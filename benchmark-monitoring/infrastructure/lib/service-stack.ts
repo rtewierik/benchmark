@@ -52,20 +52,15 @@ export class ServiceStack extends Stack {
 
   private createBenchmarkMonitoringDataIngestionLayer(kmsKey: Key, props: BenchmarkMonitoringStackProps): DataIngestionLayer {
     const { sqsQueue, deadLetterQueue } = new ApiGatewayToSqs(this, 'BenchmarkMonitoringDataIngestion', {
-      apiGatewayProps: {},
       queueProps: {
         queueName: props.appName,
         visibilityTimeout: Duration.seconds(props.eventsVisibilityTimeoutSeconds),
-        encryption: QueueEncryption.KMS,
-        encryptionMasterKey: kmsKey,
         dataKeyReuse: Duration.seconds(300),
         retentionPeriod: Duration.days(14),
       },
       deployDeadLetterQueue: true,
       maxReceiveCount: 10,
       allowCreateOperation: true,
-      createRequestTemplate: 'TODO',
-      enableEncryptionWithCustomerManagedKey: true,
       encryptionKey: kmsKey
     })
     if (!deadLetterQueue) {
