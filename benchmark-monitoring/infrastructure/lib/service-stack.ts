@@ -1,4 +1,4 @@
-import { App, Duration, Stack } from 'aws-cdk-lib'
+import { App, Duration, RemovalPolicy, Stack } from 'aws-cdk-lib'
 import {
   Tracing,
   Runtime,
@@ -22,6 +22,7 @@ import { addMonitoring } from '../modules/monitoring'
 import { addAlerting } from '../modules/alerting'
 import { IKey, Key } from 'aws-cdk-lib/aws-kms'
 import { ApiGatewayToSqs } from '@aws-solutions-constructs/aws-apigateway-sqs'
+import { AttributeType, BillingMode, Table, TableEncryption } from 'aws-cdk-lib/aws-dynamodb'
 
 interface DataIngestionLayer {
   sqsQueue: IQueue
@@ -36,6 +37,7 @@ export class ServiceStack extends Stack {
     const { sqsQueue, ingestionDeadLetterQueue } = this.createBenchmarkMonitoringDataIngestionLayer(kmsKey, props)
     const deadLetterQueue = this.createBenchmarkMonitoringLambdaDeadLetterQueue(props)
     const lambda = this.createBenchmarkMonitoringLambda(sqsQueue, kmsKey, deadLetterQueue, props)
+    this.createBenchmarkMonitoringDynamoDb(lambda, kmsKey)
     addMonitoring(this, sqsQueue, lambda, deadLetterQueue, ingestionDeadLetterQueue, props)
     addAlerting(this, lambda, deadLetterQueue, ingestionDeadLetterQueue, props)
   }
@@ -55,6 +57,7 @@ export class ServiceStack extends Stack {
       queueProps: {
         queueName: props.appName,
         visibilityTimeout: Duration.seconds(props.eventsVisibilityTimeoutSeconds),
+        encryption: QueueEncryption.KMS,
         dataKeyReuse: Duration.seconds(300),
         retentionPeriod: Duration.days(14),
       },
@@ -127,7 +130,6 @@ export class ServiceStack extends Stack {
         memorySize: 512,
         tracing: Tracing.ACTIVE,
         role: iamRole,
-        reservedConcurrentExecutions: props.reservedConcurrentExecutions,
         environment: {
           REGION: this.region,
           DEBUG: props.debug ? 'TRUE' : 'FALSE',
@@ -146,6 +148,24 @@ export class ServiceStack extends Stack {
     )
 
     return lambda
+  }
+
+  private createBenchmarkMonitoringDynamoDb(lambda: LambdaFunction, kmsKey: IKey) {
+    const table = new Table(this, 'BenchmarkMonitoringDynamoDbTable', {
+      encryption: TableEncryption.CUSTOMER_MANAGED,
+      encryptionKey: kmsKey,
+      partitionKey: {
+        name: 'ExperimentId',
+        type: AttributeType.STRING,
+      },
+      readCapacity: 1,
+      writeCapacity: 1,
+      billingMode: BillingMode.PROVISIONED,
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
+
+    table.grantReadData(lambda);
+    table.grantWriteData(lambda);
   }
 }
 
