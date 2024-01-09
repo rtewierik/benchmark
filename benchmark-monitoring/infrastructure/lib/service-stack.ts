@@ -37,7 +37,7 @@ export class ServiceStack extends Stack {
     const { sqsQueue, ingestionDeadLetterQueue } = this.createBenchmarkMonitoringDataIngestionLayer(kmsKey, props)
     const deadLetterQueue = this.createBenchmarkMonitoringLambdaDeadLetterQueue(props)
     const lambda = this.createBenchmarkMonitoringLambda(sqsQueue, kmsKey, deadLetterQueue, props)
-    this.createBenchmarkMonitoringDynamoDb(lambda, kmsKey)
+    this.createBenchmarkMonitoringDynamoDb(lambda, kmsKey, props)
     addMonitoring(this, sqsQueue, lambda, deadLetterQueue, ingestionDeadLetterQueue, props)
     addAlerting(this, lambda, deadLetterQueue, ingestionDeadLetterQueue, props)
   }
@@ -150,22 +150,23 @@ export class ServiceStack extends Stack {
     return lambda
   }
 
-  private createBenchmarkMonitoringDynamoDb(lambda: LambdaFunction, kmsKey: IKey) {
+  private createBenchmarkMonitoringDynamoDb(lambda: LambdaFunction, kmsKey: IKey, props: BenchmarkMonitoringStackProps) {
     const table = new Table(this, 'BenchmarkMonitoringDynamoDbTable', {
+      tableName: props.appName,
       encryption: TableEncryption.CUSTOMER_MANAGED,
       encryptionKey: kmsKey,
       partitionKey: {
-        name: 'ExperimentId',
+        name: 'experimentId',
         type: AttributeType.STRING,
       },
       readCapacity: 1,
       writeCapacity: 1,
       billingMode: BillingMode.PROVISIONED,
       removalPolicy: RemovalPolicy.DESTROY,
-    });
+    })
 
-    table.grantReadData(lambda);
-    table.grantWriteData(lambda);
+    table.grantReadData(lambda)
+    table.grantWriteData(lambda)
   }
 }
 
