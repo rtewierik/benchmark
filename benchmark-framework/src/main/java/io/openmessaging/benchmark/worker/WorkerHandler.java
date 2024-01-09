@@ -48,7 +48,6 @@ public class WorkerHandler {
     public static final String RESET_STATS = "/reset-stats";
     public static final String CREATE_TPC_H_MAP_COORDINATOR = "/create-tpc-h-map-initiator";
     public static final String CREATE_TPC_H_REDUCE_COORDINATOR = "/create-tpc-h-reduce-initiator";
-    public static final String CREATE_TPC_H_RESULTS_COLLECTOR = "/create-tpc-h-results-collector";
     private final Worker localWorker;
 
     public WorkerHandler(Javalin app, StatsLogger statsLogger) {
@@ -70,7 +69,6 @@ public class WorkerHandler {
         app.post(RESET_STATS, this::handleResetStats);
         app.post(CREATE_TPC_H_MAP_COORDINATOR, this::handleCreateTpcHMapCoordinator);
         app.post(CREATE_TPC_H_REDUCE_COORDINATOR, this::handleCreateTpcHReduceCoordinator);
-        app.post(CREATE_TPC_H_RESULTS_COLLECTOR, this::handleCreateTpcHResultsCollector);
     }
 
     private void handleInitializeDriver(Context ctx) throws Exception {
@@ -163,11 +161,6 @@ public class WorkerHandler {
     private void handleCreateTpcHReduceCoordinator(Context ctx) throws Exception {
         ConsumerAssignment consumerAssignment = mapper.readValue(ctx.body(), ConsumerAssignment.class);
         localWorker.createTpcHReduceCoordinator(); // TODO: Update this code.
-    }
-
-    private void handleCreateTpcHResultsCollector(Context ctx) throws Exception {
-        ConsumerAssignment consumerAssignment = mapper.readValue(ctx.body(), ConsumerAssignment.class);
-        localWorker.createTpcHResultsCollector(); // TODO: Update this code.
     }
 
     private static final Logger log = LoggerFactory.getLogger(WorkerHandler.class);

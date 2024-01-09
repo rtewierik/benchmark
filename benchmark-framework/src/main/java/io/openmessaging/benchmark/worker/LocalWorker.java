@@ -245,11 +245,15 @@ public class LocalWorker implements Worker, ConsumerCallback {
     @Override
     public void messageReceived(byte[] data, long publishTimestamp) {
         internalMessageReceived(data.length, publishTimestamp);
+        // TODO: Implement generic logic to execute TPC-H query based on JSON parseability and message type.
+        // TODO: Add separate call to stats to record message processed.
     }
 
     @Override
     public void messageReceived(ByteBuffer data, long publishTimestamp) {
         internalMessageReceived(data.remaining(), publishTimestamp);
+        // TODO: Implement generic logic to execute TPC-H query based on JSON parseability and message type.
+        // TODO: Add separate call to stats to record message processed.
     }
 
     public void internalMessageReceived(int size, long publishTimestamp) {
@@ -290,11 +294,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public void createTpcHReduceCoordinator() throws IOException {
-        // TODO: Implement this method.
-    }
-
-    @Override
-    public void createTpcHResultsCollector() throws IOException {
         // TODO: Implement this method.
     }
 

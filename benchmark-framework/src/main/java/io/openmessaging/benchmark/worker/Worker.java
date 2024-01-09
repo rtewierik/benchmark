@@ -56,8 +56,6 @@ public interface Worker extends AutoCloseable {
 
     void createTpcHReduceCoordinator() throws IOException;
 
-    void createTpcHResultsCollector() throws IOException;
-
     void stopAll();
 
     String id();

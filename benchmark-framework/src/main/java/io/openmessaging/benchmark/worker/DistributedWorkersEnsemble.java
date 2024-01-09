@@ -39,7 +39,6 @@ public class DistributedWorkersEnsemble implements Worker {
     private static final int LEADER_WORKER_INDEX = 0;
     private static final int TPC_H_MAP_COORDINATOR_WORKER_INDEX = 0;
     private static final int TPC_H_REDUCE_COORDINATOR_WORKER_INDEX = 1;
-    private static final int TPC_H_RESULTS_COLLECTOR_WORKER_INDEX = 2;
     private final Thread shutdownHook = new Thread(this::stopAll);
     private final List<Worker> workers;
     private final List<Worker> producerWorkers;
@@ -294,14 +293,6 @@ public class DistributedWorkersEnsemble implements Worker {
         this.workers
                 .get(index)
                 .createTpcHReduceCoordinator();
-    }
-
-    @Override
-    public void createTpcHResultsCollector() throws IOException {
-        int index = TPC_H_RESULTS_COLLECTOR_WORKER_INDEX % this.producerWorkers.size();
-        this.workers
-                .get(index)
-                .createTpcHResultsCollector();
     }
 
     @Override

@@ -134,11 +134,6 @@ public class HttpWorkerClient implements Worker {
     }
 
     @Override
-    public void createTpcHResultsCollector() throws IOException {
-        sendPost(CREATE_TPC_H_RESULTS_COLLECTOR); // TODO: Add body here if needed.
-    }
-
-    @Override
     public void stopAll() {
         sendPost(STOP_ALL);
     }
