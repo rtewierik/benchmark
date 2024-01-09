@@ -18,8 +18,7 @@ const dynamoDbClient = new DynamoDBClient({ region: REGION })
 const mapToEvent = (record: SqsEventRecord): OperationResult<Event | undefined> => {
   try {
     const event = JSON.parse(record.body)
-    const message = JSON.parse(event.Message)
-    const data = { ...message, messageId: record.messageId }
+    const data = { ...event, messageId: record.messageId }
     return OperationResult.successWithData(event.messageId, data)
   } catch (error: unknown) {
     console.error(`Error occurred while parsing record ${JSON.stringify(record)}`, error)

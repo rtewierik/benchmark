@@ -12,6 +12,7 @@ import {
 } from 'aws-cdk-lib/aws-sqs'
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources'
 import {
+  ManagedPolicy,
   PolicyStatement,
   Role,
   ServicePrincipal,
@@ -53,7 +54,7 @@ export class ServiceStack extends Stack {
   }
 
   private createBenchmarkMonitoringDataIngestionLayer(kmsKey: Key, props: BenchmarkMonitoringStackProps): DataIngestionLayer {
-    const { sqsQueue, deadLetterQueue } = new ApiGatewayToSqs(this, 'BenchmarkMonitoringDataIngestion', {
+    const { sqsQueue, deadLetterQueue, apiGatewayRole } = new ApiGatewayToSqs(this, 'BenchmarkMonitoringDataIngestion', {
       queueProps: {
         queueName: props.appName,
         visibilityTimeout: Duration.seconds(props.eventsVisibilityTimeoutSeconds),
@@ -69,6 +70,7 @@ export class ServiceStack extends Stack {
     if (!deadLetterQueue) {
       throw new Error('The ApiGatewayToSqs dependency did not yield a dead letter queue!')
     }
+    kmsKey.grantEncryptDecrypt(apiGatewayRole);
     return { sqsQueue, ingestionDeadLetterQueue: deadLetterQueue.queue }
   }
 
@@ -115,6 +117,10 @@ export class ServiceStack extends Stack {
         actions: ['SQS:SendMessage'],
         resources: [deadLetterQueue.queueArn],
       })
+    )
+
+    iamRole.addManagedPolicy(
+      ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole')
     )
 
     const lambda = new LambdaFunction(
