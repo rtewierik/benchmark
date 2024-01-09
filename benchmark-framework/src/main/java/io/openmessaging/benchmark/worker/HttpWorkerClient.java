@@ -13,20 +13,7 @@
  */
 package io.openmessaging.benchmark.worker;
 
-import static io.openmessaging.benchmark.worker.WorkerHandler.ADJUST_PUBLISH_RATE;
-import static io.openmessaging.benchmark.worker.WorkerHandler.COUNTERS_STATS;
-import static io.openmessaging.benchmark.worker.WorkerHandler.CREATE_CONSUMERS;
-import static io.openmessaging.benchmark.worker.WorkerHandler.CREATE_PRODUCERS;
-import static io.openmessaging.benchmark.worker.WorkerHandler.CREATE_TOPICS;
-import static io.openmessaging.benchmark.worker.WorkerHandler.CUMULATIVE_LATENCIES;
-import static io.openmessaging.benchmark.worker.WorkerHandler.INITIALIZE_DRIVER;
-import static io.openmessaging.benchmark.worker.WorkerHandler.PAUSE_CONSUMERS;
-import static io.openmessaging.benchmark.worker.WorkerHandler.PERIOD_STATS;
-import static io.openmessaging.benchmark.worker.WorkerHandler.PROBE_PRODUCERS;
-import static io.openmessaging.benchmark.worker.WorkerHandler.RESET_STATS;
-import static io.openmessaging.benchmark.worker.WorkerHandler.RESUME_CONSUMERS;
-import static io.openmessaging.benchmark.worker.WorkerHandler.START_LOAD;
-import static io.openmessaging.benchmark.worker.WorkerHandler.STOP_ALL;
+import static io.openmessaging.benchmark.worker.WorkerHandler.*;
 import static org.asynchttpclient.Dsl.asyncHttpClient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -134,6 +121,21 @@ public class HttpWorkerClient implements Worker {
     @Override
     public void resetStats() throws IOException {
         sendPost(RESET_STATS);
+    }
+
+    @Override
+    public void createTpcHMapCoordinator() throws IOException {
+        sendPost(CREATE_TPC_H_MAP_COORDINATOR); // TODO: Add body here if needed.
+    }
+
+    @Override
+    public void createTpcHReduceCoordinator() throws IOException {
+        sendPost(CREATE_TPC_H_REDUCE_COORDINATOR); // TODO: Add body here if needed.
+    }
+
+    @Override
+    public void createTpcHResultsCollector() throws IOException {
+        sendPost(CREATE_TPC_H_RESULTS_COLLECTOR); // TODO: Add body here if needed.
     }
 
     @Override

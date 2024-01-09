@@ -284,6 +284,21 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     @Override
+    public void createTpcHMapCoordinator() throws IOException {
+        // TODO: Implement this method.
+    }
+
+    @Override
+    public void createTpcHReduceCoordinator() throws IOException {
+        // TODO: Implement this method.
+    }
+
+    @Override
+    public void createTpcHResultsCollector() throws IOException {
+        // TODO: Implement this method.
+    }
+
+    @Override
     public void stopAll() {
         testCompleted = true;
         consumersArePaused = false;
