@@ -140,12 +140,12 @@ public class HttpWorkerClient implements Worker {
 
     @Override
     public void createTpcHMapCoordinator() throws IOException {
-        sendPost(CREATE_TPC_H_MAP_COORDINATOR); // TODO: Add body here if needed.
+        sendPost(CREATE_TPC_H_MAP_COORDINATOR); // TO DO: Add body here if needed.
     }
 
     @Override
     public void createTpcHReduceCoordinator() throws IOException {
-        sendPost(CREATE_TPC_H_REDUCE_COORDINATOR); // TODO: Add body here if needed.
+        sendPost(CREATE_TPC_H_REDUCE_COORDINATOR); // TO DO: Add body here if needed.
     }
 
     @Override
