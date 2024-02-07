@@ -1,0 +1,54 @@
+sudo bin/benchmark \
+>   --drivers driver-kafka/kafka-throughput.yaml \
+>   workloads/1-topic-1-partition-1kb.yaml
+03:15:25.164 [main] INFO Benchmark - Using default worker file workers.yaml
+03:15:25.176 [main] INFO Benchmark - Reading workers list from workers.yaml
+03:15:25.231 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-kafka/kafka-throughput.yaml" ],
+  "workers" : [ "http://10.0.0.170:8080", "http://10.0.0.74:8080", "http://10.0.0.117:8080", "http://10.0.0.247:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "workloads" : [ "workloads/1-topic-1-partition-1kb.yaml" ],
+  "output" : null
+}
+03:15:25.250 [main] INFO Benchmark - Workloads: {
+  "1-topic-1-partition-1kb" : {
+    "name" : "1 topic / 1 partition / 1Kb",
+    "topics" : 1,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 1024,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-1Kb.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 50000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 15,
+    "warmupDurationMinutes" : 1
+  }
+}
+03:15:25.777 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.74:8080,http://10.0.0.170:8080]
+03:15:25.777 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.247:8080,http://10.0.0.117:8080
+03:15:25.781 [main] INFO Benchmark - --------------- WORKLOAD : 1 topic / 1 partition / 1Kb --- DRIVER : Kafka---------------
+03:25:26.547 [main] ERROR Benchmark - Failed to run the workload '1 topic / 1 partition / 1Kb' for driver 'driver-kafka/kafka-throughput.yaml'
+java.util.concurrent.CompletionException: java.util.concurrent.TimeoutException: Request timeout to 10.0.0.170/10.0.0.170:8080 after 600000 ms
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:331) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:346) ~[?:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:632) ~[?:?]
+	at java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2094) ~[?:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.abort(NettyResponseFuture.java:273) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.request.NettyRequestSender.abort(NettyRequestSender.java:487) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.timeout.TimeoutTimerTask.expire(TimeoutTimerTask.java:43) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.timeout.RequestTimeoutTimerTask.run(RequestTimeoutTimerTask.java:50) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at io.netty.util.HashedWheelTimer$HashedWheelTimeout.expire(HashedWheelTimer.java:669) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.HashedWheelTimer$HashedWheelBucket.expireTimeouts(HashedWheelTimer.java:744) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.HashedWheelTimer$Worker.run(HashedWheelTimer.java:469) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at java.lang.Thread.run(Thread.java:829) ~[?:?]
+Caused by: java.util.concurrent.TimeoutException: Request timeout to 10.0.0.170/10.0.0.170:8080 after 600000 ms
+	... 7 more
