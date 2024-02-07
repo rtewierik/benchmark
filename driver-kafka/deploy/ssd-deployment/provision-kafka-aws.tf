@@ -1,12 +1,3 @@
-provider "aws" {
-  region  = "${var.region}"
-  version = "3.50"
-}
-
-provider "random" {
-  version = "3.1"
-}
-
 variable "public_key_path" {
   description = <<DESCRIPTION
 Path to the SSH public key to be used for authentication.

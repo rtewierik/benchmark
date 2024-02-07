@@ -97,7 +97,7 @@ The benchmark scripts can be run from the `/opt/benchmark` working directory.
 Once you’ve successfully SSH'ed into the client host, you can run any of the existing benchmarking workloads by specifying the YAML file for that workload when running the benchmark executable. All workloads are in the workloads folder. Here’s an example:
 
 ```
-$ sudo bin/benchmark \
+$ sudo /opt/benchmark/bin/benchmark \
   --drivers driver-kafka/kafka.yaml \
   workloads/1-topic-16-partitions-1kb.yaml
 ```
