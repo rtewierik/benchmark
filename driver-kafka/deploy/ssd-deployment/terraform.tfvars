@@ -4,13 +4,13 @@ az              = "us-west-2a"
 ami             = "ami-08970fb2e5767e3b8" // RHEL-8
 
 instance_types = {
-  "kafka"     = "i3en.2xlarge"
-  "zookeeper" = "i3en.2xlarge"
-  "client"    = "m5dn.xlarge"
+  "kafka"     = "t3.large"
+  "zookeeper" = "t3.large"
+  "client"    = "t3.large"
 }
 
 num_instances = {
   "client"    = 4
-  "kafka"     = 1
-  "zookeeper" = 1
+  "kafka"     = 3
+  "zookeeper" = 3
 }

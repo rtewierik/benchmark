@@ -416,3 +416,106 @@ content-length: 0
 09:35:59.497 [AsyncHttpClient-5-1] DEBUG PoolThreadCache - Freed 4 thread-local buffer(s) from thread: AsyncHttpClient-5-1
 09:35:59.512 [AsyncHttpClient-7-1] DEBUG PoolThreadCache - Freed 4 thread-local buffer(s) from thread: AsyncHttpClient-7-1
 09:35:59.523 [AsyncHttpClient-9-1] DEBUG PoolThreadCache - Freed 4 thread-local buffer(s) from thread: AsyncHttpClient-9-1
+
+------------
+
+journalctl -u benchmark-worker
+-- Logs begin at Wed 2024-02-07 09:54:16 UTC, end at Wed 2024-02-07 11:50:51 UTC. --
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594) [?:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183) [?:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]: 09:54:16.694 [ForkJoinPool.commonPool-worker-3] DEBUG KafkaTopicCreator - org.apache.kafka.common.errors.TimeoutException: The AdminClient thread is not accepting new calls.
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]: 09:54:16.694 [ForkJoinPool.commonPool-worker-3] DEBUG KafkaTopicCreator - Executing batch, size: 1
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]: 09:54:16.694 [ForkJoinPool.commonPool-worker-3] DEBUG KafkaAdminClient - [AdminClient clientId=adminclient-1] The AdminClient is not accepting new calls. Timing out Call(callName=createTopics, deadlineMs=1707300856694, tries=0, next>
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]: 09:54:16.694 [ForkJoinPool.commonPool-worker-3] DEBUG KafkaAdminClient - [AdminClient clientId=adminclient-1] Call(callName=createTopics, deadlineMs=1707300856694, tries=0, nextAllowedTryMs=0) timed out at 1707299656694 after 0 atte>
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]: java.lang.Exception: TimeoutException: The AdminClient thread is not accepting new calls.
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at org.apache.kafka.clients.admin.KafkaAdminClient$Call.handleTimeoutFailure(KafkaAdminClient.java:843) ~[org.apache.kafka-kafka-clients-3.2.1.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at org.apache.kafka.clients.admin.KafkaAdminClient$Call.access$2100(KafkaAdminClient.java:738) ~[org.apache.kafka-kafka-clients-3.2.1.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at org.apache.kafka.clients.admin.KafkaAdminClient$AdminClientRunnable.call(KafkaAdminClient.java:1468) ~[org.apache.kafka-kafka-clients-3.2.1.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at org.apache.kafka.clients.admin.KafkaAdminClient.createTopics(KafkaAdminClient.java:1578) ~[org.apache.kafka-kafka-clients-3.2.1.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at org.apache.kafka.clients.admin.Admin.createTopics(Admin.java:180) ~[org.apache.kafka-kafka-clients-3.2.1.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at io.openmessaging.benchmark.driver.kafka.KafkaTopicCreator.executeBatch(KafkaTopicCreator.java:98) ~[io.openmessaging.benchmark-driver-kafka-0.0.1-SNAPSHOT.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at io.openmessaging.benchmark.driver.kafka.KafkaTopicCreator.createBlocking(KafkaTopicCreator.java:74) ~[io.openmessaging.benchmark-driver-kafka-0.0.1-SNAPSHOT.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at io.openmessaging.benchmark.driver.kafka.KafkaTopicCreator.lambda$0(KafkaTopicCreator.java:55) ~[io.openmessaging.benchmark-driver-kafka-0.0.1-SNAPSHOT.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1736) [?:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at java.util.concurrent.CompletableFuture$AsyncRun.exec(CompletableFuture.java:1728) [?:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290) [?:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020) [?:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656) [?:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594) [?:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183) [?:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]: 09:54:16.694 [ForkJoinPool.commonPool-worker-3] DEBUG KafkaTopicCreator - org.apache.kafka.common.errors.TimeoutException: The AdminClient thread is not accepting new calls.
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]: 09:54:16.694 [ForkJoinPool.commonPool-worker-3] DEBUG KafkaTopicCreator - Executing batch, size: 1
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]: 09:54:16.694 [ForkJoinPool.commonPool-worker-3] DEBUG KafkaAdminClient - [AdminClient clientId=adminclient-1] The AdminClient is not accepting new calls. Timing out Call(callName=createTopics, deadlineMs=1707300856694, tries=0, next>
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]: 09:54:16.694 [ForkJoinPool.commonPool-worker-3] DEBUG KafkaAdminClient - [AdminClient clientId=adminclient-1] Call(callName=createTopics, deadlineMs=1707300856694, tries=0, nextAllowedTryMs=0) timed out at 1707299656694 after 0 atte>
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]: java.lang.Exception: TimeoutException: The AdminClient thread is not accepting new calls.
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at org.apache.kafka.clients.admin.KafkaAdminClient$Call.handleTimeoutFailure(KafkaAdminClient.java:843) ~[org.apache.kafka-kafka-clients-3.2.1.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at org.apache.kafka.clients.admin.KafkaAdminClient$Call.access$2100(KafkaAdminClient.java:738) ~[org.apache.kafka-kafka-clients-3.2.1.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at org.apache.kafka.clients.admin.KafkaAdminClient$AdminClientRunnable.call(KafkaAdminClient.java:1468) ~[org.apache.kafka-kafka-clients-3.2.1.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at org.apache.kafka.clients.admin.KafkaAdminClient.createTopics(KafkaAdminClient.java:1578) ~[org.apache.kafka-kafka-clients-3.2.1.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at org.apache.kafka.clients.admin.Admin.createTopics(Admin.java:180) ~[org.apache.kafka-kafka-clients-3.2.1.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at io.openmessaging.benchmark.driver.kafka.KafkaTopicCreator.executeBatch(KafkaTopicCreator.java:98) ~[io.openmessaging.benchmark-driver-kafka-0.0.1-SNAPSHOT.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at io.openmessaging.benchmark.driver.kafka.KafkaTopicCreator.createBlocking(KafkaTopicCreator.java:74) ~[io.openmessaging.benchmark-driver-kafka-0.0.1-SNAPSHOT.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at io.openmessaging.benchmark.driver.kafka.KafkaTopicCreator.lambda$0(KafkaTopicCreator.java:55) ~[io.openmessaging.benchmark-driver-kafka-0.0.1-SNAPSHOT.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1736) [?:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at java.util.concurrent.CompletableFuture$AsyncRun.exec(CompletableFuture.java:1728) [?:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290) [?:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020) [?:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656) [?:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594) [?:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183) [?:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]: 09:54:16.694 [ForkJoinPool.commonPool-worker-3] DEBUG KafkaTopicCreator - org.apache.kafka.common.errors.TimeoutException: The AdminClient thread is not accepting new calls.
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]: 09:54:16.694 [ForkJoinPool.commonPool-worker-3] DEBUG KafkaTopicCreator - Executing batch, size: 1
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]: 09:54:16.694 [ForkJoinPool.commonPool-worker-3] DEBUG KafkaAdminClient - [AdminClient clientId=adminclient-1] The AdminClient is not accepting new calls. Timing out Call(callName=createTopics, deadlineMs=1707300856694, tries=0, next>
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]: 09:54:16.694 [ForkJoinPool.commonPool-worker-3] DEBUG KafkaAdminClient - [AdminClient clientId=adminclient-1] Call(callName=createTopics, deadlineMs=1707300856694, tries=0, nextAllowedTryMs=0) timed out at 1707299656694 after 0 atte>
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]: java.lang.Exception: TimeoutException: The AdminClient thread is not accepting new calls.
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at org.apache.kafka.clients.admin.KafkaAdminClient$Call.handleTimeoutFailure(KafkaAdminClient.java:843) ~[org.apache.kafka-kafka-clients-3.2.1.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at org.apache.kafka.clients.admin.KafkaAdminClient$Call.access$2100(KafkaAdminClient.java:738) ~[org.apache.kafka-kafka-clients-3.2.1.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at org.apache.kafka.clients.admin.KafkaAdminClient$AdminClientRunnable.call(KafkaAdminClient.java:1468) ~[org.apache.kafka-kafka-clients-3.2.1.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at org.apache.kafka.clients.admin.KafkaAdminClient.createTopics(KafkaAdminClient.java:1578) ~[org.apache.kafka-kafka-clients-3.2.1.jar:?]
+Feb 07 09:54:16 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[22532]:         at org.apache.kafka.clients.admin.Admin.createTopics(Admin.java:180) ~[org.apache.kafka-kafka-clients-3.2.1.jar:?]
+lines 1-53
+
+----------------------
+
+systemctl -l status benchmark-worker
+● benchmark-worker.service - Benchmark worker
+   Loaded: loaded (/etc/systemd/system/benchmark-worker.service; disabled; vendor preset: disabled)
+   Active: active (running) since Wed 2024-02-07 11:05:48 UTC; 43min ago
+ Main PID: 51823 (java)
+    Tasks: 62 (limit: 98969)
+   Memory: 5.1G
+   CGroup: /system.slice/benchmark-worker.service
+           └─51823 java -server -cp :lib/* -Djava.net.preferIPv4Stack=true -Xms5G -Xmx5G -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -XX:+ParallelRefProcEnabled -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=12 -XX:ConcGCThreads=12 -XX:+DisableExplicitGC -XX:-ResizePLAB io.openmessaging.benchmark.worker.BenchmarkW>
+
+Feb 07 11:48:21 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[51823]: 11:48:21.898 [kafka-admin-client-thread | adminclient-1] INFO KafkaAdminClient - [AdminClient clientId=adminclient-1] Timed out 1 remaining operation(s) during close.
+Feb 07 11:48:21 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[51823]: 11:48:21.905 [kafka-admin-client-thread | adminclient-1] INFO Metrics - Metrics scheduler closed
+Feb 07 11:48:21 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[51823]: 11:48:21.905 [kafka-admin-client-thread | adminclient-1] INFO Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+Feb 07 11:48:21 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[51823]: 11:48:21.905 [kafka-admin-client-thread | adminclient-1] INFO Metrics - Metrics reporters closed
+Feb 07 11:48:31 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[51823]: 11:48:31.773 [pool-2-thread-1] INFO KafkaTopicCreator - Created topics 0/1
+Feb 07 11:48:41 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[51823]: 11:48:41.773 [pool-2-thread-1] INFO KafkaTopicCreator - Created topics 0/1
+Feb 07 11:48:51 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[51823]: 11:48:51.773 [pool-2-thread-1] INFO KafkaTopicCreator - Created topics 0/1
+Feb 07 11:49:01 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[51823]: 11:49:01.773 [pool-2-thread-1] INFO KafkaTopicCreator - Created topics 0/1
+Feb 07 11:49:11 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[51823]: 11:49:11.773 [pool-2-thread-1] INFO KafkaTopicCreator - Created topics 0/1
+Feb 07 11:49:21 ip-10-0-0-54.us-west-2.compute.internal benchmark-worker[51823]: 11:49:21.773 [pool-2-thread-1] INFO KafkaTopicCreator - Created topics 0/1
+
+----
+
+replicationFactor: 3
+
+topicConfig: |
+  min.insync.replicas=2
+
+commonConfig: |
+  bootstrap.servers=localhost:9092
+  default.api.timeout.ms=1200000
+  request.timeout.ms=1200000
+
+producerConfig: |
+  acks=all
+  linger.ms=1
+  batch.size=1048576
+
+consumerConfig: |
+  auto.offset.reset=earliest
+  enable.auto.commit=false
+  max.partition.fetch.bytes=10485760

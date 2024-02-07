@@ -77,7 +77,12 @@ public class HttpWorkerClient implements Worker {
     @SuppressWarnings("unchecked")
     @Override
     public List<String> createTopics(TopicsInfo topicsInfo) throws IOException {
-        return (List<String>) post(CREATE_TOPICS, writer.writeValueAsBytes(topicsInfo), List.class);
+        try {
+            return (List<String>) post(CREATE_TOPICS, writer.writeValueAsBytes(topicsInfo), List.class);
+        } catch (Exception e) {
+            log.error("Exception occurred while creating topics", e);
+            throw e;
+        }
     }
 
     @Override
