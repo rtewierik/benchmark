@@ -19,13 +19,33 @@
   tasks:
     - command: >
         tuned-adm profile latency-performance
-    - name: Format disks
-      filesystem:
-         fstype: xfs
-         dev: '{{ item }}'
-      with_items:
-        - '/dev/nvme1n1'
-        - '/dev/nvme2n1'
+    - name: Get EC2 volume details
+      delegate_to: localhost
+      vars:
+        ansible_python_interpreter: /usr/local/bin/python3.12
+      amazon.aws.ec2_vol_info:
+        access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
+        secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
+        region: us-west-2
+        filters:
+          "tag:Name": "kafka_ebs_{{groups['kafka'].index(inventory_hostname)}}"
+      register: ec2_vol_info
+    - name: Store volume serial number
+      ansible.builtin.set_fact:
+        ebs_volume_id: "{{ ec2_vol_info.volumes[0].id | replace('-', '') }}"
+    - name: List Linux block devices
+      ansible.builtin.shell:
+        cmd: "lsblk -p -o NAME,SERIAL | grep {{ ebs_volume_id }} | cut -d' ' -f1"
+      register: lsblk
+    - name: Store EBS volume device name
+      ansible.builtin.set_fact:
+        ebs_volume_device_name: "{{ lsblk.stdout }}"
+    - name: Format EC2 volume
+      debugger: on_failed
+      community.general.filesystem:
+        fstype: xfs
+        dev: "{{ ebs_volume_device_name }}"
+        force: no
     - name: Mount disks
       mount:
         path: "{{ item.path }}"
@@ -34,8 +54,7 @@
         opts: defaults,noatime,nodiscard
         state: mounted
       with_items:
-        - { path: "/mnt/data-1", src: "/dev/nvme1n1" }
-        - { path: "/mnt/data-2", src: "/dev/nvme2n1" }
+        - { path: "/mnt/data-1", src: '{{ ebs_volume_device_name }}' }
     - name: Increase hard file descriptor limit
       pam_limits:
         domain: '*'
@@ -67,13 +86,32 @@
   connection: ssh
   become: true
   tasks:
-    - name: Format disks
-      filesystem:
+    - name: Get EC2 volume details
+      delegate_to: localhost
+      vars:
+        ansible_python_interpreter: /usr/local/bin/python3.12
+      amazon.aws.ec2_vol_info:
+        access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
+        secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
+        region: us-west-2
+        filters:
+          "tag:Name": "zookeeper_ebs_{{groups['zookeeper'].index(inventory_hostname)}}"
+      register: ec2_vol_info
+    - name: Store volume serial number
+      ansible.builtin.set_fact:
+        ebs_volume_id: "{{ ec2_vol_info.volumes[0].id | replace('-', '') }}"
+    - name: List Linux block devices
+      ansible.builtin.shell:
+        cmd: "lsblk -p -o NAME,SERIAL | grep {{ ebs_volume_id }} | cut -d' ' -f1"
+      register: lsblk
+    - name: Store EBS volume device name
+      ansible.builtin.set_fact:
+        ebs_volume_device_name: "{{ lsblk.stdout }}"
+    - name: Format EC2 volume
+      community.general.filesystem:
         fstype: xfs
-        dev: '{{ item }}'
-      with_items:
-        - '/dev/nvme1n1'
-        - '/dev/nvme2n1'
+        dev: "{{ ebs_volume_device_name }}"
+        force: no
     - name: Mount disks
       mount:
         path: "{{ item.path }}"
@@ -82,8 +120,7 @@
         opts: defaults,noatime,nodiscard
         state: mounted
       with_items:
-        - { path: "/mnt/zookeeper/logs", src: "/dev/nvme1n1" }
-        - { path: "/mnt/zookeeper/data", src: "/dev/nvme2n1" }
+        - { path: "/mnt/zookeeper/data", src: '{{ ebs_volume_device_name }}' }
 
 - name: Kafka setup
   hosts: all
@@ -226,7 +263,7 @@
       lineinfile:
          dest: /opt/benchmark/bin/benchmark-worker
          regexp: '^JVM_MEM='
-         line: 'JVM_MEM="-Xms100G -Xmx100G -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -XX:+ParallelRefProcEnabled -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=12 -XX:ConcGCThreads=12 -XX:+DisableExplicitGC -XX:-ResizePLAB"'
+         line: 'JVM_MEM="-Djava.net.preferIPv4Stack=true -Xms5G -Xmx5G -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -XX:+ParallelRefProcEnabled -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=12 -XX:ConcGCThreads=12 -XX:+DisableExplicitGC -XX:-ResizePLAB"'
       tags: [client-code]
     - name: Configure memory
       lineinfile:
