@@ -91,6 +91,16 @@ In the output produced by Terraform, there’s a `client_ssh_host` variable that
 $ ssh -i ~/.ssh/kafka_aws ec2-user@$(terraform output client_ssh_host)
 ```
 
+## Verifying worker health
+
+If benchmark workers did not properly start, they will not respond to API calls. For each of the IP addresses in `/opt/benchmark/workers.yaml`, one can run
+
+```
+  curl -o - -I -H "Accept: application/json" -X POST http://${IP_ADDRESS}/stop-all
+```
+
+which should yield a `200 OK` response.
+
 ## Running the benchmarks from the client hosts
 The benchmark scripts can be run from the `/opt/benchmark` working directory.
 
@@ -112,12 +122,26 @@ $ sudo bin/benchmark \
   workloads/1-topic-16-partitions-1kb.yaml
 ```
 
+## Debugging failing benchmarks
+
+Benchmarks can fail for a number of reasons. The most common ones observed are related to the infrastructure.
+
+* Insufficient allocation of memory: depending on the chosen EC2 instance size, the configuration for the processes launched on these instances must be modified. The configuration can be found in the `templates` folder, specifically the `*.service` and `*.properties` files.
+* Corrupted Ansible deployment: If the Ansible deploy script is executed in part or multiple times, infrastructure can get corrupted. Ensure you are always deploying fresh infrastructure with Terraform and execute the Ansible script in full and only once to observe the most consistent results.
+
+Failing benchmarks can be debugged by running the following commands on the EC2 hosts to analyze the state of the services running on the hosts.
+
+* Printing the logs for a service: `journalctl -u service-name.service (-b)`
+* Learning more about the status of a service (e.g. active, failed, initialising): `systemctl -l status benchmark-worker`
+
 ## Downloading your benchmarking results
 The OpenMessaging benchmarking suite stores results in JSON files in the `/opt/benchmark` folder on the client host from which the benchmarks are run. You can download those results files onto your local machine using scp. You can download all generated JSON results files using this command:
 
 ```
 $ scp -i ~/.ssh/kafka_aws ec2-user@$(terraform output client_ssh_host):/opt/benchmark/*.json .
 ```
+
+**NOTE:** On MacOS, the wildcard needs to be escaped.
 
 ## Tearing down your benchmarking infrastructure
 Once you’re finished running your benchmarks, you should tear down the AWS infrastructure you deployed for the sake of saving costs. You can do that with one command:
