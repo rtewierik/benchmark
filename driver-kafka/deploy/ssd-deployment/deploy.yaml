@@ -120,7 +120,7 @@
         opts: defaults,noatime,nodiscard
         state: mounted
       with_items:
-        - { path: "/mnt/zookeeper/logs", src: '{{ ebs_volume_device_name }}' }
+        - { path: "/mnt/zookeeper/data", src: '{{ ebs_volume_device_name }}' }
 
 - name: Kafka setup
   hosts: all

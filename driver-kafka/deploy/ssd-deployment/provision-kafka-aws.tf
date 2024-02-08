@@ -156,7 +156,7 @@ resource "aws_ebs_volume" "ebs_kafka" {
   count             = "${var.num_instances["kafka"]}"
 
   availability_zone = "us-west-2a"
-  size              = 30
+  size              = 40
   type              = "gp3"
 
   tags = {
