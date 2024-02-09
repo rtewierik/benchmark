@@ -98,12 +98,15 @@ resource "aws_key_pair" "auth" {
   public_key = "${file(var.public_key_path)}"
 }
 
-resource "aws_instance" "zookeeper" {
+resource "aws_spot_instance_request" "zookeeper" {
   ami                    = "${var.ami}"
   instance_type          = "${var.instance_types["zookeeper"]}"
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
+  spot_type              = "one_time"
+  wait_for_fulfillment   = true
+  launch_group           = "kafka_deployment"
   count                  = "${var.num_instances["zookeeper"]}"
 
   tags = {
@@ -112,12 +115,15 @@ resource "aws_instance" "zookeeper" {
   }
 }
 
-resource "aws_instance" "kafka" {
+resource "aws_spot_instance_request" "kafka" {
   ami                    = "${var.ami}"
   instance_type          = "${var.instance_types["kafka"]}"
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
+  spot_type              = "one_time"
+  wait_for_fulfillment   = true
+  launch_group           = "kafka_deployment"
   count                  = "${var.num_instances["kafka"]}"
 
   tags = {
@@ -126,12 +132,15 @@ resource "aws_instance" "kafka" {
   }
 }
 
-resource "aws_instance" "client" {
+resource "aws_spot_instance_request" "client" {
   ami                    = "${var.ami}"
   instance_type          = "${var.instance_types["client"]}"
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
+  spot_type              = "one_time"
+  wait_for_fulfillment   = true
+  launch_group           = "kafka_deployment"
   count                  = "${var.num_instances["client"]}"
 
   tags = {
