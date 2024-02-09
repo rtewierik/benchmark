@@ -106,7 +106,6 @@ resource "aws_spot_instance_request" "zookeeper" {
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
   spot_type              = "one_time"
   wait_for_fulfillment   = true
-  launch_group           = "kafka_deployment"
   count                  = "${var.num_instances["zookeeper"]}"
 
   tags = {
@@ -123,7 +122,6 @@ resource "aws_spot_instance_request" "kafka" {
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
   spot_type              = "one_time"
   wait_for_fulfillment   = true
-  launch_group           = "kafka_deployment"
   count                  = "${var.num_instances["kafka"]}"
 
   tags = {
@@ -140,7 +138,6 @@ resource "aws_spot_instance_request" "client" {
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
   spot_type              = "one_time"
   wait_for_fulfillment   = true
-  launch_group           = "kafka_deployment"
   count                  = "${var.num_instances["client"]}"
 
   tags = {

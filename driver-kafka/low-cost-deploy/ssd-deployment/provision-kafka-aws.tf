@@ -150,6 +150,12 @@ resource "aws_spot_instance_request" "zookeeper" {
   user_data = <<-EOF
               #!/bin/bash
               # Attach the EBS volume
+              sudo yum install -y unzip
+              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              unzip awscliv2.zip
+              sudo ./aws/install
+              aws configure set region "${var.region}"
+              aws configure set output "json"
               aws ec2 attach-volume --volume-id ${aws_ebs_volume.ebs_zookeeper[count.index].id} --instance-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) --device /dev/sdh
               EOF
 
@@ -178,7 +184,7 @@ resource "aws_spot_instance_request" "kafka" {
               curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
               unzip awscliv2.zip
               sudo ./aws/install
-              aws configure set region "us-west-2"
+              aws configure set region "${var.region}"
               aws configure set output "json"
               aws ec2 attach-volume --volume-id ${aws_ebs_volume.ebs_kafka[count.index].id} --instance-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) --device /dev/sdh
               EOF
