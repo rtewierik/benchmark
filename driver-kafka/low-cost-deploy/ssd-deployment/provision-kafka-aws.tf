@@ -129,6 +129,12 @@ resource "aws_iam_role" "kafka_iam_role" {
   }
 }
 
+resource "aws_iam_instance_profile" "kafka_ec2_instance_profile" {
+  name = "kafka_ec2_instance_profile"
+
+  role = aws_iam_role.kafka_iam_role.name
+}
+
 resource "aws_spot_instance_request" "zookeeper" {
   ami                    = "${var.ami}"
   instance_type          = "${var.instance_types["zookeeper"]}"
@@ -139,7 +145,7 @@ resource "aws_spot_instance_request" "zookeeper" {
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["zookeeper"]}"
 
-  iam_instance_profile = aws_iam_role.kafka_iam_role.name
+  iam_instance_profile = aws_iam_instance_profile.kafka_ec2_instance_profile.name
 
   user_data = <<-EOF
               #!/bin/bash
@@ -163,7 +169,7 @@ resource "aws_spot_instance_request" "kafka" {
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["kafka"]}"
 
-  iam_instance_profile = aws_iam_role.kafka_iam_role.name
+  iam_instance_profile = aws_iam_instance_profile.kafka_ec2_instance_profile.name
 
   user_data = <<-EOF
               #!/bin/bash
