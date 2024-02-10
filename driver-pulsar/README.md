@@ -18,7 +18,7 @@ TF_STATE=. ansible-playbook \
 The Ansible deployment script supports flexible configuration with a variable file, which is specified by `-e` option like:
 
 ```bash
-TF_STATE=. ansible-playbook \
+ansible-playbook \
   --user ec2-user \
   --inventory `which terraform-inventory` \
   -e @extra_vars.yaml \
@@ -56,7 +56,7 @@ It will download KoP and MoP from the given URLs. Then, the configuration templa
 You can change the configuration files and then restart the cluster by executing the following command.
 
 ```bash
-TF_STATE=. ansible-playbook \
+ansible-playbook \
   --user ec2-user \
   --inventory `which terraform-inventory` \
   -e @extra_vars.yaml \
