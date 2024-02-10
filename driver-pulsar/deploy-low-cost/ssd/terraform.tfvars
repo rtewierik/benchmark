@@ -7,12 +7,12 @@ instance_types = {
   "pulsar"     = "t3.large"
   "zookeeper"  = "t3.large"
   "client"     = "t3.large"
-  "prometheus" = "t2.large"
+  "prometheus" = "t2.medium"
 }
 
 num_instances = {
   "client"     = 4
-  "pulsar"     = 5
+  "pulsar"     = 4
   "zookeeper"  = 3
   "prometheus" = 1
 }

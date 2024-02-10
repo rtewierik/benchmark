@@ -23,7 +23,7 @@
         serviceUrl: "pulsar://{{ hostvars[groups['pulsar'][0]].private_ip }}:6650/"
         httpUrl: "http://{{ hostvars[groups['pulsar'][0]].private_ip }}:8080/"
     - set_fact:
-        pulsar_version: "{{ pulsar_version | default('2.11.3') }}"
+        pulsar_version: "{{ pulsar_version | default('2.11.0') }}"
         node_exporter_version: "{{ node_exporter_version | default('1.2.2') }}"
         prometheus_version: "{{ prometheus_version | default('2.31.1') }}"
     - set_fact:
@@ -195,8 +195,8 @@
         state: latest
         pkg:
           - wget
-          - java-11-openjdk
-          - java-11-openjdk-devel
+          - java-17-openjdk
+          - java-17-openjdk-devel
           - sysstat
           - vim
           - chrony
@@ -211,7 +211,7 @@
         extra_opts: ["--strip-components=1"]
     - set_fact:
         max_heap_memory: "{{ pulsar_max_heap_memory | default('4g') }}"
-        max_direct_memory: "{{ pulsar_max_direct_memory | default('4g') }}"
+        max_direct_memory: "{{ pulsar_max_direct_memory | default('2g') }}"
     - template:
         src: "templates/pulsar_env.sh"
         dest: "/opt/pulsar/conf/pulsar_env.sh"
