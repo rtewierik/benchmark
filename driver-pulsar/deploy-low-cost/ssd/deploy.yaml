@@ -195,8 +195,8 @@
         state: latest
         pkg:
           - wget
-          - java-17-openjdk
-          - java-17-openjdk-devel
+          - java-11-openjdk
+          - java-11-openjdk-devel
           - sysstat
           - vim
           - chrony
@@ -439,7 +439,7 @@
       lineinfile:
          dest: /opt/benchmark/bin/benchmark-worker
          regexp: '^JVM_MEM='
-         line: 'JVM_MEM="-Xms3G -Xmx3G -XX:+UseZGC"'
+         line: 'JVM_MEM="-Xms3G -Xmx3G -XX:+UnlockExperimentalVMOptions -XX:+UseZGC"'
     - name: Configure memory
       lineinfile:
          dest: /opt/benchmark/bin/benchmark

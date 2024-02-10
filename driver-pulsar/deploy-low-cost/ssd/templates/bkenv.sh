@@ -33,7 +33,7 @@ BOOKIE_LOG_DIR=${BOOKIE_LOG_DIR:-"${PULSAR_LOG_DIR}"}
 BOOKIE_MEM=${BOOKIE_MEM:-${PULSAR_MEM:-"-Xms{{ max_heap_memory }} -Xmx{{ max_heap_memory }} -XX:MaxDirectMemorySize={{ max_direct_memory }}"}}
 
 # Garbage collection options
-BOOKIE_GC=${BOOKIE_GC:-${PULSAR_GC:-"-XX:+UseZGC -XX:+PerfDisableSharedMem -XX:+AlwaysPreTouch"}}
+BOOKIE_GC=${BOOKIE_GC:-${PULSAR_GC:-"-XX:+UnlockExperimentalVMOptions -XX:+UseZGC -XX:+PerfDisableSharedMem -XX:+AlwaysPreTouch"}}
 
 if [ -z "$JAVA_HOME" ]; then
   JAVA_BIN=java
