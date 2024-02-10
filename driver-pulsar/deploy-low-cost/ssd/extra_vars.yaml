@@ -13,7 +13,7 @@
 #
 
 # https://github.com/apache/pulsar/issues/20282
-pulsar_version: 2.10.4
+pulsar_version: 2.11.3
 node_exporter_version: 1.2.2
 prometheus_version: 2.31.1
 

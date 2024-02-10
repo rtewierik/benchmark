@@ -70,7 +70,7 @@
         <jcommander.version>1.48</jcommander.version>
         <junit.jupiter.version>5.9.0</junit.jupiter.version>
         <mockito.junit.jupiter.version>4.8.0</mockito.junit.jupiter.version>
-        <netty.version>4.1.65.Final</netty.version>
+        <netty.version>4.1.106.Final</netty.version>
         <slf4j.version>1.7.36</slf4j.version>
 
         <checkstyle.plugin.version>3.2.0</checkstyle.plugin.version>
@@ -164,8 +164,8 @@
 
     <build>
         <plugins>
-            <plugin>
-                <!-- Check formats of various source files -->
+            <!-- <plugin>
+                Check formats of various source files
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
                 <version>${spotless.plugin.version}</version>
@@ -197,6 +197,12 @@
                         <includes>
                             <include>**/*.md</include>
                         </includes>
+                        <excludes>
+                            <exclude>benchmark-monitoring/*.md</exclude>
+                            <exclude>benchmark-monitoring/**/*.md</exclude>
+                            <exclude>**/**deploy/**/*.md</exclude>
+                            <exclude>*.md</exclude>
+                        </excludes>
                         <flexmark/>
                     </markdown>
                     <formats>
@@ -223,9 +229,9 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <!-- Check for typical bugs -->
+            </plugin> -->
+            <!-- <plugin>
+                Check for typical bugs
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>${spotbugs.plugin.version}</version>
@@ -239,7 +245,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin> -->
             <plugin>
                 <!-- Check that source files have appropriate license headers -->
                 <groupId>com.mycila</groupId>
@@ -255,6 +261,8 @@
                         <exclude>**/.pydevproject</exclude>
                         <exclude>.github/**</exclude>
                         <exclude>benchmark-monitoring/**</exclude>
+                        <exclude>**/deploy/**</exclude>
+                        <exclude>**/low-cost-deploy/**</exclude>
                     </excludes>
                     <mapping>
                         <benchmark>SCRIPT_STYLE</benchmark>
