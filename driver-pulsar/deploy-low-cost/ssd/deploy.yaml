@@ -210,8 +210,8 @@
         dest: /opt/pulsar
         extra_opts: ["--strip-components=1"]
     - set_fact:
-        max_heap_memory: "{{ pulsar_max_heap_memory | default('32g') }}"
-        max_direct_memory: "{{ pulsar_max_direct_memory | default('32g') }}"
+        max_heap_memory: "{{ pulsar_max_heap_memory | default('4g') }}"
+        max_direct_memory: "{{ pulsar_max_direct_memory | default('4g') }}"
     - template:
         src: "templates/pulsar_env.sh"
         dest: "/opt/pulsar/conf/pulsar_env.sh"
@@ -254,7 +254,7 @@
   tasks:
     - set_fact:
         zid: "{{ groups['zookeeper'].index(inventory_hostname) }}"
-        max_heap_memory: "{{ zookeeper_max_heap_memory | default('32G') }}"
+        max_heap_memory: "{{ zookeeper_max_heap_memory | default('4G') }}"
         max_direct_memory: "{{ zookeeper_max_direct_memory | default('2G') }}"
     - file:
         path: "/opt/pulsar/{{ item }}"
@@ -439,12 +439,12 @@
       lineinfile:
          dest: /opt/benchmark/bin/benchmark-worker
          regexp: '^JVM_MEM='
-         line: 'JVM_MEM="-Xms64G -Xmx64G -XX:+UseZGC"'
+         line: 'JVM_MEM="-Xms3G -Xmx3G -XX:+UseZGC"'
     - name: Configure memory
       lineinfile:
          dest: /opt/benchmark/bin/benchmark
          regexp: '^JVM_MEM='
-         line: 'JVM_MEM="-Xmx16G"'
+         line: 'JVM_MEM="-Xmx3G"'
     - name: Install benchmark systemd service
       template:
         src: "templates/benchmark-worker.service"
