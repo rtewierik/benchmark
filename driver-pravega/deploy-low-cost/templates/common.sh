@@ -95,8 +95,8 @@ else
     -XX:+ParallelRefProcEnabled \
     -XX:+UnlockExperimentalVMOptions \
     -XX:+DoEscapeAnalysis \
-    -XX:ParallelGCThreads=32 \
-    -XX:ConcGCThreads=32 \
+    -XX:ParallelGCThreads=16 \
+    -XX:ConcGCThreads=16 \
     -XX:G1NewSizePercent=50 \
     -XX:+DisableExplicitGC \
     -XX:-ResizePLAB"
