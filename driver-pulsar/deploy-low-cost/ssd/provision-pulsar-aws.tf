@@ -217,21 +217,21 @@ resource "aws_spot_instance_request" "client" {
   }
 }
 
-resource "aws_spot_instance_request" "prometheus" {
-  ami                     = var.ami
-  instance_type           = var.instance_types["prometheus"]
-  key_name                = aws_key_pair.auth.id
-  subnet_id               = aws_subnet.benchmark_subnet.id
-  vpc_security_group_ids  = [aws_security_group.benchmark_security_group.id]
-  spot_type               = "one-time"
-  wait_for_fulfillment    = true
-  count = var.num_instances["prometheus"]
+# resource "aws_spot_instance_request" "prometheus" {
+#   ami                     = var.ami
+#   instance_type           = var.instance_types["prometheus"]
+#   key_name                = aws_key_pair.auth.id
+#   subnet_id               = aws_subnet.benchmark_subnet.id
+#   vpc_security_group_ids  = [aws_security_group.benchmark_security_group.id]
+#   spot_type               = "one-time"
+#   wait_for_fulfillment    = true
+#   count = var.num_instances["prometheus"]
 
-  tags = {
-    Name = "prometheus-${count.index}"
-    Benchmark = "Pulsar"
-  }
-}
+#   tags = {
+#     Name = "prometheus-${count.index}"
+#     Benchmark = "Pulsar"
+#   }
+# }
 
 resource "aws_ebs_volume" "ebs_zookeeper" {
   count             = "${var.num_instances["zookeeper"]}"
@@ -278,17 +278,17 @@ output "client" {
   }
 }
 
-output "prometheus" {
-  value = {
-    for instance in aws_spot_instance_request.prometheus :
-    instance.public_ip => instance.private_ip
-  }
-}
+# output "prometheus" {
+#   value = {
+#     for instance in aws_spot_instance_request.prometheus :
+#     instance.public_ip => instance.private_ip
+#   }
+# }
 
 output "client_ssh_host" {
   value = aws_spot_instance_request.client.0.public_ip
 }
 
-output "prometheus_host" {
-  value = aws_spot_instance_request.prometheus.0.public_ip
-}
+# output "prometheus_host" {
+#   value = aws_spot_instance_request.prometheus.0.public_ip
+# }

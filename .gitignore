@@ -10,6 +10,7 @@ core/*.json
 *.json
 !benchmark-monitoring/**/*.json
 !**/**deploy/*.json
+!**/**deploy/**/*.json
 *.retry
 *.pem
 *.hcl
