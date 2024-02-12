@@ -156,7 +156,7 @@ resource "aws_spot_instance_request" "zookeeper" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  spot_type              = "one_time"
+  spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["zookeeper"]}"
 
@@ -171,7 +171,7 @@ resource "aws_spot_instance_request" "controller" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  spot_type              = "one_time"
+  spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["controller"]}"
 
@@ -186,7 +186,7 @@ resource "aws_spot_instance_request" "bookkeeper" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  spot_type              = "one_time"
+  spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["bookkeeper"]}"
 
@@ -215,7 +215,7 @@ resource "aws_spot_instance_request" "client" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  spot_type              = "one_time"
+  spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["client"]}"
 
@@ -230,7 +230,7 @@ resource "aws_spot_instance_request" "metrics" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  spot_type              = "one_time"
+  spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["metrics"]}"
 
@@ -254,7 +254,7 @@ resource "aws_ebs_volume" "ebs_bookkeeper" {
 # Change the EFS provisioned TP here
 resource "aws_efs_file_system" "tier2" {
   throughput_mode = "provisioned"
-  provisioned_throughput_in_mibps = 100
+  provisioned_throughput_in_mibps = 50
   tags = {
     Name = "pravega-tier2"
   }

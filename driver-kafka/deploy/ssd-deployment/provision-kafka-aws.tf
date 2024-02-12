@@ -104,7 +104,7 @@ resource "aws_spot_instance_request" "zookeeper" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  spot_type              = "one_time"
+  spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["zookeeper"]}"
 
@@ -120,7 +120,7 @@ resource "aws_spot_instance_request" "kafka" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  spot_type              = "one_time"
+  spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["kafka"]}"
 
@@ -136,7 +136,7 @@ resource "aws_spot_instance_request" "client" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  spot_type              = "one_time"
+  spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["client"]}"
 
