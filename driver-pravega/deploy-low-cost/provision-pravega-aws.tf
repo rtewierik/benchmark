@@ -156,6 +156,7 @@ resource "aws_spot_instance_request" "zookeeper" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
+  availability_zone      = "us-east-2a"
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["zookeeper"]}"
@@ -171,6 +172,7 @@ resource "aws_spot_instance_request" "controller" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
+  availability_zone      = "us-east-2a"
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["controller"]}"
@@ -186,6 +188,7 @@ resource "aws_spot_instance_request" "bookkeeper" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
+  availability_zone      = "us-east-2a"
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["bookkeeper"]}"
@@ -201,7 +204,7 @@ resource "aws_spot_instance_request" "bookkeeper" {
               sudo ./aws/install
               aws configure set region "${var.region}"
               aws configure set output "json"
-              aws ec2 attach-volume --volume-id ${aws_ebs_volume.ebs_zookeeper[count.index].id} --instance-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) --device /dev/sdh
+              aws ec2 attach-volume --volume-id ${aws_ebs_volume.ebs_bookkeeper[count.index].id} --instance-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) --device /dev/sdh
               EOF
 
   tags = {
@@ -215,6 +218,7 @@ resource "aws_spot_instance_request" "client" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
+  availability_zone      = "us-east-2a"
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["client"]}"
@@ -230,6 +234,7 @@ resource "aws_spot_instance_request" "metrics" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
+  availability_zone      = "us-east-2a"
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["metrics"]}"
@@ -242,7 +247,7 @@ resource "aws_spot_instance_request" "metrics" {
 resource "aws_ebs_volume" "ebs_bookkeeper" {
   count             = "${var.num_instances["bookkeeper"]}"
 
-  availability_zone = "us-west-2a"
+  availability_zone = "us-east-2a"
   size              = 30
   type              = "gp3"
 
