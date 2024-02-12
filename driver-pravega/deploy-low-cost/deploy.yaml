@@ -59,14 +59,12 @@
         - "bookkeeper"
         - "zookeeper"
     - name: Delete files on hosts
-      shell: "rm -rf /opt/pravega /opt/zookeeper /opt/bookkeeper /opt/benchmark /mnt/journal/* /mnt/storage/*"
-      args:
-        warn: no
+      ansible.builtin.shell:
+        cmd: "rm -rf /opt/pravega /opt/zookeeper /opt/bookkeeper /opt/benchmark /mnt/journal/*"
     - name: Delete files on tier 2
-      shell: "rm -rf /mnt/tier2/*"
+      ansible.builtin.shell:
+        cmd: "rm -rf /mnt/tier2/*"
       when: groups['bookkeeper'][0] == inventory_hostname
-      args:
-        warn: no
     - name: Unmount tier 2
       shell: "umount /mnt/tier2"
       ignore_errors: yes
@@ -266,7 +264,6 @@
   connection: ssh
   become: true
   tasks:
-    - set_fact:
     - file: path=/opt/pravega state=absent
     - file: path=/opt/pravega state=directory
     - name: Download Pravega binary package
@@ -310,14 +307,14 @@
         name: "bookkeeper"
         state: stopped
       ignore_errors: yes
-- name: Get EC2 volume details
+    - name: Get EC2 volume details
       delegate_to: localhost
       vars:
         ansible_python_interpreter: /usr/local/bin/python3.12
       amazon.aws.ec2_vol_info:
         access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
         secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
-        region: us-west-2
+        region: us-east-2
         filters:
           "tag:Name": "bookkeeper_ebs_{{groups['bookkeeper'].index(inventory_hostname)}}"
       register: ec2_vol_info
@@ -428,42 +425,21 @@
         state: restarted
         enabled: yes
 
-- name: Get Benchmark version
-  hosts: localhost
-  tags: ["client"]
-  become: false
-  tasks:
-     - shell: >
-          cat ../../pom.xml | xmllint --format - \
-            | sed "s/xmlns=\".*\"//g" | xmllint --stream --pattern /project/version --debug - \
-            | grep -A 2 "matches pattern" | grep text | sed "s/.* [0-9] //g"
-       register: maven_version
-     - set_fact:
-         benchmark_version: "{{ maven_version.stdout }}"
-     - debug:
-         msg: "benchmark_version: {{ benchmark_version }}"
-
 - name: Benchmark client setup
   hosts: client
   tags: ["client"]
   connection: ssh
   become: true
   tasks:
-    - set_fact:
-        benchmark_version: "{{ hostvars['localhost'].benchmark_version }}"
-    - debug:
-        msg: "benchmark_version: {{ benchmark_version }}"
     - file: path=/opt/benchmark state=absent
-    - file: path=/opt/benchmark state=directory
+      tags: [client-code]
     - name: Copy benchmark code
       unarchive:
         src: ../../package/target/openmessaging-benchmark-0.0.1-SNAPSHOT-bin.tar.gz
-        dest: /opt/benchmark
-        extra_opts: ["--strip-components=1"]
-    - file:
-        dest: /opt/benchmark
-        mode: u=rwX,g=rwX,o=rwX
-        recurse: yes
+        dest: /opt
+      tags: [client-code]
+    - shell: mv /opt/openmessaging-benchmark-0.0.1-SNAPSHOT /opt/benchmark
+      tags: [client-code]
     - template:
         src: "templates/workers.yaml"
         dest: "/opt/benchmark/workers.yaml"

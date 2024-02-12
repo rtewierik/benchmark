@@ -55,6 +55,7 @@ resource "aws_route" "internet_access" {
 resource "aws_subnet" "benchmark_subnet" {
   vpc_id                  = "${aws_vpc.benchmark_vpc.id}"
   cidr_block              = "10.0.0.0/24"
+  availability_zone       = "us-east-2a"
   map_public_ip_on_launch = true
 }
 
