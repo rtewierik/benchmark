@@ -29,10 +29,6 @@ variable "region" {}
 variable "az" {}
 variable "ami" {}
 
-provider "aws" {
-  region = var.region
-}
-
 # Create a VPC to launch our instances into
 resource "aws_vpc" "benchmark_vpc" {
   cidr_block = "10.0.0.0/16"
@@ -172,6 +168,8 @@ resource "aws_spot_instance_request" "rabbitmq" {
   wait_for_fulfillment   = true
   count                  = var.num_instances["rabbitmq"]
 
+  iam_instance_profile = aws_iam_instance_profile.rabbitmq_ec2_instance_profile.name
+
   user_data = <<-EOF
               #!/bin/bash
               # Attach the EBS volume
@@ -235,9 +233,9 @@ resource "aws_ebs_volume" "ebs_rabbitmq" {
 }
 
 output "prometheus_host" {
-  value = aws_instance.prometheus.0.public_ip
+  value = aws_spot_instance_request.prometheus.0.public_ip
 }
 
 output "client_ssh_host" {
-  value = aws_instance.client[0].public_ip
+  value = aws_spot_instance_request.client[0].public_ip
 }
