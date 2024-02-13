@@ -80,10 +80,9 @@ There's a handful of configurable parameters related to the Terraform deployment
 ### Running the Ansible playbook
 
 With the appropriate infrastructure in place, you can install and start the RabbitMQ cluster using Ansible with just one command.
-Note that a `TFSTATE` environment must point to the folder in which the `tf.state` file is located.
 
 ```bash
-$ TF_STATE=. ansible-playbook \
+$ ansible-playbook \
   --user ec2-user \
   --inventory `which terraform-inventory` \
   deploy.yaml
