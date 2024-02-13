@@ -9,8 +9,9 @@ target
 core/*.json
 *.json
 !benchmark-monitoring/**/*.json
-!**/**deploy/*.json
-!**/**deploy/**/*.json
+!**/**deploy**/*.json
+!**/**deploy**/**/*.json
+**/**deploy**/templates/dashboards/*.json
 *.retry
 *.pem
 *.hcl
