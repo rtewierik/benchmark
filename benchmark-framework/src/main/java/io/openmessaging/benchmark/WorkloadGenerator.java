@@ -138,7 +138,7 @@ public class WorkloadGenerator implements AutoCloseable {
                         }
                     });
         }
-        // T ODO: Execute above code only if not in TPC-H context.
+        // TO DO: Execute above code only if not in TPC-H context.
 
         // TO DO: If in TPC-H context, parse TPC-H parameters from `workload` and launch Map- and Reduce coordinators.
 
@@ -148,6 +148,8 @@ public class WorkloadGenerator implements AutoCloseable {
         // TO DO: Wait until TPC-H query results are present in S3.
         TestResult result = printAndCollectStats(workload.testDurationMinutes, TimeUnit.MINUTES);
         runCompleted = true;
+
+        log.info("----- Completed run. Stopping worker and yielding results ------");
 
         worker.stopAll();
         return result;

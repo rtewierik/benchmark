@@ -10,6 +10,3 @@ instance_types = {
 num_instances = {
   "client"    = 3
 }
-
-redis_username = "redis-benchmark-cluster-ec2-user"
-redis_password = "redis-bceu-p4ssw0rd"

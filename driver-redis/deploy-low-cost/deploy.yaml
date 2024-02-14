@@ -28,8 +28,6 @@
       shell: tuned-adm profile latency-performance
     - set_fact:
         redisHost: "{{ tf_redis_primary_node_address }}"
-        redisUser: "{{ tf_redis_username }}"
-        redisPass: "{{ tf_redis_password }}"
     - name: Benchmark - Install RPM packages
       yum: pkg={{ item }} state=latest
       with_items:

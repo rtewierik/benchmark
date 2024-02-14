@@ -13,17 +13,17 @@
 #
 
 
-name: Simple Workload 1 producer on 1 topic
+name: Simple Workload 1 producer on 2 topics
 
-topics: 1
+topics: 2
 partitionsPerTopic: 10
 messageSize: 1024
 payloadFile: "payload/payload-1Kb.data"
 subscriptionsPerTopic: 1
 producersPerTopic: 1
 consumerPerSubscription: 1
-producerRate: 10000
+producerRate: 100
 consumerBacklogSizeGB: 0
-testDurationMinutes: 5
+testDurationMinutes: 3
 
 

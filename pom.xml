@@ -263,6 +263,7 @@
                         <exclude>benchmark-monitoring/**</exclude>
                         <exclude>**/deploy/**</exclude>
                         <exclude>**/low-cost-deploy/**</exclude>
+                        <exclude>**/tf_ansible_vars.yml</exclude>
                     </excludes>
                     <mapping>
                         <benchmark>SCRIPT_STYLE</benchmark>

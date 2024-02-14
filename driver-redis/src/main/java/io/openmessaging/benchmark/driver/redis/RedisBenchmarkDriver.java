@@ -83,6 +83,8 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
         GenericObjectPoolConfig<Jedis> poolConfig = new GenericObjectPoolConfig<>();
         poolConfig.setMaxTotal(this.clientConfig.jedisPoolMaxTotal);
         poolConfig.setMaxIdle(this.clientConfig.jedisPoolMaxIdle);
+        log.info("Attempting to connect to {}:{} with user {}",
+            this.clientConfig.redisHost, this.clientConfig.redisPort, this.clientConfig.redisUser);
         if (this.clientConfig.redisPass != null) {
             if (this.clientConfig.redisUser != null) {
                 jedisPool =
