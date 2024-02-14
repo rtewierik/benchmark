@@ -28,6 +28,8 @@
       shell: tuned-adm profile latency-performance
     - set_fact:
         redisHost: "{{ tf_redis_primary_node_address }}"
+        redisUser: "{{ tf_redis_username }}"
+        redisPass: "{{ tf_redis_password }}"
     - name: Benchmark - Install RPM packages
       yum: pkg={{ item }} state=latest
       with_items:
@@ -52,7 +54,7 @@
         src: "templates/workers.yaml"
         dest: "/opt/benchmark/workers.yaml"
       tags: [client-code]
-    - name: Benchmark - Configure driver TODO
+    - name: Benchmark - Configure driver
       template:
         src: "templates/redis.yaml"
         dest: "/opt/benchmark/driver-redis/redis-default.yaml"
