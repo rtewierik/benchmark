@@ -12,30 +12,22 @@
 # limitations under the License.
 #
 
-- name: Chrony setup
-  hosts: client
-  connection: ssh
-  become: true
-  tasks:
-    - name: Chrony - Configure
-      template:
-        src: "templates/chrony.conf"
-        dest: "/etc/chrony.conf"
-    - name: Chrony - Restart
-      systemd:
-        state: restarted
-        daemon_reload: yes
-        name: "chronyd"
-
 - name: Redis benchmarking client setup
   hosts: client
   connection: ssh
   become: true
+  vars_files:
+    - ./tf_ansible_vars.yml
   tasks:
+    - name: Check mandatory variables imported from Terraform
+      assert:
+        that:
+          - tf_redis_primary_node_address is defined
+        fail_msg: "tf_* variable usually defined in './tf_ansible_vars_file.yml' is missing"
     - name:  Benchmark - Tune kernel
       shell: tuned-adm profile latency-performance
     - set_fact:
-        redisHost: "{{ hostvars[groups['redis'][0]].attributes.cache_nodes[0].address }}"
+        redisHost: "{{ tf_redis_primary_node_address }}"
     - name: Benchmark - Install RPM packages
       yum: pkg={{ item }} state=latest
       with_items:
