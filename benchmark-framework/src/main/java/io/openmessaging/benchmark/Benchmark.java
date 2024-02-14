@@ -172,6 +172,8 @@ public class Benchmark {
 
                                     TestResult result = generator.run();
 
+                                    log.info("Preparing to write test results...");
+
                                     boolean useOutput = (arguments.output != null) && (arguments.output.length() > 0);
 
                                     String fileName =
