@@ -27,7 +27,7 @@
         daemon_reload: yes
         name: "chronyd"
 
-- name: RabbitMQ benchmarking client setup
+- name: Redis benchmarking client setup
   hosts: client
   connection: ssh
   become: true
@@ -35,7 +35,7 @@
     - name:  Benchmark - Tune kernel
       shell: tuned-adm profile latency-performance
     - set_fact:
-        redisHost: "{{ groups['redis'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | map('regex_replace', '^(.*)$', '\\1:2181') | join(',') }}"
+        redisHost: "{{ hostvars[groups['redis'][0]].attributes.cache_nodes[0].address }}"
     - name: Benchmark - Install RPM packages
       yum: pkg={{ item }} state=latest
       with_items:
@@ -62,8 +62,8 @@
       tags: [client-code]
     - name: Benchmark - Configure driver TODO
       template:
-        src: "templates/rabbitmq-classic.yaml"
-        dest: "/opt/benchmark/driver-rabbitmq/rabbitmq-classic.yaml"
+        src: "templates/redis.yaml"
+        dest: "/opt/benchmark/driver-redis/redis-default.yaml"
       tags: [client-code]
     - name: Benchmark - Configure worker JVM memory
       lineinfile:

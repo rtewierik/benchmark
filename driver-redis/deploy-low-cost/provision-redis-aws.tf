@@ -101,9 +101,9 @@ resource "aws_key_pair" "auth" {
 resource "aws_elasticache_cluster" "redis" {
   cluster_id           = "redis-benchmark-cluster"
   engine               = "redis"
-  node_type            = "cache.m5.large"
-  num_cache_nodes      = 3
-  parameter_group_name = "default.redis6.x"
+  node_type            = "cache.t3.micro"
+  num_cache_nodes      = 1
+  parameter_group_name = "default.redis7"
   port                 = 6379
   subnet_group_name    = aws_elasticache_subnet_group.redis_subnet_group.name
 }
@@ -132,3 +132,4 @@ resource "aws_spot_instance_request" "client" {
 output "client_ssh_host" {
   value = aws_spot_instance_request.client[0].public_ip
 }
+
