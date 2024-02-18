@@ -100,6 +100,7 @@ public class WorkerHandler {
     private void handleCreateConsumers(Context ctx) throws Exception {
         ConsumerAssignment consumerAssignment = mapper.readValue(ctx.body(), ConsumerAssignment.class);
 
+        log.info("ConsumerAssignment payload: {}", ctx.body());
         log.info(
                 "Received create consumers request for topics: {}", consumerAssignment.topicsSubscriptions);
         localWorker.createConsumers(consumerAssignment);

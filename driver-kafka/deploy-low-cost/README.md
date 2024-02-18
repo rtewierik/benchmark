@@ -134,6 +134,11 @@ Failing benchmarks can be debugged by running the following commands on the EC2 
 * Printing the logs for a service: `journalctl -u service-name.service (-b)`
 * Learning more about the status of a service (e.g. active, failed, initialising): `systemctl -l status benchmark-worker`
 
+### Locations to configure memory in case of changing instance size
+
+* `kafka.service` and `zookeeper.service` require modification of `Environment`
+* `deploy.yaml`requires modification of the `Configure memory` task
+
 ## Downloading your benchmarking results
 The OpenMessaging benchmarking suite stores results in JSON files in the `/opt/benchmark` folder on the client host from which the benchmarks are run. You can download those results files onto your local machine using scp. You can download all generated JSON results files using this command:
 

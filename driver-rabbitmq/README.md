@@ -80,10 +80,9 @@ There's a handful of configurable parameters related to the Terraform deployment
 ### Running the Ansible playbook
 
 With the appropriate infrastructure in place, you can install and start the RabbitMQ cluster using Ansible with just one command.
-Note that a `TFSTATE` environment must point to the folder in which the `tf.state` file is located.
 
 ```bash
-$ TF_STATE=. ansible-playbook \
+$ ansible-playbook \
   --user ec2-user \
   --inventory `which terraform-inventory` \
   deploy.yaml
@@ -105,14 +104,18 @@ Once you've successfully SSHed into the client host, you can run all [available 
 
 ```bash
 $ cd /opt/benchmark
-$ sudo bin/benchmark --drivers driver-rabbitmq/rabbitmq-classic.yaml workloads/*.yaml
+$ sudo bin/benchmark --drivers driver-rabbitmq/rabbitmq.yaml workloads/*.yaml
 ```
 
 You can also run specific workloads in the `workloads` folder. Here's an example:
 
 ```bash
-$ sudo bin/benchmark --drivers driver-rabbotmq/rabbitmq-classic.yaml workloads/1-topic-1-partitions-1kb.yaml
+$ sudo bin/benchmark --drivers driver-rabbitmq/rabbitmq-quorum.yaml workloads/max-rate-10-topics-1-partition-1kb.yaml
 ```
+
+Make sure to use an actual driver instead of `rabbitmq.yml` that is an example with an incorrect AMQP URL.
+
+**NOTE:** The 1-topic benchmarks do not work properly due to empty topic creation tasks returning a 500 error that crashes the benchmark coordinator.
 
 ## Monitoring
 

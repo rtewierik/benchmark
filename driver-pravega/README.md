@@ -101,7 +101,6 @@ With the appropriate infrastructure in place, you can install and start the Prav
 
 ```
 # Fixes "terraform-inventory had an execution error: Error reading tfstate file: 0.12 format error"
-$ export TF_STATE=./
 $ ansible-playbook \
   --user ec2-user \
   --inventory `which terraform-inventory` \

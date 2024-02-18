@@ -204,6 +204,9 @@ public class DistributedWorkersEnsemble implements Worker {
 
     @Override
     public void createConsumers(ConsumerAssignment overallConsumerAssignment) {
+        for (TopicSubscription ts : overallConsumerAssignment.topicsSubscriptions) {
+            log.info("[DistributedWorkersEnsemble] Topic subscription detected: {}", ts.toString());
+        }
         List<List<TopicSubscription>> subscriptionsPerConsumer =
                 ListPartition.partitionList(
                         overallConsumerAssignment.topicsSubscriptions, consumerWorkers.size());

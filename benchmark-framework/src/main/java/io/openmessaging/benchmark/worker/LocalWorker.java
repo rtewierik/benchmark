@@ -306,21 +306,25 @@ public class LocalWorker implements Worker, ConsumerCallback {
         try {
             Thread.sleep(100);
 
+            log.info("Attempting to shut down producers...");
             for (BenchmarkProducer producer : producers) {
                 producer.close();
             }
             producers.clear();
 
+            log.info("Attempting to shut down consumers...");
             for (BenchmarkConsumer consumer : consumers) {
                 consumer.close();
             }
             consumers.clear();
 
+            log.info("Attempting to shut down benchmark driver...");
             if (benchmarkDriver != null) {
                 benchmarkDriver.close();
                 benchmarkDriver = null;
             }
         } catch (Exception e) {
+            log.error("Error occurred while stopping all local resources.", e);
             throw new RuntimeException(e);
         }
     }

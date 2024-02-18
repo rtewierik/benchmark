@@ -9,7 +9,10 @@ target
 core/*.json
 *.json
 !benchmark-monitoring/**/*.json
-!**/**deploy/*.json
+!**/**deploy**/*.json
+!**/**deploy**/**/*.json
+**/**deploy**/templates/dashboards/*.json
+**/tf_ansible_vars.yml
 *.retry
 *.pem
 *.hcl

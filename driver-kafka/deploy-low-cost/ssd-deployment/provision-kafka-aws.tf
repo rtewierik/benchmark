@@ -98,13 +98,66 @@ resource "aws_key_pair" "auth" {
   public_key = "${file(var.public_key_path)}"
 }
 
-resource "aws_instance" "zookeeper" {
+resource "aws_iam_role" "kafka_iam_role" {
+  name = "kafka-iam-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Action = "sts:AssumeRole",
+      Effect = "Allow",
+      Principal = {
+        Service = "ec2.amazonaws.com"
+      }
+    }]
+  })
+
+  inline_policy {
+    name = "allow_ebs_attachment"
+
+    policy = jsonencode({
+      Version = "2012-10-17",
+      Statement = [{
+        Effect = "Allow",
+        Action = [
+          "ec2:AttachVolume",
+          "ec2:DetachVolume",
+        ],
+        Resource = "*"
+      }]
+    })
+  }
+}
+
+resource "aws_iam_instance_profile" "kafka_ec2_instance_profile" {
+  name = "kafka_ec2_instance_profile"
+
+  role = aws_iam_role.kafka_iam_role.name
+}
+
+resource "aws_spot_instance_request" "zookeeper" {
   ami                    = "${var.ami}"
   instance_type          = "${var.instance_types["zookeeper"]}"
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
+  spot_type              = "one-time"
+  wait_for_fulfillment   = true
   count                  = "${var.num_instances["zookeeper"]}"
+
+  iam_instance_profile = aws_iam_instance_profile.kafka_ec2_instance_profile.name
+
+  user_data = <<-EOF
+              #!/bin/bash
+              # Attach the EBS volume
+              sudo yum install -y unzip
+              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              unzip awscliv2.zip
+              sudo ./aws/install
+              aws configure set region "${var.region}"
+              aws configure set output "json"
+              aws ec2 attach-volume --volume-id ${aws_ebs_volume.ebs_zookeeper[count.index].id} --instance-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) --device /dev/sdh
+              EOF
 
   tags = {
     Name      = "zk_${count.index}"
@@ -112,13 +165,29 @@ resource "aws_instance" "zookeeper" {
   }
 }
 
-resource "aws_instance" "kafka" {
+resource "aws_spot_instance_request" "kafka" {
   ami                    = "${var.ami}"
   instance_type          = "${var.instance_types["kafka"]}"
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
+  spot_type              = "one-time"
+  wait_for_fulfillment   = true
   count                  = "${var.num_instances["kafka"]}"
+
+  iam_instance_profile = aws_iam_instance_profile.kafka_ec2_instance_profile.name
+
+  user_data = <<-EOF
+              #!/bin/bash
+              # Attach the EBS volume
+              sudo yum install -y unzip
+              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              unzip awscliv2.zip
+              sudo ./aws/install
+              aws configure set region "${var.region}"
+              aws configure set output "json"
+              aws ec2 attach-volume --volume-id ${aws_ebs_volume.ebs_kafka[count.index].id} --instance-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) --device /dev/sdh
+              EOF
 
   tags = {
     Name      = "kafka_${count.index}"
@@ -126,12 +195,14 @@ resource "aws_instance" "kafka" {
   }
 }
 
-resource "aws_instance" "client" {
+resource "aws_spot_instance_request" "client" {
   ami                    = "${var.ami}"
   instance_type          = "${var.instance_types["client"]}"
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
+  spot_type              = "one-time"
+  wait_for_fulfillment   = true
   count                  = "${var.num_instances["client"]}"
 
   tags = {
@@ -164,26 +235,10 @@ resource "aws_ebs_volume" "ebs_kafka" {
   }
 }
 
-resource "aws_volume_attachment" "ebs_attachment_zk" {
-  count       = "${var.num_instances["zookeeper"]}"
-
-  instance_id = aws_instance.zookeeper[count.index].id
-  volume_id   = aws_ebs_volume.ebs_zookeeper[count.index].id
-  device_name = "/dev/sdh"
-}
-
-resource "aws_volume_attachment" "ebs_attachment_kafka" {
-  count       = "${var.num_instances["kafka"]}"
-
-  instance_id = aws_instance.kafka[count.index].id
-  volume_id   = aws_ebs_volume.ebs_kafka[count.index].id
-  device_name = "/dev/sdh"
-}
-
 output "kafka_ssh_host" {
-  value = "${aws_instance.kafka.0.public_ip}"
+  value = "${aws_spot_instance_request.kafka.0.public_ip}"
 }
 
 output "client_ssh_host" {
-  value = "${aws_instance.client.0.public_ip}"
+  value = "${aws_spot_instance_request.client.0.public_ip}"
 }
