@@ -96,7 +96,23 @@ One can run the following command to list all deployed services to verify presen
   kubectl get service
 ```
 
+## Errors while running the benchmarks on AWS
 
+The low-cost benchmarks have been executed successfully on AWS. The current state of the repository should work across devices as long as the tools to run the benchmarks (e.g. Terraform and Ansible, and underlying dependenceis such as Python) are instlaled. In case of any benchmark failure, please review the allocated memory in the resource configuration and compare this with the memory available for an EC2 instance of the instance type configured in the Terraform project: you should find that unsufficient memory is available, causing services running on EC2 instances to crash when trying to allocate memory, which in turns yields all sorts of nasty timeout errors that do not provide enough visibility of a potential fix.
+
+### More details
+
+Benchmarks can fail for a number of reasons. The most common ones observed are related to the infrastructure.
+
+* Insufficient allocation of memory: depending on the chosen EC2 instance size, the configuration for the processes launched on these instances must be modified. The configuration can be found in the `templates` folder, specifically the `*.service` and `*.properties` files.
+* Corrupted Ansible deployment: If the Ansible deploy script is executed in part or multiple times, infrastructure can get corrupted. Ensure you are always deploying fresh infrastructure with Terraform and execute the Ansible script in full and only once to observe the most consistent results.
+
+### Best debugging approaches
+
+Failing benchmarks can be debugged by running the following commands on the EC2 hosts to analyze the state of the services running on the hosts.
+
+* Printing the logs for a service: `journalctl -u service-name.service (-b)`
+* Learning more about the status of a service (e.g. active, failed, initialising): `systemctl -l status benchmark-worker`
 
 ## License
 
