@@ -86,8 +86,11 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
     @Override
     public void close() throws Exception {
         closing = true;
+        log.info("[RedisBenchmarkConsumer] Attempting to shut down consumer task...");
+        consumerTask.cancel(true);
+        log.info("[RedisBenchmarkConsumer] Attempting to shut down executor...");
         executor.shutdown();
-        consumerTask.get();
+        log.info("[RedisBenchmarkConsumer] Attempting to shut down pool...");
         pool.close();
     }
 
