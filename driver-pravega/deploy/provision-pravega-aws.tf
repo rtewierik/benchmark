@@ -1,6 +1,7 @@
 provider "aws" {
   region  = "${var.region}"
   version = "~> 2.7"
+  allowed_account_ids = ["533267013102", "138945776678"]
 }
 
 provider "random" {

@@ -98,6 +98,12 @@ resource "aws_key_pair" "auth" {
   public_key = file(var.public_key_path)
 }
 
+resource "aws_iam_instance_profile" "redis_ec2_instance_profile" {
+  name = "redis_ec2_instance_profile"
+
+  role = "redis-iam-role"
+}
+
 resource "aws_elasticache_cluster" "redis" {
   cluster_id           = "redis-benchmark-cluster"
   engine               = "redis"
@@ -123,6 +129,8 @@ resource "aws_spot_instance_request" "client" {
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = var.num_instances["client"]
+
+  iam_instance_profile = aws_iam_instance_profile.redis_ec2_instance_profile.name
 
   tags = {
     Name = "redis_client_${count.index}"
