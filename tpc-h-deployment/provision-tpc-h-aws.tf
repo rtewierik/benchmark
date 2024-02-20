@@ -2,8 +2,8 @@ variable "tpc_h_s3_bucket" {
   type = string
 }
 
-variable "source_account_iam_role_arns" {
-  type  = list(string)
+variable "iam_roles_account_number" {
+  type = string
 }
 
 resource "aws_s3_bucket_policy" "tpc_h_bucket_policy" {
@@ -11,18 +11,35 @@ resource "aws_s3_bucket_policy" "tpc_h_bucket_policy" {
 
   policy = jsonencode({
       Version = "2012-10-17",
-      Statement = [
-        for role_arn in var.source_account_iam_role_arns : {
-          Action = [
-            "s3:GetObject",
-            "s3:ListBucket"
-          ],
-          Effect = "Allow",
-          Principal = {
-            AWS = role_arn
+      Statement = flatten([
+        for role_arn in [
+          "arn:aws:iam::${var.iam_roles_account_number}:role/kafka-iam-role",
+          "arn:aws:iam::${var.iam_roles_account_number}:role/pravega-iam-role",
+          "arn:aws:iam::${var.iam_roles_account_number}:role/pulsar-iam-role",
+          "arn:aws:iam::${var.iam_roles_account_number}:role/rabbitmq-iam-role",
+          "arn:aws:iam::${var.iam_roles_account_number}:role/redis-iam-role"
+        ] : [
+          {
+            Action = [
+              "s3:ListBucket"
+            ],
+            Effect = "Allow",
+            Principal = {
+              AWS = role_arn
+            }
+            Resource = "arn:aws:s3:::${var.tpc_h_s3_bucket}"
+          },
+          {
+            Action = [
+              "s3:GetObject",
+            ],
+            Effect = "Allow",
+            Principal = {
+              AWS = role_arn
+            }
+            Resource = "arn:aws:s3:::${var.tpc_h_s3_bucket}/*"
           }
-          Resource = "arn:aws:s3:::${var.tpc_h_s3_bucket}"
-        }
-      ]
+        ]
+      ])
     })
 }
