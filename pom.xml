@@ -72,7 +72,7 @@
         <mockito.junit.jupiter.version>4.8.0</mockito.junit.jupiter.version>
         <netty.version>4.1.65.Final</netty.version>
         <slf4j.version>1.7.36</slf4j.version>
-        <awssdk.version>2.24.6</awssdk.version>
+        <awssdk.version>1.12.661</awssdk.version>
 
         <checkstyle.plugin.version>3.2.0</checkstyle.plugin.version>
         <jacoco.plugin.version>0.8.8</jacoco.plugin.version>
@@ -86,13 +86,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>software.amazon.awssdk</groupId>
-                <artifactId>bom</artifactId>
-                <version>${awssdk.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
             <dependency>
                 <groupId>com.beust</groupId>
                 <artifactId>jcommander</artifactId>
@@ -142,10 +135,6 @@
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-slf4j-impl</artifactId>
                 <version>${log4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>software.amazon.awssdk</groupId>
-                <artifactId>s3</artifactId>
             </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
