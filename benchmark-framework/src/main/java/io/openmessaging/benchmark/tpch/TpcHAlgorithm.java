@@ -2,7 +2,7 @@ package io.openmessaging.benchmark.tpch;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,20 +29,22 @@ public class TpcHAlgorithm {
             }
             String groupId = String.format("%s%s", row.returnFlag, row.lineStatus);
             if (!groups.containsKey(groupId)) {
-                TpcHIntermediateResultGroup group  = new TpcHIntermediateResultGroup();
-                group.groupIdentifiers.put("returnFlag", row.returnFlag);
-                group.groupIdentifiers.put("lineStatus", row.lineStatus);
-                group.aggregates.put("quantitySum", 0.0d);
-                group.aggregates.put("basePriceSum", 0.0d);
-                group.aggregates.put("discountedPriceSum", 0.0d);
-                group.aggregates.put("chargeSum", 0.0d);
-                group.aggregates.put("quantityAverage", 0.0d);
-                group.aggregates.put("priceAverage", 0.0d);
-                group.aggregates.put("discountAverage", 0.0d);
-                group.aggregates.put("orderCount", 0);
-                groups.put(groupId, group);
+                TpcHIntermediateResultGroup newGroup  = new TpcHIntermediateResultGroup();
+                newGroup.groupIdentifiers.put("returnFlag", row.returnFlag);
+                newGroup.groupIdentifiers.put("lineStatus", row.lineStatus);
+                groups.put(groupId, newGroup);
             }
+            Double discountedPrice = row.extendedPrice * (1 - row.discount);
+            Double charge = discountedPrice * (1 + row.tax);
+            TpcHIntermediateResultGroup group = groups.get(groupId);
+            group.aggregates.put("quantity", (Double)group.aggregates.get("quantity") + row.quantity);
+            group.aggregates.put("basePrice", (Double)group.aggregates.get("basePrice") + row.extendedPrice);
+            group.aggregates.put("discount", (Double)group.aggregates.get("discount") + row.discount);
+            group.aggregates.put("discountedPrice", (Integer)group.aggregates.get("discountedPrice") + discountedPrice);
+            group.aggregates.put("charge", (Integer)group.aggregates.get("charge") + charge);
+            group.aggregates.put("orderCount", (Integer)group.aggregates.get("orderCount") + 1);
         }
+        return new TpcHIntermediateResult(new ArrayList<>(groups.values()));
     }
 
     /*
