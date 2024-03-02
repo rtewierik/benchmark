@@ -38,6 +38,7 @@ variable "num_instances" {}
 
 provider "aws" {
   region = var.region
+  allowed_account_ids = ["533267013102", "138945776678"]
 }
 
 # Create a VPC to launch our instances into

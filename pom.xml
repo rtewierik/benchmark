@@ -72,6 +72,7 @@
         <mockito.junit.jupiter.version>4.8.0</mockito.junit.jupiter.version>
         <netty.version>4.1.65.Final</netty.version>
         <slf4j.version>1.7.36</slf4j.version>
+        <awssdk.version>1.12.661</awssdk.version>
 
         <checkstyle.plugin.version>3.2.0</checkstyle.plugin.version>
         <jacoco.plugin.version>0.8.8</jacoco.plugin.version>
@@ -262,7 +263,7 @@
                         <exclude>.github/**</exclude>
                         <exclude>benchmark-monitoring/**</exclude>
                         <exclude>**/deploy/**</exclude>
-                        <exclude>**/low-cost-deploy/**</exclude>
+                        <exclude>**/deploy-low-cost/**</exclude>
                         <exclude>**/tf_ansible_vars.yml</exclude>
                     </excludes>
                     <mapping>

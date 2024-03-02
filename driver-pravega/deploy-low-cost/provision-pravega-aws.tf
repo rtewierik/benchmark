@@ -114,41 +114,10 @@ resource "aws_key_pair" "auth" {
   public_key = "${file(var.public_key_path)}"
 }
 
-resource "aws_iam_role" "pravega_iam_role" {
-  name = "pravega-iam-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [{
-      Action = "sts:AssumeRole",
-      Effect = "Allow",
-      Principal = {
-        Service = "ec2.amazonaws.com"
-      }
-    }]
-  })
-
-  inline_policy {
-    name = "allow_ebs_attachment"
-
-    policy = jsonencode({
-      Version = "2012-10-17",
-      Statement = [{
-        Effect = "Allow",
-        Action = [
-          "ec2:AttachVolume",
-          "ec2:DetachVolume",
-        ],
-        Resource = "*"
-      }]
-    })
-  }
-}
-
 resource "aws_iam_instance_profile" "pravega_ec2_instance_profile" {
   name = "pravega_ec2_instance_profile"
 
-  role = aws_iam_role.pravega_iam_role.name
+  role = "pravega-iam-role"
 }
 
 resource "aws_spot_instance_request" "zookeeper" {
