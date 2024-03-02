@@ -23,7 +23,7 @@ sudo bin/benchmark \
 ## AWS Academy instructions
 
 * Create Redis serverless cache
-* Create three EC2 `t3.large` instances with RHEL image and arm64 architecture
+* Create three EC2 `t3.large` instances with RHEL image and arm64 architecture (launch template saved in Academy account)
 * Add inventory.in as follows
 
 ```
@@ -34,3 +34,12 @@ sudo bin/benchmark \
 ```
 
 * Execute playbook e.g. `ansible-playbook -i inventory.ini your_playbook.yml`
+
+```
+ansible-playbook -K \
+  --user ec2-user \
+  -i inventory.ini \
+  deploy.yaml
+```
+
+* Need to use redis_aws_academy PEM key with 400 file permissions
