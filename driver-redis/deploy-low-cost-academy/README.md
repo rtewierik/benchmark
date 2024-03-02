@@ -22,9 +22,9 @@ sudo bin/benchmark \
 
 ## AWS Academy instructions
 
-* Create Redis serverless cache
+* Create Redis cache in CLUSTER mode manually using AWS console
 * Create three EC2 `t3.large` instances with RHEL image and arm64 architecture (launch template saved in Academy account)
-* Add inventory.in as follows
+* Add `inventory.ini` as follows
 
 ```
   [ec2_instances]
