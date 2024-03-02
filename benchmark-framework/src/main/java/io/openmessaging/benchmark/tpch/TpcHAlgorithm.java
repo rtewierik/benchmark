@@ -5,10 +5,25 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TpcHAlgorithm {
 
-    private static final LocalDate maxShipDate = LocalDate.of(1998, 1, 12).minusDays(90);
+    private static final LocalDate pricingSummaryReportShipDate = LocalDate.of(1998, 1, 12).minusDays(90);
+    private static final Map<String, Object> pricingSummaryReportQueryAggregates = new HashMap<String, Object>() {{
+        put("quantity", 0.0d);
+        put("basePrice", 0.0d);
+        put("discount", 0.0d);
+        put("discountedPrice", 0.0d);
+        put("charge", 0.0d);
+        put("orderCount", 0);
+    }};
+
+    private static final LocalDate forecastingRevenueChangeMinShipDate = LocalDate.of(1994, 1, 1);
+    private static final LocalDate forecastingRevenueChangeMaxShipDate = forecastingRevenueChangeMinShipDate.plusYears(1);
+    private static final Map<String, Object> forecastingRevenueChangeQueryAggregates = new HashMap<String, Object>() {{
+        put("revenue", 0.0d);
+    }};
 
     public static TpcHIntermediateResult applyQueryToChunk(List<TpcHRow> chunk, TpcHQuery query) {
         switch (query) {
@@ -24,12 +39,13 @@ public class TpcHAlgorithm {
     private static TpcHIntermediateResult applyPricingSummaryReportQueryToChunk(List<TpcHRow> chunk) {
         HashMap<String, TpcHIntermediateResultGroup> groups = new HashMap<>();
         for (TpcHRow row : chunk) {
-            if (maxShipDate.isBefore(row.shipDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())) {
+            LocalDate shipDate = row.shipDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if (pricingSummaryReportShipDate.isBefore(shipDate)) {
                 continue;
             }
             String groupId = String.format("%s%s", row.returnFlag, row.lineStatus);
             if (!groups.containsKey(groupId)) {
-                TpcHIntermediateResultGroup newGroup  = new TpcHIntermediateResultGroup();
+                TpcHIntermediateResultGroup newGroup = new TpcHIntermediateResultGroup(pricingSummaryReportQueryAggregates);
                 newGroup.groupIdentifiers.put("returnFlag", row.returnFlag);
                 newGroup.groupIdentifiers.put("lineStatus", row.lineStatus);
                 groups.put(groupId, newGroup);
@@ -47,29 +63,28 @@ public class TpcHAlgorithm {
         return new TpcHIntermediateResult(new ArrayList<>(groups.values()));
     }
 
-    /*
-    select
-	l_returnflag,
-	l_linestatus,
-	sum(l_quantity) as sum_qty,
-	sum(l_extendedprice) as sum_base_price,
-	sum(l_extendedprice * (1 - l_discount)) as sum_disc_price,
-	sum(l_extendedprice * (1 - l_discount) * (1 + l_tax)) as sum_charge,
-	avg(l_quantity) as avg_qty,
-	avg(l_extendedprice) as avg_price,
-	avg(l_discount) as avg_disc,
-	count(*) as count_order
-group by
-	l_returnflag,
-	l_linestatus
-order by
-	l_returnflag,
-	l_linestatus;
-:n -1
-
-
-     */
     private static TpcHIntermediateResult applyForecastingRevenueChangeReportQueryToChunk(List<TpcHRow> chunk) {
-
+        HashMap<String, TpcHIntermediateResultGroup> groups = new HashMap<>();
+        for (TpcHRow row : chunk) {
+            LocalDate shipDate = row.shipDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if (shipDate.isBefore(forecastingRevenueChangeMinShipDate)) {
+                continue;
+            }
+            if (shipDate.isAfter(forecastingRevenueChangeMaxShipDate)) {
+                continue;
+            }
+            double discount = row.discount;
+            if (discount < 0.05d || discount > 0.07d || row.quantity < 24d) {
+                continue;
+            }
+            if (!groups.containsKey("default")) {
+                TpcHIntermediateResultGroup newGroup = new TpcHIntermediateResultGroup(forecastingRevenueChangeQueryAggregates);
+                groups.put("default", newGroup);
+            }
+            TpcHIntermediateResultGroup group = groups.get("default");
+            Double revenue = row.extendedPrice * row.discount;
+            group.aggregates.put("revenue", (Double)group.aggregates.get("revenue") + revenue);
+        }
+        return new TpcHIntermediateResult(new ArrayList<>(groups.values()));
     }
 }
