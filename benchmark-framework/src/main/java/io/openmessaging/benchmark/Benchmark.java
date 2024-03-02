@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import io.openmessaging.benchmark.tpch.TpcHCommand;
 import io.openmessaging.benchmark.worker.DistributedWorkersEnsemble;
 import io.openmessaging.benchmark.worker.HttpWorkerClient;
 import io.openmessaging.benchmark.worker.LocalWorker;
@@ -68,6 +69,11 @@ public class Benchmark {
         public File workersFile;
 
         @Parameter(
+                names = {"-tpch", "--tpc-h-file"},
+                description = "Path to a YAML file containing the TPC H command")
+        public File tpcHFile;
+
+        @Parameter(
                 names = {"-x", "--extra"},
                 description = "Allocate extra consumer workers when your backlog builds.")
         boolean extraConsumers;
@@ -83,6 +89,12 @@ public class Benchmark {
     }
 
     public static void main(String[] args) throws Exception {
+        if (false) {
+            benchmark(args);
+        }
+    }
+
+    public static void benchmark(String[] args) throws Exception {
         final Arguments arguments = new Arguments();
         JCommander jc = new JCommander(arguments);
         jc.setProgramName("messaging-benchmark");
@@ -137,6 +149,14 @@ public class Benchmark {
 
         log.info("Workloads: {}", writer.writeValueAsString(workloads));
 
+        TpcHCommand tpcHCommand;
+        if (arguments.tpcHFile != null) {
+            tpcHCommand = mapper.readValue(arguments.tpcHFile, TpcHCommand.class);
+        } else {
+            tpcHCommand = null;
+        }
+        log.info("TPC-H command: {}", writer.writeValueAsString(tpcHCommand));
+
         Worker worker;
 
         if (arguments.workers != null && !arguments.workers.isEmpty()) {
@@ -168,7 +188,7 @@ public class Benchmark {
                                     worker.initializeDriver(new File(driverConfig));
 
                                     WorkloadGenerator generator =
-                                            new WorkloadGenerator(driverConfiguration.name, workload, worker);
+                                            new WorkloadGenerator(driverConfiguration.name, workload, tpcHCommand, worker);
 
                                     TestResult result = generator.run();
 
@@ -180,10 +200,10 @@ public class Benchmark {
                                             useOutput
                                                     ? arguments.output
                                                     : String.format(
-                                                            "%s-%s-%s.json",
-                                                            workloadName,
-                                                            driverConfiguration.name,
-                                                            dateFormat.format(new Date()));
+                                                    "%s-%s-%s.json",
+                                                    workloadName,
+                                                    driverConfiguration.name,
+                                                    dateFormat.format(new Date()));
 
                                     log.info("Writing test result into {}", fileName);
                                     writer.writeValue(new File(fileName), result);

@@ -16,6 +16,7 @@ package io.openmessaging.benchmark;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 import io.netty.util.concurrent.DefaultThreadFactory;
+import io.openmessaging.benchmark.tpch.TpcHCommand;
 import io.openmessaging.benchmark.utils.PaddingDecimalFormat;
 import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.Timer;
@@ -46,6 +47,7 @@ public class WorkloadGenerator implements AutoCloseable {
 
     private final String driverName;
     private final Workload workload;
+    private final TpcHCommand command;
     private final Worker worker;
 
     private final ExecutorService executor =
@@ -56,9 +58,10 @@ public class WorkloadGenerator implements AutoCloseable {
 
     private volatile double targetPublishRate;
 
-    public WorkloadGenerator(String driverName, Workload workload, Worker worker) {
+    public WorkloadGenerator(String driverName, Workload workload, TpcHCommand command, Worker worker) {
         this.driverName = driverName;
         this.workload = workload;
+        this.command = command;
         this.worker = worker;
 
         if (workload.consumerBacklogSizeGB > 0 && workload.producerRate == 0) {
@@ -68,12 +71,50 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     public TestResult run() throws Exception {
+        if (this.command != null) {
+            // TODO: Apply TPC-H algorithm in single thread here for testing purposes.
+        }
+        return runWorkload();
+    }
+
+    private TestResult runTpcH() throws Exception {
+        Timer timer = new Timer();
+        /*
+            * 1 topic for Map commands;
+            * topic for Reduce commands
+            * x topics to send intermediate results to;
+            * one topic to send aggregated intermediate results to.
+        */
+        int numberOfTopics = 2 + this.command.numberOfIntermediateResultsPartitions + 1;
+        List<String> topics = worker.createTopics(new TopicsInfo(numberOfTopics, workload.partitionsPerTopic));
+
+        log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
+        createConsumers(topics);
+        createProducers(topics);
+
+        ensureTopicsAreReady();
+
+        // TODO: Assign producers with work by writing commands to topic. To be implemented in worker.
+
+        // TODO: Monitor availability of aggregated intermediate results in the final topic of the created list of topics.
+
+        // TODO: Wait until TPC-H query results are present in S3.
+
+        TestResult result = printAndCollectStats(workload.testDurationMinutes, TimeUnit.MINUTES);
+        runCompleted = true;
+
+        log.info("----- Completed run. Stopping worker and yielding results ------");
+
+        worker.stopAll();
+        return result;
+    }
+
+    private TestResult runWorkload() throws Exception {
         Timer timer = new Timer();
         List<String> topics =
                 worker.createTopics(new TopicsInfo(workload.topics, workload.partitionsPerTopic));
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
 
-        // TO DO: Consumers should be aware of TPC-H context to be able to apply generic TPC-H logic in messageReceived.
         createConsumers(topics);
         createProducers(topics);
 
@@ -96,7 +137,6 @@ public class WorkloadGenerator implements AutoCloseable {
                     });
         }
 
-        // TO DO: Execute below code only if not in TPC-H context.
         final PayloadReader payloadReader = new FilePayloadReader(workload.messageSize);
 
         ProducerWorkAssignment producerWorkAssignment = new ProducerWorkAssignment();
@@ -138,14 +178,10 @@ public class WorkloadGenerator implements AutoCloseable {
                         }
                     });
         }
-        // TO DO: Execute above code only if not in TPC-H context.
-
-        // TO DO: If in TPC-H context, parse TPC-H parameters from `workload` and launch Map- and Reduce coordinators.
 
         worker.resetStats();
         log.info("----- Starting benchmark traffic ({}m)------", workload.testDurationMinutes);
 
-        // TO DO: Wait until TPC-H query results are present in S3.
         TestResult result = printAndCollectStats(workload.testDurationMinutes, TimeUnit.MINUTES);
         runCompleted = true;
 
@@ -258,6 +294,10 @@ public class WorkloadGenerator implements AutoCloseable {
                 "Created {} consumers in {} ms",
                 consumerAssignment.topicsSubscriptions.size(),
                 timer.elapsedMillis());
+    }
+
+    private void createTpcHConsumers(List<String> topics) throws IOException {
+        // Topics list is always going to be of size 2. Replicate topic subscription once for each consumer.
     }
 
     private void createProducers(List<String> topics) throws IOException {

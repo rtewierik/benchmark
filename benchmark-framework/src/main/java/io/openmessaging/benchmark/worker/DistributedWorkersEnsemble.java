@@ -204,6 +204,8 @@ public class DistributedWorkersEnsemble implements Worker {
 
     @Override
     public void createConsumers(ConsumerAssignment overallConsumerAssignment) {
+        // TODO: For TPC-H queries, there will be two topics (one for Map, one for reduce. Add TPC-H flag that ensures each consumer is subscribed to both topics.
+        // Ensure intermediate result file written to S3 has the same name for each consumer in case of multiple consumers processing the same event. File will be overwritten.
         for (TopicSubscription ts : overallConsumerAssignment.topicsSubscriptions) {
             log.info("[DistributedWorkersEnsemble] Topic subscription detected: {}", ts.toString());
         }
@@ -227,6 +229,8 @@ public class DistributedWorkersEnsemble implements Worker {
                             }
                         });
     }
+
+    private void
 
     @Override
     public PeriodStats getPeriodStats() {
