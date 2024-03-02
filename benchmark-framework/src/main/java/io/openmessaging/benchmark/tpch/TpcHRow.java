@@ -20,10 +20,10 @@ public class TpcHRow {
     public int partKey;
     public int suppKey;
     public int lineNumber;
-    public float quantity;
-    public float extendedPrice;
-    public float discount;
-    public float tax;
+    public double quantity;
+    public double extendedPrice;
+    public double discount;
+    public double tax;
     public char returnFlag;
     public char lineStatus;
     public Date shipDate;
