@@ -56,8 +56,8 @@ public class TpcHAlgorithm {
             group.aggregates.put("quantity", (Double)group.aggregates.get("quantity") + row.quantity);
             group.aggregates.put("basePrice", (Double)group.aggregates.get("basePrice") + row.extendedPrice);
             group.aggregates.put("discount", (Double)group.aggregates.get("discount") + row.discount);
-            group.aggregates.put("discountedPrice", (Integer)group.aggregates.get("discountedPrice") + discountedPrice);
-            group.aggregates.put("charge", (Integer)group.aggregates.get("charge") + charge);
+            group.aggregates.put("discountedPrice", (Double)group.aggregates.get("discountedPrice") + discountedPrice);
+            group.aggregates.put("charge", (Double)group.aggregates.get("charge") + charge);
             group.aggregates.put("orderCount", (Integer)group.aggregates.get("orderCount") + 1);
         }
         return new TpcHIntermediateResult(new ArrayList<>(groups.values()));

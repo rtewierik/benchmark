@@ -111,18 +111,15 @@ public class Benchmark {
             "../tpc-h-chunks/chunk_9.csv",
             "../tpc-h-chunks/chunk_10.csv"
         );
-        List<List<TpcHRow>> chunks = new ArrayList<>();
+        List<TpcHIntermediateResult> results = new ArrayList<>();
         for (String chunkFile : chunkFiles) {
             try (InputStream stream = Files.newInputStream(Paths.get(chunkFile))) {
-                chunks.add(TpcHDataParser.readTpcHRowsFromStream(stream));
+                List<TpcHRow> chunk = TpcHDataParser.readTpcHRowsFromStream(stream);
+                TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunk, TpcHQuery.PricingSummaryReport);
+                results.add(result);
             } catch (IOException exception) {
                 exception.printStackTrace();
             }
-        }
-        List<TpcHIntermediateResult> results = new ArrayList<>();
-        for (List<TpcHRow> chunk : chunks) {
-            TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunk, TpcHQuery.PricingSummaryReport);
-            results.add(result);
         }
         for (TpcHIntermediateResult result : results) {
             System.out.println(result);
