@@ -52,6 +52,7 @@ public class TpcHQueryResultGenerator {
             TpcHQueryResultRow row = new TpcHQueryResultRow();
             row.columns.putAll(group.identifiers);
             row.columns.putAll(group.aggregates);
+            result.rows.add(row);
         }
         return result;
     }

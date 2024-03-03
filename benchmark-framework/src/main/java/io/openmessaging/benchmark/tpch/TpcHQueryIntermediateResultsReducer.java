@@ -33,7 +33,7 @@ public class TpcHQueryIntermediateResultsReducer {
             for (TpcHIntermediateResultGroup group : intermediateResult.groups) {
                 TpcHIntermediateResultGroup existingGroup = result.findGroupByIdentifiers(group.identifiers);
                 if (existingGroup == null) {
-                    result.groups.add(group);
+                    result.groups.add(group.getClone());
                 } else {
                     Map<String, Number> existingAggregates = existingGroup.aggregates;
                     for (Map.Entry<String, Number> aggregate : group.aggregates.entrySet()) {

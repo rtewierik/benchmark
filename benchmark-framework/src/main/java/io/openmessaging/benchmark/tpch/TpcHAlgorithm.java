@@ -11,20 +11,9 @@ import java.util.Map;
 public class TpcHAlgorithm {
 
     private static final LocalDate pricingSummaryReportShipDate = LocalDate.of(1998, 1, 12).minusDays(90);
-    private static final Map<String, Number> pricingSummaryReportQueryAggregates = new HashMap<String, Number>() {{
-        put("quantity", new BigDecimal("0.00"));
-        put("basePrice", new BigDecimal("0.00"));
-        put("discount", new BigDecimal("0.00"));
-        put("discountedPrice", new BigDecimal("0.00"));
-        put("charge", new BigDecimal("0.00"));
-        put("orderCount", 0L);
-    }};
 
     private static final LocalDate forecastingRevenueChangeMinShipDate = LocalDate.of(1994, 1, 1);
     private static final LocalDate forecastingRevenueChangeMaxShipDate = forecastingRevenueChangeMinShipDate.plusYears(1);
-    private static final Map<String, Number> forecastingRevenueChangeQueryAggregates = new HashMap<String, Number>() {{
-        put("revenue", new BigDecimal("0.00"));
-    }};
 
     private static final BigDecimal oneAsBigDecimal = new BigDecimal("1");
     private static final BigDecimal discountLowerBound = new BigDecimal("0.05");
@@ -52,7 +41,7 @@ public class TpcHAlgorithm {
             }
             String groupId = String.format("%s%s", row.returnFlag, row.lineStatus);
             if (!groups.containsKey(groupId)) {
-                TpcHIntermediateResultGroup newGroup = new TpcHIntermediateResultGroup(pricingSummaryReportQueryAggregates);
+                TpcHIntermediateResultGroup newGroup = new TpcHIntermediateResultGroup(getPricingSummaryReportQueryAggregates());
                 newGroup.identifiers.put("returnFlag", row.returnFlag);
                 newGroup.identifiers.put("lineStatus", row.lineStatus);
                 groups.put(groupId, newGroup);
@@ -77,15 +66,15 @@ public class TpcHAlgorithm {
             if (shipDate.isBefore(forecastingRevenueChangeMinShipDate)) {
                 continue;
             }
-            if (shipDate.isAfter(forecastingRevenueChangeMaxShipDate)) {
+            if (shipDate.isEqual(forecastingRevenueChangeMaxShipDate) || shipDate.isAfter(forecastingRevenueChangeMaxShipDate)) {
                 continue;
             }
             BigDecimal discount = row.discount;
-            if (discount.compareTo(discountLowerBound) < 0 || discount.compareTo(discountUpperBound) > 0 || row.quantity.compareTo(quantityLowerBound) < 0) {
+            if (discount.compareTo(discountLowerBound) < 0 || discount.compareTo(discountUpperBound) > 0 || row.quantity.compareTo(quantityLowerBound) >= 0) {
                 continue;
             }
             if (!groups.containsKey("default")) {
-                TpcHIntermediateResultGroup newGroup = new TpcHIntermediateResultGroup(forecastingRevenueChangeQueryAggregates);
+                TpcHIntermediateResultGroup newGroup = new TpcHIntermediateResultGroup(getForecastingRevenueChangeQueryAggregates());
                 groups.put("default", newGroup);
             }
             TpcHIntermediateResultGroup group = groups.get("default");
@@ -93,5 +82,22 @@ public class TpcHAlgorithm {
             group.aggregates.put("revenue", ((BigDecimal)group.aggregates.get("revenue")).add(revenue));
         }
         return new TpcHIntermediateResult(new ArrayList<>(groups.values()));
+    }
+
+    private static Map<String, Number> getPricingSummaryReportQueryAggregates() {
+        return new HashMap<String, Number>() {{
+            put("quantity", new BigDecimal("0.00"));
+            put("basePrice", new BigDecimal("0.00"));
+            put("discount", new BigDecimal("0.00"));
+            put("discountedPrice", new BigDecimal("0.00"));
+            put("charge", new BigDecimal("0.00"));
+            put("orderCount", 0L);
+        }};
+    }
+
+    private static Map<String, Number> getForecastingRevenueChangeQueryAggregates() {
+        return new HashMap<String, Number>() {{
+            put("revenue", new BigDecimal("0.00"));
+        }};
     }
 }

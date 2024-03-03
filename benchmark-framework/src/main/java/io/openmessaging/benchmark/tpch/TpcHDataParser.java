@@ -14,7 +14,6 @@ public class TpcHDataParser {
 
     public static List<TpcHRow> readTpcHRowsFromStream(InputStream stream) throws IOException  {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        reader.readLine();
         List<TpcHRow> csvRows = new ArrayList<>();
         String dataLine;
         while ((dataLine = reader.readLine()) != null) {

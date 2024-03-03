@@ -99,22 +99,23 @@ public class Benchmark {
     }
 
     private static void testTpcHAlgorithmLocally() {
-        TpcHQuery query = TpcHQuery.PricingSummaryReport;
+        TpcHQuery query = TpcHQuery.ForecastingRevenueChange;
         List<String> chunkFiles = Arrays.asList(
-            "../tpc-h-chunks/chunk_1.csv",
-            "../tpc-h-chunks/chunk_2.csv",
-            "../tpc-h-chunks/chunk_3.csv",
-            "../tpc-h-chunks/chunk_4.csv",
-            "../tpc-h-chunks/chunk_5.csv",
-            "../tpc-h-chunks/chunk_6.csv",
-            "../tpc-h-chunks/chunk_7.csv",
-            "../tpc-h-chunks/chunk_8.csv",
-            "../tpc-h-chunks/chunk_9.csv",
-            "../tpc-h-chunks/chunk_10.csv"
+                // "../tpc-h-chunks/chunk_1.csv",
+                // "../tpc-h-chunks/chunk_2.csv",
+                // "../tpc-h-chunks/chunk_3.csv",
+                // "../tpc-h-chunks/chunk_4.csv",
+                // "../tpc-h-chunks/chunk_5.csv",
+                // "../tpc-h-chunks/chunk_6.csv",
+                // "../tpc-h-chunks/chunk_7.csv",
+                // "../tpc-h-chunks/chunk_8.csv",
+                // "../tpc-h-chunks/chunk_9.csv",
+                // "../tpc-h-chunks/chunk_10.csv"
+                "../tpc-h-chunks/lineitem.tbl"
         );
         List<TpcHIntermediateResult> chunk = new ArrayList<>();
         for (String chunkFile : chunkFiles) {
-            System.out.println(String.format("[INFO] Applying map to chunk \"%s\"...", chunkFile));
+            System.out.printf("[INFO] Applying map to chunk \"%s\"...%n", chunkFile);
             try (InputStream stream = Files.newInputStream(Paths.get(chunkFile))) {
                 List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
                 TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, query);
