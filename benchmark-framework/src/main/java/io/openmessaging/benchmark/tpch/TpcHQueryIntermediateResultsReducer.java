@@ -18,16 +18,15 @@ public class TpcHQueryIntermediateResultsReducer {
     }
 
     private static TpcHIntermediateResult applyPricingSummaryReportReduceToChunk(List<TpcHIntermediateResult> chunk) {
-        return applyReduceToChunk(chunk);
+        return applyReduceToChunkGeneric(chunk);
     }
 
     private static TpcHIntermediateResult applyForecastingRevenueChangeReportReduceToChunk(List<TpcHIntermediateResult> chunk) {
-        return applyReduceToChunk(chunk);
+        return applyReduceToChunkGeneric(chunk);
     }
 
     // TODO: Break up function into two separate ones working with domain-specific models after refactor to optimize.
-    private static TpcHIntermediateResult applyReduceToChunk(List<TpcHIntermediateResult> chunk) {
-
+    private static TpcHIntermediateResult applyReduceToChunkGeneric(List<TpcHIntermediateResult> chunk) {
         TpcHIntermediateResult result = new TpcHIntermediateResult(new ArrayList<>());
         for (TpcHIntermediateResult intermediateResult : chunk) {
             for (TpcHIntermediateResultGroup group : intermediateResult.groups) {

@@ -37,6 +37,7 @@ public class TpcHAlgorithm {
     }
 
     private static TpcHIntermediateResult applyPricingSummaryReportQueryToChunk(List<TpcHRow> chunk) {
+        // TODO: Perhaps add groupMap to intermediate result.
         HashMap<String, TpcHIntermediateResultGroup> groups = new HashMap<>();
         for (TpcHRow row : chunk) {
             LocalDate shipDate = row.shipDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();

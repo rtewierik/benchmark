@@ -95,11 +95,11 @@ public class Benchmark {
         if (false) {
             benchmark(args);
         }
-        Number a = 1;
-        Number b = 2;
+        testTpcHAlgorithmLocally();
     }
 
     private static void testTpcHAlgorithmLocally() {
+        TpcHQuery query = TpcHQuery.PricingSummaryReport;
         List<String> chunkFiles = Arrays.asList(
             "../tpc-h-chunks/chunk_1.csv",
             "../tpc-h-chunks/chunk_2.csv",
@@ -112,19 +112,22 @@ public class Benchmark {
             "../tpc-h-chunks/chunk_9.csv",
             "../tpc-h-chunks/chunk_10.csv"
         );
-        List<TpcHIntermediateResult> results = new ArrayList<>();
+        List<TpcHIntermediateResult> chunk = new ArrayList<>();
         for (String chunkFile : chunkFiles) {
+            System.out.println(String.format("[INFO] Applying map to chunk \"%s\"...", chunkFile));
             try (InputStream stream = Files.newInputStream(Paths.get(chunkFile))) {
-                List<TpcHRow> chunk = TpcHDataParser.readTpcHRowsFromStream(stream);
-                TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunk, TpcHQuery.PricingSummaryReport);
-                results.add(result);
+                List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
+                TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, query);
+                chunk.add(result);
             } catch (IOException exception) {
                 exception.printStackTrace();
             }
         }
-        for (TpcHIntermediateResult result : results) {
-            System.out.println(result);
-        }
+        System.out.println("[INFO] Applying reducer to chunk...");
+        TpcHIntermediateResult intermediateResult = TpcHQueryIntermediateResultsReducer.applyReduceToChunk(chunk, query);
+        System.out.println("[INFO] Generating result from reduced intermediate result...");
+        TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(intermediateResult, query);
+        System.out.println(result);
     }
 
     private static void benchmark(String[] args) throws Exception {
