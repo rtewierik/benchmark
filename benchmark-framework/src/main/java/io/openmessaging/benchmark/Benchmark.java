@@ -95,7 +95,8 @@ public class Benchmark {
         if (false) {
             benchmark(args);
         }
-        testTpcHAlgorithmLocally();
+        Number a = 1;
+        Number b = 2;
     }
 
     private static void testTpcHAlgorithmLocally() {
