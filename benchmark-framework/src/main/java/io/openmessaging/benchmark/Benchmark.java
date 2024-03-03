@@ -111,7 +111,17 @@ public class Benchmark {
                 // "../tpc-h-chunks/chunk_8.csv",
                 // "../tpc-h-chunks/chunk_9.csv",
                 // "../tpc-h-chunks/chunk_10.csv"
-                "../tpc-h-chunks/lineitem.tbl"
+                 "../tpc-h-chunks/ref/chunk_1.csv",
+                 "../tpc-h-chunks/ref/chunk_2.csv",
+                 "../tpc-h-chunks/ref/chunk_3.csv",
+                 "../tpc-h-chunks/ref/chunk_4.csv",
+                 "../tpc-h-chunks/ref/chunk_5.csv",
+                 "../tpc-h-chunks/ref/chunk_6.csv",
+                 "../tpc-h-chunks/ref/chunk_7.csv",
+                 "../tpc-h-chunks/ref/chunk_8.csv",
+                 "../tpc-h-chunks/ref/chunk_9.csv",
+                 "../tpc-h-chunks/ref/chunk_10.csv"
+                // "../tpc-h-chunks/lineitem.tbl"
         );
         List<TpcHIntermediateResult> chunk = new ArrayList<>();
         for (String chunkFile : chunkFiles) {
