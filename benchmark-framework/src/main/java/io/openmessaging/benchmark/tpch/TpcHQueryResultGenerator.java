@@ -1,5 +1,7 @@
 package io.openmessaging.benchmark.tpch;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Map;
 
 public class TpcHQueryResultGenerator {
@@ -21,15 +23,16 @@ public class TpcHQueryResultGenerator {
             TpcHQueryResultRow row = new TpcHQueryResultRow();
             row.columns.putAll(group.identifiers);
             Map<String, Number> aggregates = group.aggregates;
-            Double quantity = aggregates.get("quantity").doubleValue();
-            Double basePrice = aggregates.get("basePrice").doubleValue();
-            Double discount = aggregates.get("discount").doubleValue();
-            Double discountedPrice = aggregates.get("discountedPrice").doubleValue();
-            Double charge = aggregates.get("charge").doubleValue();
+            BigDecimal quantity = (BigDecimal)aggregates.get("quantity");
+            BigDecimal basePrice = (BigDecimal)aggregates.get("basePrice");
+            BigDecimal discount = (BigDecimal)aggregates.get("discount");
+            BigDecimal discountedPrice = (BigDecimal)aggregates.get("discountedPrice");
+            BigDecimal charge = (BigDecimal)aggregates.get("charge");
             Long orderCount = aggregates.get("orderCount").longValue();
-            Double averageQuantity = quantity / orderCount;
-            Double averagePrice = basePrice / orderCount;
-            Double averageDiscount = discount / orderCount;
+            BigDecimal orderCountAsDecimal = new BigDecimal(orderCount);
+            BigDecimal averageQuantity = quantity.divide(orderCountAsDecimal, RoundingMode.HALF_UP);
+            BigDecimal averagePrice = basePrice.divide(orderCountAsDecimal, RoundingMode.HALF_UP);
+            BigDecimal averageDiscount = discount.divide(orderCountAsDecimal, RoundingMode.HALF_UP);
             row.columns.put("quantitySum", quantity);
             row.columns.put("basePriceSum", basePrice);
             row.columns.put("discountedPriceSum", discountedPrice);

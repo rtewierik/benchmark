@@ -1,5 +1,6 @@
 package io.openmessaging.benchmark.tpch;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -11,19 +12,24 @@ public class TpcHAlgorithm {
 
     private static final LocalDate pricingSummaryReportShipDate = LocalDate.of(1998, 1, 12).minusDays(90);
     private static final Map<String, Number> pricingSummaryReportQueryAggregates = new HashMap<String, Number>() {{
-        put("quantity", 0.0d);
-        put("basePrice", 0.0d);
-        put("discount", 0.0d);
-        put("discountedPrice", 0.0d);
-        put("charge", 0.0d);
+        put("quantity", new BigDecimal("0.00"));
+        put("basePrice", new BigDecimal("0.00"));
+        put("discount", new BigDecimal("0.00"));
+        put("discountedPrice", new BigDecimal("0.00"));
+        put("charge", new BigDecimal("0.00"));
         put("orderCount", 0L);
     }};
 
     private static final LocalDate forecastingRevenueChangeMinShipDate = LocalDate.of(1994, 1, 1);
     private static final LocalDate forecastingRevenueChangeMaxShipDate = forecastingRevenueChangeMinShipDate.plusYears(1);
     private static final Map<String, Number> forecastingRevenueChangeQueryAggregates = new HashMap<String, Number>() {{
-        put("revenue", 0.0d);
+        put("revenue", new BigDecimal("0.00"));
     }};
+
+    private static final BigDecimal oneAsBigDecimal = new BigDecimal("1");
+    private static final BigDecimal discountLowerBound = new BigDecimal("0.05");
+    private static final BigDecimal discountUpperBound = new BigDecimal("0.07");
+    private static final BigDecimal quantityLowerBound = new BigDecimal("24.00");
 
     public static TpcHIntermediateResult applyQueryToChunk(List<TpcHRow> chunk, TpcHQuery query) {
         switch (query) {
@@ -51,14 +57,14 @@ public class TpcHAlgorithm {
                 newGroup.identifiers.put("lineStatus", row.lineStatus);
                 groups.put(groupId, newGroup);
             }
-            Double discountedPrice = row.extendedPrice * (1 - row.discount);
-            Double charge = discountedPrice * (1 + row.tax);
+            BigDecimal discountedPrice = row.extendedPrice.multiply(oneAsBigDecimal.subtract(row.discount));
+            BigDecimal charge = discountedPrice.multiply(oneAsBigDecimal.add(row.tax));
             TpcHIntermediateResultGroup group = groups.get(groupId);
-            group.aggregates.put("quantity", (Double)group.aggregates.get("quantity") + row.quantity);
-            group.aggregates.put("basePrice", (Double)group.aggregates.get("basePrice") + row.extendedPrice);
-            group.aggregates.put("discount", (Double)group.aggregates.get("discount") + row.discount);
-            group.aggregates.put("discountedPrice", (Double)group.aggregates.get("discountedPrice") + discountedPrice);
-            group.aggregates.put("charge", (Double)group.aggregates.get("charge") + charge);
+            group.aggregates.put("quantity", ((BigDecimal)group.aggregates.get("quantity")).add(row.quantity));
+            group.aggregates.put("basePrice", ((BigDecimal)group.aggregates.get("basePrice")).add(row.extendedPrice));
+            group.aggregates.put("discount", ((BigDecimal)group.aggregates.get("discount")).add(row.discount));
+            group.aggregates.put("discountedPrice", ((BigDecimal)group.aggregates.get("discountedPrice")).add(discountedPrice));
+            group.aggregates.put("charge", ((BigDecimal)group.aggregates.get("charge")).add(charge));
             group.aggregates.put("orderCount", (Long)group.aggregates.get("orderCount") + 1);
         }
         return new TpcHIntermediateResult(new ArrayList<>(groups.values()));
@@ -74,8 +80,8 @@ public class TpcHAlgorithm {
             if (shipDate.isAfter(forecastingRevenueChangeMaxShipDate)) {
                 continue;
             }
-            double discount = row.discount;
-            if (discount < 0.05d || discount > 0.07d || row.quantity < 24d) {
+            BigDecimal discount = row.discount;
+            if (discount.compareTo(discountLowerBound) < 0 || discount.compareTo(discountUpperBound) > 0 || row.quantity.compareTo(quantityLowerBound) < 0) {
                 continue;
             }
             if (!groups.containsKey("default")) {
@@ -83,8 +89,8 @@ public class TpcHAlgorithm {
                 groups.put("default", newGroup);
             }
             TpcHIntermediateResultGroup group = groups.get("default");
-            Double revenue = row.extendedPrice * row.discount;
-            group.aggregates.put("revenue", (Double)group.aggregates.get("revenue") + revenue);
+            BigDecimal revenue = row.extendedPrice.multiply(row.discount);
+            group.aggregates.put("revenue", ((BigDecimal)group.aggregates.get("revenue")).add(revenue));
         }
         return new TpcHIntermediateResult(new ArrayList<>(groups.values()));
     }

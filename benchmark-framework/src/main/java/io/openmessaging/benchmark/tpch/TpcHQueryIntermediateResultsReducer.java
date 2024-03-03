@@ -1,5 +1,6 @@
 package io.openmessaging.benchmark.tpch;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +43,8 @@ public class TpcHQueryIntermediateResultsReducer {
                         Number updatedAggregate;
                         if (existingAggregate instanceof Long && additionalAggregate instanceof Long) {
                             updatedAggregate = existingAggregate.longValue() + additionalAggregate.longValue();
-                        } else if (existingAggregate instanceof Double && additionalAggregate instanceof Double) {
-                            updatedAggregate = existingAggregate.doubleValue() + additionalAggregate.doubleValue();
+                        } else if (existingAggregate instanceof BigDecimal && additionalAggregate instanceof BigDecimal) {
+                            updatedAggregate = ((BigDecimal)existingAggregate).add((BigDecimal)additionalAggregate);
                         } else {
                             throw new ArithmeticException("Invalid aggregates detected.");
                         }

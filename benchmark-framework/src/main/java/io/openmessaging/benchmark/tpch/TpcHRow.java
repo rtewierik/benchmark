@@ -13,6 +13,7 @@
  */
 package io.openmessaging.benchmark.tpch;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class TpcHRow {
@@ -20,10 +21,10 @@ public class TpcHRow {
     public int partKey;
     public int suppKey;
     public int lineNumber;
-    public double quantity;
-    public double extendedPrice;
-    public double discount;
-    public double tax;
+    public BigDecimal quantity;
+    public BigDecimal extendedPrice;
+    public BigDecimal discount;
+    public BigDecimal tax;
     public char returnFlag;
     public char lineStatus;
     public Date shipDate;
@@ -32,4 +33,26 @@ public class TpcHRow {
     public String shipInstruct;
     public String shipMode;
     public String comment;
+
+    @Override
+    public String toString() {
+        return "TpcHRow{" +
+                "orderKey=" + orderKey +
+                ", partKey=" + partKey +
+                ", suppKey=" + suppKey +
+                ", lineNumber=" + lineNumber +
+                ", quantity=" + quantity +
+                ", extendedPrice=" + extendedPrice +
+                ", discount=" + discount +
+                ", tax=" + tax +
+                ", returnFlag=" + returnFlag +
+                ", lineStatus=" + lineStatus +
+                ", shipDate=" + shipDate +
+                ", commitDate=" + commitDate +
+                ", receiptDate=" + receiptDate +
+                ", shipInstruct='" + shipInstruct + '\'' +
+                ", shipMode='" + shipMode + '\'' +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
 }
