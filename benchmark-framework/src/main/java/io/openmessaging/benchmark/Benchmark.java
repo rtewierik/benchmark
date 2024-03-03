@@ -22,18 +22,21 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import io.openmessaging.benchmark.tpch.TpcHCommand;
+import io.openmessaging.benchmark.tpch.*;
 import io.openmessaging.benchmark.worker.DistributedWorkersEnsemble;
 import io.openmessaging.benchmark.worker.HttpWorkerClient;
 import io.openmessaging.benchmark.worker.LocalWorker;
 import io.openmessaging.benchmark.worker.Worker;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,9 +95,41 @@ public class Benchmark {
         if (false) {
             benchmark(args);
         }
+        testTpcHAlgorithmLocally();
     }
 
-    public static void benchmark(String[] args) throws Exception {
+    private static void testTpcHAlgorithmLocally() {
+        List<String> chunkFiles = Arrays.asList(
+            "../tpc-h-chunks/chunk_1.csv",
+            "../tpc-h-chunks/chunk_2.csv",
+            "../tpc-h-chunks/chunk_3.csv",
+            "../tpc-h-chunks/chunk_4.csv",
+            "../tpc-h-chunks/chunk_5.csv",
+            "../tpc-h-chunks/chunk_6.csv",
+            "../tpc-h-chunks/chunk_7.csv",
+            "../tpc-h-chunks/chunk_8.csv",
+            "../tpc-h-chunks/chunk_9.csv",
+            "../tpc-h-chunks/chunk_10.csv"
+        );
+        List<List<TpcHRow>> chunks = new ArrayList<>();
+        for (String chunkFile : chunkFiles) {
+            try (InputStream stream = Files.newInputStream(Paths.get(chunkFile))) {
+                chunks.add(TpcHDataParser.readTpcHRowsFromStream(stream));
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        }
+        List<TpcHIntermediateResult> results = new ArrayList<>();
+        for (List<TpcHRow> chunk : chunks) {
+            TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunk, TpcHQuery.PricingSummaryReport);
+            results.add(result);
+        }
+        for (TpcHIntermediateResult result : results) {
+            System.out.println(result);
+        }
+    }
+
+    private static void benchmark(String[] args) throws Exception {
         final Arguments arguments = new Arguments();
         JCommander jc = new JCommander(arguments);
         jc.setProgramName("messaging-benchmark");

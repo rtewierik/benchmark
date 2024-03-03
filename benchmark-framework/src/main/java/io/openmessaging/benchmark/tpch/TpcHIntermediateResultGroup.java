@@ -11,4 +11,12 @@ public class TpcHIntermediateResultGroup {
     public TpcHIntermediateResultGroup(Map<String, Object> aggregates) {
         this.aggregates = aggregates;
     }
+
+    @Override
+    public String toString() {
+        return "TpcHIntermediateResultGroup{" +
+                "groupIdentifiers=" + groupIdentifiers +
+                ", aggregates=" + aggregates +
+                '}';
+    }
 }

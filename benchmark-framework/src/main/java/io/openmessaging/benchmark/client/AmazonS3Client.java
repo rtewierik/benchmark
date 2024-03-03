@@ -21,6 +21,7 @@ import com.amazonaws.services.s3.model.ListObjectsV2Request;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import io.openmessaging.benchmark.tpch.TpcHDataParser;
 import io.openmessaging.benchmark.tpch.TpcHRow;
 import lombok.extern.slf4j.Slf4j;
 
@@ -75,43 +76,9 @@ public class AmazonS3Client {
         try {
             S3Object s3Object = this.s3Client.getObject(new GetObjectRequest(bucketName, objectKey));
             S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(objectInputStream));
-            reader.readLine();
-            List<TpcHRow> csvRows = new ArrayList<>();
-            String dataLine;
-            while ((dataLine = reader.readLine()) != null) {
-                String[] values = dataLine.split("\\|");
-                TpcHRow row = parseCsvRow(values);
-                csvRows.add(row);
-            }
-            return csvRows;
+            return TpcHDataParser.readTpcHRowsFromStream(objectInputStream);
         } catch (Exception exception) {
             throw new IOException("Failed to read and CSV from S3: " + exception.getMessage(), exception);
-        }
-    }
-
-    private static TpcHRow parseCsvRow(String[] values) {
-        try {
-            TpcHRow row = new TpcHRow();
-            row.orderKey = Integer.parseInt(values[0]);
-            row.partKey = Integer.parseInt(values[1]);
-            row.suppKey = Integer.parseInt(values[2]);
-            row.lineNumber = Integer.parseInt(values[3]);
-            row.quantity = Float.parseFloat(values[4]);
-            row.extendedPrice = Float.parseFloat(values[5]);
-            row.discount = Float.parseFloat(values[6]);
-            row.tax = Float.parseFloat(values[7]);
-            row.returnFlag = values[8].charAt(0);
-            row.lineStatus = values[9].charAt(0);
-            row.shipDate = SIMPLE_DATE_FORMAT.parse(values[10]);
-            row.commitDate = SIMPLE_DATE_FORMAT.parse(values[11]);
-            row.receiptDate = SIMPLE_DATE_FORMAT.parse(values[12]);
-            row.shipInstruct = values[13];
-            row.shipMode = values[14];
-            row.comment = values[15];
-            return row;
-        } catch (Exception exception) {
-            throw new RuntimeException("Failed to parse row: " + exception.getMessage(), exception);
         }
     }
 

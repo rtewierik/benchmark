@@ -8,4 +8,11 @@ public class TpcHIntermediateResult {
     public TpcHIntermediateResult(List<TpcHIntermediateResultGroup> groups) {
         this.groups = groups;
     }
+
+    @Override
+    public String toString() {
+        return "TpcHIntermediateResult{" +
+                "groups=" + groups +
+                '}';
+    }
 }
