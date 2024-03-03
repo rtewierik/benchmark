@@ -22,17 +22,21 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import io.openmessaging.benchmark.tpch.*;
 import io.openmessaging.benchmark.worker.DistributedWorkersEnsemble;
 import io.openmessaging.benchmark.worker.HttpWorkerClient;
 import io.openmessaging.benchmark.worker.LocalWorker;
 import io.openmessaging.benchmark.worker.Worker;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,6 +72,11 @@ public class Benchmark {
         public File workersFile;
 
         @Parameter(
+                names = {"-tpch", "--tpc-h-file"},
+                description = "Path to a YAML file containing the TPC H command")
+        public File tpcHFile;
+
+        @Parameter(
                 names = {"-x", "--extra"},
                 description = "Allocate extra consumer workers when your backlog builds.")
         boolean extraConsumers;
@@ -83,6 +92,56 @@ public class Benchmark {
     }
 
     public static void main(String[] args) throws Exception {
+        if (false) {
+            benchmark(args);
+        }
+        testTpcHAlgorithmLocally();
+    }
+
+    private static void testTpcHAlgorithmLocally() {
+        TpcHQuery query = TpcHQuery.ForecastingRevenueChange;
+        List<String> chunkFiles = Arrays.asList(
+                // "../tpc-h-chunks/chunk_1.csv",
+                // "../tpc-h-chunks/chunk_2.csv",
+                // "../tpc-h-chunks/chunk_3.csv",
+                // "../tpc-h-chunks/chunk_4.csv",
+                // "../tpc-h-chunks/chunk_5.csv",
+                // "../tpc-h-chunks/chunk_6.csv",
+                // "../tpc-h-chunks/chunk_7.csv",
+                // "../tpc-h-chunks/chunk_8.csv",
+                // "../tpc-h-chunks/chunk_9.csv",
+                // "../tpc-h-chunks/chunk_10.csv"
+                 "../tpc-h-chunks/ref/chunk_1.csv",
+                 "../tpc-h-chunks/ref/chunk_2.csv",
+                 "../tpc-h-chunks/ref/chunk_3.csv",
+                 "../tpc-h-chunks/ref/chunk_4.csv",
+                 "../tpc-h-chunks/ref/chunk_5.csv",
+                 "../tpc-h-chunks/ref/chunk_6.csv",
+                 "../tpc-h-chunks/ref/chunk_7.csv",
+                 "../tpc-h-chunks/ref/chunk_8.csv",
+                 "../tpc-h-chunks/ref/chunk_9.csv",
+                 "../tpc-h-chunks/ref/chunk_10.csv"
+                // "../tpc-h-chunks/lineitem.tbl"
+        );
+        List<TpcHIntermediateResult> chunk = new ArrayList<>();
+        for (String chunkFile : chunkFiles) {
+            System.out.printf("[INFO] Applying map to chunk \"%s\"...%n", chunkFile);
+            try (InputStream stream = Files.newInputStream(Paths.get(chunkFile))) {
+                List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
+                TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, query);
+                chunk.add(result);
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        }
+        System.out.println("[INFO] Applying reducer to chunk...");
+        TpcHIntermediateResult intermediateResult = TpcHQueryIntermediateResultsReducer.applyReduceToChunk(chunk, query);
+        System.out.println("[INFO] Generating result from reduced intermediate result...");
+        TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(intermediateResult, query);
+        System.out.println(result);
+    }
+
+    private static void benchmark(String[] args) throws Exception {
         final Arguments arguments = new Arguments();
         JCommander jc = new JCommander(arguments);
         jc.setProgramName("messaging-benchmark");
@@ -137,6 +196,14 @@ public class Benchmark {
 
         log.info("Workloads: {}", writer.writeValueAsString(workloads));
 
+        TpcHCommand tpcHCommand;
+        if (arguments.tpcHFile != null) {
+            tpcHCommand = mapper.readValue(arguments.tpcHFile, TpcHCommand.class);
+        } else {
+            tpcHCommand = null;
+        }
+        log.info("TPC-H command: {}", writer.writeValueAsString(tpcHCommand));
+
         Worker worker;
 
         if (arguments.workers != null && !arguments.workers.isEmpty()) {
@@ -168,7 +235,7 @@ public class Benchmark {
                                     worker.initializeDriver(new File(driverConfig));
 
                                     WorkloadGenerator generator =
-                                            new WorkloadGenerator(driverConfiguration.name, workload, worker);
+                                            new WorkloadGenerator(driverConfiguration.name, workload, tpcHCommand, worker);
 
                                     TestResult result = generator.run();
 
@@ -180,10 +247,10 @@ public class Benchmark {
                                             useOutput
                                                     ? arguments.output
                                                     : String.format(
-                                                            "%s-%s-%s.json",
-                                                            workloadName,
-                                                            driverConfiguration.name,
-                                                            dateFormat.format(new Date()));
+                                                    "%s-%s-%s.json",
+                                                    workloadName,
+                                                    driverConfiguration.name,
+                                                    dateFormat.format(new Date()));
 
                                     log.info("Writing test result into {}", fileName);
                                     writer.writeValue(new File(fileName), result);
