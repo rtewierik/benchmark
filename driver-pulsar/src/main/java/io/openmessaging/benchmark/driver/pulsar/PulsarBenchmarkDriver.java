@@ -20,10 +20,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.collect.Sets;
 import com.google.common.io.BaseEncoding;
-import io.openmessaging.benchmark.driver.BenchmarkConsumer;
-import io.openmessaging.benchmark.driver.BenchmarkDriver;
-import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.*;
 import io.openmessaging.benchmark.driver.pulsar.config.PulsarClientConfig.PersistenceConfiguration;
 import io.openmessaging.benchmark.driver.pulsar.config.PulsarConfig;
 import java.io.File;
@@ -200,14 +197,14 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkConsumer> createConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback, boolean isTpcH) {
+            String topic, String subscriptionName, ConsumerCallback consumerCallback, TpcHInfo info) {
         List<CompletableFuture<Consumer<ByteBuffer>>> futures = new ArrayList<>();
         return client
                 .getPartitionsForTopic(topic)
                 .thenCompose(
                         partitions -> {
                             partitions.forEach(
-                                    p -> futures.add(createInternalConsumer(p, subscriptionName, consumerCallback, isTpcH)));
+                                    p -> futures.add(createInternalConsumer(p, subscriptionName, consumerCallback, info)));
                             return FutureUtil.waitForAll(futures);
                         })
                 .thenApply(
@@ -217,7 +214,7 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
     }
 
     CompletableFuture<Consumer<ByteBuffer>> createInternalConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback, boolean isTpcH) {
+            String topic, String subscriptionName, ConsumerCallback consumerCallback, TpcHInfo info) {
         return client
                 .newConsumer(Schema.BYTEBUFFER)
                 .priorityLevel(0)
@@ -225,7 +222,7 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
                 .messageListener(
                         (c, msg) -> {
                             try {
-                                consumerCallback.messageReceived(msg.getValue(), msg.getPublishTime(), isTpcH);
+                                consumerCallback.messageReceived(msg.getValue(), msg.getPublishTime(), info);
                                 c.acknowledgeAsync(msg);
                             } finally {
                                 msg.release();

@@ -26,11 +26,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import io.netty.handler.codec.http.QueryStringDecoder;
-import io.openmessaging.benchmark.driver.BenchmarkConsumer;
-import io.openmessaging.benchmark.driver.BenchmarkDriver;
-import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import io.openmessaging.benchmark.driver.ConsumerCallback;
-import io.openmessaging.benchmark.driver.ResourceCreator;
+import io.openmessaging.benchmark.driver.*;
 import io.openmessaging.benchmark.driver.ResourceCreator.CreationResult;
 import java.io.File;
 import java.io.IOException;
@@ -161,7 +157,7 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
                                                                         c.getTopic(),
                                                                         c.getSubscriptionName(),
                                                                         c.getConsumerCallback(),
-                                                                        c.isTpcH()))),
+                                                                        c.getInfo()))),
                         fc -> {
                             try {
                                 return new CreationResult<>(fc.get(), true);
@@ -178,7 +174,7 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkConsumer> createConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback, boolean isTpcH) {
+            String topic, String subscriptionName, ConsumerCallback consumerCallback, TpcHInfo info) {
 
         CompletableFuture<BenchmarkConsumer> future = new CompletableFuture<>();
         ForkJoinPool.commonPool()
@@ -196,7 +192,7 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
                                         queueName, true, false, false, config.queueType.queueOptions());
                                 channel.queueBind(queueName, exchange, "");
                                 future.complete(
-                                        new RabbitMqBenchmarkConsumer(channel, queueName, consumerCallback, isTpcH));
+                                        new RabbitMqBenchmarkConsumer(channel, queueName, consumerCallback, info));
                             } catch (IOException e) {
                                 future.completeExceptionally(e);
                             }

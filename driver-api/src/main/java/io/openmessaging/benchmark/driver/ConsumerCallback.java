@@ -23,16 +23,16 @@ public interface ConsumerCallback {
      *
      * @param payload the received message payload
      * @param publishTimestamp the publish timestamp in milliseconds
-     * @param isTpcH flag indicating whether the benchmark is a TPC-H benchmark
+     * @param info info relevant to message processing in case of a TPC-H benchmark
      */
-    void messageReceived(byte[] payload, long publishTimestamp, boolean isTpcH);
+    void messageReceived(byte[] payload, long publishTimestamp, TpcHInfo info);
 
     /**
      * Driver should invoke this method (or the byte[] variant) once for each message received.
      *
      * @param payload the received message payload
      * @param publishTimestamp the publish timestamp in milliseconds
-     * @param isTpcH flag indicating whether the benchmark is a TPC-H benchmark
+     * @param info info relevant to message processing in case of a TPC-H benchmark
      */
-    void messageReceived(ByteBuffer payload, long publishTimestamp, boolean isTpcH);
+    void messageReceived(ByteBuffer payload, long publishTimestamp, TpcHInfo info);
 }

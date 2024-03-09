@@ -22,6 +22,8 @@ import com.rabbitmq.client.Envelope;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
 import java.io.IOException;
+
+import io.openmessaging.benchmark.driver.TpcHInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,22 +33,22 @@ public class RabbitMqBenchmarkConsumer extends DefaultConsumer implements Benchm
 
     private final Channel channel;
     private final ConsumerCallback callback;
-    private final boolean isTpcH;
+    private final TpcHInfo info;
 
-    public RabbitMqBenchmarkConsumer(Channel channel, String queueName, ConsumerCallback callback, boolean isTpcH)
+    public RabbitMqBenchmarkConsumer(Channel channel, String queueName, ConsumerCallback callback, TpcHInfo info)
             throws IOException {
         super(channel);
 
         this.channel = channel;
         this.callback = callback;
-        this.isTpcH = isTpcH;
+        this.info = info;
         channel.basicConsume(queueName, true, this);
     }
 
     @Override
     public void handleDelivery(
             String consumerTag, Envelope envelope, BasicProperties properties, byte[] body) {
-        callback.messageReceived(body, properties.getTimestamp().getTime(), isTpcH);
+        callback.messageReceived(body, properties.getTimestamp().getTime(), info);
     }
 
     @Override

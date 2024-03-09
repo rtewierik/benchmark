@@ -22,13 +22,10 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Preconditions;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.DriverConfiguration;
-import io.openmessaging.benchmark.driver.BenchmarkConsumer;
-import io.openmessaging.benchmark.driver.BenchmarkDriver;
+import io.openmessaging.benchmark.driver.*;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ConsumerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ProducerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
-import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import io.openmessaging.benchmark.driver.ConsumerCallback;
 import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.utils.UniformRateLimiter;
@@ -243,14 +240,14 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     @Override
-    public void messageReceived(byte[] data, long publishTimestamp, boolean isTpcH) {
+    public void messageReceived(byte[] data, long publishTimestamp, TpcHInfo info) {
         internalMessageReceived(data.length, publishTimestamp);
         // TO DO: Implement generic logic to execute TPC-H query based on JSON parseability and message type.
         // TO DO: Add separate call to stats to record message processed.
     }
 
     @Override
-    public void messageReceived(ByteBuffer data, long publishTimestamp, boolean isTpcH) {
+    public void messageReceived(ByteBuffer data, long publishTimestamp, TpcHInfo info) {
         internalMessageReceived(data.remaining(), publishTimestamp);
         // TO DO: Implement generic logic to execute TPC-H query based on JSON parseability and message type.
         // TO DO: Add separate call to stats to record message processed.

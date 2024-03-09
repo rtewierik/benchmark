@@ -18,10 +18,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.io.BaseEncoding;
-import io.openmessaging.benchmark.driver.BenchmarkConsumer;
-import io.openmessaging.benchmark.driver.BenchmarkDriver;
-import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.*;
 import io.openmessaging.benchmark.driver.redis.client.RedisClientConfig;
 import java.io.File;
 import java.io.IOException;
@@ -64,7 +61,7 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkConsumer> createConsumer(
-            final String topic, final String subscriptionName, final ConsumerCallback consumerCallback, final boolean isTpcH) {
+            final String topic, final String subscriptionName, final ConsumerCallback consumerCallback, final TpcHInfo info) {
         String consumerId = "consumer-" + getRandomString();
         if (jedisPool == null) {
             setupJedisConn();
@@ -76,7 +73,7 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
         }
         return CompletableFuture.completedFuture(
                 new RedisBenchmarkConsumer(
-                        consumerId, topic, subscriptionName, jedisPool, consumerCallback, isTpcH));
+                        consumerId, topic, subscriptionName, jedisPool, consumerCallback, info));
     }
 
     private void setupJedisConn() {
