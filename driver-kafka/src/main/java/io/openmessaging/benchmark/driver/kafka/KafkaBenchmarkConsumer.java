@@ -46,15 +46,17 @@ public class KafkaBenchmarkConsumer implements BenchmarkConsumer {
     public KafkaBenchmarkConsumer(
             KafkaConsumer<String, byte[]> consumer,
             Properties consumerConfig,
-            ConsumerCallback callback) {
-        this(consumer, consumerConfig, callback, 100L);
+            ConsumerCallback callback,
+            boolean isTpcH) {
+        this(consumer, consumerConfig, callback, 100L, isTpcH);
     }
 
     public KafkaBenchmarkConsumer(
             KafkaConsumer<String, byte[]> consumer,
             Properties consumerConfig,
             ConsumerCallback callback,
-            long pollTimeoutMs) {
+            long pollTimeoutMs,
+            boolean isTpcH) {
         this.consumer = consumer;
         this.executor = Executors.newSingleThreadExecutor();
         this.autoCommit =
@@ -71,7 +73,7 @@ public class KafkaBenchmarkConsumer implements BenchmarkConsumer {
 
                                     Map<TopicPartition, OffsetAndMetadata> offsetMap = new HashMap<>();
                                     for (ConsumerRecord<String, byte[]> record : records) {
-                                        callback.messageReceived(record.value(), record.timestamp());
+                                        callback.messageReceived(record.value(), record.timestamp(), isTpcH);
 
                                         offsetMap.put(
                                                 new TopicPartition(record.topic(), record.partition()),

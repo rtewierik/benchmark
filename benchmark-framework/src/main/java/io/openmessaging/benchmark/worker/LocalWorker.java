@@ -152,7 +152,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                         .map(
                                                 c ->
                                                         new ConsumerInfo(
-                                                                index.getAndIncrement(), c.topic, c.subscription, this))
+                                                                index.getAndIncrement(), c.topic, c.subscription, this, consumerAssignment.isTpcHAssignment))
                                         .collect(toList()))
                         .join());
 
@@ -243,14 +243,14 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     @Override
-    public void messageReceived(byte[] data, long publishTimestamp) {
+    public void messageReceived(byte[] data, long publishTimestamp, boolean isTpcH) {
         internalMessageReceived(data.length, publishTimestamp);
         // TO DO: Implement generic logic to execute TPC-H query based on JSON parseability and message type.
         // TO DO: Add separate call to stats to record message processed.
     }
 
     @Override
-    public void messageReceived(ByteBuffer data, long publishTimestamp) {
+    public void messageReceived(ByteBuffer data, long publishTimestamp, boolean isTpcH) {
         internalMessageReceived(data.remaining(), publishTimestamp);
         // TO DO: Implement generic logic to execute TPC-H query based on JSON parseability and message type.
         // TO DO: Add separate call to stats to record message processed.

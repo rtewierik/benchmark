@@ -36,7 +36,8 @@ public class JMSBenchmarkConsumer implements BenchmarkConsumer {
             Session session,
             MessageConsumer consumer,
             ConsumerCallback callback,
-            boolean useGetBody)
+            boolean useGetBody,
+            boolean isTpcH)
             throws Exception {
         this.connection = connection;
         this.consumer = consumer;
@@ -46,7 +47,7 @@ public class JMSBenchmarkConsumer implements BenchmarkConsumer {
                 message -> {
                     try {
                         byte[] payload = getPayload(message);
-                        callback.messageReceived(payload, message.getLongProperty("E2EStartMillis"));
+                        callback.messageReceived(payload, message.getLongProperty("E2EStartMillis"), isTpcH);
                         message.acknowledge();
                     } catch (Throwable e) {
                         log.warn("Failed to acknowledge message", e);

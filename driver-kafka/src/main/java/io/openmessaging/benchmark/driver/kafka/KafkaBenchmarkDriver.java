@@ -122,7 +122,7 @@ public class KafkaBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkConsumer> createConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback) {
+            String topic, String subscriptionName, ConsumerCallback consumerCallback, boolean isTpcH) {
         Properties properties = new Properties();
         consumerProperties.forEach((key, value) -> properties.put(key, value));
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, subscriptionName);
@@ -130,7 +130,7 @@ public class KafkaBenchmarkDriver implements BenchmarkDriver {
         try {
             consumer.subscribe(Arrays.asList(topic));
             return CompletableFuture.completedFuture(
-                    new KafkaBenchmarkConsumer(consumer, consumerProperties, consumerCallback));
+                    new KafkaBenchmarkConsumer(consumer, consumerProperties, consumerCallback, isTpcH));
         } catch (Throwable t) {
             consumer.close();
             CompletableFuture<BenchmarkConsumer> future = new CompletableFuture<>();

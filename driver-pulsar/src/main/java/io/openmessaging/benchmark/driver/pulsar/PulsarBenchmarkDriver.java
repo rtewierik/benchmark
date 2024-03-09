@@ -200,14 +200,14 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkConsumer> createConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback) {
+            String topic, String subscriptionName, ConsumerCallback consumerCallback, boolean isTpcH) {
         List<CompletableFuture<Consumer<ByteBuffer>>> futures = new ArrayList<>();
         return client
                 .getPartitionsForTopic(topic)
                 .thenCompose(
                         partitions -> {
                             partitions.forEach(
-                                    p -> futures.add(createInternalConsumer(p, subscriptionName, consumerCallback)));
+                                    p -> futures.add(createInternalConsumer(p, subscriptionName, consumerCallback, isTpcH)));
                             return FutureUtil.waitForAll(futures);
                         })
                 .thenApply(
@@ -217,7 +217,7 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
     }
 
     CompletableFuture<Consumer<ByteBuffer>> createInternalConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback) {
+            String topic, String subscriptionName, ConsumerCallback consumerCallback, boolean isTpcH) {
         return client
                 .newConsumer(Schema.BYTEBUFFER)
                 .priorityLevel(0)
@@ -225,7 +225,7 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
                 .messageListener(
                         (c, msg) -> {
                             try {
-                                consumerCallback.messageReceived(msg.getValue(), msg.getPublishTime());
+                                consumerCallback.messageReceived(msg.getValue(), msg.getPublishTime(), isTpcH);
                                 c.acknowledgeAsync(msg);
                             } finally {
                                 msg.release();

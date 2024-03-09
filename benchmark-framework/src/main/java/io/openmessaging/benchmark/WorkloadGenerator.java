@@ -81,15 +81,16 @@ public class WorkloadGenerator implements AutoCloseable {
         Timer timer = new Timer();
         /*
             * 1 topic for Map commands;
-            * topic for Reduce commands
+            * 1 topic for Reduce commands;
             * x topics to send intermediate results to;
-            * one topic to send aggregated intermediate results to.
+            * 1 topic to send aggregated intermediate results to.
         */
-        int numberOfTopics = 2 + this.command.numberOfIntermediateResultsPartitions + 1;
+        int numberOfReduceOps = this.command.getNumberOfReduceOperations();
+        int numberOfTopics = 1 + 1 + numberOfReduceOps + 1;
         List<String> topics = worker.createTopics(new TopicsInfo(numberOfTopics, workload.partitionsPerTopic));
 
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
-        createConsumers(topics);
+        createTpcHConsumers(topics);
         createProducers(topics);
 
         ensureTopicsAreReady();
@@ -276,11 +277,9 @@ public class WorkloadGenerator implements AutoCloseable {
 
         for (String topic : topics) {
             for (int i = 0; i < workload.subscriptionsPerTopic; i++) {
-                String subscriptionName =
-                        String.format("sub-%03d-%s", i, RandomGenerator.getRandomString());
+                String subscriptionName = String.format("sub-%03d-%s", i, RandomGenerator.getRandomString());
                 for (int j = 0; j < workload.consumerPerSubscription; j++) {
-                    consumerAssignment.topicsSubscriptions.add(
-                            new TopicSubscription(topic, subscriptionName));
+                    consumerAssignment.topicsSubscriptions.add(new TopicSubscription(topic, subscriptionName));
                 }
             }
         }
@@ -296,8 +295,24 @@ public class WorkloadGenerator implements AutoCloseable {
                 timer.elapsedMillis());
     }
 
-    private void createTpcHConsumers(List<String> topics) throws IOException {
-        // Topics list is always going to be of size 2. Replicate topic subscription once for each consumer.
+    private ConsumerAssignment createTpcHConsumers(List<String> topics) throws IOException {
+        ConsumerAssignment consumerAssignment = new ConsumerAssignment();
+        consumerAssignment.isTpcHAssignment = true;
+
+        for (int i = 0; i < topics.size(); i++) {
+            String topic = topics.get(i);
+            String subscriptionName = String.format("sub-%03d-%s", i, RandomGenerator.getRandomString());
+            consumerAssignment.topicsSubscriptions.add(new TopicSubscription(topic, subscriptionName));
+        }
+
+        Timer timer = new Timer();
+        worker.createConsumers(consumerAssignment);
+        log.info(
+                "Created {} consumers in {} ms",
+                consumerAssignment.topicsSubscriptions.size(),
+                timer.elapsedMillis());
+
+        return consumerAssignment;
     }
 
     private void createProducers(List<String> topics) throws IOException {

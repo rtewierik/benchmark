@@ -154,7 +154,7 @@ public class JMSBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkConsumer> createConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback) {
+            String topic, String subscriptionName, ConsumerCallback consumerCallback, boolean isTpcH) {
         try {
             String selector =
                     config.messageSelector != null && !config.messageSelector.isEmpty()
@@ -174,7 +174,7 @@ public class JMSBenchmarkDriver implements BenchmarkDriver {
             }
             return CompletableFuture.completedFuture(
                     new JMSBenchmarkConsumer(
-                            connection, session, durableConsumer, consumerCallback, config.use20api));
+                            connection, session, durableConsumer, consumerCallback, config.use20api, isTpcH));
         } catch (Exception err) {
             CompletableFuture<BenchmarkConsumer> res = new CompletableFuture<>();
             res.completeExceptionally(err);

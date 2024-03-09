@@ -31,20 +31,22 @@ public class RabbitMqBenchmarkConsumer extends DefaultConsumer implements Benchm
 
     private final Channel channel;
     private final ConsumerCallback callback;
+    private final boolean isTpcH;
 
-    public RabbitMqBenchmarkConsumer(Channel channel, String queueName, ConsumerCallback callback)
+    public RabbitMqBenchmarkConsumer(Channel channel, String queueName, ConsumerCallback callback, boolean isTpcH)
             throws IOException {
         super(channel);
 
         this.channel = channel;
         this.callback = callback;
+        this.isTpcH = isTpcH;
         channel.basicConsume(queueName, true, this);
     }
 
     @Override
     public void handleDelivery(
             String consumerTag, Envelope envelope, BasicProperties properties, byte[] body) {
-        callback.messageReceived(body, properties.getTimestamp().getTime());
+        callback.messageReceived(body, properties.getTimestamp().getTime(), isTpcH);
     }
 
     @Override

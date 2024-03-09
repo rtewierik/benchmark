@@ -141,7 +141,7 @@ public class PravegaBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkConsumer> createConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback) {
+            String topic, String subscriptionName, ConsumerCallback consumerCallback, boolean isTpcH) {
         topic = cleanName(topic);
         subscriptionName = cleanName(subscriptionName);
         BenchmarkConsumer consumer =
@@ -152,7 +152,8 @@ public class PravegaBenchmarkDriver implements BenchmarkDriver {
                         consumerCallback,
                         clientFactory,
                         readerGroupManager,
-                        config.includeTimestampInEvent);
+                        config.includeTimestampInEvent,
+                        isTpcH);
         return CompletableFuture.completedFuture(consumer);
     }
 
