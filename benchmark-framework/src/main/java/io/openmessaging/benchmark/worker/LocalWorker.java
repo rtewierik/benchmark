@@ -142,6 +142,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         Timer timer = new Timer();
         AtomicInteger index = new AtomicInteger();
 
+        // TODO: Verify created consumers are not launched immediately. They are probably not paused.
         consumers.addAll(
                 benchmarkDriver
                         .createConsumers(
@@ -176,6 +177,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private void startLoadForTpcHProducers(ProducerWorkAssignment producerWorkAssignment) {
         updateMessageProducer(producerWorkAssignment.publishRate);
 
+        // TODO: Implement logic to produce batch of messages with correct payload and then shut down and launch local consumers.
         submitProducersToExecutor(
             Collections.singletonList(this.producers.get(TpcHConstants.MAP_CMD_INDEX)),
             new NoKeyDistributor(),
