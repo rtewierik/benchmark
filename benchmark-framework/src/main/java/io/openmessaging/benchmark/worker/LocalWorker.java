@@ -30,12 +30,8 @@ import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.utils.distributor.KeyDistributor;
-import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
-import io.openmessaging.benchmark.worker.commands.CountersStats;
-import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
-import io.openmessaging.benchmark.worker.commands.PeriodStats;
-import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
-import io.openmessaging.benchmark.worker.commands.TopicsInfo;
+import io.openmessaging.benchmark.worker.commands.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -129,14 +125,15 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     @Override
-    public void createProducers(List<String> topics) {
+    public void createProducers(ProducerAssignment producerAssignment) {
+        // TODO: Consume isTpcH.
         Timer timer = new Timer();
         AtomicInteger index = new AtomicInteger();
 
         producers.addAll(
                 benchmarkDriver
                         .createProducers(
-                                topics.stream()
+                                producerAssignment.topics.stream()
                                         .map(t -> new ProducerInfo(index.getAndIncrement(), t))
                                         .collect(toList()))
                         .join());
@@ -165,6 +162,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public void startLoad(ProducerWorkAssignment producerWorkAssignment) {
+        // TODO: Consume isTpcH here.
         int processors = Runtime.getRuntime().availableProcessors();
 
         updateMessageProducer(producerWorkAssignment.publishRate);

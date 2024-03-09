@@ -27,13 +27,8 @@ import io.openmessaging.benchmark.utils.payload.FilePayloadReader;
 import io.openmessaging.benchmark.utils.payload.PayloadReader;
 import io.openmessaging.benchmark.worker.LocalWorker;
 import io.openmessaging.benchmark.worker.Worker;
-import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
-import io.openmessaging.benchmark.worker.commands.CountersStats;
-import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
-import io.openmessaging.benchmark.worker.commands.PeriodStats;
-import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
-import io.openmessaging.benchmark.worker.commands.TopicSubscription;
-import io.openmessaging.benchmark.worker.commands.TopicsInfo;
+import io.openmessaging.benchmark.worker.commands.*;
+
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -347,26 +342,28 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     private void createProducers(List<String> topics) throws IOException {
-        List<String> fullListOfTopics = new ArrayList<>();
+        ProducerAssignment producerAssignment = new ProducerAssignment();
 
         // Add the topic multiple times, one for each producer
         for (int i = 0; i < workload.producersPerTopic; i++) {
-            fullListOfTopics.addAll(topics);
+            producerAssignment.topics.addAll(topics);
         }
 
-        Collections.shuffle(fullListOfTopics);
+        Collections.shuffle(producerAssignment.topics);
 
         Timer timer = new Timer();
 
-        worker.createProducers(fullListOfTopics);
-        log.info("Created {} producers in {} ms", fullListOfTopics.size(), timer.elapsedMillis());
+        worker.createProducers(producerAssignment);
+        log.info("Created {} producers in {} ms", producerAssignment.topics.size(), timer.elapsedMillis());
     }
 
     private void createTpcHProducers(List<String> topics) throws IOException {
-        // TODO: Pass isTpcH parameter in to register producer for all workers for 1 topic.
         // TODO: What about sending messages from Map to second topic?
+        ProducerAssignment producerAssignment = new ProducerAssignment();
+        producerAssignment.topics.addAll(topics);
+        producerAssignment.isTpcH = true;
         Timer timer = new Timer();
-        worker.createProducers(topics);
+        worker.createProducers(producerAssignment);
         log.info("Created {} producers in {} ms", topics.size(), timer.elapsedMillis());
     }
 

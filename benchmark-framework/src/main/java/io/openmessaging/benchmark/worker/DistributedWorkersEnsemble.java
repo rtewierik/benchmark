@@ -21,13 +21,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import io.openmessaging.benchmark.utils.ListPartition;
-import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
-import io.openmessaging.benchmark.worker.commands.CountersStats;
-import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
-import io.openmessaging.benchmark.worker.commands.PeriodStats;
-import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
-import io.openmessaging.benchmark.worker.commands.TopicSubscription;
-import io.openmessaging.benchmark.worker.commands.TopicsInfo;
+import io.openmessaging.benchmark.worker.commands.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -96,10 +91,10 @@ public class DistributedWorkersEnsemble implements Worker {
     }
 
     @Override
-    public void createProducers(List<String> topics) {
-        // TODO: Modify this function to create producers for all workers.
+    public void createProducers(ProducerAssignment producerAssignment) {
+        // TODO: Modify this function to create producers for all workers. Consume isTpcH.
         List<List<String>> topicsPerProducer =
-                ListPartition.partitionList(topics, producerWorkers.size());
+                ListPartition.partitionList(producerAssignment.topics, producerWorkers.size());
         Map<Worker, List<String>> topicsPerProducerMap = Maps.newHashMap();
         int i = 0;
         for (List<String> assignedTopics : topicsPerProducer) {
@@ -115,7 +110,7 @@ public class DistributedWorkersEnsemble implements Worker {
                 .forEach(
                         e -> {
                             try {
-                                e.getKey().createProducers(e.getValue());
+                                e.getKey().createProducers(new ProducerAssignment(e.getValue()));
                             } catch (IOException ex) {
                                 throw new RuntimeException(ex);
                             }

@@ -24,6 +24,7 @@ public class ProducerWorkAssignment {
     public double publishRate;
 
     public KeyDistributorType keyDistributorType;
+    public boolean isTpcH = false;
 
     public ProducerWorkAssignment withPublishRate(double publishRate) {
         ProducerWorkAssignment copy = new ProducerWorkAssignment();
