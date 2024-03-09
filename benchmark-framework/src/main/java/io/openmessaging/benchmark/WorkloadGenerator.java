@@ -73,7 +73,7 @@ public class WorkloadGenerator implements AutoCloseable {
 
     public TestResult run() throws Exception {
         if (this.command != null) {
-            // TODO: Apply TPC-H algorithm in single thread here for testing purposes.
+            runTpcH();
         }
         return runWorkload();
     }
@@ -99,9 +99,16 @@ public class WorkloadGenerator implements AutoCloseable {
 
         ensureTopicsAreReady();
 
-        // TODO: Assign producers with work by writing commands to topic. To be implemented in worker.
+        ProducerWorkAssignment producerWorkAssignment = new ProducerWorkAssignment();
+        producerWorkAssignment.keyDistributorType = workload.keyDistributor;
+        producerWorkAssignment.publishRate = targetPublishRate;
+        producerWorkAssignment.payloadData = new ArrayList<>();
+        producerWorkAssignment.tpcH = workload.tpcH;
 
-        // TODO: Wait until TPC-H query results are present in S3.
+        worker.startLoad(producerWorkAssignment);
+        log.info("----- Starting benchmark traffic ({}m)------", workload.testDurationMinutes);
+
+        // TO DO: Wait until TPC-H query results are present from local worker consumer.
 
         TestResult result = printAndCollectStats(workload.testDurationMinutes, TimeUnit.MINUTES);
         runCompleted = true;
@@ -358,7 +365,7 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     private void createTpcHProducers(List<String> topics) throws IOException {
-        // TODO: What about sending messages from Map to second topic?
+        // TO DO: What about sending messages from Map to second topic?
         ProducerAssignment producerAssignment = new ProducerAssignment();
         producerAssignment.topics.addAll(topics);
         producerAssignment.isTpcH = true;

@@ -14,6 +14,7 @@
 package io.openmessaging.benchmark;
 
 
+import io.openmessaging.benchmark.tpch.TpcHProducerAssignment;
 import io.openmessaging.benchmark.utils.distributor.KeyDistributorType;
 
 public class Workload {
@@ -65,4 +66,5 @@ public class Workload {
     public int testDurationMinutes;
 
     public int warmupDurationMinutes = 1;
+    public TpcHProducerAssignment tpcH = null;
 }
