@@ -19,4 +19,5 @@ import java.util.List;
 
 public class ConsumerAssignment {
     public List<TopicSubscription> topicsSubscriptions = new ArrayList<>();
+    public boolean isTpcH = false;
 }

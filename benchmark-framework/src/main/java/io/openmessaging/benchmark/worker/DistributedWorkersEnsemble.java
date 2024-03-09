@@ -183,10 +183,43 @@ public class DistributedWorkersEnsemble implements Worker {
     }
 
     @Override
-    public void createConsumers(ConsumerAssignment overallConsumerAssignment) {
-        for (TopicSubscription ts : overallConsumerAssignment.topicsSubscriptions) {
+    public void createConsumers(ConsumerAssignment assignment) {
+        for (TopicSubscription ts : assignment.topicsSubscriptions) {
             log.info("[DistributedWorkersEnsemble] Topic subscription detected: {}", ts.toString());
         }
+        if (assignment.isTpcH) {
+            createTpcHConsumers(assignment);
+        } else {
+            createThroughputConsumers(assignment);
+        }
+    }
+
+    private void createTpcHConsumers(ConsumerAssignment assignment) {
+        List<TopicSubscription> subscriptions = assignment.topicsSubscriptions;
+        List<TopicSubscription> distributableConsumerSubscriptions = new ArrayList<>(subscriptions.subList(TpcHConstants.REDUCE_SRC_START_INDEX, subscriptions.size()));;
+        TopicSubscription mapSubscription = subscriptions.get(TpcHConstants.MAP_CMD_INDEX);
+        List<List<TopicSubscription>> reduceSubscriptionsPerConsumer =
+                ListPartition.partitionList(distributableConsumerSubscriptions, workers.size());
+        Map<Worker, ConsumerAssignment> topicsPerConsumerMap = Maps.newHashMap();
+        int i = 0;
+        for (List<TopicSubscription> reduceSubscriptions : reduceSubscriptionsPerConsumer) {
+            ConsumerAssignment individualAssignment = new ConsumerAssignment();
+            individualAssignment.topicsSubscriptions.add(mapSubscription);
+            individualAssignment.topicsSubscriptions.addAll(reduceSubscriptions);
+            topicsPerConsumerMap.put(workers.get(i++), individualAssignment);
+        }
+        topicsPerConsumerMap.entrySet().parallelStream()
+                .forEach(
+                        e -> {
+                            try {
+                                e.getKey().createConsumers(e.getValue());
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        });
+    }
+
+    private void createThroughputConsumers(ConsumerAssignment overallConsumerAssignment) {
         List<List<TopicSubscription>> subscriptionsPerConsumer =
                 ListPartition.partitionList(
                         overallConsumerAssignment.topicsSubscriptions, consumerWorkers.size());

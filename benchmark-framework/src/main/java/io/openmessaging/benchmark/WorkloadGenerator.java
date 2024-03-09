@@ -298,11 +298,11 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     private ConsumerAssignment createTpcHConsumers(List<String> topics) throws IOException {
-        ConsumerAssignment externalConsumerAssignment = new ConsumerAssignment();
-        ConsumerAssignment internalConsumerAssignment = new ConsumerAssignment();
+        ConsumerAssignment consumerAssignment = new ConsumerAssignment();
+        ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment();
 
         TpcHInfo mapInfo = new TpcHInfo(TpcHConsumer.Map, null, null);
-        externalConsumerAssignment.topicsSubscriptions.add(
+        consumerAssignment.topicsSubscriptions.add(
             new TopicSubscription(
                 topics.get(TpcHConstants.MAP_CMD_INDEX),
                 generateSubscriptionName(TpcHConstants.MAP_CMD_INDEX),
@@ -310,10 +310,19 @@ public class WorkloadGenerator implements AutoCloseable {
             )
         );
 
+        TpcHInfo generateResultInfo = new TpcHInfo(TpcHConsumer.GenerateResult, null, this.command.numberOfReducers);
+        TopicSubscription orchestratorSubscription = new TopicSubscription(
+            topics.get(TpcHConstants.REDUCE_DST_INDEX),
+            generateSubscriptionName(TpcHConstants.REDUCE_DST_INDEX),
+            generateResultInfo
+        );
+        consumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
+        orchestratorConsumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
+
         for (int i = 0; i < this.command.numberOfReducers; i++) {
             TpcHInfo info = new TpcHInfo(TpcHConsumer.Reduce, this.command.getNumberOfMapResults(i), null);
             int index = TpcHConstants.REDUCE_SRC_START_INDEX + i;
-            externalConsumerAssignment.topicsSubscriptions.add(
+            consumerAssignment.topicsSubscriptions.add(
                 new TopicSubscription(
                     topics.get(index),
                     generateSubscriptionName(index),
@@ -322,23 +331,14 @@ public class WorkloadGenerator implements AutoCloseable {
             );
         }
 
-        TpcHInfo generateResultInfo = new TpcHInfo(TpcHConsumer.GenerateResult, null, this.command.numberOfReducers);
-        internalConsumerAssignment.topicsSubscriptions.add(
-            new TopicSubscription(
-                topics.get(TpcHConstants.REDUCE_DST_INDEX),
-                generateSubscriptionName(TpcHConstants.REDUCE_DST_INDEX),
-                generateResultInfo
-            )
-        );
-
         Timer timer = new Timer();
-        worker.createConsumers(externalConsumerAssignment);
+        worker.createConsumers(consumerAssignment);
         log.info(
                 "Created {} external consumers in {} ms",
-                externalConsumerAssignment.topicsSubscriptions.size(),
+                consumerAssignment.topicsSubscriptions.size(),
                 timer.elapsedMillis());
 
-        return internalConsumerAssignment;
+        return orchestratorConsumerAssignment;
     }
 
     private void createProducers(List<String> topics) throws IOException {
