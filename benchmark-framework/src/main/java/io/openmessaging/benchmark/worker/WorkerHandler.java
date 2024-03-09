@@ -68,8 +68,6 @@ public class WorkerHandler {
         app.get(CUMULATIVE_LATENCIES, this::handleCumulativeLatencies);
         app.get(COUNTERS_STATS, this::handleCountersStats);
         app.post(RESET_STATS, this::handleResetStats);
-        app.post(CREATE_TPC_H_MAP_COORDINATOR, this::handleCreateTpcHMapCoordinator);
-        app.post(CREATE_TPC_H_REDUCE_COORDINATOR, this::handleCreateTpcHReduceCoordinator);
     }
 
     private void handleInitializeDriver(Context ctx) throws Exception {
@@ -153,16 +151,6 @@ public class WorkerHandler {
     private void handleResetStats(Context ctx) throws Exception {
         log.info("Reset stats");
         localWorker.resetStats();
-    }
-
-    private void handleCreateTpcHMapCoordinator(Context ctx) throws Exception {
-        ConsumerAssignment consumerAssignment = mapper.readValue(ctx.body(), ConsumerAssignment.class);
-        localWorker.createTpcHMapCoordinator(); // TO DO: Update this code.
-    }
-
-    private void handleCreateTpcHReduceCoordinator(Context ctx) throws Exception {
-        ConsumerAssignment consumerAssignment = mapper.readValue(ctx.body(), ConsumerAssignment.class);
-        localWorker.createTpcHReduceCoordinator(); // TO DO: Update this code.
     }
 
     private static final Logger log = LoggerFactory.getLogger(WorkerHandler.class);

@@ -25,12 +25,14 @@ import io.openmessaging.benchmark.DriverConfiguration;
 import io.openmessaging.benchmark.driver.*;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ConsumerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
+import io.openmessaging.benchmark.tpch.TpcHConsumerAssignment;
+import io.openmessaging.benchmark.tpch.TpcHProducerAssignment;
 import io.openmessaging.benchmark.tpch.TpcHConstants;
 import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.utils.distributor.KeyDistributor;
-import io.openmessaging.benchmark.utils.distributor.NoKeyDistributor;
+import io.openmessaging.benchmark.utils.distributor.KeyDistributorType;
 import io.openmessaging.benchmark.worker.commands.*;
 
 import java.io.File;
@@ -43,6 +45,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
+
+import io.openmessaging.benchmark.worker.jackson.ObjectMappers;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
@@ -66,6 +70,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final WorkerStats stats;
     private boolean testCompleted = false;
     private boolean consumersArePaused = false;
+    private static final ObjectWriter messageWriter = ObjectMappers.DEFAULT.writer();
 
     public LocalWorker() {
         this(NullStatsLogger.INSTANCE);
@@ -142,7 +147,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
         Timer timer = new Timer();
         AtomicInteger index = new AtomicInteger();
 
-        // TODO: Verify created consumers are not launched immediately. They are probably not paused.
         consumers.addAll(
                 benchmarkDriver
                         .createConsumers(
@@ -176,13 +180,28 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     private void startLoadForTpcHProducers(ProducerWorkAssignment producerWorkAssignment) {
         updateMessageProducer(producerWorkAssignment.publishRate);
-
-        // TODO: Implement logic to produce batch of messages with correct payload and then shut down and launch local consumers.
-        submitProducersToExecutor(
-            Collections.singletonList(this.producers.get(TpcHConstants.MAP_CMD_INDEX)),
-            new NoKeyDistributor(),
-            new ArrayList<>()
-        );
+        executor.submit(
+                () -> {
+                    BenchmarkProducer producer = producers.get(TpcHConstants.MAP_CMD_INDEX);
+                    TpcHProducerAssignment tpcH = producerWorkAssignment.tpcH;
+                    AtomicInteger currentAssignment = new AtomicInteger();
+                    KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
+                    int limit = tpcH.offset + tpcH.batchSize;
+                    try {
+                        while (currentAssignment.get() < limit) {
+                            TpcHConsumerAssignment assignment = new TpcHConsumerAssignment();
+                            assignment.query = tpcH.query;
+                            assignment.sourceDataS3Uri = String.format("%s/chunk_%d.csv", tpcH.sourceDataS3FolderUri, currentAssignment.incrementAndGet());
+                            messageProducer.sendMessage(
+                                producer,
+                                Optional.of(keyDistributor.next()),
+                                messageWriter.writeValueAsBytes(assignment)
+                            );
+                        }
+                    } catch (Throwable t) {
+                        log.error("Got error", t);
+                    }
+                });
     }
 
     private void startLoadForThroughputProducers(ProducerWorkAssignment producerWorkAssignment) {
@@ -205,13 +224,13 @@ public class LocalWorker implements Worker, ConsumerCallback {
             .values()
             .forEach(
                 producers ->
-                    submitProducersToExecutor(
+                    submitThroughputProducersToExecutor(
                         producers,
                         KeyDistributor.build(producerWorkAssignment.keyDistributorType),
                         producerWorkAssignment.payloadData));
     }
 
-    private void submitProducersToExecutor(
+    private void submitThroughputProducersToExecutor(
             List<BenchmarkProducer> producers, KeyDistributor keyDistributor, List<byte[]> payloads) {
         ThreadLocalRandom r = ThreadLocalRandom.current();
         int payloadCount = payloads.size();
@@ -303,16 +322,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
     @Override
     public void resetStats() throws IOException {
         stats.resetLatencies();
-    }
-
-    @Override
-    public void createTpcHMapCoordinator() throws IOException {
-        // TO DO: Implement this method.
-    }
-
-    @Override
-    public void createTpcHReduceCoordinator() throws IOException {
-        // TO DO: Implement this method.
     }
 
     @Override

@@ -34,8 +34,6 @@ import org.slf4j.LoggerFactory;
 
 public class DistributedWorkersEnsemble implements Worker {
     private static final int LEADER_WORKER_INDEX = 0;
-    private static final int TPC_H_MAP_COORDINATOR_WORKER_INDEX = 0;
-    private static final int TPC_H_REDUCE_COORDINATOR_WORKER_INDEX = 1;
     private final Thread shutdownHook = new Thread(this::stopAll);
     private final List<Worker> workers;
     private final List<Worker> producerWorkers;
@@ -103,19 +101,18 @@ public class DistributedWorkersEnsemble implements Worker {
 
     @Override
     public void startLoad(ProducerWorkAssignment producerWorkAssignment) throws IOException {
-        // Reduce the publish rate across all the brokers
         double newRate = producerWorkAssignment.publishRate / numberOfUsedProducerWorkers;
         log.debug("Setting worker assigned publish rate to {} msgs/sec", newRate);
-        // Reduce the publish rate across all the brokers
-        producerWorkers.parallelStream()
-                .forEach(
-                        w -> {
-                            try {
-                                w.startLoad(producerWorkAssignment.withPublishRate(newRate));
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        });
+        List<Worker> workersToStart = producerWorkAssignment.tpcH != null ? this.workers : this.producerWorkers;
+        workersToStart.parallelStream()
+            .forEach(
+                w -> {
+                    try {
+                        w.startLoad(producerWorkAssignment.withPublishRate(newRate));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
     @Override
@@ -280,6 +277,7 @@ public class DistributedWorkersEnsemble implements Worker {
             topicsPerProducerMap.put(workers.get(i++), assignedTopics);
         }
 
+        numberOfUsedProducerWorkers = workers.size();
         topicsPerProducerMap.entrySet().parallelStream()
                 .forEach(
                         e -> {
@@ -344,21 +342,6 @@ public class DistributedWorkersEnsemble implements Worker {
                                 throw new RuntimeException(e);
                             }
                         });
-    }
-
-    @Override
-    public void createTpcHMapCoordinator() throws IOException {
-        this.producerWorkers
-                .get(TPC_H_MAP_COORDINATOR_WORKER_INDEX)
-                .createTpcHMapCoordinator();
-    }
-
-    @Override
-    public void createTpcHReduceCoordinator() throws IOException {
-        int index = TPC_H_REDUCE_COORDINATOR_WORKER_INDEX % this.producerWorkers.size();
-        this.workers
-                .get(index)
-                .createTpcHReduceCoordinator();
     }
 
     @Override
