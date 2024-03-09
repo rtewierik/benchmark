@@ -16,7 +16,10 @@ package io.openmessaging.benchmark;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 import io.netty.util.concurrent.DefaultThreadFactory;
+import io.openmessaging.benchmark.driver.TpcHConsumer;
+import io.openmessaging.benchmark.driver.TpcHInfo;
 import io.openmessaging.benchmark.tpch.TpcHCommand;
+import io.openmessaging.benchmark.tpch.TpcHConstants;
 import io.openmessaging.benchmark.utils.PaddingDecimalFormat;
 import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.Timer;
@@ -78,13 +81,12 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     private TestResult runTpcH() throws Exception {
-        Timer timer = new Timer();
-        /*
-            * 1 topic for Map commands;
-            * 1 topic for Reduce commands;
-            * x topics to send intermediate results to;
-            * 1 topic to send aggregated intermediate results to.
-        */
+        Timer timer = new Timer();/*
+         * 1 topic for Map commands;
+         * 1 topic for Reduce commands;
+         * 1 topic to send aggregated intermediate results to.
+         * x topics to send intermediate results to;
+         */
         int numberOfReduceOps = this.command.getNumberOfReduceOperations();
         int numberOfTopics = 1 + 1 + numberOfReduceOps + 1;
         List<String> topics = worker.createTopics(new TopicsInfo(numberOfTopics, workload.partitionsPerTopic));
@@ -277,9 +279,9 @@ public class WorkloadGenerator implements AutoCloseable {
 
         for (String topic : topics) {
             for (int i = 0; i < workload.subscriptionsPerTopic; i++) {
-                String subscriptionName = String.format("sub-%03d-%s", i, RandomGenerator.getRandomString());
+                String subscriptionName = generateSubscriptionName(i);
                 for (int j = 0; j < workload.consumerPerSubscription; j++) {
-                    consumerAssignment.topicsSubscriptions.add(new TopicSubscription(topic, subscriptionName));
+                    consumerAssignment.topicsSubscriptions.add(new TopicSubscription(topic, subscriptionName, null));
                 }
             }
         }
@@ -297,14 +299,42 @@ public class WorkloadGenerator implements AutoCloseable {
 
     private ConsumerAssignment createTpcHConsumers(List<String> topics) throws IOException {
         ConsumerAssignment consumerAssignment = new ConsumerAssignment();
-        consumerAssignment.isTpcHAssignment = true;
+        /*
+         * 1 topic for Map commands;
+         * 1 topic to send aggregated intermediate results to.
+         * x topics to send intermediate results to;
+         */
+        TpcHInfo mapInfo = new TpcHInfo(TpcHConsumer.Map, null, null);
+        consumerAssignment.topicsSubscriptions.add(
+            new TopicSubscription(
+                topics.get(TpcHConstants.MAP_CMD_INDEX),
+                generateSubscriptionName(TpcHConstants.MAP_CMD_INDEX),
+                mapInfo
+            )
+        );
 
-        for (int i = 0; i < topics.size(); i++) {
-            String topic = topics.get(i);
-            String subscriptionName = String.format("sub-%03d-%s", i, RandomGenerator.getRandomString());
-            consumerAssignment.topicsSubscriptions.add(new TopicSubscription(topic, subscriptionName));
+        TpcHInfo generateResultInfo = new TpcHInfo(TpcHConsumer.GenerateResult, null, this.command.numberOfReducers);
+        consumerAssignment.topicsSubscriptions.add(
+            new TopicSubscription(
+                topics.get(TpcHConstants.REDUCE_DST_INDEX),
+                generateSubscriptionName(TpcHConstants.REDUCE_DST_INDEX),
+                generateResultInfo
+            )
+        );
+
+        for (int i = 0; i < this.command.numberOfReducers; i++) {
+            TpcHInfo info = new TpcHInfo(TpcHConsumer.Reduce, this.command.getNumberOfMapResults(i), null);
+            int index = TpcHConstants.REDUCE_SRC_START_INDEX + i;
+            consumerAssignment.topicsSubscriptions.add(
+                new TopicSubscription(
+                    topics.get(index),
+                    generateSubscriptionName(index),
+                    info
+                )
+            );
         }
 
+        // TODO: Figure out what to do with consuner assignment.
         Timer timer = new Timer();
         worker.createConsumers(consumerAssignment);
         log.info(
@@ -590,6 +620,9 @@ public class WorkloadGenerator implements AutoCloseable {
     private static final DecimalFormat throughputFormat = new PaddingDecimalFormat("0.0", 4);
     private static final DecimalFormat dec = new PaddingDecimalFormat("0.0", 4);
 
+    private static String generateSubscriptionName(int index) {
+        return String.format("sub-%03d-%s", index, RandomGenerator.getRandomString());
+    }
     private static double microsToMillis(double timeInMicros) {
         return timeInMicros / 1000.0;
     }

@@ -149,7 +149,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                         .map(
                                                 c ->
                                                         new ConsumerInfo(
-                                                                index.getAndIncrement(), c.topic, c.subscription, this, consumerAssignment.isTpcHAssignment))
+                                                                index.getAndIncrement(), c.topic, c.subscription, this, c.info))
                                         .collect(toList()))
                         .join());
 

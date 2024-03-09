@@ -13,26 +13,26 @@
  */
 package io.openmessaging.benchmark.worker.commands;
 
+import io.openmessaging.benchmark.driver.TpcHInfo;
+
 public class TopicSubscription {
     public String topic;
     public String subscription;
+    public TpcHInfo info;
 
     public TopicSubscription() {}
 
-    public TopicSubscription(String topic, String subscription) {
+    public TopicSubscription(String topic, String subscription, TpcHInfo info) {
         this.topic = topic;
         this.subscription = subscription;
     }
 
     @Override
     public String toString() {
-        return "TopicSubscription{"
-                + "topic='"
-                + topic
-                + '\''
-                + ", subscription='"
-                + subscription
-                + '\''
-                + '}';
+        return "TopicSubscription{" +
+                "topic='" + topic + '\'' +
+                ", subscription='" + subscription + '\'' +
+                ", info=" + info +
+                '}';
     }
 }
