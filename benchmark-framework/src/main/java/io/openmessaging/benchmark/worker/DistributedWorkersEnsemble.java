@@ -97,6 +97,7 @@ public class DistributedWorkersEnsemble implements Worker {
 
     @Override
     public void createProducers(List<String> topics) {
+        // TODO: Modify this function to create producers for all workers.
         List<List<String>> topicsPerProducer =
                 ListPartition.partitionList(topics, producerWorkers.size());
         Map<Worker, List<String>> topicsPerProducerMap = Maps.newHashMap();

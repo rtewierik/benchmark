@@ -58,7 +58,14 @@ import org.slf4j.LoggerFactory;
 public class LocalWorker implements Worker, ConsumerCallback {
 
     private BenchmarkDriver benchmarkDriver = null;
+    /*
+        For TPC-H queries, the producers list is allocated with the producer for Map messages and producers for all the
+        assigned reducers.
+     */
     private final List<BenchmarkProducer> producers = new ArrayList<>();
+    /*
+        For TPC-H queries, the consumers list is allocated with the consumers for all the assigned reducers.
+     */
     private final List<BenchmarkConsumer> consumers = new ArrayList<>();
     private volatile MessageProducer messageProducer;
     private final ExecutorService executor =

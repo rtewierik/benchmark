@@ -25,6 +25,7 @@ import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.utils.payload.FilePayloadReader;
 import io.openmessaging.benchmark.utils.payload.PayloadReader;
+import io.openmessaging.benchmark.worker.LocalWorker;
 import io.openmessaging.benchmark.worker.Worker;
 import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
 import io.openmessaging.benchmark.worker.commands.CountersStats;
@@ -52,6 +53,7 @@ public class WorkloadGenerator implements AutoCloseable {
     private final Workload workload;
     private final TpcHCommand command;
     private final Worker worker;
+    private final LocalWorker localWorker;
 
     private final ExecutorService executor =
             Executors.newCachedThreadPool(new DefaultThreadFactory("messaging-benchmark"));
@@ -61,11 +63,12 @@ public class WorkloadGenerator implements AutoCloseable {
 
     private volatile double targetPublishRate;
 
-    public WorkloadGenerator(String driverName, Workload workload, TpcHCommand command, Worker worker) {
+    public WorkloadGenerator(String driverName, Workload workload, TpcHCommand command, Worker worker, LocalWorker localWorker) {
         this.driverName = driverName;
         this.workload = workload;
         this.command = command;
         this.worker = worker;
+        this.localWorker = localWorker;
 
         if (workload.consumerBacklogSizeGB > 0 && workload.producerRate == 0) {
             throw new IllegalArgumentException(
@@ -81,25 +84,27 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     private TestResult runTpcH() throws Exception {
-        Timer timer = new Timer();/*
+        Timer timer = new Timer();
+        /*
          * 1 topic for Map commands;
-         * 1 topic for Reduce commands;
          * 1 topic to send aggregated intermediate results to.
          * x topics to send intermediate results to;
          */
-        int numberOfReduceOps = this.command.getNumberOfReduceOperations();
-        int numberOfTopics = 1 + 1 + numberOfReduceOps + 1;
+        int numberOfTopics = 1 + 1 + this.command.numberOfReducers;
         List<String> topics = worker.createTopics(new TopicsInfo(numberOfTopics, workload.partitionsPerTopic));
-
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
-        createTpcHConsumers(topics);
-        createProducers(topics);
+
+        ConsumerAssignment internalConsumerAssignment = createTpcHConsumers(topics);
+        this.localWorker.createConsumers(internalConsumerAssignment);
+        log.info(
+                "Created {} internal consumers in {} ms",
+                internalConsumerAssignment.topicsSubscriptions.size(),
+                timer.elapsedMillis());
+        createTpcHProducers(topics);
 
         ensureTopicsAreReady();
 
         // TODO: Assign producers with work by writing commands to topic. To be implemented in worker.
-
-        // TODO: Monitor availability of aggregated intermediate results in the final topic of the created list of topics.
 
         // TODO: Wait until TPC-H query results are present in S3.
 
@@ -298,14 +303,11 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     private ConsumerAssignment createTpcHConsumers(List<String> topics) throws IOException {
-        ConsumerAssignment consumerAssignment = new ConsumerAssignment();
-        /*
-         * 1 topic for Map commands;
-         * 1 topic to send aggregated intermediate results to.
-         * x topics to send intermediate results to;
-         */
+        ConsumerAssignment externalConsumerAssignment = new ConsumerAssignment();
+        ConsumerAssignment internalConsumerAssignment = new ConsumerAssignment();
+
         TpcHInfo mapInfo = new TpcHInfo(TpcHConsumer.Map, null, null);
-        consumerAssignment.topicsSubscriptions.add(
+        externalConsumerAssignment.topicsSubscriptions.add(
             new TopicSubscription(
                 topics.get(TpcHConstants.MAP_CMD_INDEX),
                 generateSubscriptionName(TpcHConstants.MAP_CMD_INDEX),
@@ -313,19 +315,10 @@ public class WorkloadGenerator implements AutoCloseable {
             )
         );
 
-        TpcHInfo generateResultInfo = new TpcHInfo(TpcHConsumer.GenerateResult, null, this.command.numberOfReducers);
-        consumerAssignment.topicsSubscriptions.add(
-            new TopicSubscription(
-                topics.get(TpcHConstants.REDUCE_DST_INDEX),
-                generateSubscriptionName(TpcHConstants.REDUCE_DST_INDEX),
-                generateResultInfo
-            )
-        );
-
         for (int i = 0; i < this.command.numberOfReducers; i++) {
             TpcHInfo info = new TpcHInfo(TpcHConsumer.Reduce, this.command.getNumberOfMapResults(i), null);
             int index = TpcHConstants.REDUCE_SRC_START_INDEX + i;
-            consumerAssignment.topicsSubscriptions.add(
+            externalConsumerAssignment.topicsSubscriptions.add(
                 new TopicSubscription(
                     topics.get(index),
                     generateSubscriptionName(index),
@@ -334,15 +327,23 @@ public class WorkloadGenerator implements AutoCloseable {
             );
         }
 
-        // TODO: Figure out what to do with consuner assignment.
+        TpcHInfo generateResultInfo = new TpcHInfo(TpcHConsumer.GenerateResult, null, this.command.numberOfReducers);
+        internalConsumerAssignment.topicsSubscriptions.add(
+            new TopicSubscription(
+                topics.get(TpcHConstants.REDUCE_DST_INDEX),
+                generateSubscriptionName(TpcHConstants.REDUCE_DST_INDEX),
+                generateResultInfo
+            )
+        );
+
         Timer timer = new Timer();
-        worker.createConsumers(consumerAssignment);
+        worker.createConsumers(externalConsumerAssignment);
         log.info(
-                "Created {} consumers in {} ms",
-                consumerAssignment.topicsSubscriptions.size(),
+                "Created {} external consumers in {} ms",
+                externalConsumerAssignment.topicsSubscriptions.size(),
                 timer.elapsedMillis());
 
-        return consumerAssignment;
+        return internalConsumerAssignment;
     }
 
     private void createProducers(List<String> topics) throws IOException {
@@ -359,6 +360,14 @@ public class WorkloadGenerator implements AutoCloseable {
 
         worker.createProducers(fullListOfTopics);
         log.info("Created {} producers in {} ms", fullListOfTopics.size(), timer.elapsedMillis());
+    }
+
+    private void createTpcHProducers(List<String> topics) throws IOException {
+        // TODO: Pass isTpcH parameter in to register producer for all workers for 1 topic.
+        // TODO: What about sending messages from Map to second topic?
+        Timer timer = new Timer();
+        worker.createProducers(topics);
+        log.info("Created {} producers in {} ms", topics.size(), timer.elapsedMillis());
     }
 
     private void buildAndDrainBacklog(int testDurationMinutes) throws IOException {
