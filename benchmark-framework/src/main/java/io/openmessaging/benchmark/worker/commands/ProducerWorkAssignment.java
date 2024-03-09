@@ -14,6 +14,7 @@
 package io.openmessaging.benchmark.worker.commands;
 
 
+import io.openmessaging.benchmark.tpch.TpcHAssignment;
 import io.openmessaging.benchmark.utils.distributor.KeyDistributorType;
 import java.util.List;
 
@@ -24,7 +25,8 @@ public class ProducerWorkAssignment {
     public double publishRate;
 
     public KeyDistributorType keyDistributorType;
-    public boolean isTpcH = false;
+
+    public TpcHAssignment tpcH = null;
 
     public ProducerWorkAssignment withPublishRate(double publishRate) {
         ProducerWorkAssignment copy = new ProducerWorkAssignment();

@@ -24,22 +24,19 @@ import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.DriverConfiguration;
 import io.openmessaging.benchmark.driver.*;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ConsumerInfo;
-import io.openmessaging.benchmark.driver.BenchmarkDriver.ProducerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
+import io.openmessaging.benchmark.tpch.TpcHConstants;
 import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.utils.distributor.KeyDistributor;
+import io.openmessaging.benchmark.utils.distributor.NoKeyDistributor;
 import io.openmessaging.benchmark.worker.commands.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
@@ -126,7 +123,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public void createProducers(ProducerAssignment producerAssignment) {
-        // TODO: Consume isTpcH.
         Timer timer = new Timer();
         AtomicInteger index = new AtomicInteger();
 
@@ -134,7 +130,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 benchmarkDriver
                         .createProducers(
                                 producerAssignment.topics.stream()
-                                        .map(t -> new ProducerInfo(index.getAndIncrement(), t))
+                                        .map(t -> new BenchmarkDriver.ProducerInfo(index.getAndIncrement(), t))
                                         .collect(toList()))
                         .join());
 
@@ -162,7 +158,32 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public void startLoad(ProducerWorkAssignment producerWorkAssignment) {
-        // TODO: Consume isTpcH here.
+        if (producerWorkAssignment.tpcH == null) {
+            startLoadForThroughputProducers(producerWorkAssignment);
+        } else {
+            startLoadForTpcHProducers(producerWorkAssignment);
+        }
+    }
+
+    @Override
+    public void probeProducers() throws IOException {
+        producers.forEach(
+            producer ->
+                producer.sendAsync(Optional.of("key"), new byte[10]).thenRun(stats::recordMessageSent));
+    }
+
+
+    private void startLoadForTpcHProducers(ProducerWorkAssignment producerWorkAssignment) {
+        updateMessageProducer(producerWorkAssignment.publishRate);
+
+        submitProducersToExecutor(
+            Collections.singletonList(this.producers.get(TpcHConstants.MAP_CMD_INDEX)),
+            new NoKeyDistributor(),
+            new ArrayList<>()
+        );
+    }
+
+    private void startLoadForThroughputProducers(ProducerWorkAssignment producerWorkAssignment) {
         int processors = Runtime.getRuntime().availableProcessors();
 
         updateMessageProducer(producerWorkAssignment.publishRate);
@@ -172,27 +193,20 @@ public class LocalWorker implements Worker, ConsumerCallback {
         int processorIdx = 0;
         for (BenchmarkProducer p : producers) {
             processorAssignment
-                    .computeIfAbsent(processorIdx, x -> new ArrayList<BenchmarkProducer>())
-                    .add(p);
+                .computeIfAbsent(processorIdx, x -> new ArrayList<>())
+                .add(p);
 
             processorIdx = (processorIdx + 1) % processors;
         }
 
         processorAssignment
-                .values()
-                .forEach(
-                        producers ->
-                                submitProducersToExecutor(
-                                        producers,
-                                        KeyDistributor.build(producerWorkAssignment.keyDistributorType),
-                                        producerWorkAssignment.payloadData));
-    }
-
-    @Override
-    public void probeProducers() throws IOException {
-        producers.forEach(
-                producer ->
-                        producer.sendAsync(Optional.of("key"), new byte[10]).thenRun(stats::recordMessageSent));
+            .values()
+            .forEach(
+                producers ->
+                    submitProducersToExecutor(
+                        producers,
+                        KeyDistributor.build(producerWorkAssignment.keyDistributorType),
+                        producerWorkAssignment.payloadData));
     }
 
     private void submitProducersToExecutor(

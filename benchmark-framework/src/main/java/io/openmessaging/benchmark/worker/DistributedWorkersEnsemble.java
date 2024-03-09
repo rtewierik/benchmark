@@ -20,11 +20,13 @@ import com.beust.jcommander.internal.Maps;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import io.openmessaging.benchmark.tpch.TpcHConstants;
 import io.openmessaging.benchmark.utils.ListPartition;
 import io.openmessaging.benchmark.worker.commands.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -92,29 +94,11 @@ public class DistributedWorkersEnsemble implements Worker {
 
     @Override
     public void createProducers(ProducerAssignment producerAssignment) {
-        // TODO: Modify this function to create producers for all workers. Consume isTpcH.
-        List<List<String>> topicsPerProducer =
-                ListPartition.partitionList(producerAssignment.topics, producerWorkers.size());
-        Map<Worker, List<String>> topicsPerProducerMap = Maps.newHashMap();
-        int i = 0;
-        for (List<String> assignedTopics : topicsPerProducer) {
-            topicsPerProducerMap.put(producerWorkers.get(i++), assignedTopics);
+        if (producerAssignment.isTpcH) {
+            createTpcHProducers(producerAssignment);
+        } else {
+            createThroughputProducers(producerAssignment);
         }
-
-        // Number of actually used workers might be less than available workers
-        numberOfUsedProducerWorkers =
-                (int) topicsPerProducerMap.values().stream().filter(t -> !t.isEmpty()).count();
-        log.debug(
-                "Producing worker count: {} of {}", numberOfUsedProducerWorkers, producerWorkers.size());
-        topicsPerProducerMap.entrySet().parallelStream()
-                .forEach(
-                        e -> {
-                            try {
-                                e.getKey().createProducers(new ProducerAssignment(e.getValue()));
-                            } catch (IOException ex) {
-                                throw new RuntimeException(ex);
-                            }
-                        });
     }
 
     @Override
@@ -224,9 +208,54 @@ public class DistributedWorkersEnsemble implements Worker {
                         });
     }
 
-    private void createConsumersForTpcH() {
-        // TODO: For TPC-H queries, there will be two topics (one for Map, one for reduce. Add TPC-H flag that ensures each consumer is subscribed to both topics.
-        // Ensure intermediate result file written to S3 has the same name for each consumer in case of multiple consumers processing the same event. File will be overwritten.
+    private void createThroughputProducers(ProducerAssignment producerAssignment) {
+        List<List<String>> topicsPerProducer =
+                ListPartition.partitionList(producerAssignment.topics, producerWorkers.size());
+        Map<Worker, List<String>> topicsPerProducerMap = Maps.newHashMap();
+        int i = 0;
+        for (List<String> assignedTopics : topicsPerProducer) {
+            topicsPerProducerMap.put(producerWorkers.get(i++), assignedTopics);
+        }
+
+        // Number of actually used workers might be less than available workers
+        numberOfUsedProducerWorkers =
+                (int) topicsPerProducerMap.values().stream().filter(t -> !t.isEmpty()).count();
+        log.debug(
+                "Producing worker count: {} of {}", numberOfUsedProducerWorkers, producerWorkers.size());
+        topicsPerProducerMap.entrySet().parallelStream()
+                .forEach(
+                        e -> {
+                            try {
+                                e.getKey().createProducers(new ProducerAssignment(e.getValue()));
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        });
+    }
+
+    private void createTpcHProducers(ProducerAssignment producerAssignment) {
+        List<String> distributableReducerTopics = new ArrayList<>(producerAssignment.topics.subList(TpcHConstants.REDUCE_SRC_START_INDEX, producerAssignment.topics.size()));;
+        String mapTopic = producerAssignment.topics.get(TpcHConstants.MAP_CMD_INDEX);
+        List<List<String>> reduceTopicsPerProducer =
+                ListPartition.partitionList(distributableReducerTopics, workers.size());
+        Map<Worker, List<String>> topicsPerProducerMap = Maps.newHashMap();
+        int i = 0;
+        for (List<String> assignedReducerTopics : reduceTopicsPerProducer) {
+            List<String> assignedTopics = new ArrayList<>();
+            assignedTopics.add(mapTopic);
+            assignedTopics.addAll(assignedReducerTopics);
+            topicsPerProducerMap.put(workers.get(i++), assignedTopics);
+        }
+
+        topicsPerProducerMap.entrySet().parallelStream()
+                .forEach(
+                        e -> {
+                            try {
+                                e.getKey().createProducers(new ProducerAssignment(e.getValue()));
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        });
     }
 
     @Override
