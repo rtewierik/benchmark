@@ -73,7 +73,7 @@ public class WorkloadGenerator implements AutoCloseable {
 
     public TestResult run() throws Exception {
         if (this.command != null) {
-            runTpcH();
+            return runTpcH();
         }
         return runWorkload();
     }

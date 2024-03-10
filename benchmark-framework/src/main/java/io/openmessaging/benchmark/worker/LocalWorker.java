@@ -25,9 +25,7 @@ import io.openmessaging.benchmark.DriverConfiguration;
 import io.openmessaging.benchmark.driver.*;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ConsumerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
-import io.openmessaging.benchmark.tpch.TpcHConsumerAssignment;
-import io.openmessaging.benchmark.tpch.TpcHProducerAssignment;
-import io.openmessaging.benchmark.tpch.TpcHConstants;
+import io.openmessaging.benchmark.tpch.*;
 import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.utils.UniformRateLimiter;
@@ -186,16 +184,21 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     TpcHProducerAssignment tpcH = producerWorkAssignment.tpcH;
                     AtomicInteger currentAssignment = new AtomicInteger();
                     KeyDistributor keyDistributor = KeyDistributor.build(producerWorkAssignment.keyDistributorType);
-                    int limit = tpcH.offset + tpcH.batchSize;
+                    int limit = (tpcH.offset * tpcH.batchSize) + tpcH.batchSize;
+                    String batchId = String.format("batch-%d-%s", tpcH.offset, RandomGenerator.getRandomString());
                     try {
                         while (currentAssignment.get() < limit) {
                             TpcHConsumerAssignment assignment = new TpcHConsumerAssignment();
+                            assignment.batchId = batchId;
                             assignment.query = tpcH.query;
                             assignment.sourceDataS3Uri = String.format("%s/chunk_%d.csv", tpcH.sourceDataS3FolderUri, currentAssignment.incrementAndGet());
+                            TpcHMessage message = new TpcHMessage();
+                            message.type = TpcHMessageType.ConsumerAssignment;
+                            message.message = messageWriter.writeValueAsString(assignment);
                             messageProducer.sendMessage(
                                 producer,
                                 Optional.of(keyDistributor.next()),
-                                messageWriter.writeValueAsBytes(assignment)
+                                messageWriter.writeValueAsBytes(message)
                             );
                         }
                     } catch (Throwable t) {
@@ -280,17 +283,57 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     @Override
-    public void messageReceived(byte[] data, long publishTimestamp, TpcHInfo info) {
+    public void messageReceived(byte[] data, long publishTimestamp, TpcHInfo info) throws IOException {
         internalMessageReceived(data.length, publishTimestamp);
-        // TO DO: Implement generic logic to execute TPC-H query based on JSON parseability and message type.
+        if (info != null) {
+            TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
+            handleTpcHMessage(message, info);
+        }
         // TO DO: Add separate call to stats to record message processed.
     }
 
     @Override
-    public void messageReceived(ByteBuffer data, long publishTimestamp, TpcHInfo info) {
+    public void messageReceived(ByteBuffer data, long publishTimestamp, TpcHInfo info) throws IOException {
         internalMessageReceived(data.remaining(), publishTimestamp);
-        // TO DO: Implement generic logic to execute TPC-H query based on JSON parseability and message type.
+        if (info != null) {
+            TpcHMessage message = mapper.readValue(data.array(), TpcHMessage.class);
+            handleTpcHMessage(message, info);
+        }
         // TO DO: Add separate call to stats to record message processed.
+    }
+
+    private void handleTpcHMessage(TpcHMessage message, TpcHInfo info) throws IOException {
+        switch (message.type) {
+            case ConsumerAssignment:
+                TpcHConsumerAssignment assignment = mapper.readValue(message.message, TpcHConsumerAssignment.class);
+                processConsumerAssignment(assignment, info);
+                break;
+            case IntermediateResult:
+                TpcHIntermediateResult intermediateResult = mapper.readValue(message.message, TpcHIntermediateResult.class);
+                processIntermediateResult(intermediateResult, info);
+                break;
+            case ReducedResult:
+                TpcHIntermediateResult reducedResult = mapper.readValue(message.message, TpcHIntermediateResult.class);
+                processReducedResult(reducedResult, info);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid message type detected!");
+        }
+    }
+
+    private void processConsumerAssignment(TpcHConsumerAssignment assignment, TpcHInfo info) {
+        // TO DO: Use S3 client to request file, generate TpcHIntermediateResult, and use producer to send.
+    }
+
+    private void processIntermediateResult(TpcHIntermediateResult intermediateResult, TpcHInfo info) {
+        // TO DO: Upon reception, aggregate data into intermediate result persisted in thread-safe map.
+        // TO DO: Check whether all results are present based on info and send message using second producer.
+    }
+
+    private void processReducedResult(TpcHIntermediateResult reducedResult, TpcHInfo info) {
+        // TO DO: Upon reception, aggregate data into intermediate result persisted in thread-safe map.
+        // TO DO: Check whether all results are present based on info and log result.
+        // TO DO: Somehow notify main thread that work is done. Can be done through testCompleted property and getter.
     }
 
     public void internalMessageReceived(int size, long publishTimestamp) {
@@ -371,6 +414,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private static final ObjectMapper mapper =
             new ObjectMapper(new YAMLFactory())
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private static final ObjectMapper jsonMapper = ObjectMappers.DEFAULT.mapper();
 
     static {
         mapper.enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TpcHIntermediateResult {
+    public String queryId;
     public List<TpcHIntermediateResultGroup> groups;
 
     public TpcHIntermediateResult(List<TpcHIntermediateResultGroup> groups) {
