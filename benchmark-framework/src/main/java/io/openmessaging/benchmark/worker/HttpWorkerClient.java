@@ -34,12 +34,7 @@ import static org.asynchttpclient.Dsl.asyncHttpClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.base.Preconditions;
-import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
-import io.openmessaging.benchmark.worker.commands.CountersStats;
-import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
-import io.openmessaging.benchmark.worker.commands.PeriodStats;
-import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
-import io.openmessaging.benchmark.worker.commands.TopicsInfo;
+import io.openmessaging.benchmark.worker.commands.*;
 import io.openmessaging.benchmark.worker.jackson.ObjectMappers;
 import java.io.File;
 import java.io.IOException;
@@ -86,9 +81,9 @@ public class HttpWorkerClient implements Worker {
     }
 
     @Override
-    public void createProducers(List<String> topics) throws IOException {
+    public void createProducers(ProducerAssignment producerAssignment) throws IOException {
         try {
-            sendPost(CREATE_PRODUCERS, writer.writeValueAsBytes(topics));
+            sendPost(CREATE_PRODUCERS, writer.writeValueAsBytes(producerAssignment));
         } catch (Exception e) {
             log.error("Exception occurred while creating producers", e);
             throw e;
@@ -196,16 +191,6 @@ public class HttpWorkerClient implements Worker {
             log.error("Exception occurred while resetting stats", e);
             throw e;
         }
-    }
-
-    @Override
-    public void createTpcHMapCoordinator() throws IOException {
-        sendPost(CREATE_TPC_H_MAP_COORDINATOR); // TO DO: Add body here if needed.
-    }
-
-    @Override
-    public void createTpcHReduceCoordinator() throws IOException {
-        sendPost(CREATE_TPC_H_REDUCE_COORDINATOR); // TO DO: Add body here if needed.
     }
 
     @Override

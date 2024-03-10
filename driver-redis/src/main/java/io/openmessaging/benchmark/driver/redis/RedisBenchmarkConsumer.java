@@ -23,6 +23,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import io.openmessaging.benchmark.driver.TpcHInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
@@ -45,7 +47,8 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
             final String topic,
             final String subscriptionName,
             final JedisPool pool,
-            ConsumerCallback consumerCallback) {
+            ConsumerCallback consumerCallback,
+            TpcHInfo info) {
         this.pool = pool;
         this.topic = topic;
         this.subscriptionName = subscriptionName;
@@ -71,7 +74,7 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
                                             for (StreamEntry entry : streamEntries.getValue()) {
                                                 long timestamp = entry.getID().getTime();
                                                 byte[] payload = entry.getFields().get("payload").getBytes(UTF_8);
-                                                consumerCallback.messageReceived(payload, timestamp);
+                                                consumerCallback.messageReceived(payload, timestamp, info);
                                             }
                                         }
                                     }

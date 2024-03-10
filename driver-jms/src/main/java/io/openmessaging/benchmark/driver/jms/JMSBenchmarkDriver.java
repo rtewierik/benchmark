@@ -18,10 +18,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import io.openmessaging.benchmark.driver.BenchmarkConsumer;
-import io.openmessaging.benchmark.driver.BenchmarkDriver;
-import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.*;
 import io.openmessaging.benchmark.driver.jms.config.JMSConfig;
 import java.io.File;
 import java.io.IOException;
@@ -154,7 +151,7 @@ public class JMSBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkConsumer> createConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback) {
+            String topic, String subscriptionName, ConsumerCallback consumerCallback, TpcHInfo info) {
         try {
             String selector =
                     config.messageSelector != null && !config.messageSelector.isEmpty()
@@ -174,7 +171,7 @@ public class JMSBenchmarkDriver implements BenchmarkDriver {
             }
             return CompletableFuture.completedFuture(
                     new JMSBenchmarkConsumer(
-                            connection, session, durableConsumer, consumerCallback, config.use20api));
+                            connection, session, durableConsumer, consumerCallback, config.use20api, info));
         } catch (Exception err) {
             CompletableFuture<BenchmarkConsumer> res = new CompletableFuture<>();
             res.completeExceptionally(err);

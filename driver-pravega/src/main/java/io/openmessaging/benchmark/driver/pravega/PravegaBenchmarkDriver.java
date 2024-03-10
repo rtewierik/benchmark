@@ -18,10 +18,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import io.openmessaging.benchmark.driver.BenchmarkConsumer;
-import io.openmessaging.benchmark.driver.BenchmarkDriver;
-import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.*;
 import io.openmessaging.benchmark.driver.pravega.config.PravegaConfig;
 import io.pravega.client.ClientConfig;
 import io.pravega.client.EventStreamClientFactory;
@@ -141,7 +138,7 @@ public class PravegaBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkConsumer> createConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback) {
+            String topic, String subscriptionName, ConsumerCallback consumerCallback, TpcHInfo info) {
         topic = cleanName(topic);
         subscriptionName = cleanName(subscriptionName);
         BenchmarkConsumer consumer =
@@ -152,7 +149,8 @@ public class PravegaBenchmarkDriver implements BenchmarkDriver {
                         consumerCallback,
                         clientFactory,
                         readerGroupManager,
-                        config.includeTimestampInEvent);
+                        config.includeTimestampInEvent,
+                        info);
         return CompletableFuture.completedFuture(consumer);
     }
 

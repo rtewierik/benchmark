@@ -14,12 +14,8 @@
 package io.openmessaging.benchmark.worker;
 
 
-import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
-import io.openmessaging.benchmark.worker.commands.CountersStats;
-import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
-import io.openmessaging.benchmark.worker.commands.PeriodStats;
-import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
-import io.openmessaging.benchmark.worker.commands.TopicsInfo;
+import io.openmessaging.benchmark.worker.commands.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -30,7 +26,7 @@ public interface Worker extends AutoCloseable {
 
     List<String> createTopics(TopicsInfo topicsInfo) throws IOException;
 
-    void createProducers(List<String> topics) throws IOException;
+    void createProducers(ProducerAssignment producerAssignment) throws IOException;
 
     void createConsumers(ConsumerAssignment consumerAssignment) throws IOException;
 
@@ -51,10 +47,6 @@ public interface Worker extends AutoCloseable {
     CumulativeLatencies getCumulativeLatencies() throws IOException;
 
     void resetStats() throws IOException;
-
-    void createTpcHMapCoordinator() throws IOException;
-
-    void createTpcHReduceCoordinator() throws IOException;
 
     void stopAll();
 

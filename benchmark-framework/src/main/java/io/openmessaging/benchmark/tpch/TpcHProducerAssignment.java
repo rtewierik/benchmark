@@ -1,8 +1,8 @@
 package io.openmessaging.benchmark.tpch;
 
-public class TpcHAssignment {
+public class TpcHProducerAssignment {
+    public TpcHQuery query;
     public String sourceDataS3FolderUri;
-    public int chunkSize;
+    public int batchSize;
     public int offset;
-    public String intermediateResultsS3FolderUri;
 }

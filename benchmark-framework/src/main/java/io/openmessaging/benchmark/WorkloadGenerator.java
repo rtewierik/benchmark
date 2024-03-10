@@ -16,20 +16,19 @@ package io.openmessaging.benchmark;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 import io.netty.util.concurrent.DefaultThreadFactory;
+import io.openmessaging.benchmark.driver.TpcHConsumer;
+import io.openmessaging.benchmark.driver.TpcHInfo;
 import io.openmessaging.benchmark.tpch.TpcHCommand;
+import io.openmessaging.benchmark.tpch.TpcHConstants;
 import io.openmessaging.benchmark.utils.PaddingDecimalFormat;
 import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.utils.payload.FilePayloadReader;
 import io.openmessaging.benchmark.utils.payload.PayloadReader;
+import io.openmessaging.benchmark.worker.LocalWorker;
 import io.openmessaging.benchmark.worker.Worker;
-import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
-import io.openmessaging.benchmark.worker.commands.CountersStats;
-import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
-import io.openmessaging.benchmark.worker.commands.PeriodStats;
-import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
-import io.openmessaging.benchmark.worker.commands.TopicSubscription;
-import io.openmessaging.benchmark.worker.commands.TopicsInfo;
+import io.openmessaging.benchmark.worker.commands.*;
+
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -49,6 +48,7 @@ public class WorkloadGenerator implements AutoCloseable {
     private final Workload workload;
     private final TpcHCommand command;
     private final Worker worker;
+    private final LocalWorker localWorker;
 
     private final ExecutorService executor =
             Executors.newCachedThreadPool(new DefaultThreadFactory("messaging-benchmark"));
@@ -58,11 +58,12 @@ public class WorkloadGenerator implements AutoCloseable {
 
     private volatile double targetPublishRate;
 
-    public WorkloadGenerator(String driverName, Workload workload, TpcHCommand command, Worker worker) {
+    public WorkloadGenerator(String driverName, Workload workload, TpcHCommand command, Worker worker, LocalWorker localWorker) {
         this.driverName = driverName;
         this.workload = workload;
         this.command = command;
         this.worker = worker;
+        this.localWorker = localWorker;
 
         if (workload.consumerBacklogSizeGB > 0 && workload.producerRate == 0) {
             throw new IllegalArgumentException(
@@ -72,7 +73,7 @@ public class WorkloadGenerator implements AutoCloseable {
 
     public TestResult run() throws Exception {
         if (this.command != null) {
-            // TODO: Apply TPC-H algorithm in single thread here for testing purposes.
+            return runTpcH();
         }
         return runWorkload();
     }
@@ -80,25 +81,34 @@ public class WorkloadGenerator implements AutoCloseable {
     private TestResult runTpcH() throws Exception {
         Timer timer = new Timer();
         /*
-            * 1 topic for Map commands;
-            * topic for Reduce commands
-            * x topics to send intermediate results to;
-            * one topic to send aggregated intermediate results to.
-        */
-        int numberOfTopics = 2 + this.command.numberOfIntermediateResultsPartitions + 1;
+         * 1 topic for Map commands;
+         * 1 topic to send aggregated intermediate results to.
+         * x topics to send intermediate results to;
+         */
+        int numberOfTopics = 1 + 1 + this.command.numberOfReducers;
         List<String> topics = worker.createTopics(new TopicsInfo(numberOfTopics, workload.partitionsPerTopic));
-
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
-        createConsumers(topics);
-        createProducers(topics);
+
+        ConsumerAssignment internalConsumerAssignment = createTpcHConsumers(topics);
+        this.localWorker.createConsumers(internalConsumerAssignment);
+        log.info(
+                "Created {} internal consumers in {} ms",
+                internalConsumerAssignment.topicsSubscriptions.size(),
+                timer.elapsedMillis());
+        createTpcHProducers(topics);
 
         ensureTopicsAreReady();
 
-        // TODO: Assign producers with work by writing commands to topic. To be implemented in worker.
+        ProducerWorkAssignment producerWorkAssignment = new ProducerWorkAssignment();
+        producerWorkAssignment.keyDistributorType = workload.keyDistributor;
+        producerWorkAssignment.publishRate = targetPublishRate;
+        producerWorkAssignment.payloadData = new ArrayList<>();
+        producerWorkAssignment.tpcH = workload.tpcH;
 
-        // TODO: Monitor availability of aggregated intermediate results in the final topic of the created list of topics.
+        worker.startLoad(producerWorkAssignment);
+        log.info("----- Starting benchmark traffic ({}m)------", workload.testDurationMinutes);
 
-        // TODO: Wait until TPC-H query results are present in S3.
+        // TO DO: Wait until TPC-H query results are present from local worker consumer.
 
         TestResult result = printAndCollectStats(workload.testDurationMinutes, TimeUnit.MINUTES);
         runCompleted = true;
@@ -276,11 +286,9 @@ public class WorkloadGenerator implements AutoCloseable {
 
         for (String topic : topics) {
             for (int i = 0; i < workload.subscriptionsPerTopic; i++) {
-                String subscriptionName =
-                        String.format("sub-%03d-%s", i, RandomGenerator.getRandomString());
+                String subscriptionName = generateSubscriptionName(i);
                 for (int j = 0; j < workload.consumerPerSubscription; j++) {
-                    consumerAssignment.topicsSubscriptions.add(
-                            new TopicSubscription(topic, subscriptionName));
+                    consumerAssignment.topicsSubscriptions.add(new TopicSubscription(topic, subscriptionName, null));
                 }
             }
         }
@@ -296,24 +304,74 @@ public class WorkloadGenerator implements AutoCloseable {
                 timer.elapsedMillis());
     }
 
-    private void createTpcHConsumers(List<String> topics) throws IOException {
-        // Topics list is always going to be of size 2. Replicate topic subscription once for each consumer.
+    private ConsumerAssignment createTpcHConsumers(List<String> topics) throws IOException {
+        ConsumerAssignment consumerAssignment = new ConsumerAssignment();
+        ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment();
+
+        TpcHInfo mapInfo = new TpcHInfo(TpcHConsumer.Map, null, null);
+        consumerAssignment.topicsSubscriptions.add(
+            new TopicSubscription(
+                topics.get(TpcHConstants.MAP_CMD_INDEX),
+                generateSubscriptionName(TpcHConstants.MAP_CMD_INDEX),
+                mapInfo
+            )
+        );
+
+        TpcHInfo generateResultInfo = new TpcHInfo(TpcHConsumer.GenerateResult, null, this.command.numberOfReducers);
+        TopicSubscription orchestratorSubscription = new TopicSubscription(
+            topics.get(TpcHConstants.REDUCE_DST_INDEX),
+            generateSubscriptionName(TpcHConstants.REDUCE_DST_INDEX),
+            generateResultInfo
+        );
+        consumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
+        orchestratorConsumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
+
+        for (int i = 0; i < this.command.numberOfReducers; i++) {
+            TpcHInfo info = new TpcHInfo(TpcHConsumer.Reduce, this.command.getNumberOfMapResults(i), null);
+            int index = TpcHConstants.REDUCE_SRC_START_INDEX + i;
+            consumerAssignment.topicsSubscriptions.add(
+                new TopicSubscription(
+                    topics.get(index),
+                    generateSubscriptionName(index),
+                    info
+                )
+            );
+        }
+
+        Timer timer = new Timer();
+        worker.createConsumers(consumerAssignment);
+        log.info(
+                "Created {} external consumers in {} ms",
+                consumerAssignment.topicsSubscriptions.size(),
+                timer.elapsedMillis());
+
+        return orchestratorConsumerAssignment;
     }
 
     private void createProducers(List<String> topics) throws IOException {
-        List<String> fullListOfTopics = new ArrayList<>();
+        ProducerAssignment producerAssignment = new ProducerAssignment();
 
         // Add the topic multiple times, one for each producer
         for (int i = 0; i < workload.producersPerTopic; i++) {
-            fullListOfTopics.addAll(topics);
+            producerAssignment.topics.addAll(topics);
         }
 
-        Collections.shuffle(fullListOfTopics);
+        Collections.shuffle(producerAssignment.topics);
 
         Timer timer = new Timer();
 
-        worker.createProducers(fullListOfTopics);
-        log.info("Created {} producers in {} ms", fullListOfTopics.size(), timer.elapsedMillis());
+        worker.createProducers(producerAssignment);
+        log.info("Created {} producers in {} ms", producerAssignment.topics.size(), timer.elapsedMillis());
+    }
+
+    private void createTpcHProducers(List<String> topics) throws IOException {
+        // TO DO: What about sending messages from Map to second topic?
+        ProducerAssignment producerAssignment = new ProducerAssignment();
+        producerAssignment.topics.addAll(topics);
+        producerAssignment.isTpcH = true;
+        Timer timer = new Timer();
+        worker.createProducers(producerAssignment);
+        log.info("Created {} producers in {} ms", topics.size(), timer.elapsedMillis());
     }
 
     private void buildAndDrainBacklog(int testDurationMinutes) throws IOException {
@@ -575,6 +633,9 @@ public class WorkloadGenerator implements AutoCloseable {
     private static final DecimalFormat throughputFormat = new PaddingDecimalFormat("0.0", 4);
     private static final DecimalFormat dec = new PaddingDecimalFormat("0.0", 4);
 
+    private static String generateSubscriptionName(int index) {
+        return String.format("sub-%03d-%s", index, RandomGenerator.getRandomString());
+    }
     private static double microsToMillis(double timeInMicros) {
         return timeInMicros / 1000.0;
     }

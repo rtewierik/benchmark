@@ -22,37 +22,29 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Preconditions;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.DriverConfiguration;
-import io.openmessaging.benchmark.driver.BenchmarkConsumer;
-import io.openmessaging.benchmark.driver.BenchmarkDriver;
+import io.openmessaging.benchmark.driver.*;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ConsumerInfo;
-import io.openmessaging.benchmark.driver.BenchmarkDriver.ProducerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
-import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.tpch.*;
 import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.utils.distributor.KeyDistributor;
-import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
-import io.openmessaging.benchmark.worker.commands.CountersStats;
-import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
-import io.openmessaging.benchmark.worker.commands.PeriodStats;
-import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
-import io.openmessaging.benchmark.worker.commands.TopicsInfo;
+import io.openmessaging.benchmark.utils.distributor.KeyDistributorType;
+import io.openmessaging.benchmark.worker.commands.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
+
+import io.openmessaging.benchmark.worker.jackson.ObjectMappers;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
@@ -61,7 +53,14 @@ import org.slf4j.LoggerFactory;
 public class LocalWorker implements Worker, ConsumerCallback {
 
     private BenchmarkDriver benchmarkDriver = null;
+    /*
+        For TPC-H queries, the producers list is allocated with the producer for Map messages and producers for all the
+        assigned reducers.
+     */
     private final List<BenchmarkProducer> producers = new ArrayList<>();
+    /*
+        For TPC-H queries, the consumers list is allocated with the consumers for all the assigned reducers.
+     */
     private final List<BenchmarkConsumer> consumers = new ArrayList<>();
     private volatile MessageProducer messageProducer;
     private final ExecutorService executor =
@@ -69,6 +68,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final WorkerStats stats;
     private boolean testCompleted = false;
     private boolean consumersArePaused = false;
+    private static final ObjectWriter messageWriter = ObjectMappers.DEFAULT.writer();
 
     public LocalWorker() {
         this(NullStatsLogger.INSTANCE);
@@ -125,15 +125,15 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     @Override
-    public void createProducers(List<String> topics) {
+    public void createProducers(ProducerAssignment producerAssignment) {
         Timer timer = new Timer();
         AtomicInteger index = new AtomicInteger();
 
         producers.addAll(
                 benchmarkDriver
                         .createProducers(
-                                topics.stream()
-                                        .map(t -> new ProducerInfo(index.getAndIncrement(), t))
+                                producerAssignment.topics.stream()
+                                        .map(t -> new BenchmarkDriver.ProducerInfo(index.getAndIncrement(), t))
                                         .collect(toList()))
                         .join());
 
@@ -152,7 +152,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                         .map(
                                                 c ->
                                                         new ConsumerInfo(
-                                                                index.getAndIncrement(), c.topic, c.subscription, this))
+                                                                index.getAndIncrement(), c.topic, c.subscription, this, c.info))
                                         .collect(toList()))
                         .join());
 
@@ -161,6 +161,53 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public void startLoad(ProducerWorkAssignment producerWorkAssignment) {
+        if (producerWorkAssignment.tpcH == null) {
+            startLoadForThroughputProducers(producerWorkAssignment);
+        } else {
+            startLoadForTpcHProducers(producerWorkAssignment);
+        }
+    }
+
+    @Override
+    public void probeProducers() throws IOException {
+        producers.forEach(
+            producer ->
+                producer.sendAsync(Optional.of("key"), new byte[10]).thenRun(stats::recordMessageSent));
+    }
+
+
+    private void startLoadForTpcHProducers(ProducerWorkAssignment producerWorkAssignment) {
+        updateMessageProducer(producerWorkAssignment.publishRate);
+        executor.submit(
+                () -> {
+                    BenchmarkProducer producer = producers.get(TpcHConstants.MAP_CMD_INDEX);
+                    TpcHProducerAssignment tpcH = producerWorkAssignment.tpcH;
+                    AtomicInteger currentAssignment = new AtomicInteger();
+                    KeyDistributor keyDistributor = KeyDistributor.build(producerWorkAssignment.keyDistributorType);
+                    int limit = (tpcH.offset * tpcH.batchSize) + tpcH.batchSize;
+                    String batchId = String.format("batch-%d-%s", tpcH.offset, RandomGenerator.getRandomString());
+                    try {
+                        while (currentAssignment.get() < limit) {
+                            TpcHConsumerAssignment assignment = new TpcHConsumerAssignment();
+                            assignment.batchId = batchId;
+                            assignment.query = tpcH.query;
+                            assignment.sourceDataS3Uri = String.format("%s/chunk_%d.csv", tpcH.sourceDataS3FolderUri, currentAssignment.incrementAndGet());
+                            TpcHMessage message = new TpcHMessage();
+                            message.type = TpcHMessageType.ConsumerAssignment;
+                            message.message = messageWriter.writeValueAsString(assignment);
+                            messageProducer.sendMessage(
+                                producer,
+                                Optional.of(keyDistributor.next()),
+                                messageWriter.writeValueAsBytes(message)
+                            );
+                        }
+                    } catch (Throwable t) {
+                        log.error("Got error", t);
+                    }
+                });
+    }
+
+    private void startLoadForThroughputProducers(ProducerWorkAssignment producerWorkAssignment) {
         int processors = Runtime.getRuntime().availableProcessors();
 
         updateMessageProducer(producerWorkAssignment.publishRate);
@@ -170,30 +217,23 @@ public class LocalWorker implements Worker, ConsumerCallback {
         int processorIdx = 0;
         for (BenchmarkProducer p : producers) {
             processorAssignment
-                    .computeIfAbsent(processorIdx, x -> new ArrayList<BenchmarkProducer>())
-                    .add(p);
+                .computeIfAbsent(processorIdx, x -> new ArrayList<>())
+                .add(p);
 
             processorIdx = (processorIdx + 1) % processors;
         }
 
         processorAssignment
-                .values()
-                .forEach(
-                        producers ->
-                                submitProducersToExecutor(
-                                        producers,
-                                        KeyDistributor.build(producerWorkAssignment.keyDistributorType),
-                                        producerWorkAssignment.payloadData));
+            .values()
+            .forEach(
+                producers ->
+                    submitThroughputProducersToExecutor(
+                        producers,
+                        KeyDistributor.build(producerWorkAssignment.keyDistributorType),
+                        producerWorkAssignment.payloadData));
     }
 
-    @Override
-    public void probeProducers() throws IOException {
-        producers.forEach(
-                producer ->
-                        producer.sendAsync(Optional.of("key"), new byte[10]).thenRun(stats::recordMessageSent));
-    }
-
-    private void submitProducersToExecutor(
+    private void submitThroughputProducersToExecutor(
             List<BenchmarkProducer> producers, KeyDistributor keyDistributor, List<byte[]> payloads) {
         ThreadLocalRandom r = ThreadLocalRandom.current();
         int payloadCount = payloads.size();
@@ -243,17 +283,57 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     @Override
-    public void messageReceived(byte[] data, long publishTimestamp) {
+    public void messageReceived(byte[] data, long publishTimestamp, TpcHInfo info) throws IOException {
         internalMessageReceived(data.length, publishTimestamp);
-        // TO DO: Implement generic logic to execute TPC-H query based on JSON parseability and message type.
+        if (info != null) {
+            TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
+            handleTpcHMessage(message, info);
+        }
         // TO DO: Add separate call to stats to record message processed.
     }
 
     @Override
-    public void messageReceived(ByteBuffer data, long publishTimestamp) {
+    public void messageReceived(ByteBuffer data, long publishTimestamp, TpcHInfo info) throws IOException {
         internalMessageReceived(data.remaining(), publishTimestamp);
-        // TO DO: Implement generic logic to execute TPC-H query based on JSON parseability and message type.
+        if (info != null) {
+            TpcHMessage message = mapper.readValue(data.array(), TpcHMessage.class);
+            handleTpcHMessage(message, info);
+        }
         // TO DO: Add separate call to stats to record message processed.
+    }
+
+    private void handleTpcHMessage(TpcHMessage message, TpcHInfo info) throws IOException {
+        switch (message.type) {
+            case ConsumerAssignment:
+                TpcHConsumerAssignment assignment = mapper.readValue(message.message, TpcHConsumerAssignment.class);
+                processConsumerAssignment(assignment, info);
+                break;
+            case IntermediateResult:
+                TpcHIntermediateResult intermediateResult = mapper.readValue(message.message, TpcHIntermediateResult.class);
+                processIntermediateResult(intermediateResult, info);
+                break;
+            case ReducedResult:
+                TpcHIntermediateResult reducedResult = mapper.readValue(message.message, TpcHIntermediateResult.class);
+                processReducedResult(reducedResult, info);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid message type detected!");
+        }
+    }
+
+    private void processConsumerAssignment(TpcHConsumerAssignment assignment, TpcHInfo info) {
+        // TO DO: Use S3 client to request file, generate TpcHIntermediateResult, and use producer to send.
+    }
+
+    private void processIntermediateResult(TpcHIntermediateResult intermediateResult, TpcHInfo info) {
+        // TO DO: Upon reception, aggregate data into intermediate result persisted in thread-safe map.
+        // TO DO: Check whether all results are present based on info and send message using second producer.
+    }
+
+    private void processReducedResult(TpcHIntermediateResult reducedResult, TpcHInfo info) {
+        // TO DO: Upon reception, aggregate data into intermediate result persisted in thread-safe map.
+        // TO DO: Check whether all results are present based on info and log result.
+        // TO DO: Somehow notify main thread that work is done. Can be done through testCompleted property and getter.
     }
 
     public void internalMessageReceived(int size, long publishTimestamp) {
@@ -285,16 +365,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
     @Override
     public void resetStats() throws IOException {
         stats.resetLatencies();
-    }
-
-    @Override
-    public void createTpcHMapCoordinator() throws IOException {
-        // TO DO: Implement this method.
-    }
-
-    @Override
-    public void createTpcHReduceCoordinator() throws IOException {
-        // TO DO: Implement this method.
     }
 
     @Override
@@ -344,6 +414,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private static final ObjectMapper mapper =
             new ObjectMapper(new YAMLFactory())
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private static final ObjectMapper jsonMapper = ObjectMappers.DEFAULT.mapper();
 
     static {
         mapper.enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);

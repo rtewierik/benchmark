@@ -28,7 +28,6 @@ import io.openmessaging.benchmark.worker.HttpWorkerClient;
 import io.openmessaging.benchmark.worker.LocalWorker;
 import io.openmessaging.benchmark.worker.Worker;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -205,6 +204,7 @@ public class Benchmark {
         log.info("TPC-H command: {}", writer.writeValueAsString(tpcHCommand));
 
         Worker worker;
+        LocalWorker localWorker = new LocalWorker();
 
         if (arguments.workers != null && !arguments.workers.isEmpty()) {
             List<Worker> workers =
@@ -212,7 +212,7 @@ public class Benchmark {
             worker = new DistributedWorkersEnsemble(workers, arguments.extraConsumers);
         } else {
             // Use local worker implementation
-            worker = new LocalWorker();
+            worker = localWorker;
         }
 
         workloads.forEach(
@@ -231,11 +231,17 @@ public class Benchmark {
 
                                     // Stop any left over workload
                                     worker.stopAll();
+                                    if (worker != localWorker) {
+                                        localWorker.stopAll();
+                                    }
 
                                     worker.initializeDriver(new File(driverConfig));
+                                    if (worker != localWorker) {
+                                        localWorker.initializeDriver(new File(driverConfig));
+                                    }
 
                                     WorkloadGenerator generator =
-                                            new WorkloadGenerator(driverConfiguration.name, workload, tpcHCommand, worker);
+                                            new WorkloadGenerator(driverConfiguration.name, workload, tpcHCommand, worker, localWorker);
 
                                     TestResult result = generator.run();
 
@@ -264,11 +270,17 @@ public class Benchmark {
                                             e);
                                 } finally {
                                     worker.stopAll();
+                                    if (worker != localWorker) {
+                                        localWorker.stopAll();
+                                    }
                                 }
                             });
                 });
 
         worker.close();
+        if (worker != localWorker) {
+            localWorker.close();
+        }
     }
 
     private static final ObjectMapper mapper =
