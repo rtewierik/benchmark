@@ -15,6 +15,7 @@ package io.openmessaging.benchmark.worker;
 
 import static java.util.stream.Collectors.toList;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -35,12 +36,10 @@ import io.openmessaging.benchmark.worker.commands.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
@@ -68,6 +67,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final WorkerStats stats;
     private boolean testCompleted = false;
     private boolean consumersArePaused = false;
+    private Map<String, TpcHIntermediateResult> collectedIntermediateResults = new ConcurrentHashMap<>();
     private static final ObjectWriter messageWriter = ObjectMappers.DEFAULT.writer();
 
     public LocalWorker() {
@@ -325,9 +325,25 @@ public class LocalWorker implements Worker, ConsumerCallback {
         // TO DO: Use S3 client to request file, generate TpcHIntermediateResult, and use producer to send.
     }
 
-    private void processIntermediateResult(TpcHIntermediateResult intermediateResult, TpcHInfo info) {
-        // TO DO: Upon reception, aggregate data into intermediate result persisted in thread-safe map.
-        // TO DO: Check whether all results are present based on info and send message using second producer.
+    private void processIntermediateResult(TpcHIntermediateResult intermediateResult, TpcHInfo info) throws IOException {
+        if (!this.collectedIntermediateResults.containsKey(intermediateResult.queryId)) {
+            TpcHIntermediateResult newIntermediateResult = new TpcHIntermediateResult(intermediateResult.queryId, new ArrayList<>());;
+            this.collectedIntermediateResults.put(intermediateResult.queryId, newIntermediateResult);
+        }
+        TpcHIntermediateResult existingIntermediateResult = this.collectedIntermediateResults.get(intermediateResult.queryId);
+        existingIntermediateResult.aggregateIntermediateResult(intermediateResult);
+        if (existingIntermediateResult.numberOfAggregatedResults == info.numberOfReduceResults) {
+            BenchmarkProducer producer = this.producers.get(TpcHConstants.REDUCE_DST_INDEX);
+            KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
+            TpcHMessage message = new TpcHMessage();
+            message.type = TpcHMessageType.ReducedResult;
+            message.message = messageWriter.writeValueAsString(existingIntermediateResult);
+            this.messageProducer.sendMessage(
+                producer,
+                Optional.of(keyDistributor.next()),
+                messageWriter.writeValueAsBytes(message)
+            );
+        }
     }
 
     private void processReducedResult(TpcHIntermediateResult reducedResult, TpcHInfo info) {

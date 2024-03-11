@@ -12,7 +12,7 @@ public class TpcHIntermediateResultGroup {
         this.aggregates = aggregates;
     }
 
-    protected TpcHIntermediateResultGroup getClone() {
+    public TpcHIntermediateResultGroup getClone() {
         Map<String, Number> hashMapClone = (Map<String, Number>)((HashMap<String, Number>)aggregates).clone();
         TpcHIntermediateResultGroup clone = new TpcHIntermediateResultGroup(hashMapClone);
         clone.identifiers = identifiers;
