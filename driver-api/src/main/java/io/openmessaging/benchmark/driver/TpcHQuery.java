@@ -1,4 +1,4 @@
-package io.openmessaging.benchmark.tpch;
+package io.openmessaging.benchmark.driver;
 
 public enum TpcHQuery {
     PricingSummaryReport(1),

@@ -1,6 +1,9 @@
 package io.openmessaging.benchmark.tpch;
 
+import io.openmessaging.benchmark.driver.TpcHQuery;
+
 public class TpcHCommand {
+    public TpcHQuery query;
     public String sourceDataS3FolderUri;
     public int numberOfChunks;
     public int numberOfReducers;

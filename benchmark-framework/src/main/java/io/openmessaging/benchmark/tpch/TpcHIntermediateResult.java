@@ -13,6 +13,8 @@ public class TpcHIntermediateResult {
     public List<TpcHIntermediateResultGroup> groups;
     private final Lock lock = new ReentrantLock();
 
+    public TpcHIntermediateResult() {}
+
     public TpcHIntermediateResult(List<TpcHIntermediateResultGroup> groups) {
         this.queryId = "default-query-id";
         this.groups = groups;
@@ -50,7 +52,7 @@ public class TpcHIntermediateResult {
                     }
                 }
             }
-            this.numberOfAggregatedResults++;
+            this.numberOfAggregatedResults += intermediateResult.numberOfAggregatedResults;
         } finally {
             lock.unlock();;
         }

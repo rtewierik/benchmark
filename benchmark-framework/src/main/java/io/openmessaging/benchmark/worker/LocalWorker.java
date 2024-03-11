@@ -67,7 +67,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final WorkerStats stats;
     private boolean testCompleted = false;
     private boolean consumersArePaused = false;
-    private Map<String, TpcHIntermediateResult> collectedIntermediateResults = new ConcurrentHashMap<>();
+    private final Map<String, TpcHIntermediateResult> collectedIntermediateResults = new ConcurrentHashMap<>();
+    private final Map<String, TpcHIntermediateResult> collectedReducedResults = new ConcurrentHashMap<>();
     private static final ObjectWriter messageWriter = ObjectMappers.DEFAULT.writer();
 
     public LocalWorker() {
@@ -321,6 +322,10 @@ public class LocalWorker implements Worker, ConsumerCallback {
         }
     }
 
+    public boolean getTestCompleted() {
+        return this.testCompleted;
+    }
+
     private void processConsumerAssignment(TpcHConsumerAssignment assignment, TpcHInfo info) {
         // TO DO: Use S3 client to request file, generate TpcHIntermediateResult, and use producer to send.
     }
@@ -346,10 +351,18 @@ public class LocalWorker implements Worker, ConsumerCallback {
         }
     }
 
-    private void processReducedResult(TpcHIntermediateResult reducedResult, TpcHInfo info) {
-        // TO DO: Upon reception, aggregate data into intermediate result persisted in thread-safe map.
-        // TO DO: Check whether all results are present based on info and log result.
-        // TO DO: Somehow notify main thread that work is done. Can be done through testCompleted property and getter.
+    private void processReducedResult(TpcHIntermediateResult reducedResult, TpcHInfo info) throws IOException {
+        if (!this.collectedIntermediateResults.containsKey(reducedResult.queryId)) {
+            TpcHIntermediateResult newIntermediateResult = new TpcHIntermediateResult(reducedResult.queryId, new ArrayList<>());;
+            this.collectedIntermediateResults.put(reducedResult.queryId, newIntermediateResult);
+        }
+        TpcHIntermediateResult existingIntermediateResult = this.collectedIntermediateResults.get(reducedResult.queryId);
+        existingIntermediateResult.aggregateIntermediateResult(reducedResult);
+        if (existingIntermediateResult.numberOfAggregatedResults == info.numberOfMapResults) {
+            TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingIntermediateResult, info.query);
+            log.info("[LocalWorker] TPC-H query result: {}", writer.writeValueAsString(result));
+        }
+        testCompleted = true;
     }
 
     public void internalMessageReceived(int size, long publishTimestamp) {

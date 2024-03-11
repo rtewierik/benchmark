@@ -1,9 +1,9 @@
 package io.openmessaging.benchmark.tpch;
 
-import java.math.BigDecimal;
+import io.openmessaging.benchmark.driver.TpcHQuery;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class TpcHQueryIntermediateResultsReducer {
 
