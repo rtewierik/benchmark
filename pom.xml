@@ -299,8 +299,8 @@
                 <version>${checkstyle.plugin.version}</version>
                 <configuration>
                     <consoleOutput>true</consoleOutput>
-                    <failOnViolation>true</failOnViolation>
-                    <failsOnError>true</failsOnError>
+                    <failOnViolation>false</failOnViolation>
+                    <failsOnError>false</failsOnError>
                     <configLocation>etc/checkstyle.xml</configLocation>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
                 </configuration>

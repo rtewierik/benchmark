@@ -1,15 +1,89 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.openmessaging.benchmark.tpch;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class TpcHIntermediateResult {
     public String queryId;
+    public String batchId;
+    public int numberOfAggregatedResults;
     public List<TpcHIntermediateResultGroup> groups;
+    private final Lock lock = new ReentrantLock();
+
+    public TpcHIntermediateResult() {}
 
     public TpcHIntermediateResult(List<TpcHIntermediateResultGroup> groups) {
+        this.queryId = "default-query-id";
+        this.batchId = "default-batch-id";
         this.groups = groups;
+        this.numberOfAggregatedResults = 1;
+    }
+
+    public TpcHIntermediateResult(String queryId, String batchId, List<TpcHIntermediateResultGroup> groups) {
+        this.queryId = queryId;
+        this.batchId = batchId;
+        this.groups = groups;
+        this.numberOfAggregatedResults = 1;
+    }
+
+    public void aggregateIntermediateResult(TpcHIntermediateResult intermediateResult) {
+        lock.lock();
+        String queryId = intermediateResult.queryId;
+        String batchId = intermediateResult.batchId;
+        if (this.queryId == null) {
+            this.queryId = queryId;
+        } else if (!this.queryId.equals(queryId)) {
+            throw new IllegalArgumentException(String.format("Inconsistent query ID \"%s\" found relative to \"%s\".", queryId, this.queryId));
+        }
+        if (this.batchId == null) {
+            this.batchId = batchId;
+        } else if (!this.batchId.equals(batchId)) {
+            throw new IllegalArgumentException(String.format("Inconsistent batch ID \"%s\" found relative to \"%s\".", batchId, this.batchId));
+        }
+        try {
+            for (TpcHIntermediateResultGroup group : intermediateResult.groups) {
+                TpcHIntermediateResultGroup existingGroup = this.findGroupByIdentifiers(group.identifiers);
+                if (existingGroup == null) {
+                    this.groups.add(group.getClone());
+                } else {
+                    Map<String, Number> existingAggregates = existingGroup.aggregates;
+                    for (Map.Entry<String, Number> aggregate : group.aggregates.entrySet()) {
+                        String key = aggregate.getKey();
+                        Number existingAggregate = existingAggregates.get(key);
+                        Number additionalAggregate = aggregate.getValue();
+                        Number updatedAggregate;
+                        if (existingAggregate instanceof Long && additionalAggregate instanceof Long) {
+                            updatedAggregate = existingAggregate.longValue() + additionalAggregate.longValue();
+                        } else if (existingAggregate instanceof BigDecimal && additionalAggregate instanceof BigDecimal) {
+                            updatedAggregate = ((BigDecimal)existingAggregate).add((BigDecimal)additionalAggregate);
+                        } else {
+                            throw new ArithmeticException("Invalid aggregates detected.");
+                        }
+                        existingGroup.aggregates.put(key, updatedAggregate);
+                    }
+                }
+            }
+            this.numberOfAggregatedResults += intermediateResult.numberOfAggregatedResults;
+        } finally {
+            lock.unlock();;
+        }
     }
 
     public TpcHIntermediateResultGroup findGroupByIdentifiers(Map<String, Object> identifiers) {

@@ -66,5 +66,4 @@ public class Workload {
     public int testDurationMinutes;
 
     public int warmupDurationMinutes = 1;
-    public TpcHProducerAssignment tpcH = null;
 }

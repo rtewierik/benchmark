@@ -20,6 +20,7 @@ import com.beust.jcommander.internal.Maps;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import io.openmessaging.benchmark.tpch.TpcHCommand;
 import io.openmessaging.benchmark.tpch.TpcHConstants;
 import io.openmessaging.benchmark.utils.ListPartition;
 import io.openmessaging.benchmark.worker.commands.*;
@@ -29,6 +30,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,11 +107,16 @@ public class DistributedWorkersEnsemble implements Worker {
         double newRate = producerWorkAssignment.publishRate / numberOfUsedProducerWorkers;
         log.debug("Setting worker assigned publish rate to {} msgs/sec", newRate);
         List<Worker> workersToStart = producerWorkAssignment.tpcH != null ? this.workers : this.producerWorkers;
+        AtomicInteger index = new AtomicInteger();
         workersToStart.parallelStream()
             .forEach(
                 w -> {
                     try {
-                        w.startLoad(producerWorkAssignment.withPublishRate(newRate));
+                        w.startLoad(
+                            producerWorkAssignment
+                                .withPublishRate(newRate)
+                                .withIndex(index.getAndIncrement())
+                        );
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

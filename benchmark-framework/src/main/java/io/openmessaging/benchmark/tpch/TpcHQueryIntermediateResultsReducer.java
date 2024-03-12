@@ -1,9 +1,22 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.openmessaging.benchmark.tpch;
 
-import java.math.BigDecimal;
+import io.openmessaging.benchmark.driver.TpcHQuery;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class TpcHQueryIntermediateResultsReducer {
 
@@ -30,28 +43,7 @@ public class TpcHQueryIntermediateResultsReducer {
     private static TpcHIntermediateResult applyReduceToChunkGeneric(List<TpcHIntermediateResult> chunk) {
         TpcHIntermediateResult result = new TpcHIntermediateResult(new ArrayList<>());
         for (TpcHIntermediateResult intermediateResult : chunk) {
-            for (TpcHIntermediateResultGroup group : intermediateResult.groups) {
-                TpcHIntermediateResultGroup existingGroup = result.findGroupByIdentifiers(group.identifiers);
-                if (existingGroup == null) {
-                    result.groups.add(group.getClone());
-                } else {
-                    Map<String, Number> existingAggregates = existingGroup.aggregates;
-                    for (Map.Entry<String, Number> aggregate : group.aggregates.entrySet()) {
-                        String key = aggregate.getKey();
-                        Number existingAggregate = existingAggregates.get(key);
-                        Number additionalAggregate = aggregate.getValue();
-                        Number updatedAggregate;
-                        if (existingAggregate instanceof Long && additionalAggregate instanceof Long) {
-                            updatedAggregate = existingAggregate.longValue() + additionalAggregate.longValue();
-                        } else if (existingAggregate instanceof BigDecimal && additionalAggregate instanceof BigDecimal) {
-                            updatedAggregate = ((BigDecimal)existingAggregate).add((BigDecimal)additionalAggregate);
-                        } else {
-                            throw new ArithmeticException("Invalid aggregates detected.");
-                        }
-                        existingGroup.aggregates.put(key, updatedAggregate);
-                    }
-                }
-            }
+            result.aggregateIntermediateResult(intermediateResult);
         }
         return result;
     }

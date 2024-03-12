@@ -224,6 +224,8 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
                             try {
                                 consumerCallback.messageReceived(msg.getValue(), msg.getPublishTime(), info);
                                 c.acknowledgeAsync(msg);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
                             } finally {
                                 msg.release();
                             }

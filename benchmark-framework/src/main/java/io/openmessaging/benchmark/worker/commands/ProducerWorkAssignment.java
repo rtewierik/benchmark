@@ -14,6 +14,7 @@
 package io.openmessaging.benchmark.worker.commands;
 
 
+import io.openmessaging.benchmark.tpch.TpcHCommand;
 import io.openmessaging.benchmark.tpch.TpcHProducerAssignment;
 import io.openmessaging.benchmark.utils.distributor.KeyDistributorType;
 import java.util.List;
@@ -26,13 +27,26 @@ public class ProducerWorkAssignment {
 
     public KeyDistributorType keyDistributorType;
 
-    public TpcHProducerAssignment tpcH = null;
+    public TpcHCommand tpcH = null;
+    public int index;
 
     public ProducerWorkAssignment withPublishRate(double publishRate) {
         ProducerWorkAssignment copy = new ProducerWorkAssignment();
         copy.keyDistributorType = this.keyDistributorType;
         copy.payloadData = this.payloadData;
         copy.publishRate = publishRate;
+        copy.tpcH = this.tpcH;
+        copy.index = this.index;
+        return copy;
+    }
+
+    public ProducerWorkAssignment withIndex(int index) {
+        ProducerWorkAssignment copy = new ProducerWorkAssignment();
+        copy.keyDistributorType = this.keyDistributorType;
+        copy.payloadData = this.payloadData;
+        copy.publishRate = publishRate;
+        copy.tpcH = this.tpcH;
+        copy.index = index;
         return copy;
     }
 }

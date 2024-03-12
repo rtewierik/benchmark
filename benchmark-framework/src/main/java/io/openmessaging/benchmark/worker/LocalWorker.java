@@ -15,6 +15,7 @@ package io.openmessaging.benchmark.worker;
 
 import static java.util.stream.Collectors.toList;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -22,6 +23,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Preconditions;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.DriverConfiguration;
+import io.openmessaging.benchmark.client.AmazonS3Client;
 import io.openmessaging.benchmark.driver.*;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ConsumerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
@@ -35,18 +37,20 @@ import io.openmessaging.benchmark.worker.commands.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 import io.openmessaging.benchmark.worker.jackson.ObjectMappers;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
+import org.apache.pulsar.client.api.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,6 +72,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final WorkerStats stats;
     private boolean testCompleted = false;
     private boolean consumersArePaused = false;
+    private final Map<String, TpcHIntermediateResult> collectedIntermediateResults = new ConcurrentHashMap<>();
+    private final Map<String, TpcHIntermediateResult> collectedReducedResults = new ConcurrentHashMap<>();
+    private final AmazonS3Client s3Client = new AmazonS3Client();
     private static final ObjectWriter messageWriter = ObjectMappers.DEFAULT.writer();
 
     public LocalWorker() {
@@ -181,11 +188,12 @@ public class LocalWorker implements Worker, ConsumerCallback {
         executor.submit(
                 () -> {
                     BenchmarkProducer producer = producers.get(TpcHConstants.MAP_CMD_INDEX);
-                    TpcHProducerAssignment tpcH = producerWorkAssignment.tpcH;
+                    TpcHCommand command = producerWorkAssignment.tpcH;
+                    TpcHProducerAssignment tpcH = new TpcHProducerAssignment(command, producerWorkAssignment.index);
                     AtomicInteger currentAssignment = new AtomicInteger();
                     KeyDistributor keyDistributor = KeyDistributor.build(producerWorkAssignment.keyDistributorType);
                     int limit = (tpcH.offset * tpcH.batchSize) + tpcH.batchSize;
-                    String batchId = String.format("batch-%d-%s", tpcH.offset, RandomGenerator.getRandomString());
+                    String batchId = String.format("%s-batch-%d-%s", tpcH.queryId, tpcH.offset, RandomGenerator.getRandomString());
                     try {
                         while (currentAssignment.get() < limit) {
                             TpcHConsumerAssignment assignment = new TpcHConsumerAssignment();
@@ -321,19 +329,65 @@ public class LocalWorker implements Worker, ConsumerCallback {
         }
     }
 
+    public boolean getTestCompleted() {
+        return this.testCompleted;
+    }
+
     private void processConsumerAssignment(TpcHConsumerAssignment assignment, TpcHInfo info) {
-        // TO DO: Use S3 client to request file, generate TpcHIntermediateResult, and use producer to send.
+        String s3Uri = assignment.sourceDataS3Uri;
+        log.info("[INFO] Applying map to chunk \"{}\"...", s3Uri);
+        try (InputStream stream = this.s3Client.readTpcHChunkFromS3(s3Uri)) {
+            List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
+            TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, info.query, assignment);
+            int index = TpcHConstants.REDUCE_PRODUCER_START_INDEX + info.index;
+            BenchmarkProducer producer = this.producers.get(index);
+            KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
+            TpcHMessage message = new TpcHMessage();
+            message.type = TpcHMessageType.ReducedResult;
+            message.message = messageWriter.writeValueAsString(result);
+            this.messageProducer.sendMessage(
+                    producer,
+                    Optional.of(keyDistributor.next()),
+                    messageWriter.writeValueAsBytes(message)
+            );
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
-    private void processIntermediateResult(TpcHIntermediateResult intermediateResult, TpcHInfo info) {
-        // TO DO: Upon reception, aggregate data into intermediate result persisted in thread-safe map.
-        // TO DO: Check whether all results are present based on info and send message using second producer.
+    private void processIntermediateResult(TpcHIntermediateResult intermediateResult, TpcHInfo info) throws IOException {
+        if (!this.collectedIntermediateResults.containsKey(intermediateResult.batchId)) {
+            TpcHIntermediateResult newIntermediateResult = new TpcHIntermediateResult(intermediateResult.queryId, intermediateResult.batchId, new ArrayList<>());;
+            this.collectedIntermediateResults.put(intermediateResult.batchId, newIntermediateResult);
+        }
+        TpcHIntermediateResult existingIntermediateResult = this.collectedIntermediateResults.get(intermediateResult.batchId);
+        existingIntermediateResult.aggregateIntermediateResult(intermediateResult);
+        if (existingIntermediateResult.numberOfAggregatedResults == info.numberOfReduceResults) {
+            BenchmarkProducer producer = this.producers.get(TpcHConstants.REDUCE_DST_INDEX);
+            KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
+            TpcHMessage message = new TpcHMessage();
+            message.type = TpcHMessageType.ReducedResult;
+            message.message = messageWriter.writeValueAsString(existingIntermediateResult);
+            this.messageProducer.sendMessage(
+                producer,
+                Optional.of(keyDistributor.next()),
+                messageWriter.writeValueAsBytes(message)
+            );
+        }
     }
 
-    private void processReducedResult(TpcHIntermediateResult reducedResult, TpcHInfo info) {
-        // TO DO: Upon reception, aggregate data into intermediate result persisted in thread-safe map.
-        // TO DO: Check whether all results are present based on info and log result.
-        // TO DO: Somehow notify main thread that work is done. Can be done through testCompleted property and getter.
+    private void processReducedResult(TpcHIntermediateResult reducedResult, TpcHInfo info) throws IOException {
+        if (!this.collectedReducedResults.containsKey(reducedResult.batchId)) {
+            TpcHIntermediateResult newIntermediateResult = new TpcHIntermediateResult(reducedResult.queryId, reducedResult.batchId, new ArrayList<>());;
+            this.collectedReducedResults.put(reducedResult.batchId, newIntermediateResult);
+        }
+        TpcHIntermediateResult existingIntermediateResult = this.collectedReducedResults.get(reducedResult.batchId);
+        existingIntermediateResult.aggregateIntermediateResult(reducedResult);
+        if (existingIntermediateResult.numberOfAggregatedResults == info.numberOfMapResults) {
+            TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingIntermediateResult, info.query);
+            log.info("[LocalWorker] TPC-H query result: {}", writer.writeValueAsString(result));
+        }
+        testCompleted = true;
     }
 
     public void internalMessageReceived(int size, long publishTimestamp) {

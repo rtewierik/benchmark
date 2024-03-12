@@ -11,9 +11,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.benchmark.tpch;
+package io.openmessaging.benchmark.driver;
 
-public class TpcHMessage {
-    public TpcHMessageType type;
-    public String message;
+public enum TpcHQuery {
+    PricingSummaryReport(1),
+    ForecastingRevenueChange(6);
+
+    private final int id;
+
+    private TpcHQuery(int id) {
+        this.id = id;
+    }
 }

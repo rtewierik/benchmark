@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import io.openmessaging.benchmark.driver.TpcHQuery;
 import io.openmessaging.benchmark.tpch.*;
 import io.openmessaging.benchmark.worker.DistributedWorkersEnsemble;
 import io.openmessaging.benchmark.worker.HttpWorkerClient;
@@ -91,25 +92,15 @@ public class Benchmark {
     }
 
     public static void main(String[] args) throws Exception {
-        if (false) {
+        if (true) {
             benchmark(args);
         }
-        testTpcHAlgorithmLocally();
+        // testTpcHAlgorithmLocally();
     }
 
     private static void testTpcHAlgorithmLocally() {
         TpcHQuery query = TpcHQuery.ForecastingRevenueChange;
         List<String> chunkFiles = Arrays.asList(
-                // "../tpc-h-chunks/chunk_1.csv",
-                // "../tpc-h-chunks/chunk_2.csv",
-                // "../tpc-h-chunks/chunk_3.csv",
-                // "../tpc-h-chunks/chunk_4.csv",
-                // "../tpc-h-chunks/chunk_5.csv",
-                // "../tpc-h-chunks/chunk_6.csv",
-                // "../tpc-h-chunks/chunk_7.csv",
-                // "../tpc-h-chunks/chunk_8.csv",
-                // "../tpc-h-chunks/chunk_9.csv",
-                // "../tpc-h-chunks/chunk_10.csv"
                  "../tpc-h-chunks/ref/chunk_1.csv",
                  "../tpc-h-chunks/ref/chunk_2.csv",
                  "../tpc-h-chunks/ref/chunk_3.csv",
@@ -127,7 +118,7 @@ public class Benchmark {
             System.out.printf("[INFO] Applying map to chunk \"%s\"...%n", chunkFile);
             try (InputStream stream = Files.newInputStream(Paths.get(chunkFile))) {
                 List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
-                TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, query);
+                TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, query, new TpcHConsumerAssignment());
                 chunk.add(result);
             } catch (IOException exception) {
                 exception.printStackTrace();

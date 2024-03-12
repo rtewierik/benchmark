@@ -12,20 +12,8 @@
 # limitations under the License.
 #
 
-
-name: Simple Workload 1 producer on 2 topics
-
-topics: 2
-partitionsPerTopic: 10
-messageSize: 1024
-payloadFile: "payload/payload-1Kb.data"
-subscriptionsPerTopic: 1
-producersPerTopic: 1
-consumerPerSubscription: 1
-producerRate: 100
-consumerBacklogSizeGB: 0
-testDurationMinutes: 3
-
-tpcH:
-  queryId: test-query-1
-  query: PricingSummaryReport
+queryId: test-query-1
+query: PricingSummaryReport
+sourceDataS3FolderUri: s3://tpc-h-chunks/reference-data/chunked
+numberOfChunks: 10
+numberOfReducers: 4

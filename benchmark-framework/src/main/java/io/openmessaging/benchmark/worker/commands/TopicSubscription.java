@@ -25,6 +25,7 @@ public class TopicSubscription {
     public TopicSubscription(String topic, String subscription, TpcHInfo info) {
         this.topic = topic;
         this.subscription = subscription;
+        this.info = info;
     }
 
     @Override

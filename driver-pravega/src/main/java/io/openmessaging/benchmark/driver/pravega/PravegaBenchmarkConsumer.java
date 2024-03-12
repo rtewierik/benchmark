@@ -25,6 +25,8 @@ import io.pravega.client.stream.ReaderGroupConfig;
 import io.pravega.client.stream.ReinitializationRequiredException;
 import io.pravega.client.stream.Stream;
 import io.pravega.client.stream.impl.ByteBufferSerializer;
+
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -85,6 +87,8 @@ public class PravegaBenchmarkConsumer implements BenchmarkConsumer {
                         } catch (ReinitializationRequiredException e) {
                             log.error("Exception during read", e);
                             throw e;
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
                     }
                 });
