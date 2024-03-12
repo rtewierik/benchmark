@@ -321,7 +321,7 @@ public class WorkloadGenerator implements AutoCloseable {
         ConsumerAssignment consumerAssignment = new ConsumerAssignment();
         ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment();
 
-        TpcHInfo mapInfo = new TpcHInfo(query, TpcHConsumer.Map, null, null);
+        TpcHInfo mapInfo = new TpcHInfo(query, TpcHConsumer.Map, null, null, null);
         consumerAssignment.topicsSubscriptions.add(
             new TopicSubscription(
                 topics.get(TpcHConstants.MAP_CMD_INDEX),
@@ -330,7 +330,7 @@ public class WorkloadGenerator implements AutoCloseable {
             )
         );
 
-        TpcHInfo generateResultInfo = new TpcHInfo(query, TpcHConsumer.GenerateResult, null, this.command.numberOfChunks);
+        TpcHInfo generateResultInfo = new TpcHInfo(query, TpcHConsumer.GenerateResult, null, null, this.command.numberOfChunks);
         TopicSubscription orchestratorSubscription = new TopicSubscription(
             topics.get(TpcHConstants.REDUCE_DST_INDEX),
             generateSubscriptionName(TpcHConstants.REDUCE_DST_INDEX),
@@ -340,8 +340,8 @@ public class WorkloadGenerator implements AutoCloseable {
         orchestratorConsumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
 
         for (int i = 0; i < this.command.numberOfReducers; i++) {
-            TpcHInfo info = new TpcHInfo(query, TpcHConsumer.Reduce, this.command.getNumberOfMapResults(i), null);
             int index = TpcHConstants.REDUCE_SRC_START_INDEX + i;
+            TpcHInfo info = new TpcHInfo(query, TpcHConsumer.Reduce, index, this.command.getNumberOfMapResults(i), null);
             consumerAssignment.topicsSubscriptions.add(
                 new TopicSubscription(
                     topics.get(index),
@@ -378,7 +378,6 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     private void createTpcHProducers(List<String> topics) throws IOException {
-        // TO DO: What about sending messages from Map to second topic?
         ProducerAssignment producerAssignment = new ProducerAssignment();
         producerAssignment.topics.addAll(topics);
         producerAssignment.isTpcH = true;

@@ -23,6 +23,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Preconditions;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.DriverConfiguration;
+import io.openmessaging.benchmark.client.AmazonS3Client;
 import io.openmessaging.benchmark.driver.*;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ConsumerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
@@ -36,8 +37,11 @@ import io.openmessaging.benchmark.worker.commands.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -46,6 +50,7 @@ import java.util.stream.IntStream;
 import io.openmessaging.benchmark.worker.jackson.ObjectMappers;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
+import org.apache.pulsar.client.api.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,6 +74,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private boolean consumersArePaused = false;
     private final Map<String, TpcHIntermediateResult> collectedIntermediateResults = new ConcurrentHashMap<>();
     private final Map<String, TpcHIntermediateResult> collectedReducedResults = new ConcurrentHashMap<>();
+    private final AmazonS3Client s3Client = new AmazonS3Client();
     private static final ObjectWriter messageWriter = ObjectMappers.DEFAULT.writer();
 
     public LocalWorker() {
@@ -327,7 +333,25 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     private void processConsumerAssignment(TpcHConsumerAssignment assignment, TpcHInfo info) {
-        // TO DO: Use S3 client to request file, generate TpcHIntermediateResult, and use producer to send.
+        String s3Uri = assignment.sourceDataS3Uri;
+        log.info("[INFO] Applying map to chunk \"{}\"...", s3Uri);
+        try (InputStream stream = this.s3Client.readTpcHChunkFromS3(s3Uri)) {
+            List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
+            TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, info.query);
+            int index = TpcHConstants.REDUCE_PRODUCER_START_INDEX + info.index;
+            BenchmarkProducer producer = this.producers.get(index);
+            KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
+            TpcHMessage message = new TpcHMessage();
+            message.type = TpcHMessageType.ReducedResult;
+            message.message = messageWriter.writeValueAsString(result);
+            this.messageProducer.sendMessage(
+                    producer,
+                    Optional.of(keyDistributor.next()),
+                    messageWriter.writeValueAsBytes(message)
+            );
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     private void processIntermediateResult(TpcHIntermediateResult intermediateResult, TpcHInfo info) throws IOException {
@@ -352,11 +376,11 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     private void processReducedResult(TpcHIntermediateResult reducedResult, TpcHInfo info) throws IOException {
-        if (!this.collectedIntermediateResults.containsKey(reducedResult.queryId)) {
+        if (!this.collectedReducedResults.containsKey(reducedResult.queryId)) {
             TpcHIntermediateResult newIntermediateResult = new TpcHIntermediateResult(reducedResult.queryId, new ArrayList<>());;
-            this.collectedIntermediateResults.put(reducedResult.queryId, newIntermediateResult);
+            this.collectedReducedResults.put(reducedResult.queryId, newIntermediateResult);
         }
-        TpcHIntermediateResult existingIntermediateResult = this.collectedIntermediateResults.get(reducedResult.queryId);
+        TpcHIntermediateResult existingIntermediateResult = this.collectedReducedResults.get(reducedResult.queryId);
         existingIntermediateResult.aggregateIntermediateResult(reducedResult);
         if (existingIntermediateResult.numberOfAggregatedResults == info.numberOfMapResults) {
             TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingIntermediateResult, info.query);
