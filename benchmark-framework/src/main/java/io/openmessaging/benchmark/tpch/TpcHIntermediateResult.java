@@ -43,6 +43,26 @@ public class TpcHIntermediateResult {
         this.numberOfAggregatedResults = 1;
     }
 
+    public TpcHIntermediateResult(String queryId, String batchId, int numberOfAggregatedResults, List<TpcHIntermediateResultGroup> groups) {
+        this.queryId = queryId;
+        this.batchId = batchId;
+        this.numberOfAggregatedResults = numberOfAggregatedResults;
+        this.groups = groups;
+    }
+
+    public TpcHIntermediateResultDto toDto() {
+        return new TpcHIntermediateResultDto(this.queryId, this.batchId, this.numberOfAggregatedResults, this.groups);
+    }
+
+    public static TpcHIntermediateResult fromDto(TpcHIntermediateResultDto dto) {
+        return new TpcHIntermediateResult(
+            dto.queryId,
+            dto.batchId,
+            dto.numberOfAggregatedResults,
+            dto.groups.stream().map(TpcHIntermediateResultGroup::fromDto).collect(Collectors.toList())
+        );
+    }
+
     public void aggregateIntermediateResult(TpcHIntermediateResult intermediateResult) {
         lock.lock();
         String queryId = intermediateResult.queryId;
@@ -69,10 +89,12 @@ public class TpcHIntermediateResult {
                         Number existingAggregate = existingAggregates.get(key);
                         Number additionalAggregate = aggregate.getValue();
                         Number updatedAggregate;
-                        if (existingAggregate instanceof Long && additionalAggregate instanceof Long) {
+                        if ((existingAggregate instanceof Long || existingAggregate instanceof Integer) && (additionalAggregate instanceof Long || additionalAggregate instanceof Integer)) {
                             updatedAggregate = existingAggregate.longValue() + additionalAggregate.longValue();
-                        } else if (existingAggregate instanceof BigDecimal && additionalAggregate instanceof BigDecimal) {
-                            updatedAggregate = ((BigDecimal)existingAggregate).add((BigDecimal)additionalAggregate);
+                        } else if ((existingAggregate instanceof Double || existingAggregate instanceof BigDecimal) && (additionalAggregate instanceof Double || additionalAggregate instanceof BigDecimal)) {
+                            BigDecimal existingAggregateDecimal = existingAggregate instanceof Double ? BigDecimal.valueOf((Double)existingAggregate) : (BigDecimal) existingAggregate;
+                            BigDecimal additionalAggregateDecimal = additionalAggregate instanceof Double ? BigDecimal.valueOf((Double)additionalAggregate) : (BigDecimal) additionalAggregate;
+                            updatedAggregate = existingAggregateDecimal.add(additionalAggregateDecimal);
                         } else {
                             throw new ArithmeticException("Invalid aggregates detected.");
                         }

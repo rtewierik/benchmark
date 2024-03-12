@@ -25,6 +25,19 @@ public class TpcHIntermediateResultGroup {
         this.aggregates = aggregates;
     }
 
+    public TpcHIntermediateResultGroup(Map<String, Object> identifiers, Map<String, Number> aggregates) {
+        this.identifiers = identifiers;
+        this.aggregates = aggregates;
+    }
+
+    public TpcHIntermediateResultGroupDto toDto() {
+        return new TpcHIntermediateResultGroupDto(this.identifiers, this.aggregates);
+    }
+
+    public static TpcHIntermediateResultGroup fromDto(TpcHIntermediateResultGroupDto dto) {
+        return new TpcHIntermediateResultGroup(dto.identifiers, dto.aggregates);
+    }
+
     public TpcHIntermediateResultGroup getClone() {
         Map<String, Number> hashMapClone = (Map<String, Number>)((HashMap<String, Number>)aggregates).clone();
         TpcHIntermediateResultGroup clone = new TpcHIntermediateResultGroup(hashMapClone);

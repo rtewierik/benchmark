@@ -101,10 +101,18 @@ public class WorkloadGenerator implements AutoCloseable {
 
         ensureTopicsAreReady();
 
+        if (workload.producerRate > 0) {
+            targetPublishRate = workload.producerRate;
+        } else {
+            // Producer rate is 0 and we need to discover the sustainable rate
+            targetPublishRate = 10000;
+        }
+
         ProducerWorkAssignment producerWorkAssignment = new ProducerWorkAssignment();
         producerWorkAssignment.keyDistributorType = workload.keyDistributor;
         producerWorkAssignment.publishRate = targetPublishRate;
         producerWorkAssignment.payloadData = new ArrayList<>();
+        producerWorkAssignment.tpcH = this.command;
 
         worker.startLoad(producerWorkAssignment);
         log.info("----- Starting benchmark traffic ({}m)------", workload.testDurationMinutes);
@@ -319,7 +327,9 @@ public class WorkloadGenerator implements AutoCloseable {
 
     private ConsumerAssignment createTpcHConsumers(List<String> topics, String queryId, TpcHQuery query) throws IOException {
         ConsumerAssignment consumerAssignment = new ConsumerAssignment();
+        consumerAssignment.isTpcH = true;
         ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment();
+        orchestratorConsumerAssignment.isTpcH = true;
 
         TpcHInfo mapInfo = new TpcHInfo(queryId, query, TpcHConsumer.Map, null, null, null);
         consumerAssignment.topicsSubscriptions.add(

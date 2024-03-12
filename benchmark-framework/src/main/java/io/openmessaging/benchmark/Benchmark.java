@@ -92,14 +92,12 @@ public class Benchmark {
     }
 
     public static void main(String[] args) throws Exception {
-        if (true) {
-            benchmark(args);
-        }
+        benchmark(new String[] { "--drivers", "workloads/redis-default.yaml", "--tpc-h-file", "workloads/tpc-h-default.yaml", "workloads/simple-workload.yaml" });
         // testTpcHAlgorithmLocally();
     }
 
     private static void testTpcHAlgorithmLocally() {
-        TpcHQuery query = TpcHQuery.ForecastingRevenueChange;
+        TpcHQuery query = TpcHQuery.PricingSummaryReport;
         List<String> chunkFiles = Arrays.asList(
                  "../tpc-h-chunks/ref/chunk_1.csv",
                  "../tpc-h-chunks/ref/chunk_2.csv",
