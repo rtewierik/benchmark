@@ -3,11 +3,11 @@ package io.openmessaging.benchmark.tpch;
 import io.openmessaging.benchmark.driver.TpcHQuery;
 
 public class TpcHCommand {
+    public String queryId;
     public TpcHQuery query;
     public String sourceDataS3FolderUri;
     public int numberOfChunks;
     public int numberOfReducers;
-    public int queryId;
 
     public int getNumberOfMapResults(int index) {
         int actualIndex = index % numberOfReducers;

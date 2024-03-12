@@ -22,19 +22,18 @@ public class TpcHAlgorithm {
     private static final BigDecimal discountUpperBound = new BigDecimal("0.07");
     private static final BigDecimal quantityLowerBound = new BigDecimal("24.00");
 
-    public static TpcHIntermediateResult applyQueryToChunk(List<TpcHRow> chunk, TpcHQuery query) {
+    public static TpcHIntermediateResult applyQueryToChunk(List<TpcHRow> chunk, TpcHQuery query, TpcHConsumerAssignment assignment) {
         switch (query) {
             case PricingSummaryReport:
-                return applyPricingSummaryReportQueryToChunk(chunk);
+                return applyPricingSummaryReportQueryToChunk(chunk, assignment);
             case ForecastingRevenueChange:
-                return applyForecastingRevenueChangeReportQueryToChunk(chunk);
+                return applyForecastingRevenueChangeReportQueryToChunk(chunk, assignment);
             default:
                 throw new IllegalArgumentException("Invalid query detected!");
         }
     }
 
-    private static TpcHIntermediateResult applyPricingSummaryReportQueryToChunk(List<TpcHRow> chunk) {
-        // TO DO: Perhaps add groupMap to intermediate result.
+    private static TpcHIntermediateResult applyPricingSummaryReportQueryToChunk(List<TpcHRow> chunk, TpcHConsumerAssignment assignment) {
         HashMap<String, TpcHIntermediateResultGroup> groups = new HashMap<>();
         for (TpcHRow row : chunk) {
             LocalDate shipDate = row.shipDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -58,10 +57,10 @@ public class TpcHAlgorithm {
             group.aggregates.put("charge", ((BigDecimal)group.aggregates.get("charge")).add(charge));
             group.aggregates.put("orderCount", (Long)group.aggregates.get("orderCount") + 1);
         }
-        return new TpcHIntermediateResult(new ArrayList<>(groups.values()));
+        return new TpcHIntermediateResult(assignment.queryId, assignment.batchId, new ArrayList<>(groups.values()));
     }
 
-    private static TpcHIntermediateResult applyForecastingRevenueChangeReportQueryToChunk(List<TpcHRow> chunk) {
+    private static TpcHIntermediateResult applyForecastingRevenueChangeReportQueryToChunk(List<TpcHRow> chunk, TpcHConsumerAssignment assignment) {
         HashMap<String, TpcHIntermediateResultGroup> groups = new HashMap<>();
         for (TpcHRow row : chunk) {
             LocalDate shipDate = row.shipDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -83,7 +82,7 @@ public class TpcHAlgorithm {
             BigDecimal revenue = row.extendedPrice.multiply(row.discount);
             group.aggregates.put("revenue", ((BigDecimal)group.aggregates.get("revenue")).add(revenue));
         }
-        return new TpcHIntermediateResult(new ArrayList<>(groups.values()));
+        return new TpcHIntermediateResult(assignment.queryId, assignment.batchId, new ArrayList<>(groups.values()));
     }
 
     private static Map<String, Number> getPricingSummaryReportQueryAggregates() {

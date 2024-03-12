@@ -21,6 +21,7 @@ import io.openmessaging.benchmark.driver.TpcHInfo;
 import io.openmessaging.benchmark.driver.TpcHQuery;
 import io.openmessaging.benchmark.tpch.TpcHCommand;
 import io.openmessaging.benchmark.tpch.TpcHConstants;
+import io.openmessaging.benchmark.tpch.TpcHProducerAssignment;
 import io.openmessaging.benchmark.utils.PaddingDecimalFormat;
 import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.Timer;
@@ -90,7 +91,7 @@ public class WorkloadGenerator implements AutoCloseable {
         List<String> topics = worker.createTopics(new TopicsInfo(numberOfTopics, workload.partitionsPerTopic));
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
 
-        ConsumerAssignment internalConsumerAssignment = createTpcHConsumers(topics, this.command.query);
+        ConsumerAssignment internalConsumerAssignment = createTpcHConsumers(topics, this.command.queryId, this.command.query);
         this.localWorker.createConsumers(internalConsumerAssignment);
         log.info(
                 "Created {} internal consumers in {} ms",
@@ -104,7 +105,6 @@ public class WorkloadGenerator implements AutoCloseable {
         producerWorkAssignment.keyDistributorType = workload.keyDistributor;
         producerWorkAssignment.publishRate = targetPublishRate;
         producerWorkAssignment.payloadData = new ArrayList<>();
-        producerWorkAssignment.tpcH = workload.tpcH;
 
         worker.startLoad(producerWorkAssignment);
         log.info("----- Starting benchmark traffic ({}m)------", workload.testDurationMinutes);
@@ -317,11 +317,11 @@ public class WorkloadGenerator implements AutoCloseable {
                 timer.elapsedMillis());
     }
 
-    private ConsumerAssignment createTpcHConsumers(List<String> topics, TpcHQuery query) throws IOException {
+    private ConsumerAssignment createTpcHConsumers(List<String> topics, String queryId, TpcHQuery query) throws IOException {
         ConsumerAssignment consumerAssignment = new ConsumerAssignment();
         ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment();
 
-        TpcHInfo mapInfo = new TpcHInfo(query, TpcHConsumer.Map, null, null, null);
+        TpcHInfo mapInfo = new TpcHInfo(queryId, query, TpcHConsumer.Map, null, null, null);
         consumerAssignment.topicsSubscriptions.add(
             new TopicSubscription(
                 topics.get(TpcHConstants.MAP_CMD_INDEX),
@@ -330,7 +330,7 @@ public class WorkloadGenerator implements AutoCloseable {
             )
         );
 
-        TpcHInfo generateResultInfo = new TpcHInfo(query, TpcHConsumer.GenerateResult, null, null, this.command.numberOfChunks);
+        TpcHInfo generateResultInfo = new TpcHInfo(queryId, query, TpcHConsumer.GenerateResult, null, null, this.command.numberOfChunks);
         TopicSubscription orchestratorSubscription = new TopicSubscription(
             topics.get(TpcHConstants.REDUCE_DST_INDEX),
             generateSubscriptionName(TpcHConstants.REDUCE_DST_INDEX),
@@ -341,7 +341,7 @@ public class WorkloadGenerator implements AutoCloseable {
 
         for (int i = 0; i < this.command.numberOfReducers; i++) {
             int index = TpcHConstants.REDUCE_SRC_START_INDEX + i;
-            TpcHInfo info = new TpcHInfo(query, TpcHConsumer.Reduce, index, this.command.getNumberOfMapResults(i), null);
+            TpcHInfo info = new TpcHInfo(queryId, query, TpcHConsumer.Reduce, index, this.command.getNumberOfMapResults(i), null);
             consumerAssignment.topicsSubscriptions.add(
                 new TopicSubscription(
                     topics.get(index),

@@ -26,4 +26,6 @@ producerRate: 100
 consumerBacklogSizeGB: 0
 testDurationMinutes: 3
 
-
+tpcH:
+  queryId: test-query-1
+  query: PricingSummaryReport

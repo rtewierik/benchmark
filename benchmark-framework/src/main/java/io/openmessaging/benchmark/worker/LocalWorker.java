@@ -188,11 +188,12 @@ public class LocalWorker implements Worker, ConsumerCallback {
         executor.submit(
                 () -> {
                     BenchmarkProducer producer = producers.get(TpcHConstants.MAP_CMD_INDEX);
-                    TpcHProducerAssignment tpcH = producerWorkAssignment.tpcH;
+                    TpcHCommand command = producerWorkAssignment.tpcH;
+                    TpcHProducerAssignment tpcH = new TpcHProducerAssignment(command, producerWorkAssignment.index);
                     AtomicInteger currentAssignment = new AtomicInteger();
                     KeyDistributor keyDistributor = KeyDistributor.build(producerWorkAssignment.keyDistributorType);
                     int limit = (tpcH.offset * tpcH.batchSize) + tpcH.batchSize;
-                    String batchId = String.format("batch-%d-%s", tpcH.offset, RandomGenerator.getRandomString());
+                    String batchId = String.format("%s-batch-%d-%s", tpcH.queryId, tpcH.offset, RandomGenerator.getRandomString());
                     try {
                         while (currentAssignment.get() < limit) {
                             TpcHConsumerAssignment assignment = new TpcHConsumerAssignment();
@@ -337,7 +338,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         log.info("[INFO] Applying map to chunk \"{}\"...", s3Uri);
         try (InputStream stream = this.s3Client.readTpcHChunkFromS3(s3Uri)) {
             List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
-            TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, info.query);
+            TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, info.query, assignment);
             int index = TpcHConstants.REDUCE_PRODUCER_START_INDEX + info.index;
             BenchmarkProducer producer = this.producers.get(index);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
@@ -355,11 +356,11 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     private void processIntermediateResult(TpcHIntermediateResult intermediateResult, TpcHInfo info) throws IOException {
-        if (!this.collectedIntermediateResults.containsKey(intermediateResult.queryId)) {
-            TpcHIntermediateResult newIntermediateResult = new TpcHIntermediateResult(intermediateResult.queryId, new ArrayList<>());;
-            this.collectedIntermediateResults.put(intermediateResult.queryId, newIntermediateResult);
+        if (!this.collectedIntermediateResults.containsKey(intermediateResult.batchId)) {
+            TpcHIntermediateResult newIntermediateResult = new TpcHIntermediateResult(intermediateResult.queryId, intermediateResult.batchId, new ArrayList<>());;
+            this.collectedIntermediateResults.put(intermediateResult.batchId, newIntermediateResult);
         }
-        TpcHIntermediateResult existingIntermediateResult = this.collectedIntermediateResults.get(intermediateResult.queryId);
+        TpcHIntermediateResult existingIntermediateResult = this.collectedIntermediateResults.get(intermediateResult.batchId);
         existingIntermediateResult.aggregateIntermediateResult(intermediateResult);
         if (existingIntermediateResult.numberOfAggregatedResults == info.numberOfReduceResults) {
             BenchmarkProducer producer = this.producers.get(TpcHConstants.REDUCE_DST_INDEX);
@@ -376,11 +377,11 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     private void processReducedResult(TpcHIntermediateResult reducedResult, TpcHInfo info) throws IOException {
-        if (!this.collectedReducedResults.containsKey(reducedResult.queryId)) {
-            TpcHIntermediateResult newIntermediateResult = new TpcHIntermediateResult(reducedResult.queryId, new ArrayList<>());;
-            this.collectedReducedResults.put(reducedResult.queryId, newIntermediateResult);
+        if (!this.collectedReducedResults.containsKey(reducedResult.batchId)) {
+            TpcHIntermediateResult newIntermediateResult = new TpcHIntermediateResult(reducedResult.queryId, reducedResult.batchId, new ArrayList<>());;
+            this.collectedReducedResults.put(reducedResult.batchId, newIntermediateResult);
         }
-        TpcHIntermediateResult existingIntermediateResult = this.collectedReducedResults.get(reducedResult.queryId);
+        TpcHIntermediateResult existingIntermediateResult = this.collectedReducedResults.get(reducedResult.batchId);
         existingIntermediateResult.aggregateIntermediateResult(reducedResult);
         if (existingIntermediateResult.numberOfAggregatedResults == info.numberOfMapResults) {
             TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingIntermediateResult, info.query);

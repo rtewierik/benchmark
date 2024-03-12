@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 public class TpcHIntermediateResult {
     public String queryId;
+    public String batchId;
     public int numberOfAggregatedResults;
     public List<TpcHIntermediateResultGroup> groups;
     private final Lock lock = new ReentrantLock();
@@ -17,18 +18,32 @@ public class TpcHIntermediateResult {
 
     public TpcHIntermediateResult(List<TpcHIntermediateResultGroup> groups) {
         this.queryId = "default-query-id";
+        this.batchId = "default-batch-id";
         this.groups = groups;
         this.numberOfAggregatedResults = 1;
     }
 
-    public TpcHIntermediateResult(String queryId, List<TpcHIntermediateResultGroup> groups) {
+    public TpcHIntermediateResult(String queryId, String batchId, List<TpcHIntermediateResultGroup> groups) {
         this.queryId = queryId;
+        this.batchId = batchId;
         this.groups = groups;
         this.numberOfAggregatedResults = 1;
     }
 
     public void aggregateIntermediateResult(TpcHIntermediateResult intermediateResult) {
         lock.lock();
+        String queryId = intermediateResult.queryId;
+        String batchId = intermediateResult.batchId;
+        if (this.queryId == null) {
+            this.queryId = queryId;
+        } else if (!this.queryId.equals(queryId)) {
+            throw new IllegalArgumentException(String.format("Inconsistent query ID \"%s\" found relative to \"%s\".", queryId, this.queryId));
+        }
+        if (this.batchId == null) {
+            this.batchId = batchId;
+        } else if (!this.batchId.equals(batchId)) {
+            throw new IllegalArgumentException(String.format("Inconsistent batch ID \"%s\" found relative to \"%s\".", batchId, this.batchId));
+        }
         try {
             for (TpcHIntermediateResultGroup group : intermediateResult.groups) {
                 TpcHIntermediateResultGroup existingGroup = this.findGroupByIdentifiers(group.identifiers);

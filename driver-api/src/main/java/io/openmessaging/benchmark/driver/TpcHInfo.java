@@ -1,6 +1,7 @@
 package io.openmessaging.benchmark.driver;
 
 public class TpcHInfo {
+    public String queryId;
     public TpcHQuery query;
     public TpcHConsumer consumer;
     public Integer index;
@@ -8,12 +9,14 @@ public class TpcHInfo {
     public Integer numberOfReduceResults;
 
     public TpcHInfo(
+        String queryId,
         TpcHQuery query,
         TpcHConsumer consumer,
         Integer index,
         Integer numberOfMapResults,
         Integer numberOfReduceResults
     ) {
+        this.queryId = queryId;
         this.query = query;
         this.consumer = consumer;
         this.index = index;
