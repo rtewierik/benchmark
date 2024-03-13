@@ -125,6 +125,9 @@ public class WorkloadGenerator implements AutoCloseable {
         log.info("----- Completed run. Stopping worker and yielding results ------");
 
         worker.stopAll();
+        if (localWorker != worker) {
+            localWorker.stopAll();
+        }
         return result;
     }
 
@@ -207,6 +210,9 @@ public class WorkloadGenerator implements AutoCloseable {
         log.info("----- Completed run. Stopping worker and yielding results ------");
 
         worker.stopAll();
+        if (localWorker != worker) {
+            localWorker.stopAll();
+        }
         return result;
     }
 
@@ -287,6 +293,9 @@ public class WorkloadGenerator implements AutoCloseable {
     @Override
     public void close() throws Exception {
         worker.stopAll();
+        if (worker != localWorker) {
+            localWorker.close();
+        }
         executor.shutdownNow();
     }
 
