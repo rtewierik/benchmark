@@ -19,9 +19,8 @@ import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.driver.TpcHConsumer;
 import io.openmessaging.benchmark.driver.TpcHInfo;
 import io.openmessaging.benchmark.driver.TpcHQuery;
-import io.openmessaging.benchmark.tpch.TpcHCommand;
+import io.openmessaging.benchmark.tpch.TpcHArguments;
 import io.openmessaging.benchmark.tpch.TpcHConstants;
-import io.openmessaging.benchmark.tpch.TpcHProducerAssignment;
 import io.openmessaging.benchmark.utils.PaddingDecimalFormat;
 import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.Timer;
@@ -50,7 +49,7 @@ public class WorkloadGenerator implements AutoCloseable {
 
     private final String driverName;
     private final Workload workload;
-    private final TpcHCommand command;
+    private final TpcHArguments command;
     private final Worker worker;
     private final LocalWorker localWorker;
 
@@ -62,7 +61,7 @@ public class WorkloadGenerator implements AutoCloseable {
 
     private volatile double targetPublishRate;
 
-    public WorkloadGenerator(String driverName, Workload workload, TpcHCommand command, Worker worker, LocalWorker localWorker) {
+    public WorkloadGenerator(String driverName, Workload workload, TpcHArguments command, Worker worker, LocalWorker localWorker) {
         this.driverName = driverName;
         this.workload = workload;
         this.command = command;

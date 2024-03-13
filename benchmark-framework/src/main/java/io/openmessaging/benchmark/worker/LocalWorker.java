@@ -15,7 +15,6 @@ package io.openmessaging.benchmark.worker;
 
 import static java.util.stream.Collectors.toList;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -38,10 +37,7 @@ import io.openmessaging.benchmark.worker.commands.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.nio.ByteBuffer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -50,7 +46,6 @@ import java.util.stream.IntStream;
 import io.openmessaging.benchmark.worker.jackson.ObjectMappers;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
-import org.apache.pulsar.client.api.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -193,8 +188,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
         executor.submit(
                 () -> {
                     BenchmarkProducer producer = producers.get(TpcHConstants.MAP_CMD_INDEX);
-                    TpcHCommand command = producerWorkAssignment.tpcH;
-                    TpcHProducerAssignment tpcH = new TpcHProducerAssignment(command, producerWorkAssignment.index);
+                    TpcHArguments command = producerWorkAssignment.tpcH;
+                    TpcHProducerAssignment tpcH = new TpcHProducerAssignment(command, producerWorkAssignment.producerIndex);
                     AtomicInteger currentAssignment = new AtomicInteger();
                     KeyDistributor keyDistributor = KeyDistributor.build(producerWorkAssignment.keyDistributorType);
                     int limit = (tpcH.offset * tpcH.batchSize) + tpcH.batchSize;
@@ -205,7 +200,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                             assignment.batchId = batchId;
                             assignment.query = tpcH.query;
                             assignment.sourceDataS3Uri = String.format("%s/chunk_%d.csv", tpcH.sourceDataS3FolderUri, currentAssignment.incrementAndGet());
-                            assignment.index = producerWorkAssignment.index;
+                            assignment.index = producerWorkAssignment.producerIndex;
                             TpcHMessage message = new TpcHMessage();
                             message.type = TpcHMessageType.ConsumerAssignment;
                             message.message = messageWriter.writeValueAsString(assignment);

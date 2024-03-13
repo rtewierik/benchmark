@@ -20,7 +20,6 @@ import com.beust.jcommander.internal.Maps;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import io.openmessaging.benchmark.tpch.TpcHCommand;
 import io.openmessaging.benchmark.tpch.TpcHConstants;
 import io.openmessaging.benchmark.utils.ListPartition;
 import io.openmessaging.benchmark.worker.commands.*;
@@ -115,7 +114,7 @@ public class DistributedWorkersEnsemble implements Worker {
                         w.startLoad(
                             producerWorkAssignment
                                 .withPublishRate(newRate)
-                                .withIndex(index.getAndIncrement())
+                                .withProducerIndex(index.getAndIncrement())
                         );
                     } catch (IOException e) {
                         throw new RuntimeException(e);

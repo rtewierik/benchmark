@@ -15,12 +15,12 @@ package io.openmessaging.benchmark.tpch;
 
 import io.openmessaging.benchmark.driver.TpcHQuery;
 
-public class TpcHCommand {
+public class TpcHArguments {
     public String queryId;
     public TpcHQuery query;
     public String sourceDataS3FolderUri;
-    public int numberOfChunks;
-    public int numberOfReducers;
+    public Integer numberOfChunks;
+    public Integer numberOfReducers;
 
     public int getNumberOfMapResults(int index) {
         int actualIndex = index % numberOfReducers;

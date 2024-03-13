@@ -22,7 +22,7 @@ public class TpcHProducerAssignment {
     public int batchSize;
     public int offset;
 
-    public TpcHProducerAssignment(TpcHCommand command, int offset) {
+    public TpcHProducerAssignment(TpcHArguments command, int offset) {
         this.queryId = command.queryId;
         this.query = command.query;
         this.sourceDataS3FolderUri = command.sourceDataS3FolderUri;
