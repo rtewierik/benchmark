@@ -35,7 +35,6 @@ public class AmazonS3Client {
         String accessKeyId = "AKIASAWOQJQTNAUKRPOY";
         String secretAccessKey = "";
 
-        // Create AWS credentials object
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKeyId, secretAccessKey);
 
         this.s3Client = AmazonS3ClientBuilder

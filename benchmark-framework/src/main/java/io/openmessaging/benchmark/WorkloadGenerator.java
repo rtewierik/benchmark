@@ -328,7 +328,7 @@ public class WorkloadGenerator implements AutoCloseable {
         ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment();
         orchestratorConsumerAssignment.isTpcH = true;
 
-        TpcHInfo mapInfo = new TpcHInfo(queryId, query, TpcHConsumer.Map, null, null, null);
+        TpcHInfo mapInfo = new TpcHInfo(queryId, query, TpcHConsumer.Map, null, null);
         consumerAssignment.topicsSubscriptions.add(
             new TopicSubscription(
                 topics.get(TpcHConstants.MAP_CMD_INDEX),
@@ -337,7 +337,7 @@ public class WorkloadGenerator implements AutoCloseable {
             )
         );
 
-        TpcHInfo generateResultInfo = new TpcHInfo(queryId, query, TpcHConsumer.GenerateResult, null, null, this.command.numberOfChunks);
+        TpcHInfo generateResultInfo = new TpcHInfo(queryId, query, TpcHConsumer.GenerateResult, null, this.command.numberOfChunks);
         TopicSubscription orchestratorSubscription = new TopicSubscription(
             topics.get(TpcHConstants.REDUCE_DST_INDEX),
             generateSubscriptionName(TpcHConstants.REDUCE_DST_INDEX),
@@ -348,7 +348,7 @@ public class WorkloadGenerator implements AutoCloseable {
 
         for (int i = 0; i < this.command.numberOfReducers; i++) {
             int index = TpcHConstants.REDUCE_SRC_START_INDEX + i;
-            TpcHInfo info = new TpcHInfo(queryId, query, TpcHConsumer.Reduce, index, this.command.getNumberOfMapResults(i), null);
+            TpcHInfo info = new TpcHInfo(queryId, query, TpcHConsumer.Reduce, this.command.getNumberOfMapResults(i), null);
             consumerAssignment.topicsSubscriptions.add(
                 new TopicSubscription(
                     topics.get(index),
