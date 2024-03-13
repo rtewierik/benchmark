@@ -13,6 +13,8 @@
  */
 package io.openmessaging.benchmark.tpch;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +24,11 @@ public class TpcHIntermediateResultDto {
     public final Integer numberOfAggregatedResults;
     public List<TpcHIntermediateResultGroupDto> groups;
 
-    public TpcHIntermediateResultDto(String queryId, String batchId, int numberOfAggregatedResults, List<TpcHIntermediateResultGroup> groups) {
+    public TpcHIntermediateResultDto(
+        @JsonProperty("queryId") String queryId,
+        @JsonProperty("batchId") String batchId,
+        @JsonProperty("numberOfAggregatedResults") Integer numberOfAggregatedResults,
+        @JsonProperty("groups") List<TpcHIntermediateResultGroup> groups) {
         this.queryId = queryId;
         this.batchId = batchId;
         this.numberOfAggregatedResults = numberOfAggregatedResults;

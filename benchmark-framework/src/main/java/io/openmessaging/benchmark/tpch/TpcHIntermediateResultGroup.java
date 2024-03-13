@@ -13,6 +13,8 @@
  */
 package io.openmessaging.benchmark.tpch;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,10 @@ public class TpcHIntermediateResultGroup {
         this.aggregates = aggregates;
     }
 
-    public TpcHIntermediateResultGroup(Map<String, Object> identifiers, Map<String, Number> aggregates) {
+    public TpcHIntermediateResultGroup(
+        @JsonProperty("identifiers") Map<String, Object> identifiers,
+        @JsonProperty("aggregates") Map<String, Number> aggregates
+    ) {
         this.identifiers = identifiers;
         this.aggregates = aggregates;
     }

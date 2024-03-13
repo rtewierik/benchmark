@@ -13,13 +13,18 @@
  */
 package io.openmessaging.benchmark.tpch;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Map;
 
 public class TpcHIntermediateResultGroupDto {
     public final Map<String, Object> identifiers;
     public final Map<String, Number> aggregates;
 
-    public TpcHIntermediateResultGroupDto(Map<String, Object> identifiers, Map<String, Number> aggregates) {
+    public TpcHIntermediateResultGroupDto(
+        @JsonProperty("identifiers") Map<String, Object> identifiers,
+        @JsonProperty("aggregates") Map<String, Number> aggregates
+    ) {
         this.identifiers = identifiers;
         this.aggregates = aggregates;
     }

@@ -13,6 +13,8 @@
  */
 package io.openmessaging.benchmark.tpch;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +29,11 @@ public class TpcHIntermediateResult {
     public final List<TpcHIntermediateResultGroup> groups;
     private final Lock lock = new ReentrantLock();
 
-    public TpcHIntermediateResult(String queryId, String batchId, Integer numberOfAggregatedResults, List<TpcHIntermediateResultGroup> groups) {
+    public TpcHIntermediateResult(
+            @JsonProperty("queryId") String queryId,
+            @JsonProperty("batchId") String batchId,
+            @JsonProperty("numberOfAggregatedResults") Integer numberOfAggregatedResults,
+            @JsonProperty("groups") List<TpcHIntermediateResultGroup> groups) {
         this.queryId = queryId;
         this.batchId = batchId;
         this.numberOfAggregatedResults = numberOfAggregatedResults;

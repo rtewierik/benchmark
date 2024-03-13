@@ -14,11 +14,11 @@
 package io.openmessaging.benchmark.driver;
 
 public class TpcHInfo {
-    public String queryId;
-    public TpcHQuery query;
-    public TpcHConsumer consumer;
-    public Integer numberOfMapResults;
-    public Integer numberOfReduceResults;
+    public final String queryId;
+    public final TpcHQuery query;
+    public final TpcHConsumer consumer;
+    public final Integer numberOfMapResults;
+    public final Integer numberOfReduceResults;
 
     public TpcHInfo(
         String queryId,

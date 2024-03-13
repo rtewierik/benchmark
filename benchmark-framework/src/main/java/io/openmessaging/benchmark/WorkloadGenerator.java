@@ -114,6 +114,7 @@ public class WorkloadGenerator implements AutoCloseable {
         producerWorkAssignment.publishRate = targetPublishRate;
         producerWorkAssignment.payloadData = new ArrayList<>();
         producerWorkAssignment.tpcH = this.command;
+        producerWorkAssignment.producerIndex = 0;
 
         worker.startLoad(producerWorkAssignment);
         log.info("----- Starting benchmark traffic ------");

@@ -13,6 +13,7 @@
  */
 package io.openmessaging.benchmark.tpch;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.openmessaging.benchmark.driver.TpcHQuery;
 
 public class TpcHArguments {
@@ -22,7 +23,13 @@ public class TpcHArguments {
     public final Integer numberOfChunks;
     public final Integer numberOfReducers;
 
-    public TpcHArguments(String queryId, TpcHQuery query, String sourceDataS3FolderUri, Integer numberOfChunks, Integer numberOfReducers) {
+    public TpcHArguments(
+        @JsonProperty("queryId") String queryId,
+        @JsonProperty("query") TpcHQuery query,
+        @JsonProperty("sourceDataS3FolderUri") String sourceDataS3FolderUri,
+        @JsonProperty("numberOfChunks") Integer numberOfChunks,
+        @JsonProperty("numberOFReducers") Integer numberOfReducers
+    ) {
         this.queryId = queryId;
         this.query = query;
         this.sourceDataS3FolderUri = sourceDataS3FolderUri;

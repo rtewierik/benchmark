@@ -32,7 +32,7 @@ public class AmazonS3Client {
     private final AmazonS3 s3Client;
 
     public AmazonS3Client() {
-        String accessKeyId = "AKIASAWOQJQTNAUKRPOY";
+        String accessKeyId = "AKIASAWOQJQTKCRZ4T5Z";
         String secretAccessKey = "";
 
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKeyId, secretAccessKey);
@@ -40,7 +40,7 @@ public class AmazonS3Client {
         this.s3Client = AmazonS3ClientBuilder
             .standard()
             .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-            .withRegion("eu-west-1")
+                .withRegion("eu-west-1")
             .build();
     }
 
