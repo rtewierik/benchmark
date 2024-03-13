@@ -35071,3 +35071,465 @@ Caused by: java.net.SocketException: Broken pipe
 02:20:53.743 [main] INFO WorkloadGenerator - ----- Starting benchmark traffic ------
 02:20:53.979 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_1.csv"...
 02:21:04.002 [main] INFO WorkloadGenerator - Pub rate     1.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.4 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 120.0 - 50%: 110.0 - 99%: 212.7 - 99.9%: 212.7 - Max: 212.7 | Pub Delay Latency (us) avg: 534172.3 - 50%: 505287.0 - 99%: 1007119.0 - 99.9%: 1007119.0 - Max: 1007119.0
+02:21:14.269 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:21:23.147 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_2.csv"...
+02:21:24.475 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 110.4 - 50%: 110.4 - 99%: 110.4 - 99.9%: 110.4 - Max: 110.4 | Pub Delay Latency (us) avg: 29067200.0 - 50%: 29067263.0 - 99%: 29067263.0 - 99.9%: 29067263.0 - Max: 29067263.0
+02:21:34.650 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:21:44.937 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:21:52.214 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_3.csv"...
+02:21:55.371 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 109.6 - 50%: 109.6 - 99%: 109.6 - 99.9%: 109.6 - Max: 109.6 | Pub Delay Latency (us) avg: 58233216.0 - 50%: 58233343.0 - 99%: 58233343.0 - 99.9%: 58233343.0 - Max: 58233343.0
+02:22:05.627 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:22:15.988 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:22:20.229 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_4.csv"...
+02:22:26.376 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 117.9 - 50%: 117.9 - 99%: 117.9 - 99.9%: 117.9 - Max: 117.9 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:22:36.722 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:22:47.174 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:22:48.224 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_5.csv"...
+02:22:57.372 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 109.6 - 50%: 109.6 - 99%: 109.6 - 99.9%: 109.6 - Max: 109.6 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:23:07.661 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:23:18.383 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:23:18.416 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_6.csv"...
+02:23:28.794 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 109.2 - 50%: 109.2 - 99%: 109.2 - 99.9%: 109.2 - Max: 109.2 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:23:39.045 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:23:47.751 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_7.csv"...
+02:23:49.293 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 112.0 - 50%: 112.0 - 99%: 112.0 - 99.9%: 112.0 - Max: 112.0 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:23:59.594 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:24:09.887 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:24:17.180 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_8.csv"...
+02:24:20.178 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 112.1 - 50%: 112.1 - 99%: 112.1 - 99.9%: 112.1 - Max: 112.1 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:24:30.401 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:24:40.733 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:24:46.523 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_9.csv"...
+02:24:51.060 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 109.6 - 50%: 109.6 - 99%: 109.6 - 99.9%: 109.6 - Max: 109.6 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:25:01.621 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:25:11.932 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:25:13.937 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_10.csv"...
+02:25:22.357 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 111.3 - 50%: 111.3 - 99%: 111.3 - 99.9%: 111.3 - Max: 111.3 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:25:24.947 [pool-4-thread-1] INFO LocalWorker - [LocalWorker] TPC-H query result: {
+  "rows" : [ {
+    "columns" : {
+      "lineStatus" : "O",
+      "returnFlag" : "N",
+      "discountedPriceSum" : 77224279895.1766,
+      "chargeSum" : 80315428976.754440,
+      "orderCount" : 2124392,
+      "basePriceSum" : 81285904523.04,
+      "averageQuantity" : 25.5,
+      "averagePrice" : 38263.14,
+      "averageDiscount" : 0.05,
+      "quantitySum" : 54192530.0
+    }
+  }, {
+    "columns" : {
+      "lineStatus" : "F",
+      "returnFlag" : "R",
+      "discountedPriceSum" : 53741292684.6040,
+      "chargeSum" : 55889619119.831932,
+      "orderCount" : 1478870,
+      "basePriceSum" : 56568041380.90,
+      "averageQuantity" : 25.5,
+      "averagePrice" : 38250.85,
+      "averageDiscount" : 0.05,
+      "quantitySum" : 37719753.0
+    }
+  }, {
+    "columns" : {
+      "lineStatus" : "F",
+      "returnFlag" : "A",
+      "discountedPriceSum" : 53758257134.8700,
+      "chargeSum" : 55909065222.827692,
+      "orderCount" : 1478493,
+      "basePriceSum" : 56586554400.73,
+      "averageQuantity" : 25.5,
+      "averagePrice" : 38273.13,
+      "averageDiscount" : 0.05,
+      "quantitySum" : 37734107.0
+    }
+  }, {
+    "columns" : {
+      "lineStatus" : "F",
+      "returnFlag" : "N",
+      "discountedPriceSum" : 1413082168.0541,
+      "chargeSum" : 1469649223.194375,
+      "orderCount" : 38854,
+      "basePriceSum" : 1487504710.38,
+      "averageQuantity" : 25.5,
+      "averagePrice" : 38284.47,
+      "averageDiscount" : 0.05,
+      "quantitySum" : 991417.0
+    }
+  } ]
+}
+02:25:32.720 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.1 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 109.7 - 50%: 109.7 - 99%: 109.7 - 99.9%: 109.7 - Max: 109.7 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:25:32.979 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg: 115.6 - 50%: 110.0 - 95%: 117.9 - 99%: 212.7 - 99.9%: 212.7 - 99.99%: 212.7 - Max: 212.7 | Pub Delay (us)  avg: 28632158.1 - 50%: 1007119.0 - 95%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - 99.99%: 60000255.0 - Max: 60000255.0
+02:25:33.101 [main] INFO WorkloadGenerator - ----- Completed run. Stopping worker and yielding results ------
+02:25:34.265 [main] INFO LocalWorker - Attempting to shut down producers...
+02:25:34.265 [main] INFO LocalWorker - Attempting to shut down consumers...
+02:25:34.266 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down consumer task...
+02:25:34.266 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down executor...
+02:25:34.266 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down pool...
+02:25:34.271 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down consumer task...
+02:25:34.271 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down executor...
+02:25:34.271 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down pool...
+02:25:34.271 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down consumer task...
+02:25:34.271 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down executor...
+02:25:34.271 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down pool...
+02:25:34.271 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+02:25:34.271 [main] INFO Benchmark - Preparing to write test results...
+02:25:34.272 [main] INFO Benchmark - Writing test result into simple-workload-Redis-2024-03-13-02-25-34.json
+02:25:35.532 [main] INFO LocalWorker - Attempting to shut down producers...
+02:25:35.532 [main] INFO LocalWorker - Attempting to shut down consumers...
+02:25:35.532 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+02:25:36.391 [main] INFO LocalWorker - Attempting to shut down producers...
+02:25:36.391 [main] INFO LocalWorker - Attempting to shut down consumers...
+02:25:36.391 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+02:28:19.908 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "workloads/redis-default.yaml" ],
+  "workers" : null,
+  "workersFile" : null,
+  "tpcHFile" : "/Users/ruben.wierik/Repos/benchmark/workloads/tpc-h-default.yaml",
+  "workloads" : [ "workloads/simple-workload.yaml" ],
+  "output" : null
+}
+02:28:19.928 [main] INFO Benchmark - Workloads: {
+  "simple-workload" : {
+    "name" : "Simple Workload 1 producer on 2 topics",
+    "topics" : 2,
+    "partitionsPerTopic" : 10,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 1024,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-1Kb.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 100,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+02:28:19.930 [main] INFO Benchmark - TPC-H command: {
+  "queryId" : "test-query-1",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/reference-data/chunked",
+  "numberOfChunks" : 10,
+  "numberOfReducers" : 1
+}
+02:28:20.228 [main] INFO Benchmark - --------------- WORKLOAD : Simple Workload 1 producer on 2 topics --- DRIVER : Redis---------------
+02:28:21.078 [main] INFO LocalWorker - Attempting to shut down producers...
+02:28:21.078 [main] INFO LocalWorker - Attempting to shut down consumers...
+02:28:21.078 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+02:28:21.081 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+02:28:21.092 [main] INFO LocalWorker - Created 3 topics in 6.070625 ms
+02:28:21.092 [main] INFO WorkloadGenerator - Created 3 topics in 6.574166 ms
+02:28:21.097 [main] INFO RedisBenchmarkDriver - Attempting to connect to localhost:6379 with user null
+02:28:21.801 [main] INFO LocalWorker - Created 2 consumers in 707.271417 ms
+02:28:21.802 [main] INFO WorkloadGenerator - Created 2 external consumers in 707.680333 ms
+02:28:22.140 [main] INFO LocalWorker - Created 3 consumers in 338.392625 ms
+02:28:22.141 [main] INFO WorkloadGenerator - Created 1 internal consumers in 1055.601208 ms
+02:28:22.155 [main] INFO LocalWorker - Created 3 producers in 8.795709 ms
+02:28:22.155 [main] INFO WorkloadGenerator - Created 3 producers in 9.288042 ms
+02:28:22.155 [main] INFO WorkloadGenerator - Waiting for consumers to be ready
+02:28:22.723 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 3, Received: 3
+02:28:22.724 [main] INFO WorkloadGenerator - All consumers are ready
+02:28:22.726 [main] INFO WorkloadGenerator - ----- Starting benchmark traffic ------
+02:28:22.959 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_1.csv"...
+02:28:32.952 [main] INFO WorkloadGenerator - Pub rate     1.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.4 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 110.8 - 50%: 109.8 - 99%: 117.3 - 99.9%: 117.3 - Max: 117.3 | Pub Delay Latency (us) avg: 457428.7 - 50%: 406093.0 - 99%: 912463.0 - 99.9%: 912463.0 - Max: 912463.0
+02:28:43.286 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:28:51.373 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_2.csv"...
+02:28:53.757 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 110.1 - 50%: 110.1 - 99%: 110.1 - 99.9%: 110.1 - Max: 110.1 | Pub Delay Latency (us) avg: 28213440.0 - 50%: 28213503.0 - 99%: 28213503.0 - 99.9%: 28213503.0 - Max: 28213503.0
+02:29:04.198 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:29:14.601 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:29:20.673 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_3.csv"...
+02:29:24.954 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 110.4 - 50%: 110.4 - 99%: 110.4 - 99.9%: 110.4 - Max: 110.4 | Pub Delay Latency (us) avg: 57613952.0 - 50%: 57614079.0 - 99%: 57614079.0 - 99.9%: 57614079.0 - Max: 57614079.0
+02:29:35.411 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:29:45.855 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:29:49.911 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_4.csv"...
+02:29:56.268 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 109.8 - 50%: 109.8 - 99%: 109.8 - 99.9%: 109.8 - Max: 109.8 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:30:06.572 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:30:16.936 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:30:19.567 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_5.csv"...
+02:30:27.395 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 110.0 - 50%: 110.0 - 99%: 110.0 - 99.9%: 110.0 - Max: 110.0 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:30:37.652 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:30:47.894 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:30:48.161 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_6.csv"...
+02:30:58.395 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 115.2 - 50%: 115.2 - 99%: 115.2 - 99.9%: 115.2 - Max: 115.2 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:31:08.800 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:31:18.461 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_7.csv"...
+02:31:19.136 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 110.8 - 50%: 110.8 - 99%: 110.8 - 99.9%: 110.8 - Max: 110.8 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:31:29.561 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:31:39.967 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:31:49.458 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_8.csv"...
+02:31:50.249 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 109.8 - 50%: 109.8 - 99%: 109.8 - 99.9%: 109.8 - Max: 109.8 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:32:00.692 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:32:11.069 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:32:19.593 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_9.csv"...
+02:32:21.463 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 219.9 - 50%: 219.9 - 99%: 219.9 - 99.9%: 219.9 - Max: 219.9 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:32:31.794 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:32:42.078 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:32:48.881 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_10.csv"...
+02:32:52.384 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 110.3 - 50%: 110.3 - 99%: 110.3 - 99.9%: 110.3 - Max: 110.3 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:32:59.007 [pool-4-thread-1] INFO LocalWorker - [LocalWorker] TPC-H query result: {
+  "rows" : [ {
+    "columns" : {
+      "lineStatus" : "O",
+      "returnFlag" : "N",
+      "discountedPriceSum" : 77224279895.1766,
+      "chargeSum" : 80315428976.754440,
+      "orderCount" : 2124392,
+      "basePriceSum" : 81285904523.04,
+      "averageQuantity" : 25.5,
+      "averagePrice" : 38263.14,
+      "averageDiscount" : 0.05,
+      "quantitySum" : 54192530.0
+    }
+  }, {
+    "columns" : {
+      "lineStatus" : "F",
+      "returnFlag" : "R",
+      "discountedPriceSum" : 53741292684.6040,
+      "chargeSum" : 55889619119.831932,
+      "orderCount" : 1478870,
+      "basePriceSum" : 56568041380.90,
+      "averageQuantity" : 25.5,
+      "averagePrice" : 38250.85,
+      "averageDiscount" : 0.05,
+      "quantitySum" : 37719753.0
+    }
+  }, {
+    "columns" : {
+      "lineStatus" : "F",
+      "returnFlag" : "A",
+      "discountedPriceSum" : 53758257134.8700,
+      "chargeSum" : 55909065222.827692,
+      "orderCount" : 1478493,
+      "basePriceSum" : 56586554400.73,
+      "averageQuantity" : 25.5,
+      "averagePrice" : 38273.13,
+      "averageDiscount" : 0.05,
+      "quantitySum" : 37734107.0
+    }
+  }, {
+    "columns" : {
+      "lineStatus" : "F",
+      "returnFlag" : "N",
+      "discountedPriceSum" : 1413082168.0541,
+      "chargeSum" : 1469649223.194375,
+      "orderCount" : 38854,
+      "basePriceSum" : 1487504710.38,
+      "averageQuantity" : 25.5,
+      "averagePrice" : 38284.47,
+      "averageDiscount" : 0.05,
+      "quantitySum" : 991417.0
+    }
+  } ]
+}
+02:33:02.576 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.1 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 111.7 - 50%: 111.7 - 99%: 111.7 - 99.9%: 111.7 - Max: 111.7 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:33:02.854 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg: 116.3 - 50%: 110.1 - 95%: 117.3 - 99%: 219.9 - 99.9%: 219.9 - 99.99%: 219.9 - Max: 219.9 | Pub Delay (us)  avg: 28520135.1 - 50%: 912463.0 - 95%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - 99.99%: 60000255.0 - Max: 60000255.0
+02:33:02.975 [main] INFO WorkloadGenerator - ----- Completed run. Stopping worker and yielding results ------
+02:33:04.137 [main] INFO LocalWorker - Attempting to shut down producers...
+02:33:04.138 [main] INFO LocalWorker - Attempting to shut down consumers...
+02:33:04.138 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down consumer task...
+02:33:04.138 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down executor...
+02:33:04.138 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down pool...
+02:33:04.142 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down consumer task...
+02:33:04.142 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down executor...
+02:33:04.142 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down pool...
+02:33:04.142 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down consumer task...
+02:33:04.142 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down executor...
+02:33:04.142 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down pool...
+02:33:04.142 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+02:33:04.142 [main] INFO Benchmark - Preparing to write test results...
+02:33:04.143 [main] INFO Benchmark - Writing test result into simple-workload-Redis-2024-03-13-02-33-04.json
+02:33:05.151 [main] INFO LocalWorker - Attempting to shut down producers...
+02:33:05.152 [main] INFO LocalWorker - Attempting to shut down consumers...
+02:33:05.152 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+02:33:05.152 [main] INFO Benchmark - Finished test and closed generator.
+02:33:05.724 [main] INFO LocalWorker - Attempting to shut down producers...
+02:33:05.724 [main] INFO LocalWorker - Attempting to shut down consumers...
+02:33:05.724 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+02:33:05.724 [main] INFO Benchmark - Doing final clean-up...
+02:33:05.724 [main] INFO Benchmark - Final clean-up finished.
+02:33:49.795 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "workloads/redis-default.yaml" ],
+  "workers" : null,
+  "workersFile" : null,
+  "tpcHFile" : "/Users/ruben.wierik/Repos/benchmark/workloads/tpc-h-default.yaml",
+  "workloads" : [ "workloads/simple-workload.yaml" ],
+  "output" : null
+}
+02:33:49.819 [main] INFO Benchmark - Workloads: {
+  "simple-workload" : {
+    "name" : "Simple Workload 1 producer on 2 topics",
+    "topics" : 2,
+    "partitionsPerTopic" : 10,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 1024,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-1Kb.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 100,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+02:33:49.821 [main] INFO Benchmark - TPC-H command: {
+  "queryId" : "test-query-1",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/reference-data/chunked",
+  "numberOfChunks" : 10,
+  "numberOfReducers" : 1
+}
+02:33:50.123 [main] INFO Benchmark - --------------- WORKLOAD : Simple Workload 1 producer on 2 topics --- DRIVER : Redis---------------
+02:33:51.050 [main] INFO LocalWorker - Attempting to shut down producers...
+02:33:51.051 [main] INFO LocalWorker - Attempting to shut down consumers...
+02:33:51.051 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+02:33:51.054 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+02:33:51.103 [main] INFO LocalWorker - Created 3 topics in 43.811583 ms
+02:33:51.104 [main] INFO WorkloadGenerator - Created 3 topics in 45.081584 ms
+02:33:51.123 [main] INFO RedisBenchmarkDriver - Attempting to connect to localhost:6379 with user null
+02:33:51.900 [main] INFO LocalWorker - Created 2 consumers in 787.483958 ms
+02:33:51.900 [main] INFO WorkloadGenerator - Created 2 external consumers in 787.946125 ms
+02:33:52.252 [main] INFO LocalWorker - Created 3 consumers in 351.432458 ms
+02:33:52.252 [main] INFO WorkloadGenerator - Created 1 internal consumers in 1193.006625 ms
+02:33:52.257 [main] INFO LocalWorker - Created 3 producers in 3.244625 ms
+02:33:52.258 [main] INFO WorkloadGenerator - Created 3 producers in 3.495458 ms
+02:33:52.258 [main] INFO WorkloadGenerator - Waiting for consumers to be ready
+02:33:52.815 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 3, Received: 2
+02:33:52.815 [main] INFO WorkloadGenerator - All consumers are ready
+02:33:52.817 [main] INFO WorkloadGenerator - ----- Starting benchmark traffic ------
+02:33:53.076 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_1.csv"...
+02:34:03.255 [main] INFO WorkloadGenerator - Pub rate     1.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.4 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 120.5 - 50%: 108.9 - 99%: 213.7 - 99.9%: 213.7 - Max: 213.7 | Pub Delay Latency (us) avg: 545729.9 - 50%: 506763.0 - 99%: 1008059.0 - 99.9%: 1008059.0 - Max: 1008059.0
+02:34:13.505 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:34:23.768 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:34:24.373 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_2.csv"...
+02:34:34.311 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 116.2 - 50%: 116.2 - 99%: 116.2 - 99.9%: 116.2 - Max: 116.2 | Pub Delay Latency (us) avg: 31095104.0 - 50%: 31095167.0 - 99%: 31095167.0 - 99.9%: 31095167.0 - Max: 31095167.0
+02:34:44.740 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:34:55.038 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:34:56.859 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_3.csv"...
+02:35:05.466 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 111.1 - 50%: 111.1 - 99%: 111.1 - 99.9%: 111.1 - Max: 111.1 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:35:15.926 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:35:26.216 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:35:30.912 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_4.csv"...
+02:35:36.711 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 109.7 - 50%: 109.7 - 99%: 109.7 - 99.9%: 109.7 - Max: 109.7 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:35:47.123 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:35:57.438 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:36:02.615 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_5.csv"...
+02:36:07.818 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 110.8 - 50%: 110.8 - 99%: 110.8 - 99.9%: 110.8 - Max: 110.8 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:36:18.366 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:36:28.637 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:36:34.805 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_6.csv"...
+02:36:38.905 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 110.2 - 50%: 110.2 - 99%: 110.2 - 99.9%: 110.2 - Max: 110.2 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:36:49.361 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:36:59.683 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:37:06.900 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_7.csv"...
+02:37:10.219 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 109.6 - 50%: 109.6 - 99%: 109.6 - 99.9%: 109.6 - Max: 109.6 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:37:20.704 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:37:30.975 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:37:40.024 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_8.csv"...
+02:37:41.288 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 113.2 - 50%: 113.2 - 99%: 113.2 - 99.9%: 113.2 - Max: 113.2 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:37:51.712 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:38:02.027 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:38:12.209 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_9.csv"...
+02:38:12.363 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:38:22.895 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 110.7 - 50%: 110.7 - 99%: 110.7 - 99.9%: 110.7 - Max: 110.7 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:38:33.150 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:38:43.527 [main] INFO WorkloadGenerator - Pub rate     0.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.0 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0 | Pub Delay Latency (us) avg:  0.0 - 50%:  0.0 - 99%:  0.0 - 99.9%:  0.0 - Max:  0.0
+02:38:44.567 [pool-2-thread-1] INFO LocalWorker - [INFO] Applying map to chunk "s3://tpc-h-chunks/reference-data/chunked/chunk_10.csv"...
+02:38:53.952 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 109.9 - 50%: 109.9 - 99%: 109.9 - 99.9%: 109.9 - Max: 109.9 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+02:38:53.986 [pool-4-thread-1] INFO LocalWorker - [LocalWorker] TPC-H query result: {
+  "rows" : [ {
+    "columns" : {
+      "lineStatus" : "O",
+      "returnFlag" : "N",
+      "discountedPriceSum" : 77224279895.1766,
+      "chargeSum" : 80315428976.754440,
+      "orderCount" : 2124392,
+      "basePriceSum" : 81285904523.04,
+      "averageQuantity" : 25.5,
+      "averagePrice" : 38263.14,
+      "averageDiscount" : 0.05,
+      "quantitySum" : 54192530.0
+    }
+  }, {
+    "columns" : {
+      "lineStatus" : "F",
+      "returnFlag" : "R",
+      "discountedPriceSum" : 53741292684.6040,
+      "chargeSum" : 55889619119.831932,
+      "orderCount" : 1478870,
+      "basePriceSum" : 56568041380.90,
+      "averageQuantity" : 25.5,
+      "averagePrice" : 38250.85,
+      "averageDiscount" : 0.05,
+      "quantitySum" : 37719753.0
+    }
+  }, {
+    "columns" : {
+      "lineStatus" : "F",
+      "returnFlag" : "A",
+      "discountedPriceSum" : 53758257134.8700,
+      "chargeSum" : 55909065222.827692,
+      "orderCount" : 1478493,
+      "basePriceSum" : 56586554400.73,
+      "averageQuantity" : 25.5,
+      "averagePrice" : 38273.13,
+      "averageDiscount" : 0.05,
+      "quantitySum" : 37734107.0
+    }
+  }, {
+    "columns" : {
+      "lineStatus" : "F",
+      "returnFlag" : "N",
+      "discountedPriceSum" : 1413082168.0541,
+      "chargeSum" : 1469649223.194375,
+      "orderCount" : 38854,
+      "basePriceSum" : 1487504710.38,
+      "averageQuantity" : 25.5,
+      "averagePrice" : 38284.47,
+      "averageDiscount" : 0.05,
+      "quantitySum" : 991417.0
+    }
+  } ]
+}
+02:38:54.227 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg: 115.8 - 50%: 109.9 - 95%: 116.2 - 99%: 213.7 - 99.9%: 213.7 - 99.99%: 213.7 - Max: 213.7 | Pub Delay (us)  avg: 28827677.8 - 50%: 1008059.0 - 95%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - 99.99%: 60000255.0 - Max: 60000255.0
+02:38:54.346 [main] INFO WorkloadGenerator - ----- Completed run. Stopping worker and yielding results ------
+02:38:55.658 [main] INFO LocalWorker - Attempting to shut down producers...
+02:38:55.658 [main] INFO LocalWorker - Attempting to shut down consumers...
+02:38:55.659 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down consumer task...
+02:38:55.659 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down executor...
+02:38:55.659 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down pool...
+02:38:55.662 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down consumer task...
+02:38:55.663 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down executor...
+02:38:55.663 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down pool...
+02:38:55.663 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down consumer task...
+02:38:55.663 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down executor...
+02:38:55.663 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down pool...
+02:38:55.663 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+02:38:55.663 [main] INFO Benchmark - Preparing to write test results...
+02:38:55.663 [main] INFO Benchmark - Writing test result into simple-workload-Redis-2024-03-13-02-38-55.json
+02:38:56.451 [main] INFO LocalWorker - Attempting to shut down producers...
+02:38:56.451 [main] INFO LocalWorker - Attempting to shut down consumers...
+02:38:56.451 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+02:38:56.451 [main] INFO Benchmark - Finished test and closed generator.
+02:38:57.869 [main] INFO LocalWorker - Attempting to shut down producers...
+02:38:57.869 [main] INFO LocalWorker - Attempting to shut down consumers...
+02:38:57.869 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+02:38:57.869 [main] INFO Benchmark - Doing final clean-up...
+02:38:57.869 [main] INFO Benchmark - Final clean-up finished.

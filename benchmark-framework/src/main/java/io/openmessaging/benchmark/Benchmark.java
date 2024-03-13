@@ -251,6 +251,8 @@ public class Benchmark {
                                     writer.writeValue(new File(fileName), result);
 
                                     generator.close();
+
+                                    log.info("Finished test and closed generator.");
                                 } catch (Exception e) {
                                     log.error(
                                             "Failed to run the workload '{}' for driver '{}'",
@@ -266,10 +268,13 @@ public class Benchmark {
                             });
                 });
 
+        log.info("Doing final clean-up...");
         worker.close();
         if (worker != localWorker) {
             localWorker.close();
         }
+        log.info("Final clean-up finished.");
+        System.exit(0);
     }
 
     private static final ObjectMapper mapper =
