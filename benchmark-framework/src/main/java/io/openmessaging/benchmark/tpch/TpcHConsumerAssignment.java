@@ -16,9 +16,17 @@ package io.openmessaging.benchmark.tpch;
 import io.openmessaging.benchmark.driver.TpcHQuery;
 
 public class TpcHConsumerAssignment {
-    public TpcHQuery query;
-    public String queryId = "default-query-id";
-    public String batchId = "default-batch-id";
-    public Integer index;
-    public String sourceDataS3Uri;
+    public final TpcHQuery query;
+    public final String queryId;
+    public final String batchId;
+    public final Integer index;
+    public final String sourceDataS3Uri;
+
+    public TpcHConsumerAssignment(TpcHQuery query, String queryId, String batchId, Integer index, String sourceDataS3Uri) {
+        this.query = query;
+        this.queryId = queryId;
+        this.batchId = batchId;
+        this.index = index;
+        this.sourceDataS3Uri = sourceDataS3Uri;
+    }
 }

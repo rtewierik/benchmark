@@ -196,11 +196,13 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     String batchId = String.format("%s-batch-%d-%s", tpcH.queryId, tpcH.offset, RandomGenerator.getRandomString());
                     try {
                         while (currentAssignment.get() < limit) {
-                            TpcHConsumerAssignment assignment = new TpcHConsumerAssignment();
-                            assignment.batchId = batchId;
-                            assignment.query = tpcH.query;
-                            assignment.sourceDataS3Uri = String.format("%s/chunk_%d.csv", tpcH.sourceDataS3FolderUri, currentAssignment.incrementAndGet());
-                            assignment.index = producerWorkAssignment.producerIndex;
+                            TpcHConsumerAssignment assignment = new TpcHConsumerAssignment(
+                                tpcH.query,
+                                tpcH.queryId,
+                                batchId,
+                                producerWorkAssignment.producerIndex,
+                                String.format("%s/chunk_%d.csv", tpcH.sourceDataS3FolderUri, currentAssignment.incrementAndGet())
+                            );
                             TpcHMessage message = new TpcHMessage();
                             message.type = TpcHMessageType.ConsumerAssignment;
                             message.message = messageWriter.writeValueAsString(assignment);

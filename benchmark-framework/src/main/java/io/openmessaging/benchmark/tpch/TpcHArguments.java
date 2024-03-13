@@ -16,11 +16,19 @@ package io.openmessaging.benchmark.tpch;
 import io.openmessaging.benchmark.driver.TpcHQuery;
 
 public class TpcHArguments {
-    public String queryId;
-    public TpcHQuery query;
-    public String sourceDataS3FolderUri;
-    public Integer numberOfChunks;
-    public Integer numberOfReducers;
+    public final String queryId;
+    public final TpcHQuery query;
+    public final String sourceDataS3FolderUri;
+    public final Integer numberOfChunks;
+    public final Integer numberOfReducers;
+
+    public TpcHArguments(String queryId, TpcHQuery query, String sourceDataS3FolderUri, Integer numberOfChunks, Integer numberOfReducers) {
+        this.queryId = queryId;
+        this.query = query;
+        this.sourceDataS3FolderUri = sourceDataS3FolderUri;
+        this.numberOfChunks = numberOfChunks;
+        this.numberOfReducers = numberOfReducers;
+    }
 
     public int getNumberOfMapResults(int index) {
         int actualIndex = index % numberOfReducers;

@@ -116,7 +116,8 @@ public class Benchmark {
             System.out.printf("[INFO] Applying map to chunk \"%s\"...%n", chunkFile);
             try (InputStream stream = Files.newInputStream(Paths.get(chunkFile))) {
                 List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
-                TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, query, new TpcHConsumerAssignment());
+                TpcHConsumerAssignment assignment = new TpcHConsumerAssignment(query, null, null, null, null);
+                TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, query, assignment);
                 chunk.add(result);
             } catch (IOException exception) {
                 exception.printStackTrace();
