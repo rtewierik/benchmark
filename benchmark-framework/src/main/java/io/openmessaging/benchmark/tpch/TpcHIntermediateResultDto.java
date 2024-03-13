@@ -17,12 +17,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TpcHIntermediateResultDto {
-    public String queryId;
-    public String batchId;
-    public int numberOfAggregatedResults;
+    public final String queryId;
+    public final String batchId;
+    public final Integer numberOfAggregatedResults;
     public List<TpcHIntermediateResultGroupDto> groups;
-
-    public TpcHIntermediateResultDto() {}
 
     public TpcHIntermediateResultDto(String queryId, String batchId, int numberOfAggregatedResults, List<TpcHIntermediateResultGroup> groups) {
         this.queryId = queryId;

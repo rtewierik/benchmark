@@ -16,7 +16,12 @@ package io.openmessaging.benchmark.tpch;
 import java.util.UUID;
 
 public class TpcHMessage {
-    public String messageId = UUID.randomUUID().toString();
-    public TpcHMessageType type;
-    public String message;
+    public final String messageId = UUID.randomUUID().toString();
+    public final TpcHMessageType type;
+    public final String message;
+
+    public TpcHMessage(TpcHMessageType type, String message) {
+        this.type = type;
+        this.message = message;
+    }
 }

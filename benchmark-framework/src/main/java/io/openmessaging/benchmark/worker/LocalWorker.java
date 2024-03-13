@@ -203,9 +203,10 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                 producerWorkAssignment.producerIndex,
                                 String.format("%s/chunk_%d.csv", tpcH.sourceDataS3FolderUri, currentAssignment.incrementAndGet())
                             );
-                            TpcHMessage message = new TpcHMessage();
-                            message.type = TpcHMessageType.ConsumerAssignment;
-                            message.message = messageWriter.writeValueAsString(assignment);
+                            TpcHMessage message = new TpcHMessage(
+                                TpcHMessageType.ConsumerAssignment,
+                                messageWriter.writeValueAsString(assignment)
+                            );
                             String key = keyDistributor.next();
                             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
                             messageProducer.sendMessage(
@@ -353,10 +354,10 @@ public class LocalWorker implements Worker, ConsumerCallback {
             int index = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.index;
             BenchmarkProducer producer = this.producers.get(index);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
-            TpcHMessage message = new TpcHMessage();
-            message.type = TpcHMessageType.ReducedResult;
-            TpcHIntermediateResultDto resultDto = result.toDto();
-            message.message = messageWriter.writeValueAsString(resultDto);
+            TpcHMessage message = new TpcHMessage(
+                TpcHMessageType.ReducedResult,
+                messageWriter.writeValueAsString(result.toDto())
+            );
             String key = keyDistributor.next();
             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
             this.messageProducer.sendMessage(
@@ -379,10 +380,10 @@ public class LocalWorker implements Worker, ConsumerCallback {
         if (existingIntermediateResult.numberOfAggregatedResults == info.numberOfMapResults) {
             BenchmarkProducer producer = this.producers.get(TpcHConstants.REDUCE_DST_INDEX);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
-            TpcHMessage message = new TpcHMessage();
-            message.type = TpcHMessageType.ReducedResult;
-            TpcHIntermediateResultDto dto = existingIntermediateResult.toDto();
-            message.message = messageWriter.writeValueAsString(dto);
+            TpcHMessage message = new TpcHMessage(
+                TpcHMessageType.ReducedResult,
+                messageWriter.writeValueAsString(existingIntermediateResult.toDto())
+            );
             this.messageProducer.sendMessage(
                 producer,
                 Optional.of(keyDistributor.next()),

@@ -18,7 +18,7 @@ import java.util.List;
 
 public class TpcHQueryResult {
 
-    public List<TpcHQueryResultRow> rows = new ArrayList<>();
+    public final List<TpcHQueryResultRow> rows = new ArrayList<>();
 
     @Override
     public String toString() {

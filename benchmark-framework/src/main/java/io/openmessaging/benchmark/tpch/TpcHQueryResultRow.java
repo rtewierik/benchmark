@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TpcHQueryResultRow {
-    public Map<String, Object> columns = new HashMap<>();
+    public final Map<String, Object> columns = new HashMap<>();
 
     @Override
     public String toString() {

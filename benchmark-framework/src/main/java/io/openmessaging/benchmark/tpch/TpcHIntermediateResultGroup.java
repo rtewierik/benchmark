@@ -13,15 +13,15 @@
  */
 package io.openmessaging.benchmark.tpch;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class TpcHIntermediateResultGroup {
-    public Map<String, Object> identifiers = new HashMap<>();
-    public Map<String, Number> aggregates;
+    public final Map<String, Object> identifiers;
+    public final Map<String, Number> aggregates;
 
     public TpcHIntermediateResultGroup(Map<String, Number> aggregates) {
+        this.identifiers = new HashMap<>();
         this.aggregates = aggregates;
     }
 
@@ -40,8 +40,7 @@ public class TpcHIntermediateResultGroup {
 
     public TpcHIntermediateResultGroup getClone() {
         Map<String, Number> hashMapClone = (Map<String, Number>)((HashMap<String, Number>)aggregates).clone();
-        TpcHIntermediateResultGroup clone = new TpcHIntermediateResultGroup(hashMapClone);
-        clone.identifiers = identifiers;
+        TpcHIntermediateResultGroup clone = new TpcHIntermediateResultGroup(identifiers, hashMapClone);
         return clone;
     }
 

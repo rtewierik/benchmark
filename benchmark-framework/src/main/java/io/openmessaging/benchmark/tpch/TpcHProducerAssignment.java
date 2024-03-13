@@ -16,13 +16,13 @@ package io.openmessaging.benchmark.tpch;
 import io.openmessaging.benchmark.driver.TpcHQuery;
 
 public class TpcHProducerAssignment {
-    public String queryId;
-    public TpcHQuery query;
-    public String sourceDataS3FolderUri;
-    public int batchSize;
-    public int offset;
+    public final String queryId;
+    public final TpcHQuery query;
+    public final String sourceDataS3FolderUri;
+    public final Integer batchSize;
+    public final Integer offset;
 
-    public TpcHProducerAssignment(TpcHArguments command, int offset) {
+    public TpcHProducerAssignment(TpcHArguments command, Integer offset) {
         this.queryId = command.queryId;
         this.query = command.query;
         this.sourceDataS3FolderUri = command.sourceDataS3FolderUri;

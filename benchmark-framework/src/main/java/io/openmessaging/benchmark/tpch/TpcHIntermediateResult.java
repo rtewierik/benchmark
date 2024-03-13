@@ -21,60 +21,40 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class TpcHIntermediateResult {
-    public String queryId;
-    public String batchId;
-    public int numberOfAggregatedResults;
-    public List<TpcHIntermediateResultGroup> groups;
+    public final String queryId;
+    public final String batchId;
+    public Integer numberOfAggregatedResults;
+    public final List<TpcHIntermediateResultGroup> groups;
     private final Lock lock = new ReentrantLock();
 
-    public TpcHIntermediateResult() {}
-
-    public TpcHIntermediateResult(List<TpcHIntermediateResultGroup> groups) {
-        this.queryId = "default-query-id";
-        this.batchId = "default-batch-id";
-        this.groups = groups;
-        this.numberOfAggregatedResults = 1;
-    }
-
-    public TpcHIntermediateResult(String queryId, String batchId, List<TpcHIntermediateResultGroup> groups) {
-        this.queryId = queryId;
-        this.batchId = batchId;
-        this.groups = groups;
-        this.numberOfAggregatedResults = 1;
-    }
-
-    public TpcHIntermediateResult(String queryId, String batchId, int numberOfAggregatedResults, List<TpcHIntermediateResultGroup> groups) {
+    public TpcHIntermediateResult(String queryId, String batchId, Integer numberOfAggregatedResults, List<TpcHIntermediateResultGroup> groups) {
         this.queryId = queryId;
         this.batchId = batchId;
         this.numberOfAggregatedResults = numberOfAggregatedResults;
         this.groups = groups;
     }
 
-    public TpcHIntermediateResultDto toDto() {
-        return new TpcHIntermediateResultDto(this.queryId, this.batchId, this.numberOfAggregatedResults, this.groups);
-    }
-
     public static TpcHIntermediateResult fromDto(TpcHIntermediateResultDto dto) {
         return new TpcHIntermediateResult(
-            dto.queryId,
-            dto.batchId,
-            dto.numberOfAggregatedResults,
-            dto.groups.stream().map(TpcHIntermediateResultGroup::fromDto).collect(Collectors.toList())
+                dto.queryId,
+                dto.batchId,
+                dto.numberOfAggregatedResults,
+                dto.groups.stream().map(TpcHIntermediateResultGroup::fromDto).collect(Collectors.toList())
         );
+    }
+
+    public TpcHIntermediateResultDto toDto() {
+        return new TpcHIntermediateResultDto(this.queryId, this.batchId, this.numberOfAggregatedResults, this.groups);
     }
 
     public void aggregateIntermediateResult(TpcHIntermediateResult intermediateResult) {
         lock.lock();
         String queryId = intermediateResult.queryId;
         String batchId = intermediateResult.batchId;
-        if (this.queryId == null) {
-            this.queryId = queryId;
-        } else if (!this.queryId.equals(queryId)) {
+        if (!this.queryId.equals(queryId)) {
             throw new IllegalArgumentException(String.format("Inconsistent query ID \"%s\" found relative to \"%s\".", queryId, this.queryId));
         }
-        if (this.batchId == null) {
-            this.batchId = batchId;
-        } else if (!this.batchId.equals(batchId)) {
+        if (!this.batchId.equals(batchId)) {
             throw new IllegalArgumentException(String.format("Inconsistent batch ID \"%s\" found relative to \"%s\".", batchId, this.batchId));
         }
         try {

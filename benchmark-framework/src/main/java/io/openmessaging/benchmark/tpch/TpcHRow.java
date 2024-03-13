@@ -17,16 +17,16 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class TpcHRow {
-    public int orderKey;
-    public int partKey;
-    public int suppKey;
-    public int lineNumber;
+    public Integer orderKey;
+    public Integer partKey;
+    public Integer suppKey;
+    public Integer lineNumber;
     public BigDecimal quantity;
     public BigDecimal extendedPrice;
     public BigDecimal discount;
     public BigDecimal tax;
-    public char returnFlag;
-    public char lineStatus;
+    public Character returnFlag;
+    public Character lineStatus;
     public Date shipDate;
     public Date commitDate;
     public Date receiptDate;
