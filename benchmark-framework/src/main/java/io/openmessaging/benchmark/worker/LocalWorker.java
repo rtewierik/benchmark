@@ -74,6 +74,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private boolean consumersArePaused = false;
     private final Map<String, TpcHIntermediateResult> collectedIntermediateResults = new ConcurrentHashMap<>();
     private final Map<String, TpcHIntermediateResult> collectedReducedResults = new ConcurrentHashMap<>();
+    private final Set<String> processedMessages = new ConcurrentSkipListSet<>();
     private final AmazonS3Client s3Client = new AmazonS3Client();
     private static final ObjectWriter messageWriter = ObjectMappers.DEFAULT.writer();
 
@@ -318,6 +319,12 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     private void handleTpcHMessage(TpcHMessage message, TpcHInfo info) throws IOException {
+        String messageId = message.messageId;
+        if (processedMessages.contains(messageId)) {
+            return;
+        } else {
+            processedMessages.add(messageId);
+        }
         switch (message.type) {
             case ConsumerAssignment:
                 TpcHConsumerAssignment assignment = mapper.readValue(message.message, TpcHConsumerAssignment.class);
@@ -360,15 +367,15 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 optionalKey,
                 messageWriter.writeValueAsBytes(message)
             );
-        } catch (IOException exception) {
-            exception.printStackTrace();
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
     }
 
     private void processIntermediateResult(TpcHIntermediateResult intermediateResult, TpcHInfo info) throws IOException {
         if (!this.collectedIntermediateResults.containsKey(intermediateResult.batchId)) {
-            TpcHIntermediateResult newIntermediateResult = new TpcHIntermediateResult(intermediateResult.queryId, intermediateResult.batchId, new ArrayList<>());;
-            this.collectedIntermediateResults.put(intermediateResult.batchId, newIntermediateResult);
+            this.collectedIntermediateResults.put(intermediateResult.batchId, intermediateResult);
+            return;
         }
         TpcHIntermediateResult existingIntermediateResult = this.collectedIntermediateResults.get(intermediateResult.batchId);
         existingIntermediateResult.aggregateIntermediateResult(intermediateResult);
@@ -377,7 +384,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
             TpcHMessage message = new TpcHMessage();
             message.type = TpcHMessageType.ReducedResult;
-            message.message = messageWriter.writeValueAsString(existingIntermediateResult.toDto());
+            TpcHIntermediateResultDto dto = existingIntermediateResult.toDto();
+            message.message = messageWriter.writeValueAsString(dto);
             this.messageProducer.sendMessage(
                 producer,
                 Optional.of(keyDistributor.next()),
@@ -387,17 +395,17 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     private void processReducedResult(TpcHIntermediateResult reducedResult, TpcHInfo info) throws IOException {
-        if (!this.collectedReducedResults.containsKey(reducedResult.batchId)) {
-            TpcHIntermediateResult newIntermediateResult = new TpcHIntermediateResult(reducedResult.queryId, reducedResult.batchId, new ArrayList<>());;
-            this.collectedReducedResults.put(reducedResult.batchId, newIntermediateResult);
+        if (!this.collectedReducedResults.containsKey(reducedResult.batchId)) {;
+            this.collectedReducedResults.put(reducedResult.batchId, reducedResult);
+            return;
         }
         TpcHIntermediateResult existingIntermediateResult = this.collectedReducedResults.get(reducedResult.batchId);
         existingIntermediateResult.aggregateIntermediateResult(reducedResult);
         if (existingIntermediateResult.numberOfAggregatedResults == info.numberOfReduceResults) {
             TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingIntermediateResult, info.query);
             log.info("[LocalWorker] TPC-H query result: {}", writer.writeValueAsString(result));
+            testCompleted = true;
         }
-        testCompleted = true;
     }
 
     public void internalMessageReceived(int size, long publishTimestamp) {

@@ -40,6 +40,8 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,23 +117,9 @@ public class WorkloadGenerator implements AutoCloseable {
         producerWorkAssignment.tpcH = this.command;
 
         worker.startLoad(producerWorkAssignment);
-        log.info("----- Starting benchmark traffic ({}m)------", workload.testDurationMinutes);
+        log.info("----- Starting benchmark traffic ------");
 
-        long start = System.currentTimeMillis();
-        long end = start + 10 * 60 * 1000;
-        while (System.currentTimeMillis() < end) {
-            if (!localWorker.getTestCompleted()) {
-                break;
-            } else {
-                try {
-                    Thread.sleep(2_000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-
-        TestResult result = printAndCollectStats(workload.testDurationMinutes, TimeUnit.MINUTES);
+        TestResult result = printAndCollectStats(workload.testDurationMinutes, TimeUnit.MINUTES, localWorker::getTestCompleted);
         runCompleted = true;
 
         log.info("----- Completed run. Stopping worker and yielding results ------");
@@ -196,7 +184,7 @@ public class WorkloadGenerator implements AutoCloseable {
 
         if (workload.warmupDurationMinutes > 0) {
             log.info("----- Starting warm-up traffic ({}m) ------", workload.warmupDurationMinutes);
-            printAndCollectStats(workload.warmupDurationMinutes, TimeUnit.MINUTES);
+            printAndCollectStats(workload.warmupDurationMinutes, TimeUnit.MINUTES, () -> false);
         }
 
         if (workload.consumerBacklogSizeGB > 0) {
@@ -213,7 +201,7 @@ public class WorkloadGenerator implements AutoCloseable {
         worker.resetStats();
         log.info("----- Starting benchmark traffic ({}m)------", workload.testDurationMinutes);
 
-        TestResult result = printAndCollectStats(workload.testDurationMinutes, TimeUnit.MINUTES);
+        TestResult result = printAndCollectStats(workload.testDurationMinutes, TimeUnit.MINUTES, () -> false);
         runCompleted = true;
 
         log.info("----- Completed run. Stopping worker and yielding results ------");
@@ -458,7 +446,7 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     @SuppressWarnings({"checkstyle:LineLength", "checkstyle:MethodLength"})
-    private TestResult printAndCollectStats(long testDurations, TimeUnit unit) throws IOException {
+    private TestResult printAndCollectStats(long testDurations, TimeUnit unit, BooleanSupplier isFinished) throws IOException {
         long startTime = System.nanoTime();
 
         // Print report stats
@@ -558,7 +546,7 @@ public class WorkloadGenerator implements AutoCloseable {
                     microsToMillis(stats.endToEndLatency.getValueAtPercentile(99.99)));
             result.endToEndLatencyMax.add(microsToMillis(stats.endToEndLatency.getMaxValue()));
 
-            if (now >= testEndTime && !needToWaitForBacklogDraining) {
+            if ((now >= testEndTime || isFinished.getAsBoolean()) && !needToWaitForBacklogDraining) {
                 CumulativeLatencies agg = worker.getCumulativeLatencies();
                 log.info(
                         "----- Aggregated Pub Latency (ms) avg: {} - 50%: {} - 95%: {} - 99%: {} - 99.9%: {} - 99.99%: {} - Max: {} | Pub Delay (us)  avg: {} - 50%: {} - 95%: {} - 99%: {} - 99.9%: {} - 99.99%: {} - Max: {}",
