@@ -329,12 +329,12 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 processConsumerAssignment(assignment, info);
                 break;
             case IntermediateResult:
-                TpcHIntermediateResultDto intermediateResult = mapper.readValue(message.message, TpcHIntermediateResultDto.class);
-                processIntermediateResult(TpcHIntermediateResult.fromDto(intermediateResult), info);
+                TpcHIntermediateResult intermediateResult = mapper.readValue(message.message, TpcHIntermediateResult.class);
+                processIntermediateResult(intermediateResult, info);
                 break;
             case ReducedResult:
-                TpcHIntermediateResultDto reducedResult = mapper.readValue(message.message, TpcHIntermediateResultDto.class);
-                processReducedResult(TpcHIntermediateResult.fromDto(reducedResult), info);
+                TpcHIntermediateResult reducedResult = mapper.readValue(message.message, TpcHIntermediateResult.class);
+                processReducedResult(reducedResult, info);
                 break;
             default:
                 throw new IllegalArgumentException("Invalid message type detected!");
@@ -356,7 +356,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
             TpcHMessage message = new TpcHMessage(
                 TpcHMessageType.ReducedResult,
-                messageWriter.writeValueAsString(result.toDto())
+                messageWriter.writeValueAsString(result)
             );
             String key = keyDistributor.next();
             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
@@ -382,7 +382,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
             TpcHMessage message = new TpcHMessage(
                 TpcHMessageType.ReducedResult,
-                messageWriter.writeValueAsString(existingIntermediateResult.toDto())
+                messageWriter.writeValueAsString(existingIntermediateResult)
             );
             this.messageProducer.sendMessage(
                 producer,

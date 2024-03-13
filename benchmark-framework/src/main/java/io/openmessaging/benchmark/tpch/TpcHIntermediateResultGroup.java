@@ -26,6 +26,10 @@ public class TpcHIntermediateResultGroup {
         this.identifiers = new HashMap<>();
         this.aggregates = aggregates;
     }
+    public TpcHIntermediateResultGroup(TpcHIntermediateResultGroup otherGroup) {
+        this.identifiers = otherGroup.identifiers;
+        this.aggregates = (Map<String, Number>)((HashMap<String, Number>)otherGroup.aggregates).clone();
+    }
 
     public TpcHIntermediateResultGroup(
         @JsonProperty("identifiers") Map<String, Object> identifiers,
@@ -33,20 +37,6 @@ public class TpcHIntermediateResultGroup {
     ) {
         this.identifiers = identifiers;
         this.aggregates = aggregates;
-    }
-
-    public TpcHIntermediateResultGroupDto toDto() {
-        return new TpcHIntermediateResultGroupDto(this.identifiers, this.aggregates);
-    }
-
-    public static TpcHIntermediateResultGroup fromDto(TpcHIntermediateResultGroupDto dto) {
-        return new TpcHIntermediateResultGroup(dto.identifiers, dto.aggregates);
-    }
-
-    public TpcHIntermediateResultGroup getClone() {
-        Map<String, Number> hashMapClone = (Map<String, Number>)((HashMap<String, Number>)aggregates).clone();
-        TpcHIntermediateResultGroup clone = new TpcHIntermediateResultGroup(identifiers, hashMapClone);
-        return clone;
     }
 
     @Override

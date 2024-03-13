@@ -16,6 +16,7 @@ package io.openmessaging.benchmark.tpch;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -40,19 +41,6 @@ public class TpcHIntermediateResult {
         this.groups = groups;
     }
 
-    public static TpcHIntermediateResult fromDto(TpcHIntermediateResultDto dto) {
-        return new TpcHIntermediateResult(
-                dto.queryId,
-                dto.batchId,
-                dto.numberOfAggregatedResults,
-                dto.groups.stream().map(TpcHIntermediateResultGroup::fromDto).collect(Collectors.toList())
-        );
-    }
-
-    public TpcHIntermediateResultDto toDto() {
-        return new TpcHIntermediateResultDto(this.queryId, this.batchId, this.numberOfAggregatedResults, this.groups);
-    }
-
     public void aggregateIntermediateResult(TpcHIntermediateResult intermediateResult) {
         lock.lock();
         String queryId = intermediateResult.queryId;
@@ -67,7 +55,7 @@ public class TpcHIntermediateResult {
             for (TpcHIntermediateResultGroup group : intermediateResult.groups) {
                 TpcHIntermediateResultGroup existingGroup = this.findGroupByIdentifiers(group.identifiers);
                 if (existingGroup == null) {
-                    this.groups.add(group.getClone());
+                    this.groups.add(new TpcHIntermediateResultGroup(group));
                 } else {
                     Map<String, Number> existingAggregates = existingGroup.aggregates;
                     for (Map.Entry<String, Number> aggregate : group.aggregates.entrySet()) {
