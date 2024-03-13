@@ -43,3 +43,20 @@ ansible-playbook -K \
 ```
 
 * Need to use redis_aws_academy PEM key with 400 file permissions
+
+### Local test of TPC-H queries with data from S3 and events from Redis
+
+* Deploy the infrastructure to the AWS Academy account (Redis and any EC2 instance with the Academy SSH key).
+* Build the project using `mvn clean package`.
+* Update `workloads/redis-default.yaml` and `workloads/tpc-h-default.yaml` based on your preferences.
+* Set up an SSH tunnel using the following command.
+```
+  ssh -i ~/redis_aws_academy.pem -L 6379:REDIS_PRIVATE_IP:6379 ec2-user@EC2_INSTANCE_HOST -N
+```
+* Run the following command to start the TPC-H benchmark.
+```
+  sudo bin/benchmark \
+  --drivers workloads/redis-default.yaml \
+  --tpc-h-file workloads/tpc-h-default.yaml \
+  workloads/simple-workload.yaml
+```
