@@ -105,8 +105,8 @@ public class DistributedWorkersEnsemble implements Worker {
     public void startLoad(ProducerWorkAssignment producerWorkAssignment) throws IOException {
         double newRate = producerWorkAssignment.publishRate / numberOfUsedProducerWorkers;
         log.debug("Setting worker assigned publish rate to {} msgs/sec", newRate);
-        List<Worker> workersToStart = producerWorkAssignment.tpcH != null ? this.workers : this.producerWorkers;
-        AtomicInteger index = new AtomicInteger();
+        List<Worker> workersToStart = producerWorkAssignment.tpcHArguments != null ? this.workers : this.producerWorkers;
+        AtomicInteger producerIndex = new AtomicInteger();
         workersToStart.parallelStream()
             .forEach(
                 w -> {
@@ -114,7 +114,7 @@ public class DistributedWorkersEnsemble implements Worker {
                         w.startLoad(
                             producerWorkAssignment
                                 .withPublishRate(newRate)
-                                .withProducerIndex(index.getAndIncrement())
+                                .withProducerIndex(producerIndex.getAndIncrement())
                         );
                     } catch (IOException e) {
                         throw new RuntimeException(e);

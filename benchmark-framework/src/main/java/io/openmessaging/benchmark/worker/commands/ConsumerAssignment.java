@@ -20,4 +20,10 @@ import java.util.List;
 public class ConsumerAssignment {
     public List<TopicSubscription> topicsSubscriptions = new ArrayList<>();
     public boolean isTpcH = false;
+
+    public ConsumerAssignment() {}
+
+    public ConsumerAssignment(boolean isTpcH) {
+        this.isTpcH = isTpcH;
+    }
 }

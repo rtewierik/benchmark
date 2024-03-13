@@ -130,13 +130,12 @@ public class LocalWorker implements Worker, ConsumerCallback {
     @Override
     public void createProducers(ProducerAssignment producerAssignment) {
         Timer timer = new Timer();
-        AtomicInteger index = new AtomicInteger();
-
+        AtomicInteger producerIndex = new AtomicInteger();
         producers.addAll(
                 benchmarkDriver
                         .createProducers(
                                 producerAssignment.topics.stream()
-                                        .map(t -> new BenchmarkDriver.ProducerInfo(index.getAndIncrement(), t))
+                                        .map(t -> new BenchmarkDriver.ProducerInfo(producerIndex.getAndIncrement(), t))
                                         .collect(toList()))
                         .join());
 
@@ -146,8 +145,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     @Override
     public void createConsumers(ConsumerAssignment consumerAssignment) {
         Timer timer = new Timer();
-        AtomicInteger index = new AtomicInteger();
-
+        AtomicInteger consumerIndex = new AtomicInteger();
         // This subscription should only be done on the orchestrator host.
         if (consumerAssignment.isTpcH && consumerAssignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
             consumerAssignment.topicsSubscriptions.remove(TpcHConstants.REDUCE_DST_INDEX);
@@ -159,7 +157,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                         .map(
                                                 c ->
                                                         new ConsumerInfo(
-                                                                index.getAndIncrement(), c.topic, c.subscription, this, c.info))
+                                                                consumerIndex.getAndIncrement(), c.topic, c.subscription, this, c.info))
                                         .collect(toList()))
                         .join());
 
@@ -168,7 +166,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public void startLoad(ProducerWorkAssignment producerWorkAssignment) {
-        if (producerWorkAssignment.tpcH == null) {
+        if (producerWorkAssignment.tpcHArguments == null) {
             startLoadForThroughputProducers(producerWorkAssignment);
         } else {
             startLoadForTpcHProducers(producerWorkAssignment);
@@ -188,24 +186,23 @@ public class LocalWorker implements Worker, ConsumerCallback {
         executor.submit(
                 () -> {
                     BenchmarkProducer producer = producers.get(TpcHConstants.MAP_CMD_INDEX);
-                    TpcHArguments command = producerWorkAssignment.tpcH;
-                    TpcHProducerAssignment tpcH = new TpcHProducerAssignment(command, producerWorkAssignment.producerIndex);
+                    TpcHProducerAssignment assignment = new TpcHProducerAssignment(producerWorkAssignment);
                     AtomicInteger currentAssignment = new AtomicInteger();
                     KeyDistributor keyDistributor = KeyDistributor.build(producerWorkAssignment.keyDistributorType);
-                    int limit = (tpcH.offset * tpcH.batchSize) + tpcH.batchSize;
-                    String batchId = String.format("%s-batch-%d-%s", tpcH.queryId, tpcH.offset, RandomGenerator.getRandomString());
+                    int limit = (assignment.offset * assignment.batchSize) + assignment.batchSize;
+                    String batchId = String.format("%s-batch-%d-%s", assignment.queryId, assignment.offset, RandomGenerator.getRandomString());
                     try {
                         while (currentAssignment.get() < limit) {
-                            TpcHConsumerAssignment assignment = new TpcHConsumerAssignment(
-                                tpcH.query,
-                                tpcH.queryId,
+                            TpcHConsumerAssignment consumerAssignment = new TpcHConsumerAssignment(
+                                assignment.query,
+                                assignment.queryId,
                                 batchId,
                                 producerWorkAssignment.producerIndex,
-                                String.format("%s/chunk_%d.csv", tpcH.sourceDataS3FolderUri, currentAssignment.incrementAndGet())
+                                String.format("%s/chunk_%d.csv", assignment.sourceDataS3FolderUri, currentAssignment.incrementAndGet())
                             );
                             TpcHMessage message = new TpcHMessage(
                                 TpcHMessageType.ConsumerAssignment,
-                                messageWriter.writeValueAsString(assignment)
+                                messageWriter.writeValueAsString(consumerAssignment)
                             );
                             String key = keyDistributor.next();
                             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
@@ -351,8 +348,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
         try (InputStream stream = this.s3Client.readTpcHChunkFromS3(s3Uri)) {
             List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
             TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, info.query, assignment);
-            int index = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.index;
-            BenchmarkProducer producer = this.producers.get(index);
+            int producerIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.index;
+            BenchmarkProducer producer = this.producers.get(producerIndex);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
             TpcHMessage message = new TpcHMessage(
                 TpcHMessageType.ReducedResult,

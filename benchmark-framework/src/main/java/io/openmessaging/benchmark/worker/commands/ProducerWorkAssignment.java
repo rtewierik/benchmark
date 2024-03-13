@@ -22,7 +22,7 @@ public class ProducerWorkAssignment {
     public List<byte[]> payloadData;
     public double publishRate;
     public KeyDistributorType keyDistributorType;
-    public TpcHArguments tpcH = null;
+    public TpcHArguments tpcHArguments = null;
     public Integer producerIndex = null;
 
     public ProducerWorkAssignment withPublishRate(double publishRate) {
@@ -30,18 +30,18 @@ public class ProducerWorkAssignment {
         copy.keyDistributorType = this.keyDistributorType;
         copy.payloadData = this.payloadData;
         copy.publishRate = publishRate;
-        copy.tpcH = this.tpcH;
+        copy.tpcHArguments = this.tpcHArguments;
         copy.producerIndex = this.producerIndex;
         return copy;
     }
 
-    public ProducerWorkAssignment withProducerIndex(int index) {
+    public ProducerWorkAssignment withProducerIndex(int producerIndex) {
         ProducerWorkAssignment copy = new ProducerWorkAssignment();
         copy.keyDistributorType = this.keyDistributorType;
         copy.payloadData = this.payloadData;
         copy.publishRate = publishRate;
-        copy.tpcH = this.tpcH;
-        copy.producerIndex = index;
+        copy.tpcHArguments = this.tpcHArguments;
+        copy.producerIndex = producerIndex;
         return copy;
     }
 }
