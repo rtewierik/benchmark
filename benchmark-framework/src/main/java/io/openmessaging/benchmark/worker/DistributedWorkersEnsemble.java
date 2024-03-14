@@ -198,7 +198,7 @@ public class DistributedWorkersEnsemble implements Worker {
     @Override
     public void createConsumers(ConsumerAssignment assignment) throws IOException {
         for (TopicSubscription ts : assignment.topicsSubscriptions) {
-            log.info("[DistributedWorkersEnsemble] Topic subscription detected: {}", ts.toString());
+            log.info("Topic subscription detected: {}", ts.toString());
         }
         if (assignment.isTpcH) {
             createTpcHConsumers(assignment);
@@ -222,7 +222,7 @@ public class DistributedWorkersEnsemble implements Worker {
             individualAssignment.topicsSubscriptions.addAll(reduceSubscriptions);
             topicsPerConsumerMap.put(workers.get(i++), individualAssignment);
         }
-        log.info("Topics per consumer map: {}", writer.writeValueAsString(topicsPerConsumerMap));
+        log.debug("Topics per consumer map: {}", writer.writeValueAsString(topicsPerConsumerMap));
         topicsPerConsumerMap.entrySet().parallelStream()
                 .forEach(
                         e -> {
