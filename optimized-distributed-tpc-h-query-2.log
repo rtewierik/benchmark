@@ -1,0 +1,97 @@
+  sudo bin/benchmark \
+  --drivers workloads/redis-default.yaml \
+  --tpc-h-file workloads/tpc-h-default.yaml \
+  workloads/simple-workload.yaml
+14:42:41.566 [main] INFO Benchmark - Using default worker file workers.yaml
+14:42:41.579 [main] INFO Benchmark - Reading workers list from workers.yaml
+14:42:41.684 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "workloads/redis-default.yaml" ],
+  "workers" : [ "http://172.31.36.37:8080", "http://172.31.34.86:8080", "http://172.31.39.237:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFile" : "/opt/benchmark/workloads/tpc-h-default.yaml",
+  "workloads" : [ "workloads/simple-workload.yaml" ],
+  "output" : null
+}
+14:42:41.719 [main] INFO Benchmark - Workloads: {
+  "simple-workload" : {
+    "name" : "Simple Workload 1 producer on 2 topics",
+    "topics" : 2,
+    "partitionsPerTopic" : 10,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 1024,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-1Kb.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 100,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+14:42:41.764 [main] INFO Benchmark - TPC-H arguments: {
+  "queryId" : "test-query-1",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/reference-data/chunked",
+  "numberOfChunks" : 10,
+  "numberOfReducers" : 3,
+  "defaultNumberOfMapResults" : 4
+}
+14:42:43.031 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://172.31.36.37:8080]
+14:42:43.032 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://172.31.39.237:8080,http://172.31.34.86:8080
+14:42:43.039 [main] INFO Benchmark - --------------- WORKLOAD : Simple Workload 1 producer on 2 topics --- DRIVER : Redis---------------
+14:42:43.940 [main] INFO LocalWorker - Attempting to shut down producers...
+14:42:43.941 [main] INFO LocalWorker - Attempting to shut down consumers...
+14:42:43.941 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+14:42:44.015 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+14:42:44.123 [main] INFO WorkloadGenerator - Created 5 topics in 89.671559 ms
+14:42:44.133 [main] INFO DistributedWorkersEnsemble - Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000000-4-hhiuc', subscription='sub-000-FarTbbk', info=TpcHInfo{consumer=Map, numberOfMapResults=null, numberOfReduceResults=null}}
+14:42:44.133 [main] INFO DistributedWorkersEnsemble - Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000001-nTOIPh0', subscription='sub-001-2MDr2Xk', info=TpcHInfo{consumer=GenerateResult, numberOfMapResults=null, numberOfReduceResults=10}}
+14:42:44.134 [main] INFO DistributedWorkersEnsemble - Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000002-J6h84h8', subscription='sub-002-5aMBNzs', info=TpcHInfo{consumer=Reduce, numberOfMapResults=4, numberOfReduceResults=null}}
+14:42:44.134 [main] INFO DistributedWorkersEnsemble - Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000003-h0Bmz1Y', subscription='sub-003-34t02Gw', info=TpcHInfo{consumer=Reduce, numberOfMapResults=4, numberOfReduceResults=null}}
+14:42:44.134 [main] INFO DistributedWorkersEnsemble - Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000004-IPlD6iU', subscription='sub-004-zbRcs9w', info=TpcHInfo{consumer=Reduce, numberOfMapResults=2, numberOfReduceResults=null}}
+14:42:44.562 [main] INFO WorkloadGenerator - Created 5 external consumers in 430.937187 ms
+14:42:44.573 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-test-a1-0001-001.rs3fvf.0001.use1.cache.amazonaws.com:6379 with user null
+14:42:44.841 [main] INFO LocalWorker - Created 1 consumers in 277.689422 ms
+14:42:44.850 [main] INFO WorkloadGenerator - Created 1 internal consumers in 816.725073 ms
+14:42:44.889 [main] INFO WorkloadGenerator - Created 5 producers in 38.306421 ms
+14:42:44.889 [main] INFO WorkloadGenerator - Waiting for consumers to be ready
+14:42:44.924 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 5, Received: 4
+14:42:44.925 [main] INFO WorkloadGenerator - All consumers are ready
+14:42:44.984 [main] INFO WorkloadGenerator - ----- Starting benchmark traffic ------
+14:42:56.707 [main] INFO WorkloadGenerator - Pub rate     0.9 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.6 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  3.7 - 50%:  0.7 - 99%: 16.1 - 99.9%: 16.1 - Max: 16.1 | Pub Delay Latency (us) avg: 396.2 - 50%: 84.0 - 99%: 2431.0 - 99.9%: 2431.0 - Max: 2431.0
+14:43:07.524 [main] INFO WorkloadGenerator - Pub rate     0.4 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.6 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  5.5 - 50%:  3.6 - 99%:  9.9 - 99.9%:  9.9 - Max:  9.9 | Pub Delay Latency (us) avg: 13258616.0 - 50%: 10969727.0 - 99%: 18866559.0 - 99.9%: 18866559.0 - Max: 18866559.0
+14:43:18.146 [main] INFO WorkloadGenerator - Pub rate     0.3 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.4 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.7 - 50%:  0.7 - 99%:  0.9 - 99.9%:  0.9 - Max:  0.9 | Pub Delay Latency (us) avg: 27727978.7 - 50%: 28401919.0 - 99%: 28526335.0 - 99.9%: 28526335.0 - Max: 28526335.0
+14:43:28.694 [main] INFO WorkloadGenerator - Pub rate     0.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.2 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.6 - 50%:  0.6 - 99%:  0.6 - 99.9%:  0.6 - Max:  0.6 | Pub Delay Latency (us) avg: 36323712.0 - 50%: 36323839.0 - 99%: 36323839.0 - 99.9%: 36323839.0 - Max: 36323839.0
+14:43:39.347 [main] INFO WorkloadGenerator - Pub rate     0.3 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.4 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  3.8 - 50%:  0.6 - 99%: 10.3 - 99.9%: 10.3 - Max: 10.3 | Pub Delay Latency (us) avg: 48850304.0 - 50%: 51431167.0 - 99%: 51588863.0 - 99.9%: 51588863.0 - Max: 51588863.0
+14:43:43.974 [pool-2-thread-1] INFO LocalWorker - [LocalWorker] TPC-H query result: {
+  "rows" : [ {
+    "columns" : {
+      "revenue" : 123141078.2283
+    }
+  } ]
+}
+14:43:49.855 [main] INFO WorkloadGenerator - Pub rate     0.2 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.1 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.6 - 50%:  0.5 - 99%:  0.6 - 99.9%:  0.6 - Max:  0.6 | Pub Delay Latency (us) avg: 58603264.0 - 50%: 58589695.0 - 99%: 58617087.0 - 99.9%: 58617087.0 - Max: 58617087.0
+14:43:50.359 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg:  3.2 - 50%:  0.7 - 95%: 11.0 - 99%: 16.1 - 99.9%: 16.1 - 99.99%: 16.1 - Max: 16.1 | Pub Delay (us)  avg: 18969718.0 - 50%: 10969727.0 - 95%: 58589695.0 - 99%: 58617087.0 - 99.9%: 58617087.0 - 99.99%: 58617087.0 - Max: 58617087.0
+14:43:50.475 [main] INFO WorkloadGenerator - ----- Completed run. Stopping worker and yielding results ------
+14:43:50.895 [main] INFO LocalWorker - Attempting to shut down producers...
+14:43:50.895 [main] INFO LocalWorker - Attempting to shut down consumers...
+14:43:50.896 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down consumer task...
+14:43:50.896 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down executor...
+14:43:50.897 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down pool...
+14:43:50.899 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+14:43:50.900 [main] INFO Benchmark - Preparing to write test results...
+14:43:50.901 [main] INFO Benchmark - Writing test result into simple-workload-Redis-2024-03-14-14-43-50.json
+14:43:51.126 [main] INFO Benchmark - Finished test and closed generator.
+14:43:51.474 [main] INFO LocalWorker - Attempting to shut down producers...
+14:43:51.474 [main] INFO LocalWorker - Attempting to shut down consumers...
+14:43:51.474 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+14:43:51.474 [main] INFO Benchmark - Doing final clean-up...
+14:43:51.483 [main] INFO Benchmark - Final clean-up finished.
