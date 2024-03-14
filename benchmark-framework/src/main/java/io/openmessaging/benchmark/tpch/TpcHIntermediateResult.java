@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 public class TpcHIntermediateResult {
     public final String queryId;
     public final String batchId;
+    public final Integer chunkIndex;
     public Integer numberOfAggregatedResults;
     public final List<TpcHIntermediateResultGroup> groups;
     private final Lock lock = new ReentrantLock();
@@ -33,10 +34,12 @@ public class TpcHIntermediateResult {
     public TpcHIntermediateResult(
             @JsonProperty("queryId") String queryId,
             @JsonProperty("batchId") String batchId,
+            @JsonProperty("chunkIndex") Integer chunkIndex,
             @JsonProperty("numberOfAggregatedResults") Integer numberOfAggregatedResults,
             @JsonProperty("groups") List<TpcHIntermediateResultGroup> groups) {
         this.queryId = queryId;
         this.batchId = batchId;
+        this.chunkIndex = chunkIndex;
         this.numberOfAggregatedResults = numberOfAggregatedResults;
         this.groups = groups;
     }

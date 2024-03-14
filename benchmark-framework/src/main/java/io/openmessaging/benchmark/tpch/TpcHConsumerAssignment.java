@@ -20,19 +20,22 @@ public class TpcHConsumerAssignment {
     public final TpcHQuery query;
     public final String queryId;
     public final String batchId;
-    public final Integer index;
+    public final Integer chunkIndex;
+    public final Integer producerIndex;
     public final String sourceDataS3Uri;
 
     public TpcHConsumerAssignment(
         @JsonProperty("query") TpcHQuery query,
         @JsonProperty("queryId") String queryId,
         @JsonProperty("batchId") String batchId,
-        @JsonProperty("index") Integer index,
+        @JsonProperty("chunkIndex") Integer chunkIndex,
+        @JsonProperty("producerIndex") Integer producerIndex,
         @JsonProperty("sourceDataS3Uri") String sourceDataS3Uri) {
         this.query = query;
         this.queryId = queryId;
         this.batchId = batchId;
-        this.index = index;
+        this.chunkIndex = chunkIndex;
+        this.producerIndex = producerIndex;
         this.sourceDataS3Uri = sourceDataS3Uri;
     }
 }

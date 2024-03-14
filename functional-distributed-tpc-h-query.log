@@ -1,0 +1,220 @@
+sudo bin/benchmark \
+  --drivers workloads/redis-default.yaml \
+  --tpc-h-file workloads/tpc-h-default.yaml \
+  workloads/simple-workload.yaml
+01:02:01.667 [main] INFO Benchmark - Using default worker file workers.yaml
+01:02:01.681 [main] INFO Benchmark - Reading workers list from workers.yaml
+01:02:01.776 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "workloads/redis-default.yaml" ],
+  "workers" : [ "http://172.31.42.82:8080", "http://172.31.33.92:8080", "http://172.31.43.32:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFile" : "/opt/benchmark/workloads/tpc-h-default.yaml",
+  "workloads" : [ "workloads/simple-workload.yaml" ],
+  "output" : null
+}
+01:02:01.805 [main] INFO Benchmark - Workloads: {
+  "simple-workload" : {
+    "name" : "Simple Workload 1 producer on 2 topics",
+    "topics" : 2,
+    "partitionsPerTopic" : 10,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 1024,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-1Kb.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 100,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+01:02:01.822 [main] INFO Benchmark - TPC-H arguments: {
+  "queryId" : "test-query-1",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/reference-data/chunked",
+  "numberOfChunks" : 10,
+  "numberOfReducers" : 3
+}
+01:02:03.288 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://172.31.42.82:8080]
+01:02:03.289 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://172.31.43.32:8080,http://172.31.33.92:8080
+01:02:03.296 [main] INFO Benchmark - --------------- WORKLOAD : Simple Workload 1 producer on 2 topics --- DRIVER : Redis---------------
+01:02:04.383 [main] INFO LocalWorker - Attempting to shut down producers...
+01:02:04.384 [main] INFO LocalWorker - Attempting to shut down consumers...
+01:02:04.384 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+01:02:04.447 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+01:02:04.563 [main] INFO WorkloadGenerator - Created 5 topics in 100.958355 ms
+01:02:04.575 [main] INFO DistributedWorkersEnsemble - [DistributedWorkersEnsemble] Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000000-Y53XHyo', subscription='sub-000-HzpY9co', info=TpcHInfo{consumer=Map, numberOfMapResults=null, numberOfReduceResults=null}}
+01:02:04.579 [main] INFO DistributedWorkersEnsemble - [DistributedWorkersEnsemble] Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000001-SD1uMVw', subscription='sub-001-lJaULDw', info=TpcHInfo{consumer=GenerateResult, numberOfMapResults=null, numberOfReduceResults=10}}
+01:02:04.580 [main] INFO DistributedWorkersEnsemble - [DistributedWorkersEnsemble] Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000002-RFVNO8s', subscription='sub-002-PxCORDI', info=TpcHInfo{consumer=Reduce, numberOfMapResults=4, numberOfReduceResults=null}}
+01:02:04.580 [main] INFO DistributedWorkersEnsemble - [DistributedWorkersEnsemble] Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000003-o7hNRQk', subscription='sub-003-EQwyQoQ', info=TpcHInfo{consumer=Reduce, numberOfMapResults=4, numberOfReduceResults=null}}
+01:02:04.580 [main] INFO DistributedWorkersEnsemble - [DistributedWorkersEnsemble] Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000004-nSovOXI', subscription='sub-004-7MZ9yq4', info=TpcHInfo{consumer=Reduce, numberOfMapResults=2, numberOfReduceResults=null}}
+01:02:04.599 [main] INFO DistributedWorkersEnsemble - Topics per consumer map: {
+  "io.openmessaging.benchmark.worker.HttpWorkerClient@fca387" : {
+    "topicsSubscriptions" : [ {
+      "topic" : "redis-openmessaging-benchmark-0000000-Y53XHyo",
+      "subscription" : "sub-000-Eog8l-Q",
+      "info" : {
+        "queryId" : "test-query-1",
+        "query" : "PricingSummaryReport",
+        "consumer" : "Map",
+        "numberOfMapResults" : null,
+        "numberOfReduceResults" : null
+      }
+    }, {
+      "topic" : "redis-openmessaging-benchmark-0000003-o7hNRQk",
+      "subscription" : "sub-003-EQwyQoQ",
+      "info" : {
+        "queryId" : "test-query-1",
+        "query" : "PricingSummaryReport",
+        "consumer" : "Reduce",
+        "numberOfMapResults" : 4,
+        "numberOfReduceResults" : null
+      }
+    } ],
+    "isTpcH" : false
+  },
+  "io.openmessaging.benchmark.worker.HttpWorkerClient@10bd9df0" : {
+    "topicsSubscriptions" : [ {
+      "topic" : "redis-openmessaging-benchmark-0000000-Y53XHyo",
+      "subscription" : "sub-000-QkQezSg",
+      "info" : {
+        "queryId" : "test-query-1",
+        "query" : "PricingSummaryReport",
+        "consumer" : "Map",
+        "numberOfMapResults" : null,
+        "numberOfReduceResults" : null
+      }
+    }, {
+      "topic" : "redis-openmessaging-benchmark-0000004-nSovOXI",
+      "subscription" : "sub-004-7MZ9yq4",
+      "info" : {
+        "queryId" : "test-query-1",
+        "query" : "PricingSummaryReport",
+        "consumer" : "Reduce",
+        "numberOfMapResults" : 2,
+        "numberOfReduceResults" : null
+      }
+    } ],
+    "isTpcH" : false
+  },
+  "io.openmessaging.benchmark.worker.HttpWorkerClient@367b22e5" : {
+    "topicsSubscriptions" : [ {
+      "topic" : "redis-openmessaging-benchmark-0000000-Y53XHyo",
+      "subscription" : "sub-000-nf0y_GU",
+      "info" : {
+        "queryId" : "test-query-1",
+        "query" : "PricingSummaryReport",
+        "consumer" : "Map",
+        "numberOfMapResults" : null,
+        "numberOfReduceResults" : null
+      }
+    }, {
+      "topic" : "redis-openmessaging-benchmark-0000002-RFVNO8s",
+      "subscription" : "sub-002-PxCORDI",
+      "info" : {
+        "queryId" : "test-query-1",
+        "query" : "PricingSummaryReport",
+        "consumer" : "Reduce",
+        "numberOfMapResults" : 4,
+        "numberOfReduceResults" : null
+      }
+    } ],
+    "isTpcH" : false
+  }
+}
+01:02:05.400 [main] INFO WorkloadGenerator - Created 5 external consumers in 824.998697 ms
+01:02:05.421 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-test-2-0001-001.rs3fvf.0001.use1.cache.amazonaws.com:6379 with user null
+01:02:05.701 [main] INFO LocalWorker - Created 1 consumers in 300.834186 ms
+01:02:05.702 [main] INFO WorkloadGenerator - Created 1 internal consumers in 1240.152856 ms
+01:02:05.738 [main] INFO WorkloadGenerator - Created 5 producers in 35.457697 ms
+01:02:05.738 [main] INFO WorkloadGenerator - Waiting for consumers to be ready
+01:02:05.788 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 5, Received: 6
+01:02:05.789 [main] INFO WorkloadGenerator - All consumers are ready
+01:02:05.851 [main] INFO WorkloadGenerator - ----- Starting benchmark traffic ------
+01:02:17.137 [main] INFO WorkloadGenerator - Pub rate     1.6 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.8 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  3.1 - 50%:  1.3 - 99%: 19.6 - 99.9%: 19.6 - Max: 19.6 | Pub Delay Latency (us) avg: 102.3 - 50%: 109.0 - 99%: 183.0 - 99.9%: 183.0 - Max: 183.0
+01:02:28.360 [main] INFO WorkloadGenerator - Pub rate     0.3 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.5 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  7.6 - 50%:  7.1 - 99%: 14.5 - 99.9%: 14.5 - Max: 14.5 | Pub Delay Latency (us) avg: 14453045.3 - 50%: 13918463.0 - 99%: 15580671.0 - 99.9%: 15580671.0 - Max: 15580671.0
+01:02:39.434 [main] INFO WorkloadGenerator - Pub rate     0.3 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.3 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  2.2 - 50%:  1.3 - 99%:  4.0 - 99.9%:  4.0 - Max:  4.0 | Pub Delay Latency (us) avg: 26140138.7 - 50%: 25641471.0 - 99%: 28656639.0 - 99.9%: 28656639.0 - Max: 28656639.0
+01:02:50.419 [main] INFO WorkloadGenerator - Pub rate     0.4 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.6 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  2.3 - 50%:  1.3 - 99%:  3.4 - 99.9%:  3.4 - Max:  3.4 | Pub Delay Latency (us) avg: 37977600.0 - 50%: 35962879.0 - 99%: 42734335.0 - 99.9%: 42734335.0 - Max: 42734335.0
+01:03:01.517 [main] INFO WorkloadGenerator - Pub rate     0.3 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.4 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  4.2 - 50%:  4.8 - 99%:  6.5 - 99.9%:  6.5 - Max:  6.5 | Pub Delay Latency (us) avg: 48950400.0 - 50%: 49556223.0 - 99%: 51243007.0 - 99.9%: 51243007.0 - Max: 51243007.0
+01:03:12.617 [main] INFO WorkloadGenerator - Pub rate     0.3 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.4 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  8.0 - 50%: 10.9 - 99%: 11.8 - 99.9%: 11.8 - Max: 11.8 | Pub Delay Latency (us) avg: 58836864.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+01:03:23.753 [main] INFO WorkloadGenerator - Pub rate     0.3 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.4 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  6.7 - 50%:  6.4 - 99%: 12.4 - 99.9%: 12.4 - Max: 12.4 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+01:03:34.633 [pool-2-thread-1] INFO LocalWorker - [LocalWorker] TPC-H query result: {
+  "rows" : [ {
+    "columns" : {
+      "lineStatus" : "O",
+      "returnFlag" : "N",
+      "discountedPriceSum" : 82587063649.6050,
+      "chargeSum" : 85895874116.467326,
+      "orderCount" : 2269898,
+      "basePriceSum" : 86935187926.29,
+      "averageQuantity" : 25.5,
+      "averagePrice" : 38299.16,
+      "averageDiscount" : 0.05,
+      "quantitySum" : 57946600.0
+    }
+  }, {
+    "columns" : {
+      "lineStatus" : "F",
+      "returnFlag" : "R",
+      "discountedPriceSum" : 57478197530.4854,
+      "chargeSum" : 59775637462.370435,
+      "orderCount" : 1581484,
+      "basePriceSum" : 60499302496.71,
+      "averageQuantity" : 25.5,
+      "averagePrice" : 38254.77,
+      "averageDiscount" : 0.05,
+      "quantitySum" : 40347321.0
+    }
+  }, {
+    "columns" : {
+      "lineStatus" : "F",
+      "returnFlag" : "A",
+      "discountedPriceSum" : 57490729666.3008,
+      "chargeSum" : 59789403228.235513,
+      "orderCount" : 1581690,
+      "basePriceSum" : 60518824503.56,
+      "averageQuantity" : 25.5,
+      "averagePrice" : 38262.13,
+      "averageDiscount" : 0.05,
+      "quantitySum" : 40363831.0
+    }
+  }, {
+    "columns" : {
+      "lineStatus" : "F",
+      "returnFlag" : "N",
+      "discountedPriceSum" : 1508684654.9728,
+      "chargeSum" : 1568881096.368372,
+      "orderCount" : 41664,
+      "basePriceSum" : 1587497426.26,
+      "averageQuantity" : 25.4,
+      "averagePrice" : 38102.38,
+      "averageDiscount" : 0.05,
+      "quantitySum" : 1060188.0
+    }
+  } ]
+}
+01:03:34.947 [main] INFO WorkloadGenerator - Pub rate     0.4 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.7 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  3.1 - 50%:  1.4 - 99%:  5.0 - 99.9%:  5.0 - Max:  5.0 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+01:03:36.029 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg:  4.0 - 50%:  1.4 - 95%: 12.4 - 99%: 19.6 - 99.9%: 19.6 - 99.99%: 19.6 - Max: 19.6 | Pub Delay (us)  avg: 25644157.4 - 50%: 15580671.0 - 95%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - 99.99%: 60000255.0 - Max: 60000255.0
+01:03:36.385 [main] INFO WorkloadGenerator - ----- Completed run. Stopping worker and yielding results ------
+01:03:37.141 [main] INFO LocalWorker - Attempting to shut down producers...
+01:03:37.142 [main] INFO LocalWorker - Attempting to shut down consumers...
+01:03:37.142 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down consumer task...
+01:03:37.142 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down executor...
+01:03:37.143 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down pool...
+01:03:37.144 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+01:03:37.144 [main] INFO Benchmark - Preparing to write test results...
+01:03:37.144 [main] INFO Benchmark - Writing test result into simple-workload-Redis-2024-03-14-01-03-37.json
+01:03:37.430 [main] INFO Benchmark - Finished test and closed generator.
+01:03:37.830 [main] INFO LocalWorker - Attempting to shut down producers...
+01:03:37.830 [main] INFO LocalWorker - Attempting to shut down consumers...
+01:03:37.830 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+01:03:37.830 [main] INFO Benchmark - Doing final clean-up...
+01:03:37.835 [main] INFO Benchmark - Final clean-up finished.

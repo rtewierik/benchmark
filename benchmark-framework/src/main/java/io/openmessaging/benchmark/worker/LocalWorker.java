@@ -70,6 +70,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final Map<String, TpcHIntermediateResult> collectedIntermediateResults = new ConcurrentHashMap<>();
     private final Map<String, TpcHIntermediateResult> collectedReducedResults = new ConcurrentHashMap<>();
     private final Set<String> processedMessages = new ConcurrentSkipListSet<>();
+    private final Set<String> processedChunks = new ConcurrentSkipListSet<>();
     private final AmazonS3Client s3Client = new AmazonS3Client();
     private static final ObjectWriter messageWriter = ObjectMappers.DEFAULT.writer();
 
@@ -190,15 +191,17 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     AtomicInteger currentAssignment = new AtomicInteger();
                     KeyDistributor keyDistributor = KeyDistributor.build(producerWorkAssignment.keyDistributorType);
                     int limit = (assignment.offset * assignment.batchSize) + assignment.batchSize;
-                    String batchId = String.format("%s-batch-%d-%s", assignment.queryId, assignment.offset, RandomGenerator.getRandomString());
+                    String batchId = String.format("%s-batch-%d-%s", assignment.queryId, assignment.offset, assignment.batchSize);
                     try {
                         while (currentAssignment.get() < limit) {
+                            Integer chunkIndex = currentAssignment.incrementAndGet();
                             TpcHConsumerAssignment consumerAssignment = new TpcHConsumerAssignment(
                                 assignment.query,
                                 assignment.queryId,
                                 batchId,
+                                chunkIndex,
                                 producerWorkAssignment.producerIndex,
-                                String.format("%s/chunk_%d.csv", assignment.sourceDataS3FolderUri, currentAssignment.incrementAndGet())
+                                String.format("%s/chunk_%d.csv", assignment.sourceDataS3FolderUri, chunkIndex)
                             );
                             TpcHMessage message = new TpcHMessage(
                                 TpcHMessageType.ConsumerAssignment,
@@ -348,7 +351,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         try (InputStream stream = this.s3Client.readTpcHChunkFromS3(s3Uri)) {
             List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
             TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, info.query, assignment);
-            int producerIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.index;
+            int producerIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.producerIndex;
             BenchmarkProducer producer = this.producers.get(producerIndex);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
             TpcHMessage message = new TpcHMessage(
@@ -368,6 +371,12 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     private void processIntermediateResult(TpcHIntermediateResult intermediateResult, TpcHInfo info) throws IOException {
+        String chunkId = String.format("%s_%d", intermediateResult.batchId, intermediateResult.chunkIndex);
+        if (processedChunks.contains(chunkId)) {
+            return;
+        } else {
+            processedChunks.add(chunkId);
+        }
         if (!this.collectedIntermediateResults.containsKey(intermediateResult.batchId)) {
             this.collectedIntermediateResults.put(intermediateResult.batchId, intermediateResult);
             return;
