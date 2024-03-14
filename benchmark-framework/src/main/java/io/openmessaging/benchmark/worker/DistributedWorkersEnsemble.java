@@ -217,8 +217,7 @@ public class DistributedWorkersEnsemble implements Worker {
         int i = 0;
         for (List<TopicSubscription> reduceSubscriptions : reduceSubscriptionsPerConsumer) {
             ConsumerAssignment individualAssignment = new ConsumerAssignment();
-            String subscription = generateSubscriptionName(TpcHConstants.MAP_CMD_INDEX);
-            individualAssignment.topicsSubscriptions.add(mapSubscription.withSubscription(subscription));
+            individualAssignment.topicsSubscriptions.add(mapSubscription);
             individualAssignment.topicsSubscriptions.addAll(reduceSubscriptions);
             topicsPerConsumerMap.put(workers.get(i++), individualAssignment);
         }
