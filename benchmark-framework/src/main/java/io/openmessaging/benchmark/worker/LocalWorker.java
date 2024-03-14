@@ -152,7 +152,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         if (consumerAssignment.isTpcH && consumerAssignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
             consumerAssignment.topicsSubscriptions.remove(TpcHConstants.REDUCE_DST_INDEX);
         }
-        log.info("Creating consumers: {}", writer.writeValueAsString(consumerAssignment));
+        log.debug("Creating consumers: {}", writer.writeValueAsString(consumerAssignment));
         consumers.addAll(
                 benchmarkDriver
                         .createConsumers(
@@ -358,7 +358,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
             BenchmarkProducer producer = this.producers.get(producerIndex);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
             TpcHMessage message = new TpcHMessage(
-                TpcHMessageType.ReducedResult,
+                TpcHMessageType.IntermediateResult,
                 messageWriter.writeValueAsString(result)
             );
             String key = keyDistributor.next();
@@ -375,28 +375,35 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     private void processIntermediateResult(TpcHIntermediateResult intermediateResult, TpcHInfo info) throws IOException {
         String chunkId = this.getChunkId(intermediateResult);
+        String batchId = intermediateResult.batchId;
         if (processedIntermediateResults.contains(chunkId)) {
             log.info("Ignored intermediate result with chunk ID {} due to duplicity!", chunkId);
             return;
         } else {
             processedIntermediateResults.add(chunkId);
         }
-        if (!this.collectedIntermediateResults.containsKey(intermediateResult.batchId)) {
-            this.collectedIntermediateResults.put(intermediateResult.batchId, intermediateResult);
-            return;
+        TpcHIntermediateResult existingIntermediateResult;
+        if (!this.collectedIntermediateResults.containsKey(batchId)) {
+            this.collectedIntermediateResults.put(batchId, intermediateResult);
+            existingIntermediateResult = intermediateResult;
+        } else {
+            existingIntermediateResult = this.collectedIntermediateResults.get(batchId);
+            existingIntermediateResult.aggregateIntermediateResult(intermediateResult);
         }
-        TpcHIntermediateResult existingIntermediateResult = this.collectedIntermediateResults.get(intermediateResult.batchId);
-        existingIntermediateResult.aggregateIntermediateResult(intermediateResult);
-        if (Objects.equals(existingIntermediateResult.numberOfAggregatedResults, info.numberOfMapResults)) {
+        if (existingIntermediateResult.numberOfAggregatedResults.intValue() == info.numberOfMapResults.intValue()) {
             BenchmarkProducer producer = this.producers.get(TpcHConstants.REDUCE_DST_INDEX);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
+            String reducedResult = messageWriter.writeValueAsString(existingIntermediateResult);
             TpcHMessage message = new TpcHMessage(
                 TpcHMessageType.ReducedResult,
-                messageWriter.writeValueAsString(existingIntermediateResult)
+                reducedResult
             );
+            String key = keyDistributor.next();
+            Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
+            log.debug("Sending reduced result: {}", reducedResult);
             this.messageProducer.sendMessage(
                 producer,
-                Optional.of(keyDistributor.next()),
+                optionalKey,
                 messageWriter.writeValueAsBytes(message)
             );
         }
@@ -406,19 +413,25 @@ public class LocalWorker implements Worker, ConsumerCallback {
         String batchId = reducedResult.batchId;
         if (processedReducedResults.contains(batchId)) {
             log.info("Ignored reduced result with batch ID {} due to duplicity!", batchId);
-            log.info(writer.writeValueAsString(reducedResult));
             return;
         } else {
             processedReducedResults.add(batchId);
         }
+        TpcHIntermediateResult existingReducedResult;
         if (!this.collectedReducedResults.containsKey(reducedResult.queryId)) {;
             this.collectedReducedResults.put(reducedResult.queryId, reducedResult);
-            return;
+            existingReducedResult = reducedResult;
+        } else {
+            existingReducedResult = this.collectedReducedResults.get(reducedResult.queryId);
+            existingReducedResult.aggregateReducedResult(reducedResult);
         }
-        log.info("[LocalWorker] Detected reduced result: {}", writer.writeValueAsString(reducedResult));
-        TpcHIntermediateResult existingReducedResult = this.collectedReducedResults.get(reducedResult.queryId);
-        existingReducedResult.aggregateIntermediateResult(reducedResult);
-        if (Objects.equals(existingReducedResult.numberOfAggregatedResults, info.numberOfReduceResults)) {
+        log.debug(
+            "Detected reduced result: {}\n\n{}\n\n{}",
+            writer.writeValueAsString(reducedResult),
+            writer.writeValueAsString(existingReducedResult),
+            writer.writeValueAsString(info)
+        );
+        if (existingReducedResult.numberOfAggregatedResults.intValue() == info.numberOfReduceResults.intValue()) {
             TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult, info.query);
             log.info("[LocalWorker] TPC-H query result: {}", writer.writeValueAsString(result));
             testCompleted = true;

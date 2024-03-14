@@ -2,9 +2,9 @@ sudo bin/benchmark \
   --drivers workloads/redis-default.yaml \
   --tpc-h-file workloads/tpc-h-default.yaml \
   workloads/simple-workload.yaml
-01:02:01.667 [main] INFO Benchmark - Using default worker file workers.yaml
-01:02:01.681 [main] INFO Benchmark - Reading workers list from workers.yaml
-01:02:01.776 [main] INFO Benchmark - Starting benchmark with config: {
+05:03:47.825 [main] INFO Benchmark - Using default worker file workers.yaml
+05:03:47.838 [main] INFO Benchmark - Reading workers list from workers.yaml
+05:03:47.920 [main] INFO Benchmark - Starting benchmark with config: {
   "drivers" : [ "workloads/redis-default.yaml" ],
   "workers" : [ "http://172.31.42.82:8080", "http://172.31.33.92:8080", "http://172.31.43.32:8080" ],
   "workersFile" : "/opt/benchmark/workers.yaml",
@@ -12,7 +12,7 @@ sudo bin/benchmark \
   "workloads" : [ "workloads/simple-workload.yaml" ],
   "output" : null
 }
-01:02:01.805 [main] INFO Benchmark - Workloads: {
+05:03:47.947 [main] INFO Benchmark - Workloads: {
   "simple-workload" : {
     "name" : "Simple Workload 1 producer on 2 topics",
     "topics" : 2,
@@ -33,34 +33,35 @@ sudo bin/benchmark \
     "warmupDurationMinutes" : 1
   }
 }
-01:02:01.822 [main] INFO Benchmark - TPC-H arguments: {
+05:03:47.965 [main] INFO Benchmark - TPC-H arguments: {
   "queryId" : "test-query-1",
   "query" : "PricingSummaryReport",
   "sourceDataS3FolderUri" : "s3://tpc-h-chunks/reference-data/chunked",
   "numberOfChunks" : 10,
-  "numberOfReducers" : 3
+  "numberOfReducers" : 3,
+  "defaultNumberOfMapResults" : 4
 }
-01:02:03.288 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://172.31.42.82:8080]
-01:02:03.289 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://172.31.43.32:8080,http://172.31.33.92:8080
-01:02:03.296 [main] INFO Benchmark - --------------- WORKLOAD : Simple Workload 1 producer on 2 topics --- DRIVER : Redis---------------
-01:02:04.383 [main] INFO LocalWorker - Attempting to shut down producers...
-01:02:04.384 [main] INFO LocalWorker - Attempting to shut down consumers...
-01:02:04.384 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
-01:02:04.447 [main] INFO LocalWorker - Driver: {
+05:03:49.276 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://172.31.42.82:8080]
+05:03:49.277 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://172.31.43.32:8080,http://172.31.33.92:8080
+05:03:49.283 [main] INFO Benchmark - --------------- WORKLOAD : Simple Workload 1 producer on 2 topics --- DRIVER : Redis---------------
+05:03:50.593 [main] INFO LocalWorker - Attempting to shut down producers...
+05:03:50.594 [main] INFO LocalWorker - Attempting to shut down consumers...
+05:03:50.594 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+05:03:50.668 [main] INFO LocalWorker - Driver: {
   "name" : "Redis",
   "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
 }
-01:02:04.563 [main] INFO WorkloadGenerator - Created 5 topics in 100.958355 ms
-01:02:04.575 [main] INFO DistributedWorkersEnsemble - [DistributedWorkersEnsemble] Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000000-Y53XHyo', subscription='sub-000-HzpY9co', info=TpcHInfo{consumer=Map, numberOfMapResults=null, numberOfReduceResults=null}}
-01:02:04.579 [main] INFO DistributedWorkersEnsemble - [DistributedWorkersEnsemble] Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000001-SD1uMVw', subscription='sub-001-lJaULDw', info=TpcHInfo{consumer=GenerateResult, numberOfMapResults=null, numberOfReduceResults=10}}
-01:02:04.580 [main] INFO DistributedWorkersEnsemble - [DistributedWorkersEnsemble] Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000002-RFVNO8s', subscription='sub-002-PxCORDI', info=TpcHInfo{consumer=Reduce, numberOfMapResults=4, numberOfReduceResults=null}}
-01:02:04.580 [main] INFO DistributedWorkersEnsemble - [DistributedWorkersEnsemble] Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000003-o7hNRQk', subscription='sub-003-EQwyQoQ', info=TpcHInfo{consumer=Reduce, numberOfMapResults=4, numberOfReduceResults=null}}
-01:02:04.580 [main] INFO DistributedWorkersEnsemble - [DistributedWorkersEnsemble] Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000004-nSovOXI', subscription='sub-004-7MZ9yq4', info=TpcHInfo{consumer=Reduce, numberOfMapResults=2, numberOfReduceResults=null}}
-01:02:04.599 [main] INFO DistributedWorkersEnsemble - Topics per consumer map: {
-  "io.openmessaging.benchmark.worker.HttpWorkerClient@fca387" : {
+05:03:50.834 [main] INFO WorkloadGenerator - Created 5 topics in 157.489541 ms
+05:03:50.849 [main] INFO DistributedWorkersEnsemble - [DistributedWorkersEnsemble] Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000000-kAGaL6E', subscription='sub-000-6rm8kN4', info=TpcHInfo{consumer=Map, numberOfMapResults=null, numberOfReduceResults=null}}
+05:03:50.849 [main] INFO DistributedWorkersEnsemble - [DistributedWorkersEnsemble] Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000001-xxitbkc', subscription='sub-001-kBIKU50', info=TpcHInfo{consumer=GenerateResult, numberOfMapResults=null, numberOfReduceResults=10}}
+05:03:50.850 [main] INFO DistributedWorkersEnsemble - [DistributedWorkersEnsemble] Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000002-A5XxDxI', subscription='sub-002-NobWf-4', info=TpcHInfo{consumer=Reduce, numberOfMapResults=4, numberOfReduceResults=null}}
+05:03:50.850 [main] INFO DistributedWorkersEnsemble - [DistributedWorkersEnsemble] Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000003-XYeAqrc', subscription='sub-003-PKecX4Q', info=TpcHInfo{consumer=Reduce, numberOfMapResults=4, numberOfReduceResults=null}}
+05:03:50.850 [main] INFO DistributedWorkersEnsemble - [DistributedWorkersEnsemble] Topic subscription detected: TopicSubscription{topic='redis-openmessaging-benchmark-0000004-NybbXWU', subscription='sub-004-9CcbMPE', info=TpcHInfo{consumer=Reduce, numberOfMapResults=2, numberOfReduceResults=null}}
+05:03:50.870 [main] INFO DistributedWorkersEnsemble - Topics per consumer map: {
+  "io.openmessaging.benchmark.worker.HttpWorkerClient@21d1b321" : {
     "topicsSubscriptions" : [ {
-      "topic" : "redis-openmessaging-benchmark-0000000-Y53XHyo",
-      "subscription" : "sub-000-Eog8l-Q",
+      "topic" : "redis-openmessaging-benchmark-0000000-kAGaL6E",
+      "subscription" : "sub-000-EccdL2k",
       "info" : {
         "queryId" : "test-query-1",
         "query" : "PricingSummaryReport",
@@ -69,32 +70,8 @@ sudo bin/benchmark \
         "numberOfReduceResults" : null
       }
     }, {
-      "topic" : "redis-openmessaging-benchmark-0000003-o7hNRQk",
-      "subscription" : "sub-003-EQwyQoQ",
-      "info" : {
-        "queryId" : "test-query-1",
-        "query" : "PricingSummaryReport",
-        "consumer" : "Reduce",
-        "numberOfMapResults" : 4,
-        "numberOfReduceResults" : null
-      }
-    } ],
-    "isTpcH" : false
-  },
-  "io.openmessaging.benchmark.worker.HttpWorkerClient@10bd9df0" : {
-    "topicsSubscriptions" : [ {
-      "topic" : "redis-openmessaging-benchmark-0000000-Y53XHyo",
-      "subscription" : "sub-000-QkQezSg",
-      "info" : {
-        "queryId" : "test-query-1",
-        "query" : "PricingSummaryReport",
-        "consumer" : "Map",
-        "numberOfMapResults" : null,
-        "numberOfReduceResults" : null
-      }
-    }, {
-      "topic" : "redis-openmessaging-benchmark-0000004-nSovOXI",
-      "subscription" : "sub-004-7MZ9yq4",
+      "topic" : "redis-openmessaging-benchmark-0000004-NybbXWU",
+      "subscription" : "sub-004-9CcbMPE",
       "info" : {
         "queryId" : "test-query-1",
         "query" : "PricingSummaryReport",
@@ -105,10 +82,10 @@ sudo bin/benchmark \
     } ],
     "isTpcH" : false
   },
-  "io.openmessaging.benchmark.worker.HttpWorkerClient@367b22e5" : {
+  "io.openmessaging.benchmark.worker.HttpWorkerClient@5e746d37" : {
     "topicsSubscriptions" : [ {
-      "topic" : "redis-openmessaging-benchmark-0000000-Y53XHyo",
-      "subscription" : "sub-000-nf0y_GU",
+      "topic" : "redis-openmessaging-benchmark-0000000-kAGaL6E",
+      "subscription" : "sub-000-T84CcUk",
       "info" : {
         "queryId" : "test-query-1",
         "query" : "PricingSummaryReport",
@@ -117,8 +94,32 @@ sudo bin/benchmark \
         "numberOfReduceResults" : null
       }
     }, {
-      "topic" : "redis-openmessaging-benchmark-0000002-RFVNO8s",
-      "subscription" : "sub-002-PxCORDI",
+      "topic" : "redis-openmessaging-benchmark-0000002-A5XxDxI",
+      "subscription" : "sub-002-NobWf-4",
+      "info" : {
+        "queryId" : "test-query-1",
+        "query" : "PricingSummaryReport",
+        "consumer" : "Reduce",
+        "numberOfMapResults" : 4,
+        "numberOfReduceResults" : null
+      }
+    } ],
+    "isTpcH" : false
+  },
+  "io.openmessaging.benchmark.worker.HttpWorkerClient@6e1b9411" : {
+    "topicsSubscriptions" : [ {
+      "topic" : "redis-openmessaging-benchmark-0000000-kAGaL6E",
+      "subscription" : "sub-000-Vi5wmG4",
+      "info" : {
+        "queryId" : "test-query-1",
+        "query" : "PricingSummaryReport",
+        "consumer" : "Map",
+        "numberOfMapResults" : null,
+        "numberOfReduceResults" : null
+      }
+    }, {
+      "topic" : "redis-openmessaging-benchmark-0000003-XYeAqrc",
+      "subscription" : "sub-003-PKecX4Q",
       "info" : {
         "queryId" : "test-query-1",
         "query" : "PricingSummaryReport",
@@ -130,91 +131,472 @@ sudo bin/benchmark \
     "isTpcH" : false
   }
 }
-01:02:05.400 [main] INFO WorkloadGenerator - Created 5 external consumers in 824.998697 ms
-01:02:05.421 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-test-2-0001-001.rs3fvf.0001.use1.cache.amazonaws.com:6379 with user null
-01:02:05.701 [main] INFO LocalWorker - Created 1 consumers in 300.834186 ms
-01:02:05.702 [main] INFO WorkloadGenerator - Created 1 internal consumers in 1240.152856 ms
-01:02:05.738 [main] INFO WorkloadGenerator - Created 5 producers in 35.457697 ms
-01:02:05.738 [main] INFO WorkloadGenerator - Waiting for consumers to be ready
-01:02:05.788 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 5, Received: 6
-01:02:05.789 [main] INFO WorkloadGenerator - All consumers are ready
-01:02:05.851 [main] INFO WorkloadGenerator - ----- Starting benchmark traffic ------
-01:02:17.137 [main] INFO WorkloadGenerator - Pub rate     1.6 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.8 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  3.1 - 50%:  1.3 - 99%: 19.6 - 99.9%: 19.6 - Max: 19.6 | Pub Delay Latency (us) avg: 102.3 - 50%: 109.0 - 99%: 183.0 - 99.9%: 183.0 - Max: 183.0
-01:02:28.360 [main] INFO WorkloadGenerator - Pub rate     0.3 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.5 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  7.6 - 50%:  7.1 - 99%: 14.5 - 99.9%: 14.5 - Max: 14.5 | Pub Delay Latency (us) avg: 14453045.3 - 50%: 13918463.0 - 99%: 15580671.0 - 99.9%: 15580671.0 - Max: 15580671.0
-01:02:39.434 [main] INFO WorkloadGenerator - Pub rate     0.3 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.3 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  2.2 - 50%:  1.3 - 99%:  4.0 - 99.9%:  4.0 - Max:  4.0 | Pub Delay Latency (us) avg: 26140138.7 - 50%: 25641471.0 - 99%: 28656639.0 - 99.9%: 28656639.0 - Max: 28656639.0
-01:02:50.419 [main] INFO WorkloadGenerator - Pub rate     0.4 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.6 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  2.3 - 50%:  1.3 - 99%:  3.4 - 99.9%:  3.4 - Max:  3.4 | Pub Delay Latency (us) avg: 37977600.0 - 50%: 35962879.0 - 99%: 42734335.0 - 99.9%: 42734335.0 - Max: 42734335.0
-01:03:01.517 [main] INFO WorkloadGenerator - Pub rate     0.3 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.4 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  4.2 - 50%:  4.8 - 99%:  6.5 - 99.9%:  6.5 - Max:  6.5 | Pub Delay Latency (us) avg: 48950400.0 - 50%: 49556223.0 - 99%: 51243007.0 - 99.9%: 51243007.0 - Max: 51243007.0
-01:03:12.617 [main] INFO WorkloadGenerator - Pub rate     0.3 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.4 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  8.0 - 50%: 10.9 - 99%: 11.8 - 99.9%: 11.8 - Max: 11.8 | Pub Delay Latency (us) avg: 58836864.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
-01:03:23.753 [main] INFO WorkloadGenerator - Pub rate     0.3 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.4 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  6.7 - 50%:  6.4 - 99%: 12.4 - 99.9%: 12.4 - Max: 12.4 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
-01:03:34.633 [pool-2-thread-1] INFO LocalWorker - [LocalWorker] TPC-H query result: {
+05:03:51.372 [main] INFO WorkloadGenerator - Created 5 external consumers in 523.171747 ms
+05:03:51.380 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-test-2-0001-001.rs3fvf.0001.use1.cache.amazonaws.com:6379 with user null
+05:03:51.499 [main] INFO LocalWorker - Created 1 consumers in 126.688321 ms
+05:03:51.500 [main] INFO WorkloadGenerator - Created 1 internal consumers in 822.893368 ms
+05:03:51.534 [main] INFO WorkloadGenerator - Created 5 producers in 34.121216 ms
+05:03:51.535 [main] INFO WorkloadGenerator - Waiting for consumers to be ready
+05:03:51.575 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 5, Received: 6
+05:03:51.575 [main] INFO WorkloadGenerator - All consumers are ready
+05:03:51.636 [main] INFO WorkloadGenerator - ----- Starting benchmark traffic ------
+05:04:03.074 [main] INFO WorkloadGenerator - Pub rate     0.9 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.8 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  2.5 - 50%:  1.3 - 99%:  8.7 - 99.9%:  8.7 - Max:  8.7 | Pub Delay Latency (us) avg: 99.1 - 50%: 83.0 - 99%: 318.0 - 99.9%: 318.0 - Max: 318.0
+05:04:14.520 [main] INFO WorkloadGenerator - Pub rate     0.3 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.5 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  5.9 - 50%:  7.9 - 99%:  7.9 - 99.9%:  7.9 - Max:  7.9 | Pub Delay Latency (us) avg: 14856597.3 - 50%: 14904127.0 - 99%: 16861951.0 - 99.9%: 16861951.0 - Max: 16861951.0
+05:04:25.692 [main] INFO WorkloadGenerator - Pub rate     0.4 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.7 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  4.3 - 50%:  1.5 - 99%:  9.1 - 99.9%:  9.1 - Max:  9.1 | Pub Delay Latency (us) avg: 27433312.0 - 50%: 26215807.0 - 99%: 31833727.0 - 99.9%: 31833727.0 - Max: 31833727.0
+05:04:35.661 [pool-2-thread-1] INFO LocalWorker - [LocalWorker] Detected reduced result: {
+  "queryId" : "test-query-1",
+  "batchId" : "test-query-1-batch-2-4",
+  "chunkIndex" : 9,
+  "numberOfAggregatedResults" : 2,
+  "groups" : [ {
+    "identifiers" : {
+      "lineStatus" : "O",
+      "returnFlag" : "N"
+    },
+    "aggregates" : {
+      "quantity" : 7930605.0,
+      "charge" : 1.1751517951419708E10,
+      "discountedPrice" : 1.12992763743323E10,
+      "orderCount" : 310790,
+      "discount" : 15521.38,
+      "basePrice" : 1.189307299909E10
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "R"
+    },
+    "aggregates" : {
+      "quantity" : 5548051.0,
+      "charge" : 8.222947743461864E9,
+      "discountedPrice" : 7.9069301723508E9,
+      "orderCount" : 217238,
+      "discount" : 10880.49,
+      "basePrice" : 8.32368050193E9
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "A"
+    },
+    "aggregates" : {
+      "quantity" : 5540123.0,
+      "charge" : 8.210388892985519E9,
+      "discountedPrice" : 7.894904733373E9,
+      "orderCount" : 216952,
+      "discount" : 10865.27,
+      "basePrice" : 8.31131698976E9
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "N"
+    },
+    "aggregates" : {
+      "quantity" : 146569.0,
+      "charge" : 2.17470811186006E8,
+      "discountedPrice" : 2.091082342536E8,
+      "orderCount" : 5731,
+      "discount" : 289.15,
+      "basePrice" : 2.2018352425E8
+    }
+  } ]
+}
+
+{
+  "queryId" : "test-query-1",
+  "batchId" : "test-query-1-batch-2-4",
+  "chunkIndex" : 9,
+  "numberOfAggregatedResults" : 2,
+  "groups" : [ {
+    "identifiers" : {
+      "lineStatus" : "O",
+      "returnFlag" : "N"
+    },
+    "aggregates" : {
+      "quantity" : 7930605.0,
+      "charge" : 1.1751517951419708E10,
+      "discountedPrice" : 1.12992763743323E10,
+      "orderCount" : 310790,
+      "discount" : 15521.38,
+      "basePrice" : 1.189307299909E10
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "R"
+    },
+    "aggregates" : {
+      "quantity" : 5548051.0,
+      "charge" : 8.222947743461864E9,
+      "discountedPrice" : 7.9069301723508E9,
+      "orderCount" : 217238,
+      "discount" : 10880.49,
+      "basePrice" : 8.32368050193E9
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "A"
+    },
+    "aggregates" : {
+      "quantity" : 5540123.0,
+      "charge" : 8.210388892985519E9,
+      "discountedPrice" : 7.894904733373E9,
+      "orderCount" : 216952,
+      "discount" : 10865.27,
+      "basePrice" : 8.31131698976E9
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "N"
+    },
+    "aggregates" : {
+      "quantity" : 146569.0,
+      "charge" : 2.17470811186006E8,
+      "discountedPrice" : 2.091082342536E8,
+      "orderCount" : 5731,
+      "discount" : 289.15,
+      "basePrice" : 2.2018352425E8
+    }
+  } ]
+}
+
+{
+  "queryId" : "test-query-1",
+  "query" : "PricingSummaryReport",
+  "consumer" : "GenerateResult",
+  "numberOfMapResults" : null,
+  "numberOfReduceResults" : 10
+}
+05:04:36.731 [main] INFO WorkloadGenerator - Pub rate     0.5 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.7 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  4.2 - 50%:  1.4 - 99%:  9.4 - 99.9%:  9.4 - Max:  9.4 | Pub Delay Latency (us) avg: 40767820.8 - 50%: 40743935.0 - 99%: 43767551.0 - 99.9%: 43767551.0 - Max: 43767551.0
+05:04:47.818 [main] INFO WorkloadGenerator - Pub rate     0.5 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.9 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  2.5 - 50%:  1.4 - 99%:  6.1 - 99.9%:  6.1 - Max:  6.1 | Pub Delay Latency (us) avg: 51013299.2 - 50%: 50892287.0 - 99%: 53618175.0 - 99.9%: 53618175.0 - Max: 53618175.0
+05:04:58.958 [main] INFO WorkloadGenerator - Pub rate     0.3 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.5 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  1.3 - 50%:  1.3 - 99%:  1.3 - 99.9%:  1.3 - Max:  1.3 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+05:05:10.174 [main] INFO WorkloadGenerator - Pub rate     0.3 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.5 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  3.5 - 50%:  1.5 - 99%:  7.7 - 99.9%:  7.7 - Max:  7.7 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+05:05:11.123 [pool-2-thread-1] INFO LocalWorker - [LocalWorker] Detected reduced result: {
+  "queryId" : "test-query-1",
+  "batchId" : "test-query-1-batch-0-4",
+  "chunkIndex" : 1,
+  "numberOfAggregatedResults" : 4,
+  "groups" : [ {
+    "identifiers" : {
+      "lineStatus" : "O",
+      "returnFlag" : "N"
+    },
+    "aggregates" : {
+      "quantity" : 2.3165816E7,
+      "charge" : 3.433991437717415E10,
+      "discountedPrice" : 3.3017184990207E10,
+      "orderCount" : 907750,
+      "discount" : 45433.88,
+      "basePrice" : 3.475578946843E10
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "R"
+    },
+    "aggregates" : {
+      "quantity" : 1.6130293E7,
+      "charge" : 2.389575357317457E10,
+      "discountedPrice" : 2.29771523268016E10,
+      "orderCount" : 632212,
+      "discount" : 31617.69,
+      "basePrice" : 2.418494696335E10
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "A"
+    },
+    "aggregates" : {
+      "quantity" : 1.6124677E7,
+      "charge" : 2.3889010057425083E10,
+      "discountedPrice" : 2.29704767533428E10,
+      "orderCount" : 632008,
+      "discount" : 31596.06,
+      "basePrice" : 2.417934266548E10
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "N"
+    },
+    "aggregates" : {
+      "quantity" : 424378.0,
+      "charge" : 6.2823490688886E8,
+      "discountedPrice" : 6.041245763334E8,
+      "orderCount" : 16622,
+      "discount" : 828.42,
+      "basePrice" : 6.3582508236E8
+    }
+  } ]
+}
+
+{
+  "queryId" : "test-query-1",
+  "batchId" : "test-query-1-batch-2-4",
+  "chunkIndex" : 9,
+  "numberOfAggregatedResults" : 6,
+  "groups" : [ {
+    "identifiers" : {
+      "lineStatus" : "O",
+      "returnFlag" : "N"
+    },
+    "aggregates" : {
+      "quantity" : 31096421.0,
+      "charge" : 46091432328.593858,
+      "discountedPrice" : 44316461364.5393,
+      "orderCount" : 1218540,
+      "discount" : 60955.26,
+      "basePrice" : 46648862467.52
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "R"
+    },
+    "aggregates" : {
+      "quantity" : 21678344.0,
+      "charge" : 32118701316.636434,
+      "discountedPrice" : 30884082499.1524,
+      "orderCount" : 849450,
+      "discount" : 42498.18,
+      "basePrice" : 32508627465.28
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "A"
+    },
+    "aggregates" : {
+      "quantity" : 21664800.0,
+      "charge" : 32099398950.410602,
+      "discountedPrice" : 30865381486.7158,
+      "orderCount" : 848960,
+      "discount" : 42461.33,
+      "basePrice" : 32490659655.24
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "N"
+    },
+    "aggregates" : {
+      "quantity" : 570947.0,
+      "charge" : 845705718.074866,
+      "discountedPrice" : 813232810.5870,
+      "orderCount" : 22353,
+      "discount" : 1117.57,
+      "basePrice" : 856008606.61
+    }
+  } ]
+}
+
+{
+  "queryId" : "test-query-1",
+  "query" : "PricingSummaryReport",
+  "consumer" : "GenerateResult",
+  "numberOfMapResults" : null,
+  "numberOfReduceResults" : 10
+}
+05:05:19.956 [pool-2-thread-1] INFO LocalWorker - [LocalWorker] Detected reduced result: {
+  "queryId" : "test-query-1",
+  "batchId" : "test-query-1-batch-1-4",
+  "chunkIndex" : 5,
+  "numberOfAggregatedResults" : 4,
+  "groups" : [ {
+    "identifiers" : {
+      "lineStatus" : "O",
+      "returnFlag" : "N"
+    },
+    "aggregates" : {
+      "quantity" : 2.3096109E7,
+      "charge" : 3.4223996648160583E10,
+      "discountedPrice" : 3.29078185306373E10,
+      "orderCount" : 905852,
+      "discount" : 45247.07,
+      "basePrice" : 3.463704205552E10
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "R"
+    },
+    "aggregates" : {
+      "quantity" : 1.6041409E7,
+      "charge" : 2.37709178031955E10,
+      "discountedPrice" : 2.28572101854516E10,
+      "orderCount" : 629420,
+      "discount" : 31459.23,
+      "basePrice" : 2.405941391562E10
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "A"
+    },
+    "aggregates" : {
+      "quantity" : 1.6069307E7,
+      "charge" : 2.3809666272417088E10,
+      "discountedPrice" : 2.28928756481542E10,
+      "orderCount" : 629533,
+      "discount" : 31441.58,
+      "basePrice" : 2.409589474549E10
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "N"
+    },
+    "aggregates" : {
+      "quantity" : 420470.0,
+      "charge" : 6.23943505119509E8,
+      "discountedPrice" : 5.998493574671E8,
+      "orderCount" : 16501,
+      "discount" : 828.76,
+      "basePrice" : 6.3149610377E8
+    }
+  } ]
+}
+
+{
+  "queryId" : "test-query-1",
+  "batchId" : "test-query-1-batch-2-4",
+  "chunkIndex" : 9,
+  "numberOfAggregatedResults" : 10,
+  "groups" : [ {
+    "identifiers" : {
+      "lineStatus" : "O",
+      "returnFlag" : "N"
+    },
+    "aggregates" : {
+      "quantity" : 54192530.0,
+      "charge" : 80315428976.754441,
+      "discountedPrice" : 77224279895.1766,
+      "orderCount" : 2124392,
+      "discount" : 106202.33,
+      "basePrice" : 81285904523.04
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "R"
+    },
+    "aggregates" : {
+      "quantity" : 37719753.0,
+      "charge" : 55889619119.831934,
+      "discountedPrice" : 53741292684.6040,
+      "orderCount" : 1478870,
+      "discount" : 73957.41,
+      "basePrice" : 56568041380.90
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "A"
+    },
+    "aggregates" : {
+      "quantity" : 37734107.0,
+      "charge" : 55909065222.827690,
+      "discountedPrice" : 53758257134.8700,
+      "orderCount" : 1478493,
+      "discount" : 73902.91,
+      "basePrice" : 56586554400.73
+    }
+  }, {
+    "identifiers" : {
+      "lineStatus" : "F",
+      "returnFlag" : "N"
+    },
+    "aggregates" : {
+      "quantity" : 991417.0,
+      "charge" : 1469649223.194375,
+      "discountedPrice" : 1413082168.0541,
+      "orderCount" : 38854,
+      "discount" : 1946.33,
+      "basePrice" : 1487504710.38
+    }
+  } ]
+}
+
+{
+  "queryId" : "test-query-1",
+  "query" : "PricingSummaryReport",
+  "consumer" : "GenerateResult",
+  "numberOfMapResults" : null,
+  "numberOfReduceResults" : 10
+}
+05:05:19.972 [pool-2-thread-1] INFO LocalWorker - [LocalWorker] TPC-H query result: {
   "rows" : [ {
     "columns" : {
       "lineStatus" : "O",
       "returnFlag" : "N",
-      "discountedPriceSum" : 82587063649.6050,
-      "chargeSum" : 85895874116.467326,
-      "orderCount" : 2269898,
-      "basePriceSum" : 86935187926.29,
+      "discountedPriceSum" : 77224279895.1766,
+      "chargeSum" : 80315428976.754441,
+      "orderCount" : 2124392,
+      "basePriceSum" : 81285904523.04,
       "averageQuantity" : 25.5,
-      "averagePrice" : 38299.16,
+      "averagePrice" : 38263.14,
       "averageDiscount" : 0.05,
-      "quantitySum" : 57946600.0
+      "quantitySum" : 54192530.0
     }
   }, {
     "columns" : {
       "lineStatus" : "F",
       "returnFlag" : "R",
-      "discountedPriceSum" : 57478197530.4854,
-      "chargeSum" : 59775637462.370435,
-      "orderCount" : 1581484,
-      "basePriceSum" : 60499302496.71,
+      "discountedPriceSum" : 53741292684.6040,
+      "chargeSum" : 55889619119.831934,
+      "orderCount" : 1478870,
+      "basePriceSum" : 56568041380.90,
       "averageQuantity" : 25.5,
-      "averagePrice" : 38254.77,
+      "averagePrice" : 38250.85,
       "averageDiscount" : 0.05,
-      "quantitySum" : 40347321.0
+      "quantitySum" : 37719753.0
     }
   }, {
     "columns" : {
       "lineStatus" : "F",
       "returnFlag" : "A",
-      "discountedPriceSum" : 57490729666.3008,
-      "chargeSum" : 59789403228.235513,
-      "orderCount" : 1581690,
-      "basePriceSum" : 60518824503.56,
+      "discountedPriceSum" : 53758257134.8700,
+      "chargeSum" : 55909065222.827690,
+      "orderCount" : 1478493,
+      "basePriceSum" : 56586554400.73,
       "averageQuantity" : 25.5,
-      "averagePrice" : 38262.13,
+      "averagePrice" : 38273.13,
       "averageDiscount" : 0.05,
-      "quantitySum" : 40363831.0
+      "quantitySum" : 37734107.0
     }
   }, {
     "columns" : {
       "lineStatus" : "F",
       "returnFlag" : "N",
-      "discountedPriceSum" : 1508684654.9728,
-      "chargeSum" : 1568881096.368372,
-      "orderCount" : 41664,
-      "basePriceSum" : 1587497426.26,
-      "averageQuantity" : 25.4,
-      "averagePrice" : 38102.38,
+      "discountedPriceSum" : 1413082168.0541,
+      "chargeSum" : 1469649223.194375,
+      "orderCount" : 38854,
+      "basePriceSum" : 1487504710.38,
+      "averageQuantity" : 25.5,
+      "averagePrice" : 38284.47,
       "averageDiscount" : 0.05,
-      "quantitySum" : 1060188.0
+      "quantitySum" : 991417.0
     }
   } ]
 }
-01:03:34.947 [main] INFO WorkloadGenerator - Pub rate     0.4 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.7 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  3.1 - 50%:  1.4 - 99%:  5.0 - 99.9%:  5.0 - Max:  5.0 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
-01:03:36.029 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg:  4.0 - 50%:  1.4 - 95%: 12.4 - 99%: 19.6 - 99.9%: 19.6 - 99.99%: 19.6 - Max: 19.6 | Pub Delay (us)  avg: 25644157.4 - 50%: 15580671.0 - 95%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - 99.99%: 60000255.0 - Max: 60000255.0
-01:03:36.385 [main] INFO WorkloadGenerator - ----- Completed run. Stopping worker and yielding results ------
-01:03:37.141 [main] INFO LocalWorker - Attempting to shut down producers...
-01:03:37.142 [main] INFO LocalWorker - Attempting to shut down consumers...
-01:03:37.142 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down consumer task...
-01:03:37.142 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down executor...
-01:03:37.143 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down pool...
-01:03:37.144 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
-01:03:37.144 [main] INFO Benchmark - Preparing to write test results...
-01:03:37.144 [main] INFO Benchmark - Writing test result into simple-workload-Redis-2024-03-14-01-03-37.json
-01:03:37.430 [main] INFO Benchmark - Finished test and closed generator.
-01:03:37.830 [main] INFO LocalWorker - Attempting to shut down producers...
-01:03:37.830 [main] INFO LocalWorker - Attempting to shut down consumers...
-01:03:37.830 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
-01:03:37.830 [main] INFO Benchmark - Doing final clean-up...
-01:03:37.835 [main] INFO Benchmark - Final clean-up finished.
+05:05:21.001 [main] INFO WorkloadGenerator - Pub rate     0.6 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.6 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  7.9 - 50%:  6.7 - 99%: 18.7 - 99.9%: 18.7 - Max: 18.7 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+05:05:21.681 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg:  4.0 - 50%:  1.5 - 95%: 10.3 - 99%: 18.7 - 99.9%: 18.7 - 99.99%: 18.7 - Max: 18.7 | Pub Delay (us)  avg: 34184901.7 - 50%: 40743935.0 - 95%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - 99.99%: 60000255.0 - Max: 60000255.0
+05:05:21.930 [main] INFO WorkloadGenerator - ----- Completed run. Stopping worker and yielding results ------
+05:05:22.434 [main] INFO LocalWorker - Attempting to shut down producers...
+05:05:22.434 [main] INFO LocalWorker - Attempting to shut down consumers...
+05:05:22.435 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down consumer task...
+05:05:22.435 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down executor...
+05:05:22.435 [main] INFO RedisBenchmarkDriver - [RedisBenchmarkConsumer] Attempting to shut down pool...
+05:05:22.437 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+05:05:22.437 [main] INFO Benchmark - Preparing to write test results...
+05:05:22.437 [main] INFO Benchmark - Writing test result into simple-workload-Redis-2024-03-14-05-05-22.json
+05:05:23.028 [main] INFO Benchmark - Finished test and closed generator.
+05:05:23.406 [main] INFO LocalWorker - Attempting to shut down producers...
+05:05:23.406 [main] INFO LocalWorker - Attempting to shut down consumers...
+05:05:23.407 [main] INFO LocalWorker - Attempting to shut down benchmark driver...
+05:05:23.407 [main] INFO Benchmark - Doing final clean-up...
+05:05:23.446 [main] INFO Benchmark - Final clean-up finished.
