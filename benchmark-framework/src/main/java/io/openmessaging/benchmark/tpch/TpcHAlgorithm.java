@@ -70,7 +70,7 @@ public class TpcHAlgorithm {
             group.aggregates.put("charge", ((BigDecimal)group.aggregates.get("charge")).add(charge));
             group.aggregates.put("orderCount", (Long)group.aggregates.get("orderCount") + 1);
         }
-        return new TpcHIntermediateResult(assignment.queryId, assignment.batchId, new ArrayList<>(groups.values()));
+        return new TpcHIntermediateResult(assignment.queryId, assignment.batchId, assignment.chunkIndex, 1, new ArrayList<>(groups.values()));
     }
 
     private static TpcHIntermediateResult applyForecastingRevenueChangeReportQueryToChunk(List<TpcHRow> chunk, TpcHConsumerAssignment assignment) {
@@ -95,7 +95,7 @@ public class TpcHAlgorithm {
             BigDecimal revenue = row.extendedPrice.multiply(row.discount);
             group.aggregates.put("revenue", ((BigDecimal)group.aggregates.get("revenue")).add(revenue));
         }
-        return new TpcHIntermediateResult(assignment.queryId, assignment.batchId, new ArrayList<>(groups.values()));
+        return new TpcHIntermediateResult(assignment.queryId, assignment.batchId, assignment.chunkIndex, 1, new ArrayList<>(groups.values()));
     }
 
     private static Map<String, Number> getPricingSummaryReportQueryAggregates() {

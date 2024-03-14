@@ -13,40 +13,35 @@
  */
 package io.openmessaging.benchmark.worker.commands;
 
-
-import io.openmessaging.benchmark.tpch.TpcHCommand;
-import io.openmessaging.benchmark.tpch.TpcHProducerAssignment;
+import io.openmessaging.benchmark.tpch.TpcHArguments;
 import io.openmessaging.benchmark.utils.distributor.KeyDistributorType;
 import java.util.List;
 
 public class ProducerWorkAssignment {
 
     public List<byte[]> payloadData;
-
     public double publishRate;
-
     public KeyDistributorType keyDistributorType;
-
-    public TpcHCommand tpcH = null;
-    public int index;
+    public TpcHArguments tpcHArguments = null;
+    public Integer producerIndex = null;
 
     public ProducerWorkAssignment withPublishRate(double publishRate) {
         ProducerWorkAssignment copy = new ProducerWorkAssignment();
         copy.keyDistributorType = this.keyDistributorType;
         copy.payloadData = this.payloadData;
         copy.publishRate = publishRate;
-        copy.tpcH = this.tpcH;
-        copy.index = this.index;
+        copy.tpcHArguments = this.tpcHArguments;
+        copy.producerIndex = this.producerIndex;
         return copy;
     }
 
-    public ProducerWorkAssignment withIndex(int index) {
+    public ProducerWorkAssignment withProducerIndex(Integer producerIndex) {
         ProducerWorkAssignment copy = new ProducerWorkAssignment();
         copy.keyDistributorType = this.keyDistributorType;
         copy.payloadData = this.payloadData;
-        copy.publishRate = publishRate;
-        copy.tpcH = this.tpcH;
-        copy.index = index;
+        copy.publishRate = this.publishRate;
+        copy.tpcHArguments = this.tpcHArguments;
+        copy.producerIndex = producerIndex;
         return copy;
     }
 }

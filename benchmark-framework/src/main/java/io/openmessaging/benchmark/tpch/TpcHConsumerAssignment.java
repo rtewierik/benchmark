@@ -13,12 +13,29 @@
  */
 package io.openmessaging.benchmark.tpch;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.openmessaging.benchmark.driver.TpcHQuery;
 
 public class TpcHConsumerAssignment {
-    public TpcHQuery query;
-    public String queryId = "default-query-id";
-    public String batchId = "default-batch-id";
-    public Integer index;
-    public String sourceDataS3Uri;
+    public final TpcHQuery query;
+    public final String queryId;
+    public final String batchId;
+    public final Integer chunkIndex;
+    public final Integer producerIndex;
+    public final String sourceDataS3Uri;
+
+    public TpcHConsumerAssignment(
+        @JsonProperty("query") TpcHQuery query,
+        @JsonProperty("queryId") String queryId,
+        @JsonProperty("batchId") String batchId,
+        @JsonProperty("chunkIndex") Integer chunkIndex,
+        @JsonProperty("producerIndex") Integer producerIndex,
+        @JsonProperty("sourceDataS3Uri") String sourceDataS3Uri) {
+        this.query = query;
+        this.queryId = queryId;
+        this.batchId = batchId;
+        this.chunkIndex = chunkIndex;
+        this.producerIndex = producerIndex;
+        this.sourceDataS3Uri = sourceDataS3Uri;
+    }
 }

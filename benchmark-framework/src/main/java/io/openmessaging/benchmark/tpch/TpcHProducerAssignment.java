@@ -14,19 +14,23 @@
 package io.openmessaging.benchmark.tpch;
 
 import io.openmessaging.benchmark.driver.TpcHQuery;
+import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
 
 public class TpcHProducerAssignment {
-    public String queryId;
-    public TpcHQuery query;
-    public String sourceDataS3FolderUri;
-    public int batchSize;
-    public int offset;
+    public final String queryId;
+    public final TpcHQuery query;
+    public final String sourceDataS3FolderUri;
+    public final Integer batchSize;
+    public final Integer numberOfMapResults;
+    public final Integer offset;
 
-    public TpcHProducerAssignment(TpcHCommand command, int offset) {
-        this.queryId = command.queryId;
-        this.query = command.query;
-        this.sourceDataS3FolderUri = command.sourceDataS3FolderUri;
-        this.batchSize = command.getNumberOfMapResults(offset);
-        this.offset = offset;
+    public TpcHProducerAssignment(ProducerWorkAssignment assignment) {
+        TpcHArguments arguments = assignment.tpcHArguments;
+        this.queryId = arguments.queryId;
+        this.query = arguments.query;
+        this.sourceDataS3FolderUri = arguments.sourceDataS3FolderUri;
+        this.batchSize = arguments.getDefaultNumberOfMapResults();
+        this.numberOfMapResults = arguments.getNumberOfMapResults(assignment.producerIndex);
+        this.offset = assignment.producerIndex;
     }
 }

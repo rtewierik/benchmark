@@ -13,7 +13,10 @@
  */
 package io.openmessaging.benchmark.tpch;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -21,67 +24,49 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class TpcHIntermediateResult {
-    public String queryId;
-    public String batchId;
-    public int numberOfAggregatedResults;
-    public List<TpcHIntermediateResultGroup> groups;
+    public final String queryId;
+    public final String batchId;
+    public final Integer chunkIndex;
+    public Integer numberOfAggregatedResults;
+    public final List<TpcHIntermediateResultGroup> groups;
     private final Lock lock = new ReentrantLock();
 
-    public TpcHIntermediateResult() {}
-
-    public TpcHIntermediateResult(List<TpcHIntermediateResultGroup> groups) {
-        this.queryId = "default-query-id";
-        this.batchId = "default-batch-id";
-        this.groups = groups;
-        this.numberOfAggregatedResults = 1;
-    }
-
-    public TpcHIntermediateResult(String queryId, String batchId, List<TpcHIntermediateResultGroup> groups) {
+    public TpcHIntermediateResult(
+            @JsonProperty("queryId") String queryId,
+            @JsonProperty("batchId") String batchId,
+            @JsonProperty("chunkIndex") Integer chunkIndex,
+            @JsonProperty("numberOfAggregatedResults") Integer numberOfAggregatedResults,
+            @JsonProperty("groups") List<TpcHIntermediateResultGroup> groups) {
         this.queryId = queryId;
         this.batchId = batchId;
-        this.groups = groups;
-        this.numberOfAggregatedResults = 1;
-    }
-
-    public TpcHIntermediateResult(String queryId, String batchId, int numberOfAggregatedResults, List<TpcHIntermediateResultGroup> groups) {
-        this.queryId = queryId;
-        this.batchId = batchId;
+        this.chunkIndex = chunkIndex;
         this.numberOfAggregatedResults = numberOfAggregatedResults;
         this.groups = groups;
     }
 
-    public TpcHIntermediateResultDto toDto() {
-        return new TpcHIntermediateResultDto(this.queryId, this.batchId, this.numberOfAggregatedResults, this.groups);
-    }
-
-    public static TpcHIntermediateResult fromDto(TpcHIntermediateResultDto dto) {
-        return new TpcHIntermediateResult(
-            dto.queryId,
-            dto.batchId,
-            dto.numberOfAggregatedResults,
-            dto.groups.stream().map(TpcHIntermediateResultGroup::fromDto).collect(Collectors.toList())
-        );
-    }
-
     public void aggregateIntermediateResult(TpcHIntermediateResult intermediateResult) {
-        lock.lock();
-        String queryId = intermediateResult.queryId;
         String batchId = intermediateResult.batchId;
-        if (this.queryId == null) {
-            this.queryId = queryId;
-        } else if (!this.queryId.equals(queryId)) {
-            throw new IllegalArgumentException(String.format("Inconsistent query ID \"%s\" found relative to \"%s\".", queryId, this.queryId));
-        }
-        if (this.batchId == null) {
-            this.batchId = batchId;
-        } else if (!this.batchId.equals(batchId)) {
+        if (!this.batchId.equals(batchId)) {
             throw new IllegalArgumentException(String.format("Inconsistent batch ID \"%s\" found relative to \"%s\".", batchId, this.batchId));
         }
+        this.aggregateResult(intermediateResult);
+    }
+
+    public void aggregateReducedResult(TpcHIntermediateResult reducedResult) {
+        this.aggregateResult(reducedResult);
+    }
+
+    private void aggregateResult(TpcHIntermediateResult result) {
+        lock.lock();
+        String queryId = result.queryId;
+        if (!this.queryId.equals(queryId)) {
+            throw new IllegalArgumentException(String.format("Inconsistent query ID \"%s\" found relative to \"%s\".", queryId, this.queryId));
+        }
         try {
-            for (TpcHIntermediateResultGroup group : intermediateResult.groups) {
+            for (TpcHIntermediateResultGroup group : result.groups) {
                 TpcHIntermediateResultGroup existingGroup = this.findGroupByIdentifiers(group.identifiers);
                 if (existingGroup == null) {
-                    this.groups.add(group.getClone());
+                    this.groups.add(new TpcHIntermediateResultGroup(group));
                 } else {
                     Map<String, Number> existingAggregates = existingGroup.aggregates;
                     for (Map.Entry<String, Number> aggregate : group.aggregates.entrySet()) {
@@ -102,7 +87,7 @@ public class TpcHIntermediateResult {
                     }
                 }
             }
-            this.numberOfAggregatedResults += intermediateResult.numberOfAggregatedResults;
+            this.numberOfAggregatedResults += result.numberOfAggregatedResults;
         } finally {
             lock.unlock();;
         }

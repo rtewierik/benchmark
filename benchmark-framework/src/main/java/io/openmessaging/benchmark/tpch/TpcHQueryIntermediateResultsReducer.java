@@ -41,7 +41,7 @@ public class TpcHQueryIntermediateResultsReducer {
 
     // TO DO: Break up function into two separate ones working with domain-specific models after refactor to optimize.
     private static TpcHIntermediateResult applyReduceToChunkGeneric(List<TpcHIntermediateResult> chunk) {
-        TpcHIntermediateResult result = new TpcHIntermediateResult(new ArrayList<>());
+        TpcHIntermediateResult result = new TpcHIntermediateResult("query-id", "batch-id", 0, 1, new ArrayList<>());
         for (TpcHIntermediateResult intermediateResult : chunk) {
             result.aggregateIntermediateResult(intermediateResult);
         }

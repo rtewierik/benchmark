@@ -13,10 +13,28 @@
  */
 package io.openmessaging.benchmark.tpch;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.UUID;
 
 public class TpcHMessage {
-    public String messageId = UUID.randomUUID().toString();
-    public TpcHMessageType type;
-    public String message;
+    public final String messageId;
+    public final TpcHMessageType type;
+    public final String message;
+
+    public TpcHMessage(TpcHMessageType type, String message) {
+        this.messageId = UUID.randomUUID().toString();
+        this.type = type;
+        this.message = message;
+    }
+
+    public TpcHMessage(
+        @JsonProperty("messageId") String messageId,
+        @JsonProperty("type") TpcHMessageType type,
+        @JsonProperty("message") String message
+    ) {
+        this.messageId = messageId;
+        this.type = type;
+        this.message = message;
+    }
 }

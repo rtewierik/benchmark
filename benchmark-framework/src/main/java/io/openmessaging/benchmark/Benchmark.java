@@ -92,8 +92,9 @@ public class Benchmark {
     }
 
     public static void main(String[] args) throws Exception {
-        benchmark(new String[] { "--drivers", "workloads/redis-default.yaml", "--tpc-h-file", "workloads/tpc-h-default.yaml", "workloads/simple-workload.yaml" });
+        // benchmark(new String[] { "--drivers", "workloads/redis-default.yaml", "--tpc-h-file", "workloads/tpc-h-default.yaml", "workloads/simple-workload.yaml" });
         // testTpcHAlgorithmLocally();
+        benchmark(args);
     }
 
     private static void testTpcHAlgorithmLocally() {
@@ -116,7 +117,8 @@ public class Benchmark {
             System.out.printf("[INFO] Applying map to chunk \"%s\"...%n", chunkFile);
             try (InputStream stream = Files.newInputStream(Paths.get(chunkFile))) {
                 List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
-                TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, query, new TpcHConsumerAssignment());
+                TpcHConsumerAssignment assignment = new TpcHConsumerAssignment(query, null, null, null, null, null);
+                TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, query, assignment);
                 chunk.add(result);
             } catch (IOException exception) {
                 exception.printStackTrace();
@@ -184,13 +186,13 @@ public class Benchmark {
 
         log.info("Workloads: {}", writer.writeValueAsString(workloads));
 
-        TpcHCommand tpcHCommand;
+        TpcHArguments tpcHArguments;
         if (arguments.tpcHFile != null) {
-            tpcHCommand = mapper.readValue(arguments.tpcHFile, TpcHCommand.class);
+            tpcHArguments = mapper.readValue(arguments.tpcHFile, TpcHArguments.class);
         } else {
-            tpcHCommand = null;
+            tpcHArguments = null;
         }
-        log.info("TPC-H command: {}", writer.writeValueAsString(tpcHCommand));
+        log.info("TPC-H arguments: {}", writer.writeValueAsString(tpcHArguments));
 
         Worker worker;
         LocalWorker localWorker = new LocalWorker();
@@ -230,7 +232,7 @@ public class Benchmark {
                                     }
 
                                     WorkloadGenerator generator =
-                                            new WorkloadGenerator(driverConfiguration.name, workload, tpcHCommand, worker, localWorker);
+                                            new WorkloadGenerator(driverConfiguration.name, workload, tpcHArguments, worker, localWorker);
 
                                     TestResult result = generator.run();
 

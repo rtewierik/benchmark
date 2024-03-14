@@ -28,6 +28,14 @@ public class TopicSubscription {
         this.info = info;
     }
 
+    public TopicSubscription withSubscription(String subscription) {
+        TopicSubscription copy = new TopicSubscription();
+        copy.topic = this.topic;
+        copy.subscription = subscription;
+        copy.info = info;
+        return copy;
+    }
+
     @Override
     public String toString() {
         return "TopicSubscription{" +

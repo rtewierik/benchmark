@@ -15,7 +15,6 @@ package io.openmessaging.benchmark.client;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
@@ -32,16 +31,15 @@ public class AmazonS3Client {
     private final AmazonS3 s3Client;
 
     public AmazonS3Client() {
-        String accessKeyId = "AKIASAWOQJQTNAUKRPOY";
+        String accessKeyId = "AKIASAWOQJQTKCRZ4T5Z";
         String secretAccessKey = "";
 
-        // Create AWS credentials object
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKeyId, secretAccessKey);
 
         this.s3Client = AmazonS3ClientBuilder
             .standard()
             .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-            .withRegion("eu-west-1")
+                .withRegion("eu-west-1")
             .build();
     }
 

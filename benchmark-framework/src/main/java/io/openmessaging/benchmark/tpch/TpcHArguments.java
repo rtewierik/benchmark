@@ -13,14 +13,29 @@
  */
 package io.openmessaging.benchmark.tpch;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.openmessaging.benchmark.driver.TpcHQuery;
 
-public class TpcHCommand {
-    public String queryId;
-    public TpcHQuery query;
-    public String sourceDataS3FolderUri;
-    public int numberOfChunks;
-    public int numberOfReducers;
+public class TpcHArguments {
+    public final String queryId;
+    public final TpcHQuery query;
+    public final String sourceDataS3FolderUri;
+    public final Integer numberOfChunks;
+    public final Integer numberOfReducers;
+
+    public TpcHArguments(
+        @JsonProperty("queryId") String queryId,
+        @JsonProperty("query") TpcHQuery query,
+        @JsonProperty("sourceDataS3FolderUri") String sourceDataS3FolderUri,
+        @JsonProperty("numberOfChunks") Integer numberOfChunks,
+        @JsonProperty("numberOFReducers") Integer numberOfReducers
+    ) {
+        this.queryId = queryId;
+        this.query = query;
+        this.sourceDataS3FolderUri = sourceDataS3FolderUri;
+        this.numberOfChunks = numberOfChunks;
+        this.numberOfReducers = numberOfReducers;
+    }
 
     public int getNumberOfMapResults(int index) {
         int actualIndex = index % numberOfReducers;
@@ -31,7 +46,7 @@ public class TpcHCommand {
         return numberOfChunks - (numberOfReducers - 1) * defaultNumberOfIntermediateResults;
     }
 
-    private int getDefaultNumberOfMapResults() {
+    public int getDefaultNumberOfMapResults() {
         return (int)Math.ceil((double)this.numberOfChunks / this.numberOfReducers);
     }
 }

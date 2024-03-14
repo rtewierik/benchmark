@@ -32,7 +32,7 @@ sudo bin/benchmark \
   ec2-02 ansible_host=yy.yy.yy.yy
   ec2-03 ansible_host=zz.zz.zz.zz
 ```
-
+* Update `host_vars/*` with the private IP addresses of each of the EC2 instances.
 * Execute playbook e.g. `ansible-playbook -i inventory.ini your_playbook.yml`
 
 ```

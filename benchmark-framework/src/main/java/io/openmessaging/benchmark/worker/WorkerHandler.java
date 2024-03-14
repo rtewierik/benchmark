@@ -101,7 +101,7 @@ public class WorkerHandler {
 
         log.info("ConsumerAssignment payload: {}", ctx.body());
         log.info(
-                "Received create consumers request for topics: {}", consumerAssignment.topicsSubscriptions);
+                "Received create consumers request for topics: {}", writer.writeValueAsString(consumerAssignment.topicsSubscriptions));
         localWorker.createConsumers(consumerAssignment);
     }
 
@@ -117,10 +117,14 @@ public class WorkerHandler {
         ProducerWorkAssignment producerWorkAssignment =
                 mapper.readValue(ctx.body(), ProducerWorkAssignment.class);
 
+        int length = producerWorkAssignment.payloadData.isEmpty()
+            ? 0
+            : producerWorkAssignment.payloadData.get(0).length;
         log.info(
-                "Start load publish-rate: {} msg/s -- payload-size: {}",
+                "Start load publish-rate: {} msg/s -- payload-size: {} -- producer index: {}",
                 producerWorkAssignment.publishRate,
-                producerWorkAssignment.payloadData.get(0).length);
+                length,
+                producerWorkAssignment.producerIndex);
 
         localWorker.startLoad(producerWorkAssignment);
     }

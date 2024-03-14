@@ -13,26 +13,25 @@
  */
 package io.openmessaging.benchmark.driver;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class TpcHInfo {
-    public String queryId;
-    public TpcHQuery query;
-    public TpcHConsumer consumer;
-    public Integer index;
-    public Integer numberOfMapResults;
-    public Integer numberOfReduceResults;
+    public final String queryId;
+    public final TpcHQuery query;
+    public final TpcHConsumer consumer;
+    public final Integer numberOfMapResults;
+    public final Integer numberOfReduceResults;
 
     public TpcHInfo(
-        String queryId,
-        TpcHQuery query,
-        TpcHConsumer consumer,
-        Integer index,
-        Integer numberOfMapResults,
-        Integer numberOfReduceResults
+        @JsonProperty("queryId") String queryId,
+        @JsonProperty("query") TpcHQuery query,
+        @JsonProperty("consumer") TpcHConsumer consumer,
+        @JsonProperty("numberOfMapResults") Integer numberOfMapResults,
+        @JsonProperty("numberOfReduceResults") Integer numberOfReduceResults
     ) {
         this.queryId = queryId;
         this.query = query;
         this.consumer = consumer;
-        this.index = index;
         this.numberOfMapResults = numberOfMapResults;
         this.numberOfReduceResults = numberOfReduceResults;
     }

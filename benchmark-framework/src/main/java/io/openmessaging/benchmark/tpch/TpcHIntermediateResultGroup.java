@@ -13,36 +13,30 @@
  */
 package io.openmessaging.benchmark.tpch;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class TpcHIntermediateResultGroup {
-    public Map<String, Object> identifiers = new HashMap<>();
-    public Map<String, Number> aggregates;
+    public final Map<String, Object> identifiers;
+    public final Map<String, Number> aggregates;
 
     public TpcHIntermediateResultGroup(Map<String, Number> aggregates) {
+        this.identifiers = new HashMap<>();
         this.aggregates = aggregates;
     }
+    public TpcHIntermediateResultGroup(TpcHIntermediateResultGroup otherGroup) {
+        this.identifiers = otherGroup.identifiers;
+        this.aggregates = (Map<String, Number>)((HashMap<String, Number>)otherGroup.aggregates).clone();
+    }
 
-    public TpcHIntermediateResultGroup(Map<String, Object> identifiers, Map<String, Number> aggregates) {
+    public TpcHIntermediateResultGroup(
+        @JsonProperty("identifiers") Map<String, Object> identifiers,
+        @JsonProperty("aggregates") Map<String, Number> aggregates
+    ) {
         this.identifiers = identifiers;
         this.aggregates = aggregates;
-    }
-
-    public TpcHIntermediateResultGroupDto toDto() {
-        return new TpcHIntermediateResultGroupDto(this.identifiers, this.aggregates);
-    }
-
-    public static TpcHIntermediateResultGroup fromDto(TpcHIntermediateResultGroupDto dto) {
-        return new TpcHIntermediateResultGroup(dto.identifiers, dto.aggregates);
-    }
-
-    public TpcHIntermediateResultGroup getClone() {
-        Map<String, Number> hashMapClone = (Map<String, Number>)((HashMap<String, Number>)aggregates).clone();
-        TpcHIntermediateResultGroup clone = new TpcHIntermediateResultGroup(hashMapClone);
-        clone.identifiers = identifiers;
-        return clone;
     }
 
     @Override
