@@ -374,7 +374,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         }
         TpcHIntermediateResult existingIntermediateResult = this.collectedIntermediateResults.get(intermediateResult.batchId);
         existingIntermediateResult.aggregateIntermediateResult(intermediateResult);
-        if (existingIntermediateResult.numberOfAggregatedResults == info.numberOfMapResults) {
+        if (Objects.equals(existingIntermediateResult.numberOfAggregatedResults, info.numberOfMapResults)) {
             BenchmarkProducer producer = this.producers.get(TpcHConstants.REDUCE_DST_INDEX);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
             TpcHMessage message = new TpcHMessage(
@@ -396,7 +396,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         }
         TpcHIntermediateResult existingIntermediateResult = this.collectedReducedResults.get(reducedResult.batchId);
         existingIntermediateResult.aggregateIntermediateResult(reducedResult);
-        if (existingIntermediateResult.numberOfAggregatedResults == info.numberOfReduceResults) {
+        if (Objects.equals(existingIntermediateResult.numberOfAggregatedResults, info.numberOfReduceResults)) {
             TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingIntermediateResult, info.query);
             log.info("[LocalWorker] TPC-H query result: {}", writer.writeValueAsString(result));
             testCompleted = true;

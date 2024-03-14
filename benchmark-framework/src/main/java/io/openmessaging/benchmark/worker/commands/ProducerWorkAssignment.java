@@ -39,7 +39,7 @@ public class ProducerWorkAssignment {
         ProducerWorkAssignment copy = new ProducerWorkAssignment();
         copy.keyDistributorType = this.keyDistributorType;
         copy.payloadData = this.payloadData;
-        copy.publishRate = publishRate;
+        copy.publishRate = this.publishRate;
         copy.tpcHArguments = this.tpcHArguments;
         copy.producerIndex = producerIndex;
         return copy;

@@ -92,8 +92,9 @@ public class Benchmark {
     }
 
     public static void main(String[] args) throws Exception {
-        benchmark(new String[] { "--drivers", "workloads/redis-default.yaml", "--tpc-h-file", "workloads/tpc-h-default.yaml", "workloads/simple-workload.yaml" });
+        // benchmark(new String[] { "--drivers", "workloads/redis-default.yaml", "--tpc-h-file", "workloads/tpc-h-default.yaml", "workloads/simple-workload.yaml" });
         // testTpcHAlgorithmLocally();
+        benchmark(args);
     }
 
     private static void testTpcHAlgorithmLocally() {
