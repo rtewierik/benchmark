@@ -121,9 +121,10 @@ public class WorkerHandler {
             ? 0
             : producerWorkAssignment.payloadData.get(0).length;
         log.info(
-                "Start load publish-rate: {} msg/s -- payload-size: {}",
+                "Start load publish-rate: {} msg/s -- payload-size: {} -- producer index: {}",
                 producerWorkAssignment.publishRate,
-                length);
+                length,
+                producerWorkAssignment.producerIndex);
 
         localWorker.startLoad(producerWorkAssignment);
     }

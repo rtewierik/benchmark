@@ -46,7 +46,7 @@ public class TpcHArguments {
         return numberOfChunks - (numberOfReducers - 1) * defaultNumberOfIntermediateResults;
     }
 
-    private int getDefaultNumberOfMapResults() {
+    public int getDefaultNumberOfMapResults() {
         return (int)Math.ceil((double)this.numberOfChunks / this.numberOfReducers);
     }
 }

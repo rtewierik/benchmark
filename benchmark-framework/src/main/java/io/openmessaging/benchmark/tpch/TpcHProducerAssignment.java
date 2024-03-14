@@ -21,6 +21,7 @@ public class TpcHProducerAssignment {
     public final TpcHQuery query;
     public final String sourceDataS3FolderUri;
     public final Integer batchSize;
+    public final Integer numberOfMapResults;
     public final Integer offset;
 
     public TpcHProducerAssignment(ProducerWorkAssignment assignment) {
@@ -28,7 +29,8 @@ public class TpcHProducerAssignment {
         this.queryId = arguments.queryId;
         this.query = arguments.query;
         this.sourceDataS3FolderUri = arguments.sourceDataS3FolderUri;
-        this.batchSize = arguments.getNumberOfMapResults(assignment.producerIndex);
+        this.batchSize = arguments.getDefaultNumberOfMapResults();
+        this.numberOfMapResults = arguments.getNumberOfMapResults(assignment.producerIndex);
         this.offset = assignment.producerIndex;
     }
 }

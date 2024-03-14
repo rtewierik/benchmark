@@ -30,10 +30,13 @@ import io.openmessaging.benchmark.worker.commands.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,15 +113,17 @@ public class DistributedWorkersEnsemble implements Worker {
         double newRate = producerWorkAssignment.publishRate / numberOfUsedProducerWorkers;
         log.debug("Setting worker assigned publish rate to {} msgs/sec", newRate);
         List<Worker> workersToStart = producerWorkAssignment.tpcHArguments != null ? this.workers : this.producerWorkers;
-        AtomicInteger producerIndex = new AtomicInteger();
-        workersToStart.parallelStream()
+        List<AbstractMap.SimpleEntry<Worker, Integer>> workersToStartWithIndices = IntStream.range(0, workersToStart.size())
+                .mapToObj(i -> new AbstractMap.SimpleEntry<Worker, Integer>(workersToStart.get(i), i) {})
+                .collect(Collectors.toList());
+        workersToStartWithIndices.parallelStream()
             .forEach(
                 w -> {
                     try {
-                        w.startLoad(
+                        w.getKey().startLoad(
                             producerWorkAssignment
                                 .withPublishRate(newRate)
-                                .withProducerIndex(producerIndex.getAndIncrement())
+                                .withProducerIndex(w.getValue())
                         );
                     } catch (IOException e) {
                         throw new RuntimeException(e);

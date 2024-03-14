@@ -35,7 +35,7 @@ public class ProducerWorkAssignment {
         return copy;
     }
 
-    public ProducerWorkAssignment withProducerIndex(int producerIndex) {
+    public ProducerWorkAssignment withProducerIndex(Integer producerIndex) {
         ProducerWorkAssignment copy = new ProducerWorkAssignment();
         copy.keyDistributorType = this.keyDistributorType;
         copy.payloadData = this.payloadData;
