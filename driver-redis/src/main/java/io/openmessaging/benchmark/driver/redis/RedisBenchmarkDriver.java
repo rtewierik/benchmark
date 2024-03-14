@@ -70,18 +70,7 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
             setupJedisConn();
         }
         try (Jedis jedis = this.jedisPool.getResource()) {
-            List<StreamGroupInfo> groupsInfo = jedis.xinfoGroups(topic);
-            boolean groupExists = false;
-            for (StreamGroupInfo groupInfo : groupsInfo) {
-                String currentGroupName = groupInfo.getName();
-                if (currentGroupName.equals(subscriptionName)) {
-                    groupExists = true;
-                    break;
-                }
-            }
-            if (!groupExists) {
-                jedis.xgroupCreate(topic, subscriptionName, null, true);
-            }
+            jedis.xgroupCreate(topic, subscriptionName, null, true);
         } catch (Exception e) {
             log.info("Failed to create consumer instance.", e);
         }
