@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.benchmark.worker.jackson;
+package io.openmessaging.benchmark.common.serialization;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Random;
+
 import org.HdrHistogram.Histogram;
 import org.junit.jupiter.api.Test;
 

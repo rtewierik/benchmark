@@ -11,13 +11,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.benchmark.worker.jackson;
-
+package io.openmessaging.benchmark.common;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import io.openmessaging.benchmark.common.serialization.HistogramDeserializer;
+import io.openmessaging.benchmark.common.serialization.HistogramSerializer;
 import org.HdrHistogram.Histogram;
 
 public enum ObjectMappers {

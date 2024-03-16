@@ -41,8 +41,8 @@
 
     <modules>
         <module>benchmark-framework</module>
+        <module>common</module>
         <module>driver-api</module>
-
         <module>driver-pravega</module>
         <module>driver-pulsar</module>
         <module>driver-kafka</module>
