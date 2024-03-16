@@ -47,8 +47,6 @@ public class WorkerHandler {
     public static final String CUMULATIVE_LATENCIES = "/cumulative-latencies";
     public static final String COUNTERS_STATS = "/counters-stats";
     public static final String RESET_STATS = "/reset-stats";
-    public static final String CREATE_TPC_H_MAP_COORDINATOR = "/create-tpc-h-map-initiator";
-    public static final String CREATE_TPC_H_REDUCE_COORDINATOR = "/create-tpc-h-reduce-initiator";
     private final Worker localWorker;
 
     public WorkerHandler(Javalin app, StatsLogger statsLogger) {

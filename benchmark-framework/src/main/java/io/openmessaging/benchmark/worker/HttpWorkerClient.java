@@ -18,8 +18,6 @@ import static io.openmessaging.benchmark.worker.WorkerHandler.COUNTERS_STATS;
 import static io.openmessaging.benchmark.worker.WorkerHandler.CREATE_CONSUMERS;
 import static io.openmessaging.benchmark.worker.WorkerHandler.CREATE_PRODUCERS;
 import static io.openmessaging.benchmark.worker.WorkerHandler.CREATE_TOPICS;
-import static io.openmessaging.benchmark.worker.WorkerHandler.CREATE_TPC_H_MAP_COORDINATOR;
-import static io.openmessaging.benchmark.worker.WorkerHandler.CREATE_TPC_H_REDUCE_COORDINATOR;
 import static io.openmessaging.benchmark.worker.WorkerHandler.CUMULATIVE_LATENCIES;
 import static io.openmessaging.benchmark.worker.WorkerHandler.INITIALIZE_DRIVER;
 import static io.openmessaging.benchmark.worker.WorkerHandler.PAUSE_CONSUMERS;

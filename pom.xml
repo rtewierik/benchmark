@@ -262,6 +262,7 @@
                         <exclude>**/.pydevproject</exclude>
                         <exclude>.github/**</exclude>
                         <exclude>benchmark-monitoring/**</exclude>
+                        <exclude>sns-sqs-driver/**</exclude>
                         <exclude>**/deploy/**</exclude>
                         <exclude>**/deploy-low-cost/**</exclude>
                         <exclude>**/tf_ansible_vars.yml</exclude>
