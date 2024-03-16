@@ -19,11 +19,11 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.io.Files;
 import io.javalin.Context;
 import io.javalin.Javalin;
+import io.openmessaging.benchmark.common.ObjectMappers;
 import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
 import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
 import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
 import io.openmessaging.benchmark.worker.commands.TopicsInfo;
-import io.openmessaging.benchmark.worker.jackson.ObjectMappers;
 import java.io.File;
 import java.util.List;
 import org.apache.bookkeeper.stats.StatsLogger;
@@ -47,8 +47,6 @@ public class WorkerHandler {
     public static final String CUMULATIVE_LATENCIES = "/cumulative-latencies";
     public static final String COUNTERS_STATS = "/counters-stats";
     public static final String RESET_STATS = "/reset-stats";
-    public static final String CREATE_TPC_H_MAP_COORDINATOR = "/create-tpc-h-map-initiator";
-    public static final String CREATE_TPC_H_REDUCE_COORDINATOR = "/create-tpc-h-reduce-initiator";
     private final Worker localWorker;
 
     public WorkerHandler(Javalin app, StatsLogger statsLogger) {

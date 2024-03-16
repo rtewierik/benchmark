@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.openmessaging.benchmark.driver.TpcHQuery;
-import io.openmessaging.benchmark.tpch.*;
 import io.openmessaging.benchmark.worker.DistributedWorkersEnsemble;
 import io.openmessaging.benchmark.worker.HttpWorkerClient;
 import io.openmessaging.benchmark.worker.LocalWorker;
@@ -37,6 +36,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import io.openmessaging.tpch.algorithm.TpcHAlgorithm;
+import io.openmessaging.tpch.algorithm.TpcHDataParser;
+import io.openmessaging.tpch.algorithm.TpcHQueryIntermediateResultsReducer;
+import io.openmessaging.tpch.model.*;
+import io.openmessaging.tpch.algorithm.TpcHQueryResultGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

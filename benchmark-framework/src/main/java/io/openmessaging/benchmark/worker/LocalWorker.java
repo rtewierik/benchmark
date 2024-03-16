@@ -22,28 +22,30 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Preconditions;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.DriverConfiguration;
-import io.openmessaging.benchmark.client.AmazonS3Client;
+import io.openmessaging.benchmark.common.ObjectMappers;
+import io.openmessaging.benchmark.common.key.distribution.KeyDistributor;
 import io.openmessaging.benchmark.driver.*;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ConsumerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
-import io.openmessaging.benchmark.tpch.*;
 import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.utils.UniformRateLimiter;
-import io.openmessaging.benchmark.utils.distributor.KeyDistributor;
-import io.openmessaging.benchmark.utils.distributor.KeyDistributorType;
 import io.openmessaging.benchmark.worker.commands.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
-import io.openmessaging.benchmark.worker.jackson.ObjectMappers;
+import io.openmessaging.tpch.*;
+import io.openmessaging.tpch.model.TpcHConsumerAssignment;
+import io.openmessaging.tpch.model.TpcHMessage;
+import io.openmessaging.tpch.model.TpcHMessageType;
+import io.openmessaging.tpch.model.TpcHProducerAssignment;
+import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
@@ -61,18 +63,13 @@ public class LocalWorker implements Worker, ConsumerCallback {
         For TPC-H queries, the consumers list is allocated with the consumers for all the assigned reducers.
      */
     private final List<BenchmarkConsumer> consumers = new ArrayList<>();
-    private volatile MessageProducer messageProducer;
+    private volatile MessageProducerImpl messageProducer;
+    private final TpcHMessageProcessor tpcHMessageProcessor;
     private final ExecutorService executor =
             Executors.newCachedThreadPool(new DefaultThreadFactory("local-worker"));
     private final WorkerStats stats;
     private boolean testCompleted = false;
     private boolean consumersArePaused = false;
-    private final Map<String, TpcHIntermediateResult> collectedIntermediateResults = new ConcurrentHashMap<>();
-    private final Map<String, TpcHIntermediateResult> collectedReducedResults = new ConcurrentHashMap<>();
-    private final Set<String> processedMessages = new ConcurrentSkipListSet<>();
-    private final Set<String> processedIntermediateResults = new ConcurrentSkipListSet<>();
-    private final Set<String> processedReducedResults = new ConcurrentSkipListSet<>();
-    private final AmazonS3Client s3Client = new AmazonS3Client();
     private static final ObjectWriter messageWriter = ObjectMappers.DEFAULT.writer();
 
     public LocalWorker() {
@@ -80,8 +77,14 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     public LocalWorker(StatsLogger statsLogger) {
-        stats = new WorkerStats(statsLogger);
-        updateMessageProducer(1.0);
+        this.stats = new WorkerStats(statsLogger);
+        this.messageProducer = new MessageProducerImpl(new UniformRateLimiter(1.0), stats);
+        this.tpcHMessageProcessor = new TpcHMessageProcessor(
+            this.producers,
+            this.messageProducer,
+            () -> testCompleted = true,
+            log
+        );
     }
 
     @Override
@@ -189,7 +192,10 @@ public class LocalWorker implements Worker, ConsumerCallback {
         executor.submit(
                 () -> {
                     BenchmarkProducer producer = producers.get(TpcHConstants.MAP_CMD_INDEX);
-                    TpcHProducerAssignment assignment = new TpcHProducerAssignment(producerWorkAssignment);
+                    TpcHProducerAssignment assignment = new TpcHProducerAssignment(
+                        producerWorkAssignment.tpcHArguments,
+                        producerWorkAssignment.producerIndex
+                    );
                     AtomicInteger currentAssignment = new AtomicInteger();
                     KeyDistributor keyDistributor = KeyDistributor.build(producerWorkAssignment.keyDistributorType);
                     int batchSize = assignment.batchSize;
@@ -281,7 +287,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     private void updateMessageProducer(double publishRate) {
-        messageProducer = new MessageProducer(new UniformRateLimiter(publishRate), stats);
+        messageProducer = new MessageProducerImpl(new UniformRateLimiter(publishRate), stats);
+        tpcHMessageProcessor.updateMessageProducer(this.messageProducer);
     }
 
     @Override
@@ -320,122 +327,11 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     private void handleTpcHMessage(TpcHMessage message, TpcHInfo info) throws IOException {
-        String messageId = message.messageId;
-        if (processedMessages.contains(messageId)) {
-            return;
-        } else {
-            processedMessages.add(messageId);
-        }
-        switch (message.type) {
-            case ConsumerAssignment:
-                TpcHConsumerAssignment assignment = mapper.readValue(message.message, TpcHConsumerAssignment.class);
-                processConsumerAssignment(assignment, info);
-                break;
-            case IntermediateResult:
-                TpcHIntermediateResult intermediateResult = mapper.readValue(message.message, TpcHIntermediateResult.class);
-                processIntermediateResult(intermediateResult, info);
-                break;
-            case ReducedResult:
-                TpcHIntermediateResult reducedResult = mapper.readValue(message.message, TpcHIntermediateResult.class);
-                processReducedResult(reducedResult, info);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid message type detected!");
-        }
+        tpcHMessageProcessor.processTpcHMessage(message, info);
     }
 
     public boolean getTestCompleted() {
         return this.testCompleted;
-    }
-
-    private void processConsumerAssignment(TpcHConsumerAssignment assignment, TpcHInfo info) {
-        String s3Uri = assignment.sourceDataS3Uri;
-        log.info("[INFO] Applying map to chunk \"{}\"...", s3Uri);
-        try (InputStream stream = this.s3Client.readTpcHChunkFromS3(s3Uri)) {
-            List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
-            TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, info.query, assignment);
-            int producerIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.producerIndex;
-            BenchmarkProducer producer = this.producers.get(producerIndex);
-            KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
-            TpcHMessage message = new TpcHMessage(
-                TpcHMessageType.IntermediateResult,
-                messageWriter.writeValueAsString(result)
-            );
-            String key = keyDistributor.next();
-            Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
-            this.messageProducer.sendMessage(
-                producer,
-                optionalKey,
-                messageWriter.writeValueAsBytes(message)
-            );
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
-    }
-
-    private void processIntermediateResult(TpcHIntermediateResult intermediateResult, TpcHInfo info) throws IOException {
-        String chunkId = this.getChunkId(intermediateResult);
-        String batchId = intermediateResult.batchId;
-        if (processedIntermediateResults.contains(chunkId)) {
-            log.info("Ignored intermediate result with chunk ID {} due to duplicity!", chunkId);
-            return;
-        } else {
-            processedIntermediateResults.add(chunkId);
-        }
-        TpcHIntermediateResult existingIntermediateResult;
-        if (!this.collectedIntermediateResults.containsKey(batchId)) {
-            this.collectedIntermediateResults.put(batchId, intermediateResult);
-            existingIntermediateResult = intermediateResult;
-        } else {
-            existingIntermediateResult = this.collectedIntermediateResults.get(batchId);
-            existingIntermediateResult.aggregateIntermediateResult(intermediateResult);
-        }
-        if (existingIntermediateResult.numberOfAggregatedResults.intValue() == info.numberOfMapResults.intValue()) {
-            BenchmarkProducer producer = this.producers.get(TpcHConstants.REDUCE_DST_INDEX);
-            KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
-            String reducedResult = messageWriter.writeValueAsString(existingIntermediateResult);
-            TpcHMessage message = new TpcHMessage(
-                TpcHMessageType.ReducedResult,
-                reducedResult
-            );
-            String key = keyDistributor.next();
-            Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
-            log.debug("Sending reduced result: {}", reducedResult);
-            this.messageProducer.sendMessage(
-                producer,
-                optionalKey,
-                messageWriter.writeValueAsBytes(message)
-            );
-        }
-    }
-
-    private void processReducedResult(TpcHIntermediateResult reducedResult, TpcHInfo info) throws IOException {
-        String batchId = reducedResult.batchId;
-        if (processedReducedResults.contains(batchId)) {
-            log.info("Ignored reduced result with batch ID {} due to duplicity!", batchId);
-            return;
-        } else {
-            processedReducedResults.add(batchId);
-        }
-        TpcHIntermediateResult existingReducedResult;
-        if (!this.collectedReducedResults.containsKey(reducedResult.queryId)) {;
-            this.collectedReducedResults.put(reducedResult.queryId, reducedResult);
-            existingReducedResult = reducedResult;
-        } else {
-            existingReducedResult = this.collectedReducedResults.get(reducedResult.queryId);
-            existingReducedResult.aggregateReducedResult(reducedResult);
-        }
-        log.debug(
-            "Detected reduced result: {}\n\n{}\n\n{}",
-            writer.writeValueAsString(reducedResult),
-            writer.writeValueAsString(existingReducedResult),
-            writer.writeValueAsString(info)
-        );
-        if (existingReducedResult.numberOfAggregatedResults.intValue() == info.numberOfReduceResults.intValue()) {
-            TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult, info.query);
-            log.info("[LocalWorker] TPC-H query result: {}", writer.writeValueAsString(result));
-            testCompleted = true;
-        }
     }
 
     public void internalMessageReceived(int size, long publishTimestamp) {
@@ -509,10 +405,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
     @Override
     public void close() throws Exception {
         executor.shutdown();
-    }
-
-    private String getChunkId(TpcHIntermediateResult result) {
-        return String.format("%s_%d", result.batchId, result.chunkIndex);
     }
 
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
