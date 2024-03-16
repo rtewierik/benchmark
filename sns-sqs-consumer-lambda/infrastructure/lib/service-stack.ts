@@ -17,7 +17,7 @@ import {
   Role,
   ServicePrincipal,
 } from 'aws-cdk-lib/aws-iam'
-import { SnsSqsDriverStackProps } from './stack-configuration'
+import { SnsSqsConsumerLambdaStackProps } from './stack-configuration'
 
 import { addMonitoring } from '../modules/monitoring'
 import { addAlerting } from '../modules/alerting'
@@ -31,20 +31,20 @@ interface DataIngestionLayer {
 }
 
 export class ServiceStack extends Stack {
-  constructor(scope: App, id: string, props: SnsSqsDriverStackProps) {
+  constructor(scope: App, id: string, props: SnsSqsConsumerLambdaStackProps) {
     super(scope, id, props)
 
-    const kmsKey = this.createSnsSqsDriverKmsKey(props)
-    const { sqsQueue, ingestionDeadLetterQueue } = this.createSnsSqsDriverDataIngestionLayer(kmsKey, props)
-    const deadLetterQueue = this.createSnsSqsDriverLambdaDeadLetterQueue(props)
-    const lambda = this.createSnsSqsDriverLambda(sqsQueue, kmsKey, deadLetterQueue, props)
-    this.createSnsSqsDriverDynamoDb(lambda, kmsKey, props)
+    const kmsKey = this.createSnsSqsConsumerLambdaKmsKey(props)
+    const { sqsQueue, ingestionDeadLetterQueue } = this.createSnsSqsConsumerLambdaDataIngestionLayer(kmsKey, props)
+    const deadLetterQueue = this.createSnsSqsConsumerLambdaLambdaDeadLetterQueue(props)
+    const lambda = this.createSnsSqsConsumerLambdaLambda(sqsQueue, kmsKey, deadLetterQueue, props)
+    this.createSnsSqsConsumerLambdaDynamoDb(lambda, kmsKey, props)
     addMonitoring(this, sqsQueue, lambda, deadLetterQueue, ingestionDeadLetterQueue, props)
     addAlerting(this, lambda, deadLetterQueue, ingestionDeadLetterQueue, props)
   }
 
-  private createSnsSqsDriverKmsKey(props: SnsSqsDriverStackProps): Key {
-    return new Key(this, 'SnsSqsDriverKmsKey', {
+  private createSnsSqsConsumerLambdaKmsKey(props: SnsSqsConsumerLambdaStackProps): Key {
+    return new Key(this, 'SnsSqsConsumerLambdaKmsKey', {
       description:
         'The KMS key used to encrypt the SQS queue used in Benchmark Monitoring',
       alias: `${props.appName}-sqs-encryption`,
@@ -53,8 +53,8 @@ export class ServiceStack extends Stack {
     })
   }
 
-  private createSnsSqsDriverDataIngestionLayer(kmsKey: Key, props: SnsSqsDriverStackProps): DataIngestionLayer {
-    const { sqsQueue, deadLetterQueue, apiGatewayRole } = new ApiGatewayToSqs(this, 'SnsSqsDriverDataIngestion', {
+  private createSnsSqsConsumerLambdaDataIngestionLayer(kmsKey: Key, props: SnsSqsConsumerLambdaStackProps): DataIngestionLayer {
+    const { sqsQueue, deadLetterQueue, apiGatewayRole } = new ApiGatewayToSqs(this, 'SnsSqsConsumerLambdaDataIngestion', {
       queueProps: {
         queueName: props.appName,
         visibilityTimeout: Duration.seconds(props.eventsVisibilityTimeoutSeconds),
@@ -74,10 +74,10 @@ export class ServiceStack extends Stack {
     return { sqsQueue, ingestionDeadLetterQueue: deadLetterQueue.queue }
   }
 
-  private createSnsSqsDriverLambdaDeadLetterQueue(props: SnsSqsDriverStackProps): IQueue {
+  private createSnsSqsConsumerLambdaLambdaDeadLetterQueue(props: SnsSqsConsumerLambdaStackProps): IQueue {
     const sqsQueue = new Queue(
       this,
-      'SnsSqsDriverLambdaDeadLetterQueue',
+      'SnsSqsConsumerLambdaLambdaDeadLetterQueue',
       {
         queueName: `${props.appName}-dlq`,
         encryption: QueueEncryption.KMS_MANAGED,
@@ -88,10 +88,10 @@ export class ServiceStack extends Stack {
     return sqsQueue
   }
 
-  private createSnsSqsDriverLambda(SnsSqsDriverQueue: IQueue, SnsSqsDriverKmsKey: IKey, deadLetterQueue: IQueue, props: SnsSqsDriverStackProps): LambdaFunction {
+  private createSnsSqsConsumerLambdaLambda(SnsSqsConsumerLambdaQueue: IQueue, SnsSqsConsumerLambdaKmsKey: IKey, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps): LambdaFunction {
     const iamRole = new Role(
       this,
-      'SnsSqsDriverLambdaIamRole',
+      'SnsSqsConsumerLambdaLambdaIamRole',
       {
         assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
         roleName: `${props.appName}-lambda-role`,
@@ -103,13 +103,13 @@ export class ServiceStack extends Stack {
     iamRole.addToPolicy(
       new PolicyStatement({
         actions: ['kms:Decrypt', 'kms:GenerateDataKey'],
-        resources: [SnsSqsDriverKmsKey.keyArn],
+        resources: [SnsSqsConsumerLambdaKmsKey.keyArn],
       })
     )
     iamRole.addToPolicy(
       new PolicyStatement({
         actions: ['SQS:ReceiveMessage', 'SQS:SendMessage'],
-        resources: [SnsSqsDriverQueue.queueArn],
+        resources: [SnsSqsConsumerLambdaQueue.queueArn],
       })
     )
     iamRole.addToPolicy(
@@ -125,7 +125,7 @@ export class ServiceStack extends Stack {
 
     const lambda = new LambdaFunction(
       this,
-      'SnsSqsDriverLambda',
+      'SnsSqsConsumerLambdaLambda',
       {
         description: 'This Lambda function ingests experimental results from infrastructure participating in experiments and stores collected data in a DynamoDB table',
         runtime: Runtime.NODEJS_18_X,
@@ -145,7 +145,7 @@ export class ServiceStack extends Stack {
     )
 
     lambda.addEventSource(
-      new SqsEventSource(SnsSqsDriverQueue,
+      new SqsEventSource(SnsSqsConsumerLambdaQueue,
         {
           batchSize: props.batchSize,
           maxBatchingWindow: props.maxBatchingWindow,
@@ -156,8 +156,8 @@ export class ServiceStack extends Stack {
     return lambda
   }
 
-  private createSnsSqsDriverDynamoDb(lambda: LambdaFunction, kmsKey: IKey, props: SnsSqsDriverStackProps) {
-    const table = new Table(this, 'SnsSqsDriverDynamoDbTable', {
+  private createSnsSqsConsumerLambdaDynamoDb(lambda: LambdaFunction, kmsKey: IKey, props: SnsSqsConsumerLambdaStackProps) {
+    const table = new Table(this, 'SnsSqsConsumerLambdaDynamoDbTable', {
       tableName: props.appName,
       encryption: TableEncryption.CUSTOMER_MANAGED,
       encryptionKey: kmsKey,

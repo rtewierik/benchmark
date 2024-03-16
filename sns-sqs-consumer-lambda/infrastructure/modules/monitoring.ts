@@ -1,10 +1,10 @@
-﻿import { SnsSqsDriverStackProps } from '../lib/stack-configuration'
+﻿import { SnsSqsConsumerLambdaStackProps } from '../lib/stack-configuration'
 import { Dashboard, GraphWidget, Metric, Row } from 'aws-cdk-lib/aws-cloudwatch'
 import { Duration, Stack } from 'aws-cdk-lib'
 import { Function as LambdaFunction } from 'aws-cdk-lib/aws-lambda'
 import { IQueue } from 'aws-cdk-lib/aws-sqs'
 
-export function addMonitoring(stack: Stack, queue: IQueue, lambda: LambdaFunction, dlq: IQueue, ingestionDlq: IQueue, props: SnsSqsDriverStackProps) {
+export function addMonitoring(stack: Stack, queue: IQueue, lambda: LambdaFunction, dlq: IQueue, ingestionDlq: IQueue, props: SnsSqsConsumerLambdaStackProps) {
   const widgetWidth = 8
   const dashboardName = `${props.appName}-dashboard`
 

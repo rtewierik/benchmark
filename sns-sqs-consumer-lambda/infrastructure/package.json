@@ -1,8 +1,8 @@
 {
-  "name": "sns-sqs-driver-cdk",
+  "name": "sns-sqs-consumer-lambda-cdk",
   "version": "0.1.0",
   "bin": {
-    "sns-sqs-driver": "bin/sns-sqs-driver.js"
+    "sns-sqs-consumer-lambda": "bin/sns-sqs-consumer-lambda.js"
   },
   "license": "UNLICENSED",
   "scripts": {

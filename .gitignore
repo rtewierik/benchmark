@@ -29,5 +29,5 @@ core/*.json
 # benchmark-monitoring
 !benchmark-monitoring/**/*.json
 
-# sns-sqs-driver
-!sns-sqs-driver/**/*.json
+# sns-sqs-consumer-lambda
+!sns-sqs-consumer-lambda/**/*.json

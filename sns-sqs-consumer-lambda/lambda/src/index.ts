@@ -4,7 +4,7 @@ import { BatchItemFailures } from './model/batchItemFailure'
 import SqsEventRecord from './model/sqsEventRecord'
 import OperationResult from './model/operationResult'
 
-const DYNAMO_DB_TABLE_NAME = 'sns-sqs-driver'
+const DYNAMO_DB_TABLE_NAME = 'sns-sqs-consumer-lambda'
 const REGION = 'eu-west-1'
 
 interface Event {

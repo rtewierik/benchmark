@@ -4,13 +4,13 @@ import { SnsAction } from 'aws-cdk-lib/aws-cloudwatch-actions'
 import { Function as LambdaFunction } from 'aws-cdk-lib/aws-lambda'
 import { Topic } from 'aws-cdk-lib/aws-sns'
 import { IQueue } from 'aws-cdk-lib/aws-sqs'
-import { SnsSqsDriverStackProps } from '../lib/stack-configuration'
+import { SnsSqsConsumerLambdaStackProps } from '../lib/stack-configuration'
 import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions'
 
 const PERSONAL_EMAIL = 'rtewierik64@gmail.com'
 const STUDENT_EMAIL = 'rubeneduardconstantijn.tewierik@estudiants.urv.cat'
 
-export function addAlerting(stack: Stack, lambda: LambdaFunction, deadLetterQueue: IQueue, ingestionDeadLetterQueue: IQueue, props: SnsSqsDriverStackProps) {
+export function addAlerting(stack: Stack, lambda: LambdaFunction, deadLetterQueue: IQueue, ingestionDeadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps) {
   const invocationsMetric = lambda.metricInvocations({
     period: Duration.minutes(1),
     statistic: 'sum',
@@ -20,14 +20,14 @@ export function addAlerting(stack: Stack, lambda: LambdaFunction, deadLetterQueu
     statistic: 'sum',
   })
 
-  const alertTopic = new Topic(stack, 'SnsSqsDriverAlertTopic', {
+  const alertTopic = new Topic(stack, 'SnsSqsConsumerLambdaAlertTopic', {
     displayName: 'SNS/SQS driver alert topic',
   })
   alertTopic.addSubscription(new EmailSubscription(PERSONAL_EMAIL))
   alertTopic.addSubscription(new EmailSubscription(STUDENT_EMAIL))
 
-  const errorsAlarm = errorsMetric.createAlarm(stack, 'SnsSqsDriverErrorsAlarm', {
-    alarmName: 'benchmark-sns-sqs-driver-errors',
+  const errorsAlarm = errorsMetric.createAlarm(stack, 'SnsSqsConsumerLambdaErrorsAlarm', {
+    alarmName: 'benchmark-sns-sqs-consumer-lambda-errors',
     actionsEnabled: props.alertingEnabled,
     comparisonOperator: ComparisonOperator.GREATER_THAN_THRESHOLD,
     threshold: 1,
@@ -46,8 +46,8 @@ export function addAlerting(stack: Stack, lambda: LambdaFunction, deadLetterQueu
       errors: errorsMetric,
     }
   })
-  const errorsPercentageAlarm = errorPercentageMetric.createAlarm(stack, 'SnsSqsDriverErrorPercentageAlarm', {
-    alarmName: 'benchmark-sns-sqs-driver-error-percentage',
+  const errorsPercentageAlarm = errorPercentageMetric.createAlarm(stack, 'SnsSqsConsumerLambdaErrorPercentageAlarm', {
+    alarmName: 'benchmark-sns-sqs-consumer-lambda-error-percentage',
     actionsEnabled: props.alertingEnabled,
     comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
     threshold: 1,
@@ -59,8 +59,8 @@ export function addAlerting(stack: Stack, lambda: LambdaFunction, deadLetterQueu
   errorsPercentageAlarm.addOkAction(new SnsAction(alertTopic))
 
   const deadLetterQueueMessageCountMetric = deadLetterQueue.metricApproximateNumberOfMessagesVisible()
-  const deadLetterQueueMessagesAddedAlarm = deadLetterQueueMessageCountMetric.createAlarm(stack, 'SnsSqsDriverMessagesAddedToDlqAlarm', {
-    alarmName: 'sns-sqs-driver-dlq-messages-added',
+  const deadLetterQueueMessagesAddedAlarm = deadLetterQueueMessageCountMetric.createAlarm(stack, 'SnsSqsConsumerLambdaMessagesAddedToDlqAlarm', {
+    alarmName: 'sns-sqs-consumer-lambda-dlq-messages-added',
     actionsEnabled: props.alertingEnabled,
     comparisonOperator: ComparisonOperator.GREATER_THAN_THRESHOLD,
     threshold: 5,
@@ -71,8 +71,8 @@ export function addAlerting(stack: Stack, lambda: LambdaFunction, deadLetterQueu
   deadLetterQueueMessagesAddedAlarm.addAlarmAction(new SnsAction(alertTopic))
   deadLetterQueueMessagesAddedAlarm.addOkAction(new SnsAction(alertTopic))
 
-  const deadLetterQueueMessageCount = deadLetterQueueMessageCountMetric.createAlarm(stack, 'SnsSqsDriverDlqMessageCountAlarm', {
-    alarmName: 'sns-sqs-driver-dlq-message-count',
+  const deadLetterQueueMessageCount = deadLetterQueueMessageCountMetric.createAlarm(stack, 'SnsSqsConsumerLambdaDlqMessageCountAlarm', {
+    alarmName: 'sns-sqs-consumer-lambda-dlq-message-count',
     actionsEnabled: props.alertingEnabled,
     comparisonOperator: ComparisonOperator.GREATER_THAN_THRESHOLD,
     threshold: 10,
@@ -84,8 +84,8 @@ export function addAlerting(stack: Stack, lambda: LambdaFunction, deadLetterQueu
   deadLetterQueueMessageCount.addOkAction(new SnsAction(alertTopic))
 
   const ingestionDeadLetterQueueMessageCountMetric = ingestionDeadLetterQueue.metricApproximateNumberOfMessagesVisible()
-  const ingestionDeadLetterQueueMessagesAddedAlarm = ingestionDeadLetterQueueMessageCountMetric.createAlarm(stack, 'SnsSqsDriverMessagesAddedToIngestionDlqAlarm', {
-    alarmName: 'sns-sqs-driver-ingestion-dlq-messages-added',
+  const ingestionDeadLetterQueueMessagesAddedAlarm = ingestionDeadLetterQueueMessageCountMetric.createAlarm(stack, 'SnsSqsConsumerLambdaMessagesAddedToIngestionDlqAlarm', {
+    alarmName: 'sns-sqs-consumer-lambda-ingestion-dlq-messages-added',
     actionsEnabled: props.alertingEnabled,
     comparisonOperator: ComparisonOperator.GREATER_THAN_THRESHOLD,
     threshold: 5,
@@ -96,8 +96,8 @@ export function addAlerting(stack: Stack, lambda: LambdaFunction, deadLetterQueu
   ingestionDeadLetterQueueMessagesAddedAlarm.addAlarmAction(new SnsAction(alertTopic))
   ingestionDeadLetterQueueMessagesAddedAlarm.addOkAction(new SnsAction(alertTopic))
 
-  const ingestionDeadLetterQueueMessageCount = ingestionDeadLetterQueueMessageCountMetric.createAlarm(stack, 'SnsSqsDriverIngestionDlqMessageCountAlarm', {
-    alarmName: 'sns-sqs-driver-ingestion-dlq-message-count',
+  const ingestionDeadLetterQueueMessageCount = ingestionDeadLetterQueueMessageCountMetric.createAlarm(stack, 'SnsSqsConsumerLambdaIngestionDlqMessageCountAlarm', {
+    alarmName: 'sns-sqs-consumer-lambda-ingestion-dlq-message-count',
     actionsEnabled: props.alertingEnabled,
     comparisonOperator: ComparisonOperator.GREATER_THAN_THRESHOLD,
     threshold: 10,

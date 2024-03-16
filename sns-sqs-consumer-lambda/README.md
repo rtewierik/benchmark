@@ -17,7 +17,7 @@ git clone https://github.com/rtewierik/benchmark.git
 Navigate to the root directory of the Lambda project.
 
 ``
-cd benchmark/sns-sqs-driver
+cd benchmark/sns-sqs-consumer-lambda
 ``
 
 Install the project dependencies using NPM.
@@ -34,5 +34,5 @@ Run the following commands locally to deploy the AWS CDK project to AWS.
 
 * **Navigate to the `lambda` project and build it using npm:** `cd lambda && npm install && npm run build && cd ..`
 * **Navigate to the `infrastructure` project, verify AWS environment and CDK version and build the CDK project:** `cd infrastructure && cdk doctor && npm install && npm run build`
-* **Verify staged changes:** `npx aws-cdk diff sns-sqs-driver`
-* **Deploy staged changes:** `npx aws-cdk deploy sns-sqs-driver --require-approval never`
+* **Verify staged changes:** `npx aws-cdk diff sns-sqs-consumer-lambda`
+* **Deploy staged changes:** `npx aws-cdk deploy sns-sqs-consumer-lambda --require-approval never`

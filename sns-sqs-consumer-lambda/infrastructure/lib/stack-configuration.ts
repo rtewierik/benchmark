@@ -1,6 +1,6 @@
 import { Duration, StackProps } from 'aws-cdk-lib'
 
-export interface SnsSqsDriverStackProps extends StackProps {
+export interface SnsSqsConsumerLambdaStackProps extends StackProps {
   appName: string
   maxBatchingWindow: Duration
   batchSize: number
