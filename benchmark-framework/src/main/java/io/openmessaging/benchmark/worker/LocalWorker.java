@@ -190,7 +190,10 @@ public class LocalWorker implements Worker, ConsumerCallback {
         executor.submit(
                 () -> {
                     BenchmarkProducer producer = producers.get(TpcHConstants.MAP_CMD_INDEX);
-                    TpcHProducerAssignment assignment = new TpcHProducerAssignment(producerWorkAssignment);
+                    TpcHProducerAssignment assignment = new TpcHProducerAssignment(
+                        producerWorkAssignment.tpcHArguments,
+                        producerWorkAssignment.producerIndex
+                    );
                     AtomicInteger currentAssignment = new AtomicInteger();
                     KeyDistributor keyDistributor = KeyDistributor.build(producerWorkAssignment.keyDistributorType);
                     int batchSize = assignment.batchSize;

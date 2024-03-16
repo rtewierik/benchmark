@@ -23,7 +23,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>benchmark-framework</artifactId>
+    <artifactId>tpc-h-driver</artifactId>
 
     <properties>
         <jetty.version>9.4.42.v20210604</jetty.version>
@@ -33,41 +33,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>driver-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>driver-jms</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>driver-kafka</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>driver-pravega</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>driver-pulsar</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>driver-rabbitmq</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>driver-redis</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>tpc-h-driver</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -87,11 +52,6 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.asynchttpclient</groupId>
-            <artifactId>async-http-client</artifactId>
-            <version>2.12.3</version>
         </dependency>
         <!-- set jetty version to be consistent across all transitive dependencies  -->
         <dependency>
