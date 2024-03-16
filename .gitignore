@@ -8,7 +8,6 @@ target
 *.svg
 core/*.json
 *.json
-!benchmark-monitoring/**/*.json
 !**/**deploy**/*.json
 !**/**deploy**/**/*.json
 **/**deploy**/templates/dashboards/*.json
@@ -26,3 +25,9 @@ core/*.json
 # IntelliJ artifacts
 .idea/
 *.iml
+
+# benchmark-monitoring
+!benchmark-monitoring/**/*.json
+
+# sns-sqs-driver
+!sns-sqs-driver/**/*.json
