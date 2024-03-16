@@ -13,7 +13,7 @@
  */
 package io.openmessaging.benchmark;
 
-import io.openmessaging.benchmark.driver.key.distribution.KeyDistributorType;
+import io.openmessaging.benchmark.common.key.distribution.KeyDistributorType;
 
 public class Workload {
     public String name;
