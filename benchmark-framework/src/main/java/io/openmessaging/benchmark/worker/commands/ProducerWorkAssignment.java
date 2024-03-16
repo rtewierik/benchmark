@@ -13,8 +13,8 @@
  */
 package io.openmessaging.benchmark.worker.commands;
 
-import io.openmessaging.benchmark.tpch.TpcHArguments;
-import io.openmessaging.benchmark.utils.distributor.KeyDistributorType;
+import io.openmessaging.benchmark.driver.key.distribution.KeyDistributorType;
+import io.openmessaging.tpch.model.TpcHArguments;
 import java.util.List;
 
 public class ProducerWorkAssignment {

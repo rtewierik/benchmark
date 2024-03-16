@@ -13,9 +13,7 @@
  */
 package io.openmessaging.benchmark;
 
-
-import io.openmessaging.benchmark.tpch.TpcHProducerAssignment;
-import io.openmessaging.benchmark.utils.distributor.KeyDistributorType;
+import io.openmessaging.benchmark.driver.key.distribution.KeyDistributorType;
 
 public class Workload {
     public String name;

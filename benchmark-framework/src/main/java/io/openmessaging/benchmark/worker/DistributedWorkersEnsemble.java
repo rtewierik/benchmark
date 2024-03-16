@@ -17,13 +17,12 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.joining;
 
 import com.beust.jcommander.internal.Maps;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import io.openmessaging.benchmark.tpch.TpcHConstants;
+import io.openmessaging.tpch.TpcHConstants;
 import io.openmessaging.benchmark.utils.ListPartition;
 import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.worker.commands.*;
@@ -34,7 +33,6 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 

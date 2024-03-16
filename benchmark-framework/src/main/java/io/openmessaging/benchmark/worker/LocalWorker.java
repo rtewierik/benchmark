@@ -22,21 +22,17 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Preconditions;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.DriverConfiguration;
-import io.openmessaging.benchmark.client.AmazonS3Client;
 import io.openmessaging.benchmark.driver.*;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ConsumerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
-import io.openmessaging.benchmark.tpch.*;
+import io.openmessaging.benchmark.driver.key.distribution.KeyDistributor;
 import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.utils.UniformRateLimiter;
-import io.openmessaging.benchmark.utils.distributor.KeyDistributor;
-import io.openmessaging.benchmark.utils.distributor.KeyDistributorType;
 import io.openmessaging.benchmark.worker.commands.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.*;
@@ -44,6 +40,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 import io.openmessaging.benchmark.worker.jackson.ObjectMappers;
+import io.openmessaging.tpch.*;
+import io.openmessaging.tpch.model.TpcHConsumerAssignment;
+import io.openmessaging.tpch.model.TpcHMessage;
+import io.openmessaging.tpch.model.TpcHMessageType;
+import io.openmessaging.tpch.model.TpcHProducerAssignment;
+import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
@@ -61,7 +63,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         For TPC-H queries, the consumers list is allocated with the consumers for all the assigned reducers.
      */
     private final List<BenchmarkConsumer> consumers = new ArrayList<>();
-    private volatile MessageProducer messageProducer;
+    private volatile MessageProducerImpl messageProducer;
     private final TpcHMessageProcessor tpcHMessageProcessor;
     private final ExecutorService executor =
             Executors.newCachedThreadPool(new DefaultThreadFactory("local-worker"));
@@ -76,7 +78,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     public LocalWorker(StatsLogger statsLogger) {
         this.stats = new WorkerStats(statsLogger);
-        this.messageProducer = new MessageProducer(new UniformRateLimiter(1.0), stats);
+        this.messageProducer = new MessageProducerImpl(new UniformRateLimiter(1.0), stats);
         this.tpcHMessageProcessor = new TpcHMessageProcessor(
             this.producers,
             this.messageProducer,
@@ -285,7 +287,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     private void updateMessageProducer(double publishRate) {
-        messageProducer = new MessageProducer(new UniformRateLimiter(publishRate), stats);
+        messageProducer = new MessageProducerImpl(new UniformRateLimiter(publishRate), stats);
         tpcHMessageProcessor.updateMessageProducer(this.messageProducer);
     }
 
