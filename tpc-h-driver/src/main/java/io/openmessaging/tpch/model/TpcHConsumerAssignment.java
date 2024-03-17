@@ -14,7 +14,6 @@
 package io.openmessaging.tpch.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.openmessaging.benchmark.driver.TpcHQuery;
 
 public class TpcHConsumerAssignment {
     public final TpcHQuery query;

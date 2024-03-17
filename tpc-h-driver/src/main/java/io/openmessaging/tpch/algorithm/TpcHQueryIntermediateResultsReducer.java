@@ -13,7 +13,7 @@
  */
 package io.openmessaging.tpch.algorithm;
 
-import io.openmessaging.benchmark.driver.TpcHQuery;
+import io.openmessaging.tpch.model.TpcHQuery;
 import io.openmessaging.tpch.model.TpcHIntermediateResult;
 
 import java.util.ArrayList;

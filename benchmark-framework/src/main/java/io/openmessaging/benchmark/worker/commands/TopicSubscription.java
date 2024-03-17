@@ -13,8 +13,6 @@
  */
 package io.openmessaging.benchmark.worker.commands;
 
-import io.openmessaging.benchmark.driver.TpcHInfo;
-
 public class TopicSubscription {
     public String topic;
     public String subscription;

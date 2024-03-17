@@ -22,7 +22,6 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
-import io.openmessaging.benchmark.driver.TpcHInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

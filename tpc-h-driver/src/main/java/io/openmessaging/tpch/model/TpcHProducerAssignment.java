@@ -13,8 +13,6 @@
  */
 package io.openmessaging.tpch.model;
 
-import io.openmessaging.benchmark.driver.TpcHQuery;
-
 public class TpcHProducerAssignment {
     public final String queryId;
     public final TpcHQuery query;

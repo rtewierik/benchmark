@@ -23,7 +23,6 @@ import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
 import java.io.IOException;
 
-import io.openmessaging.benchmark.driver.TpcHInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

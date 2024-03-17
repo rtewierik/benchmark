@@ -27,7 +27,6 @@ import io.openmessaging.tpch.algorithm.TpcHQueryResultGenerator;
 import io.openmessaging.tpch.client.AmazonS3Client;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.MessageProducer;
-import io.openmessaging.benchmark.driver.TpcHInfo;
 import io.openmessaging.tpch.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -16,9 +16,6 @@ package io.openmessaging.benchmark;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 import io.netty.util.concurrent.DefaultThreadFactory;
-import io.openmessaging.benchmark.driver.TpcHConsumer;
-import io.openmessaging.benchmark.driver.TpcHInfo;
-import io.openmessaging.benchmark.driver.TpcHQuery;
 import io.openmessaging.tpch.model.TpcHArguments;
 import io.openmessaging.tpch.TpcHConstants;
 import io.openmessaging.benchmark.utils.PaddingDecimalFormat;

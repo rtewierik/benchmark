@@ -11,15 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.benchmark.driver;
+package io.openmessaging.tpch.model;
 
-public enum TpcHQuery {
-    PricingSummaryReport(1),
-    ForecastingRevenueChange(6);
-
-    private final int id;
-
-    private TpcHQuery(int id) {
-        this.id = id;
-    }
+public enum TpcHConsumer {
+    Map,
+    Reduce,
+    GenerateResult
 }

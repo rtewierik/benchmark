@@ -13,7 +13,7 @@
  */
 package io.openmessaging.tpch.algorithm;
 
-import io.openmessaging.benchmark.driver.TpcHQuery;
+import io.openmessaging.tpch.model.TpcHQuery;
 import io.openmessaging.tpch.model.TpcHConsumerAssignment;
 import io.openmessaging.tpch.model.TpcHIntermediateResult;
 import io.openmessaging.tpch.model.TpcHIntermediateResultGroup;
@@ -22,7 +22,6 @@ import io.openmessaging.tpch.model.TpcHRow;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
