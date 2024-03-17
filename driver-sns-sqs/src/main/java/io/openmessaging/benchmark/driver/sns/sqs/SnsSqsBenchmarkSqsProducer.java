@@ -16,28 +16,47 @@ package io.openmessaging.benchmark.driver.sns.sqs;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
+import com.amazonaws.services.sqs.model.SendMessageRequest;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public class SnsSqsBenchmarkProducer implements BenchmarkProducer {
+public class SnsSqsBenchmarkSqsProducer implements BenchmarkProducer {
 
     private final AmazonSQS sqsClient;
+    private final String sqsUri;
 
-    public SnsSqsBenchmarkProducer() {
-        sqsClient = AmazonSQSClientBuilder.standard()
+    public SnsSqsBenchmarkSqsProducer(String sqsUri, AmazonSQS sqsClient) {
+        this.sqsUri = sqsUri;
+        this.sqsClient = sqsClient;
+    }
+
+    public SnsSqsBenchmarkSqsProducer() {
+        this(
+            SnsSqsBenchmarkConfiguration.getSqsUri(),
+            AmazonSQSClientBuilder
+                .standard()
+                .withRegion(SnsSqsBenchmarkConfiguration.getRegion())
                 .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
-                .build();
+                .build()
+        );
     }
 
     @Override
     public CompletableFuture<Void> sendAsync(Optional<String> key, byte[] payload) {
-        return null;
+        SendMessageRequest request = new SendMessageRequest(sqsUri, new String(payload, StandardCharsets.UTF_8));
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        try {
+            this.sqsClient.sendMessage(request);
+            future.complete(null);
+        } catch (Exception e) {
+            future.completeExceptionally(e);
+        }
+        return future;
     }
 
     @Override
-    public void close() throws Exception {
-
-    }
+    public void close() throws Exception {}
 }

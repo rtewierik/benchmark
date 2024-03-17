@@ -11,7 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.benchmark.utils;
+package io.openmessaging.benchmark.common.utils;
+
+import org.junit.jupiter.api.Test;
+
+import java.util.function.Supplier;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -19,9 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.util.function.Supplier;
-import org.junit.jupiter.api.Test;
 
 class UniformRateLimiterTest {
 

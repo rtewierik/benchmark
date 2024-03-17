@@ -11,13 +11,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.benchmark.utils;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
+package io.openmessaging.benchmark.common.utils;
 
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.locks.LockSupport;
 import java.util.function.Supplier;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * Provides a next operation time for rate limited operation streams.<br>
