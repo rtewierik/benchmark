@@ -11,6 +11,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.benchmark.driver;
+package io.openmessaging.benchmark.driver.sns.sqs;
 
-public interface BenchmarkConsumer extends AutoCloseable {}
+import lombok.Getter;
+
+public class SnsSqsBenchmarkConfiguration {
+
+    @Getter
+    private static final String sqsUri;
+    @Getter
+    private static final String region;
+
+    static {
+        sqsUri = System.getenv("SQS_URI");
+        region = System.getenv("AWS_REGION");
+    }
+}

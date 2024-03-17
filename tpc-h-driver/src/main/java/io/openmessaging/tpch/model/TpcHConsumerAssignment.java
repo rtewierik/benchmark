@@ -14,7 +14,6 @@
 package io.openmessaging.tpch.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.openmessaging.benchmark.driver.TpcHQuery;
 
 public class TpcHConsumerAssignment {
     public final TpcHQuery query;
@@ -22,6 +21,8 @@ public class TpcHConsumerAssignment {
     public final String batchId;
     public final Integer chunkIndex;
     public final Integer producerIndex;
+    public final Integer numberOfMapResults;
+    public final Integer numberOfChunks;
     public final String sourceDataS3Uri;
 
     public TpcHConsumerAssignment(
@@ -30,12 +31,16 @@ public class TpcHConsumerAssignment {
         @JsonProperty("batchId") String batchId,
         @JsonProperty("chunkIndex") Integer chunkIndex,
         @JsonProperty("producerIndex") Integer producerIndex,
+        @JsonProperty("numberOfMapResults") Integer numberOfMapResults,
+        @JsonProperty("numberOfChunks") Integer numberOfChunks,
         @JsonProperty("sourceDataS3Uri") String sourceDataS3Uri) {
         this.query = query;
         this.queryId = queryId;
         this.batchId = batchId;
         this.chunkIndex = chunkIndex;
         this.producerIndex = producerIndex;
+        this.numberOfMapResults = numberOfMapResults;
+        this.numberOfChunks = numberOfChunks;
         this.sourceDataS3Uri = sourceDataS3Uri;
     }
 }

@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import io.openmessaging.benchmark.driver.TpcHQuery;
+import io.openmessaging.tpch.model.TpcHQuery;
 import io.openmessaging.benchmark.worker.DistributedWorkersEnsemble;
 import io.openmessaging.benchmark.worker.HttpWorkerClient;
 import io.openmessaging.benchmark.worker.LocalWorker;
@@ -121,7 +121,7 @@ public class Benchmark {
             System.out.printf("[INFO] Applying map to chunk \"%s\"...%n", chunkFile);
             try (InputStream stream = Files.newInputStream(Paths.get(chunkFile))) {
                 List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
-                TpcHConsumerAssignment assignment = new TpcHConsumerAssignment(query, null, null, null, null, null);
+                TpcHConsumerAssignment assignment = new TpcHConsumerAssignment(query, null, null, null, null, null, null, null);
                 TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, query, assignment);
                 chunk.add(result);
             } catch (IOException exception) {

@@ -13,26 +13,21 @@
  */
 package io.openmessaging.benchmark.worker.commands;
 
-import io.openmessaging.benchmark.driver.TpcHInfo;
-
 public class TopicSubscription {
     public String topic;
     public String subscription;
-    public TpcHInfo info;
 
     public TopicSubscription() {}
 
-    public TopicSubscription(String topic, String subscription, TpcHInfo info) {
+    public TopicSubscription(String topic, String subscription) {
         this.topic = topic;
         this.subscription = subscription;
-        this.info = info;
     }
 
     public TopicSubscription withSubscription(String subscription) {
         TopicSubscription copy = new TopicSubscription();
         copy.topic = this.topic;
         copy.subscription = subscription;
-        copy.info = info;
         return copy;
     }
 
@@ -40,8 +35,7 @@ public class TopicSubscription {
     public String toString() {
         return "TopicSubscription{" +
                 "topic='" + topic + '\'' +
-                ", subscription='" + subscription + '\'' +
-                ", info=" + info +
+                ", subscription='" + subscription +
                 '}';
     }
 }

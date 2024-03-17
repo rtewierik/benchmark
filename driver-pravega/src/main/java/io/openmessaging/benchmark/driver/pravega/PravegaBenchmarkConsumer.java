@@ -16,7 +16,6 @@ package io.openmessaging.benchmark.driver.pravega;
 
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
-import io.openmessaging.benchmark.driver.TpcHInfo;
 import io.pravega.client.EventStreamClientFactory;
 import io.pravega.client.admin.ReaderGroupManager;
 import io.pravega.client.stream.EventStreamReader;
@@ -50,8 +49,7 @@ public class PravegaBenchmarkConsumer implements BenchmarkConsumer {
             ConsumerCallback consumerCallback,
             EventStreamClientFactory clientFactory,
             ReaderGroupManager readerGroupManager,
-            boolean includeTimestampInEvent,
-            TpcHInfo info) {
+            boolean includeTimestampInEvent) {
         log.info(
                 "PravegaBenchmarkConsumer: BEGIN: subscriptionName={}, streamName={}",
                 subscriptionName,
@@ -82,7 +80,7 @@ public class PravegaBenchmarkConsumer implements BenchmarkConsumer {
                                     // This will result in an invalid end-to-end latency measurement of 0 seconds.
                                     eventTimestamp = TimeUnit.MICROSECONDS.toMillis(Long.MAX_VALUE);
                                 }
-                                consumerCallback.messageReceived(event, eventTimestamp, info);
+                                consumerCallback.messageReceived(event, eventTimestamp);
                             }
                         } catch (ReinitializationRequiredException e) {
                             log.error("Exception during read", e);

@@ -13,7 +13,6 @@
  */
 package io.openmessaging.benchmark.driver.kafka;
 
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -120,7 +119,7 @@ public class KafkaBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkConsumer> createConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback, TpcHInfo info) {
+            String topic, String subscriptionName, ConsumerCallback consumerCallback) {
         Properties properties = new Properties();
         consumerProperties.forEach((key, value) -> properties.put(key, value));
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, subscriptionName);
@@ -128,7 +127,7 @@ public class KafkaBenchmarkDriver implements BenchmarkDriver {
         try {
             consumer.subscribe(Arrays.asList(topic));
             return CompletableFuture.completedFuture(
-                    new KafkaBenchmarkConsumer(consumer, consumerProperties, consumerCallback, info));
+                    new KafkaBenchmarkConsumer(consumer, consumerProperties, consumerCallback));
         } catch (Throwable t) {
             consumer.close();
             CompletableFuture<BenchmarkConsumer> future = new CompletableFuture<>();

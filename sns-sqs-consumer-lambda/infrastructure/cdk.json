@@ -1,0 +1,3 @@
+{
+  "app": "npx ts-node bin/sns-sqs-consumer-lambda.ts"
+}

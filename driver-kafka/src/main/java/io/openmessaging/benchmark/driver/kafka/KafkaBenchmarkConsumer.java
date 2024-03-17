@@ -24,7 +24,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import io.openmessaging.benchmark.driver.TpcHInfo;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -48,17 +47,15 @@ public class KafkaBenchmarkConsumer implements BenchmarkConsumer {
     public KafkaBenchmarkConsumer(
             KafkaConsumer<String, byte[]> consumer,
             Properties consumerConfig,
-            ConsumerCallback callback,
-            TpcHInfo info) {
-        this(consumer, consumerConfig, callback, 100L, info);
+            ConsumerCallback callback) {
+        this(consumer, consumerConfig, callback, 100L);
     }
 
     public KafkaBenchmarkConsumer(
             KafkaConsumer<String, byte[]> consumer,
             Properties consumerConfig,
             ConsumerCallback callback,
-            long pollTimeoutMs,
-            TpcHInfo info) {
+            long pollTimeoutMs) {
         this.consumer = consumer;
         this.executor = Executors.newSingleThreadExecutor();
         this.autoCommit =
@@ -75,7 +72,7 @@ public class KafkaBenchmarkConsumer implements BenchmarkConsumer {
 
                                     Map<TopicPartition, OffsetAndMetadata> offsetMap = new HashMap<>();
                                     for (ConsumerRecord<String, byte[]> record : records) {
-                                        callback.messageReceived(record.value(), record.timestamp(), info);
+                                        callback.messageReceived(record.value(), record.timestamp());
 
                                         offsetMap.put(
                                                 new TopicPartition(record.topic(), record.partition()),

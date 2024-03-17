@@ -13,15 +13,13 @@
  */
 package io.openmessaging.tpch.model;
 
-import io.openmessaging.benchmark.driver.TpcHQuery;
-import io.openmessaging.tpch.model.TpcHArguments;
-
 public class TpcHProducerAssignment {
     public final String queryId;
     public final TpcHQuery query;
     public final String sourceDataS3FolderUri;
     public final Integer batchSize;
     public final Integer numberOfMapResults;
+    public final Integer numberOfChunks;
     public final Integer offset;
 
     public TpcHProducerAssignment(TpcHArguments arguments, Integer producerIndex) {
@@ -30,6 +28,7 @@ public class TpcHProducerAssignment {
         this.sourceDataS3FolderUri = arguments.sourceDataS3FolderUri;
         this.batchSize = arguments.getDefaultNumberOfMapResults();
         this.numberOfMapResults = arguments.getNumberOfMapResults(producerIndex);
+        this.numberOfChunks = arguments.numberOfChunks;
         this.offset = producerIndex;
     }
 }

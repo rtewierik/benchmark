@@ -13,7 +13,7 @@
  */
 package io.openmessaging.tpch.algorithm;
 
-import io.openmessaging.benchmark.driver.TpcHQuery;
+import io.openmessaging.tpch.model.TpcHQuery;
 import io.openmessaging.tpch.model.TpcHConsumerAssignment;
 import io.openmessaging.tpch.model.TpcHIntermediateResult;
 import io.openmessaging.tpch.model.TpcHIntermediateResultGroup;
@@ -22,7 +22,6 @@ import io.openmessaging.tpch.model.TpcHRow;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +73,7 @@ public class TpcHAlgorithm {
             group.aggregates.put("charge", ((BigDecimal)group.aggregates.get("charge")).add(charge));
             group.aggregates.put("orderCount", (Long)group.aggregates.get("orderCount") + 1);
         }
-        return new TpcHIntermediateResult(assignment.queryId, assignment.batchId, assignment.chunkIndex, 1, new ArrayList<>(groups.values()));
+        return new TpcHIntermediateResult(assignment, groups);
     }
 
     private static TpcHIntermediateResult applyForecastingRevenueChangeReportQueryToChunk(List<TpcHRow> chunk, TpcHConsumerAssignment assignment) {
@@ -99,7 +98,7 @@ public class TpcHAlgorithm {
             BigDecimal revenue = row.extendedPrice.multiply(row.discount);
             group.aggregates.put("revenue", ((BigDecimal)group.aggregates.get("revenue")).add(revenue));
         }
-        return new TpcHIntermediateResult(assignment.queryId, assignment.batchId, assignment.chunkIndex, 1, new ArrayList<>(groups.values()));
+        return new TpcHIntermediateResult(assignment, groups);
     }
 
     private static Map<String, Number> getPricingSummaryReportQueryAggregates() {

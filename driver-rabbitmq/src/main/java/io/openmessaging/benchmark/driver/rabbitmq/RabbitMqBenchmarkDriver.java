@@ -156,8 +156,7 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
                                                                 createConsumer(
                                                                         c.getTopic(),
                                                                         c.getSubscriptionName(),
-                                                                        c.getConsumerCallback(),
-                                                                        c.getInfo()))),
+                                                                        c.getConsumerCallback()))),
                         fc -> {
                             try {
                                 return new CreationResult<>(fc.get(), true);
@@ -174,7 +173,7 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkConsumer> createConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback, TpcHInfo info) {
+            String topic, String subscriptionName, ConsumerCallback consumerCallback) {
 
         CompletableFuture<BenchmarkConsumer> future = new CompletableFuture<>();
         ForkJoinPool.commonPool()
@@ -192,7 +191,7 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
                                         queueName, true, false, false, config.queueType.queueOptions());
                                 channel.queueBind(queueName, exchange, "");
                                 future.complete(
-                                        new RabbitMqBenchmarkConsumer(channel, queueName, consumerCallback, info));
+                                        new RabbitMqBenchmarkConsumer(channel, queueName, consumerCallback));
                             } catch (IOException e) {
                                 future.completeExceptionally(e);
                             }

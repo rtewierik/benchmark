@@ -22,7 +22,6 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
-import io.openmessaging.benchmark.driver.TpcHInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,8 +37,7 @@ public class JMSBenchmarkConsumer implements BenchmarkConsumer {
             Session session,
             MessageConsumer consumer,
             ConsumerCallback callback,
-            boolean useGetBody,
-            TpcHInfo info)
+            boolean useGetBody)
             throws Exception {
         this.connection = connection;
         this.consumer = consumer;
@@ -49,7 +47,7 @@ public class JMSBenchmarkConsumer implements BenchmarkConsumer {
                 message -> {
                     try {
                         byte[] payload = getPayload(message);
-                        callback.messageReceived(payload, message.getLongProperty("E2EStartMillis"), info);
+                        callback.messageReceived(payload, message.getLongProperty("E2EStartMillis"));
                         message.acknowledge();
                     } catch (Throwable e) {
                         log.warn("Failed to acknowledge message", e);

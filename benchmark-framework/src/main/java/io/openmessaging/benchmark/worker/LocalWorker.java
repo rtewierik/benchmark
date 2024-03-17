@@ -163,7 +163,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                         .map(
                                                 c ->
                                                         new ConsumerInfo(
-                                                                consumerIndex.getAndIncrement(), c.topic, c.subscription, this, c.info))
+                                                                consumerIndex.getAndIncrement(), c.topic, c.subscription, this))
                                         .collect(toList()))
                         .join());
 
@@ -198,11 +198,12 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     );
                     AtomicInteger currentAssignment = new AtomicInteger();
                     KeyDistributor keyDistributor = KeyDistributor.build(producerWorkAssignment.keyDistributorType);
-                    int batchSize = assignment.batchSize;
-                    int start = assignment.offset * batchSize;
+                    Integer batchSize = assignment.batchSize;
+                    Integer start = assignment.offset * batchSize;
+                    Integer numberOfMapResults = assignment.numberOfMapResults;
                     String batchId = String.format("%s-batch-%d-%s", assignment.queryId, assignment.offset, assignment.batchSize);
                     try {
-                        while (currentAssignment.get() < assignment.numberOfMapResults) {
+                        while (currentAssignment.get() < numberOfMapResults) {
                             Integer chunkIndex = start + currentAssignment.incrementAndGet();
                             TpcHConsumerAssignment consumerAssignment = new TpcHConsumerAssignment(
                                 assignment.query,
@@ -210,6 +211,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                 batchId,
                                 chunkIndex,
                                 producerWorkAssignment.producerIndex,
+                                numberOfMapResults,
+                                assignment.numberOfChunks,
                                 String.format("%s/chunk_%d.csv", assignment.sourceDataS3FolderUri, chunkIndex)
                             );
                             TpcHMessage message = new TpcHMessage(
@@ -307,27 +310,27 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     @Override
-    public void messageReceived(byte[] data, long publishTimestamp, TpcHInfo info) throws IOException {
+    public void messageReceived(byte[] data, long publishTimestamp) throws IOException {
         internalMessageReceived(data.length, publishTimestamp);
-        if (info != null && data.length != 10) {
+        if (data.length != 10) {
             TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
-            handleTpcHMessage(message, info);
+            handleTpcHMessage(message);
         }
         // TO DO: Add separate call to stats to record message processed.
     }
 
     @Override
-    public void messageReceived(ByteBuffer data, long publishTimestamp, TpcHInfo info) throws IOException {
+    public void messageReceived(ByteBuffer data, long publishTimestamp) throws IOException {
         internalMessageReceived(data.remaining(), publishTimestamp);
-        if (info != null && data.remaining() != 10) {
+        if (data.remaining() != 10) {
             TpcHMessage message = mapper.readValue(data.array(), TpcHMessage.class);
-            handleTpcHMessage(message, info);
+            handleTpcHMessage(message);
         }
         // TO DO: Add separate call to stats to record message processed.
     }
 
-    private void handleTpcHMessage(TpcHMessage message, TpcHInfo info) throws IOException {
-        tpcHMessageProcessor.processTpcHMessage(message, info);
+    private void handleTpcHMessage(TpcHMessage message) throws IOException {
+        tpcHMessageProcessor.processTpcHMessage(message);
     }
 
     public boolean getTestCompleted() {

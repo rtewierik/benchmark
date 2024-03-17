@@ -13,7 +13,7 @@
  */
 package io.openmessaging.tpch.algorithm;
 
-import io.openmessaging.benchmark.driver.TpcHQuery;
+import io.openmessaging.tpch.model.TpcHQuery;
 import io.openmessaging.tpch.model.TpcHQueryResultRow;
 import io.openmessaging.tpch.model.TpcHIntermediateResult;
 import io.openmessaging.tpch.model.TpcHIntermediateResultGroup;
@@ -24,6 +24,13 @@ import java.math.RoundingMode;
 import java.util.Map;
 
 public class TpcHQueryResultGenerator {
+
+    public static TpcHQueryResult generateResult(TpcHIntermediateResult intermediateResult) {
+        return TpcHQueryResultGenerator.generateResult(
+            intermediateResult,
+            intermediateResult.query
+        );
+    }
 
     public static TpcHQueryResult generateResult(TpcHIntermediateResult intermediateResult, TpcHQuery query) {
         switch (query) {

@@ -11,20 +11,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.benchmark.driver;
+package io.openmessaging.tpch.model;
 
+public enum TpcHQuery {
+    PricingSummaryReport(1),
+    ForecastingRevenueChange(6);
 
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
+    private final int id;
 
-public interface BenchmarkProducer extends AutoCloseable {
-
-    /**
-     * Publish a message and return a callback to track the completion of the operation.
-     *
-     * @param key the key associated with this message
-     * @param payload the message payload
-     * @return a future that will be triggered when the message is successfully published
-     */
-    CompletableFuture<Void> sendAsync(Optional<String> key, byte[] payload);
+    private TpcHQuery(int id) {
+        this.id = id;
+    }
 }
