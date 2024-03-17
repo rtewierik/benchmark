@@ -44,7 +44,7 @@ public class SnsSqsBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkProducer> createProducer(String topic) {
-        return CompletableFuture.completedFuture(new SnsSqsBenchmarkProducer());
+        return CompletableFuture.completedFuture(new SnsSqsBenchmarkSqsProducer());
     }
 
     @Override

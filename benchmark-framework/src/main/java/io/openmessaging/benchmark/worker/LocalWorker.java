@@ -24,12 +24,12 @@ import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.DriverConfiguration;
 import io.openmessaging.benchmark.common.ObjectMappers;
 import io.openmessaging.benchmark.common.key.distribution.KeyDistributor;
+import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.*;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ConsumerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
 import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.Timer;
-import io.openmessaging.benchmark.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.worker.commands.*;
 
 import java.io.File;
@@ -415,7 +415,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private static final ObjectMapper mapper =
             new ObjectMapper(new YAMLFactory())
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    private static final ObjectMapper jsonMapper = ObjectMappers.DEFAULT.mapper();
 
     static {
         mapper.enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);

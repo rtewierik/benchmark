@@ -38,8 +38,7 @@ export class ServiceStack extends Stack {
     const kmsKey = this.createSnsSqsConsumerLambdaKmsKey(props)
     const { sqsQueue, ingestionDeadLetterQueue } = this.createSnsSqsConsumerLambdaDataIngestionLayer(kmsKey, props)
     const deadLetterQueue = this.createSnsSqsConsumerLambdaLambdaDeadLetterQueue(props)
-    const lambda = this.createSnsSqsConsumerLambdaLambda(sqsQueue, kmsKey, deadLetterQueue, props)
-    this.createSnsSqsConsumerLambdaDynamoDb(lambda, kmsKey, props)
+    const lambda = this.createSnsSqsConsumerLambda(sqsQueue, kmsKey, deadLetterQueue, props)
     addMonitoring(this, sqsQueue, lambda, deadLetterQueue, ingestionDeadLetterQueue, props)
     addAlerting(this, lambda, deadLetterQueue, ingestionDeadLetterQueue, props)
   }
@@ -89,7 +88,7 @@ export class ServiceStack extends Stack {
     return sqsQueue
   }
 
-  private createSnsSqsConsumerLambdaLambda(snsSqsConsumerLambdaQueue: IQueue, SnsSqsConsumerLambdaKmsKey: IKey, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps): LambdaFunction {
+  private createSnsSqsConsumerLambda(snsSqsConsumerLambdaQueue: IQueue, SnsSqsConsumerLambdaKmsKey: IKey, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps): LambdaFunction {
     const iamRole = new Role(
       this,
       'SnsSqsConsumerLambdaLambdaIamRole',
@@ -159,25 +158,6 @@ export class ServiceStack extends Stack {
     )
 
     return lambda
-  }
-
-  private createSnsSqsConsumerLambdaDynamoDb(lambda: LambdaFunction, kmsKey: IKey, props: SnsSqsConsumerLambdaStackProps) {
-    const table = new Table(this, 'SnsSqsConsumerLambdaDynamoDbTable', {
-      tableName: props.appName,
-      encryption: TableEncryption.CUSTOMER_MANAGED,
-      encryptionKey: kmsKey,
-      partitionKey: {
-        name: 'experimentId',
-        type: AttributeType.STRING,
-      },
-      readCapacity: 1,
-      writeCapacity: 1,
-      billingMode: BillingMode.PROVISIONED,
-      removalPolicy: RemovalPolicy.DESTROY,
-    })
-
-    table.grantReadData(lambda)
-    table.grantWriteData(lambda)
   }
 }
 

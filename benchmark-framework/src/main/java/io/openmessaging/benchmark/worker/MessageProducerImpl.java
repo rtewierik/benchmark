@@ -13,15 +13,16 @@
  */
 package io.openmessaging.benchmark.worker;
 
-import static io.openmessaging.benchmark.utils.UniformRateLimiter.uninterruptibleSleepNs;
 
+import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.MessageProducer;
-import io.openmessaging.benchmark.utils.UniformRateLimiter;
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static io.openmessaging.benchmark.common.utils.UniformRateLimiter.uninterruptibleSleepNs;
 
 public class MessageProducerImpl implements MessageProducer {
 
@@ -51,11 +52,15 @@ public class MessageProducerImpl implements MessageProducer {
 
     private void success(long payloadLength, long intendedSendTime, long sendTime) {
         long nowNs = nanoClock.get();
-        stats.recordProducerSuccess(payloadLength, intendedSendTime, sendTime, nowNs);
+        if (stats != null) {
+            stats.recordProducerSuccess(payloadLength, intendedSendTime, sendTime, nowNs);
+        }
     }
 
     private Void failure(Throwable t) {
-        stats.recordProducerFailure();
+        if (stats != null) {
+            stats.recordProducerFailure();
+        }
         log.warn("Write error on message", t);
         return null;
     }
