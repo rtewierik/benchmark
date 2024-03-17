@@ -65,10 +65,6 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
         return null;
     }
 
-    private void processMessage(String message) {
-        System.out.println("Received message: " + message);
-    }
-
     @Override
     public void close() throws Exception {}
 

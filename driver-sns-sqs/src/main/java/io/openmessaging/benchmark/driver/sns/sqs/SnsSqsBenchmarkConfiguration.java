@@ -20,12 +20,15 @@ public class SnsSqsBenchmarkConfiguration {
     @Getter
     private static final String sqsUri;
     @Getter
+    private static final String snsUri;
+    @Getter
     private static final String region;
     @Getter
     private static final boolean isTpcH;
 
     static {
         sqsUri = System.getenv("SQS_URI");
+        snsUri = System.getenv("SNS_URI");
         region = System.getenv("AWS_REGION");
         isTpcH = Boolean.parseBoolean(System.getenv("IS_TPC_H"));
     }
