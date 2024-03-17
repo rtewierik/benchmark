@@ -29,8 +29,8 @@ public class SnsSqsBenchmarkMessageProducer implements MessageProducer {
         uninterruptibleSleepNs(intendedSendTime);
         // final long sendTime = nanoClock.get();
         producer
-                .sendAsync(key, payload)
-                .exceptionally(this::failure);
+            .sendAsync(key, payload)
+            .exceptionally(this::failure);
     }
 
     private void success(long payloadLength, long intendedSendTime, long sendTime) {

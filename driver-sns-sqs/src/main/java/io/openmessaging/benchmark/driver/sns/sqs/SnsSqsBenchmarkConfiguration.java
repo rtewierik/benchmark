@@ -15,12 +15,17 @@ package io.openmessaging.benchmark.driver.sns.sqs;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class SnsSqsBenchmarkConfiguration {
 
     @Getter
     private static final String sqsUri;
     @Getter
     private static final String snsUri;
+    @Getter
+    private static final List<String> snsUris;
     @Getter
     private static final String region;
     @Getter
@@ -29,6 +34,7 @@ public class SnsSqsBenchmarkConfiguration {
     static {
         sqsUri = System.getenv("SQS_URI");
         snsUri = System.getenv("SNS_URI");
+        snsUris = Arrays.asList(System.getenv("SNS_URIS").split(","));
         region = System.getenv("AWS_REGION");
         isTpcH = Boolean.parseBoolean(System.getenv("IS_TPC_H"));
     }

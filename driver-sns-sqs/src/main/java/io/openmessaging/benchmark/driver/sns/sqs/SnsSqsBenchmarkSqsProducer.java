@@ -28,13 +28,20 @@ public class SnsSqsBenchmarkSqsProducer implements BenchmarkProducer {
     private final AmazonSQS sqsClient;
     private final String sqsUri;
 
+    public SnsSqsBenchmarkSqsProducer(String sqsUri, AmazonSQS sqsClient) {
+        this.sqsUri = sqsUri;
+        this.sqsClient = sqsClient;
+    }
+
     public SnsSqsBenchmarkSqsProducer() {
-        this.sqsUri = SnsSqsBenchmarkConfiguration.getSqsUri();
-        this.sqsClient = AmazonSQSClientBuilder
-            .standard()
-            .withRegion(SnsSqsBenchmarkConfiguration.getRegion())
-            .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
-            .build();
+        this(
+            SnsSqsBenchmarkConfiguration.getSqsUri(),
+            AmazonSQSClientBuilder
+                .standard()
+                .withRegion(SnsSqsBenchmarkConfiguration.getRegion())
+                .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
+                .build()
+        );
     }
 
     @Override

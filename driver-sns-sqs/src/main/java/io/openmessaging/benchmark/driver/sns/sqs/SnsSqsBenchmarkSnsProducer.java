@@ -30,13 +30,20 @@ public class SnsSqsBenchmarkSnsProducer implements BenchmarkProducer {
     private final AmazonSNS snsClient;
     private final String snsUri;
 
-    public SnsSqsBenchmarkSnsProducer(String snsUri) {
+    public SnsSqsBenchmarkSnsProducer(String snsUri, AmazonSNS snsClient) {
         this.snsUri = snsUri;
-        this.snsClient = AmazonSNSClientBuilder
-            .standard()
-            .withRegion(SnsSqsBenchmarkConfiguration.getRegion())
-            .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
-            .build();
+        this.snsClient = snsClient;
+    }
+
+    public SnsSqsBenchmarkSnsProducer() {
+        this(
+            SnsSqsBenchmarkConfiguration.getSnsUri(),
+            AmazonSNSClientBuilder
+                .standard()
+                .withRegion(SnsSqsBenchmarkConfiguration.getRegion())
+                .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
+                .build()
+        );
     }
 
     @Override

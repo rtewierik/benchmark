@@ -39,7 +39,7 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
 
     // TO DO: How to implement updating rate limiting?
     public SnsSqsBenchmarkConsumer() {
-        this.producer = new SnsSqsBenchmarkSqsProducer();
+        this.producer = new SnsSqsBenchmarkSnsProducer();
         this.messageProducer = new SnsSqsBenchmarkMessageProducer(new UniformRateLimiter(1.0));
         this.messageProcessor = new TpcHMessageProcessor(
             Collections.singletonList(this.producer),
@@ -52,10 +52,10 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
     @Override
     public Void handleRequest(SQSEvent event, Context context) {
         for (SQSMessage message : event.getRecords()) {
-            String messageBody = message.getBody();
             if (SnsSqsBenchmarkConfiguration.isTpcH()) {
                 try {
-                    TpcHMessage tpcHMessage = mapper.readValue(messageBody, TpcHMessage.class);
+                    String body = message.getBody();
+                    TpcHMessage tpcHMessage = mapper.readValue(body, TpcHMessage.class);
                     messageProcessor.processTpcHMessage(tpcHMessage);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
