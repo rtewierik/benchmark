@@ -92,7 +92,7 @@ public class WorkloadGenerator implements AutoCloseable {
         List<String> topics = worker.createTopics(new TopicsInfo(numberOfTopics, workload.partitionsPerTopic));
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
 
-        ConsumerAssignment internalConsumerAssignment = createTpcHConsumers(topics, this.arguments.queryId, this.arguments.query);
+        ConsumerAssignment internalConsumerAssignment = createTpcHConsumers(topics);
         this.localWorker.createConsumers(internalConsumerAssignment);
         log.info(
                 "Created {} internal consumers in {} ms",
@@ -305,7 +305,7 @@ public class WorkloadGenerator implements AutoCloseable {
             for (int i = 0; i < workload.subscriptionsPerTopic; i++) {
                 String subscriptionName = generateSubscriptionName(i);
                 for (int j = 0; j < workload.consumerPerSubscription; j++) {
-                    consumerAssignment.topicsSubscriptions.add(new TopicSubscription(topic, subscriptionName, null));
+                    consumerAssignment.topicsSubscriptions.add(new TopicSubscription(topic, subscriptionName));
                 }
             }
         }
@@ -321,36 +321,30 @@ public class WorkloadGenerator implements AutoCloseable {
                 timer.elapsedMillis());
     }
 
-    private ConsumerAssignment createTpcHConsumers(List<String> topics, String queryId, TpcHQuery query) throws IOException {
+    private ConsumerAssignment createTpcHConsumers(List<String> topics) throws IOException {
         ConsumerAssignment consumerAssignment = new ConsumerAssignment(true);
         ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment(true);
 
-        TpcHInfo mapInfo = new TpcHInfo(queryId, query, TpcHConsumer.Map, null, null);
         consumerAssignment.topicsSubscriptions.add(
             new TopicSubscription(
                 topics.get(TpcHConstants.MAP_CMD_INDEX),
-                generateSubscriptionName(TpcHConstants.MAP_CMD_INDEX),
-                mapInfo
+                generateSubscriptionName(TpcHConstants.MAP_CMD_INDEX)
             )
         );
 
-        TpcHInfo generateResultInfo = new TpcHInfo(queryId, query, TpcHConsumer.GenerateResult, null, this.arguments.numberOfChunks);
         TopicSubscription orchestratorSubscription = new TopicSubscription(
             topics.get(TpcHConstants.REDUCE_DST_INDEX),
-            generateSubscriptionName(TpcHConstants.REDUCE_DST_INDEX),
-            generateResultInfo
+            generateSubscriptionName(TpcHConstants.REDUCE_DST_INDEX)
         );
         consumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
         orchestratorConsumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
 
         for (int i = 0; i < this.arguments.numberOfReducers; i++) {
             int sourceIndex = TpcHConstants.REDUCE_SRC_START_INDEX + i;
-            TpcHInfo info = new TpcHInfo(queryId, query, TpcHConsumer.Reduce, this.arguments.getNumberOfMapResults(i), null);
             consumerAssignment.topicsSubscriptions.add(
                 new TopicSubscription(
                     topics.get(sourceIndex),
-                    generateSubscriptionName(sourceIndex),
-                    info
+                    generateSubscriptionName(sourceIndex)
                 )
             );
         }

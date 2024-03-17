@@ -197,14 +197,14 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkConsumer> createConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback, TpcHInfo info) {
+            String topic, String subscriptionName, ConsumerCallback consumerCallback) {
         List<CompletableFuture<Consumer<ByteBuffer>>> futures = new ArrayList<>();
         return client
                 .getPartitionsForTopic(topic)
                 .thenCompose(
                         partitions -> {
                             partitions.forEach(
-                                    p -> futures.add(createInternalConsumer(p, subscriptionName, consumerCallback, info)));
+                                    p -> futures.add(createInternalConsumer(p, subscriptionName, consumerCallback)));
                             return FutureUtil.waitForAll(futures);
                         })
                 .thenApply(
@@ -214,7 +214,7 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
     }
 
     CompletableFuture<Consumer<ByteBuffer>> createInternalConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback, TpcHInfo info) {
+            String topic, String subscriptionName, ConsumerCallback consumerCallback) {
         return client
                 .newConsumer(Schema.BYTEBUFFER)
                 .priorityLevel(0)
@@ -222,7 +222,7 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
                 .messageListener(
                         (c, msg) -> {
                             try {
-                                consumerCallback.messageReceived(msg.getValue(), msg.getPublishTime(), info);
+                                consumerCallback.messageReceived(msg.getValue(), msg.getPublishTime());
                                 c.acknowledgeAsync(msg);
                             } catch (IOException e) {
                                 throw new RuntimeException(e);

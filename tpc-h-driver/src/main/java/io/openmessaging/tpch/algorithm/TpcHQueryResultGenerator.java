@@ -25,6 +25,13 @@ import java.util.Map;
 
 public class TpcHQueryResultGenerator {
 
+    public static TpcHQueryResult generateResult(TpcHIntermediateResult intermediateResult) {
+        return TpcHQueryResultGenerator.generateResult(
+            intermediateResult,
+            intermediateResult.query
+        );
+    }
+
     public static TpcHQueryResult generateResult(TpcHIntermediateResult intermediateResult, TpcHQuery query) {
         switch (query) {
             case PricingSummaryReport:

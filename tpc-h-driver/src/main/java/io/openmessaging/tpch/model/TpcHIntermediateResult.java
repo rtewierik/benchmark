@@ -14,8 +14,10 @@
 package io.openmessaging.tpch.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.openmessaging.benchmark.driver.TpcHQuery;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -23,23 +25,43 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class TpcHIntermediateResult {
+    public final TpcHQuery query;
     public final String queryId;
     public final String batchId;
     public final Integer chunkIndex;
     public Integer numberOfAggregatedResults;
+    public final Integer numberOfMapResults;
+    public final Integer numberOfChunks;
     public final List<TpcHIntermediateResultGroup> groups;
     private final Lock lock = new ReentrantLock();
 
+    public TpcHIntermediateResult(TpcHConsumerAssignment assignment, Map<String, TpcHIntermediateResultGroup> groups) {
+        this.query = assignment.query;
+        this.queryId = assignment.queryId;
+        this.batchId = assignment.queryId;
+        this.chunkIndex = assignment.chunkIndex;
+        this.numberOfAggregatedResults = 1;
+        this.numberOfMapResults = assignment.numberOfMapResults;
+        this.numberOfChunks = assignment.numberOfChunks;
+        this.groups = new ArrayList<>(groups.values());
+    }
+
     public TpcHIntermediateResult(
+            @JsonProperty("query") TpcHQuery query,
             @JsonProperty("queryId") String queryId,
             @JsonProperty("batchId") String batchId,
             @JsonProperty("chunkIndex") Integer chunkIndex,
             @JsonProperty("numberOfAggregatedResults") Integer numberOfAggregatedResults,
+            @JsonProperty("numberOfMapResults") Integer numberOfMapResults,
+            @JsonProperty("numberOfChunks") Integer numberOfChunks,
             @JsonProperty("groups") List<TpcHIntermediateResultGroup> groups) {
+        this.query = query;
         this.queryId = queryId;
         this.batchId = batchId;
         this.chunkIndex = chunkIndex;
         this.numberOfAggregatedResults = numberOfAggregatedResults;
+        this.numberOfMapResults = numberOfMapResults;
+        this.numberOfChunks = numberOfChunks;
         this.groups = groups;
     }
 

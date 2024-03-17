@@ -47,8 +47,7 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
             final String topic,
             final String subscriptionName,
             final JedisPool pool,
-            ConsumerCallback consumerCallback,
-            TpcHInfo info) {
+            ConsumerCallback consumerCallback) {
         this.pool = pool;
         this.topic = topic;
         this.subscriptionName = subscriptionName;
@@ -74,7 +73,7 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
                                             for (StreamEntry entry : streamEntries.getValue()) {
                                                 long timestamp = entry.getID().getTime();
                                                 byte[] payload = entry.getFields().get("payload").getBytes(UTF_8);
-                                                consumerCallback.messageReceived(payload, timestamp, info);
+                                                consumerCallback.messageReceived(payload, timestamp);
                                             }
                                         }
                                     }

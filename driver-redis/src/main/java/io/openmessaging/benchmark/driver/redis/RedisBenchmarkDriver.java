@@ -64,7 +64,7 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkConsumer> createConsumer(
-            final String topic, final String subscriptionName, final ConsumerCallback consumerCallback, final TpcHInfo info) {
+            final String topic, final String subscriptionName, final ConsumerCallback consumerCallback) {
         String consumerId = "consumer-" + getRandomString();
         if (jedisPool == null) {
             setupJedisConn();
@@ -76,7 +76,7 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
         }
         return CompletableFuture.completedFuture(
                 new RedisBenchmarkConsumer(
-                        consumerId, topic, subscriptionName, jedisPool, consumerCallback, info));
+                        consumerId, topic, subscriptionName, jedisPool, consumerCallback));
     }
 
     private void setupJedisConn() {

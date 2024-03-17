@@ -74,7 +74,7 @@ public class TpcHMessageProcessor {
         this.messageProducer = messageProducer;
     }
 
-    public void processTpcHMessage(TpcHMessage message, TpcHInfo info) throws IOException {
+    public void processTpcHMessage(TpcHMessage message) throws IOException {
         String messageId = message.messageId;
         if (processedMessages.contains(messageId)) {
             return;
@@ -88,11 +88,11 @@ public class TpcHMessageProcessor {
                 break;
             case IntermediateResult:
                 TpcHIntermediateResult intermediateResult = mapper.readValue(message.message, TpcHIntermediateResult.class);
-                processIntermediateResult(intermediateResult, info);
+                processIntermediateResult(intermediateResult);
                 break;
             case ReducedResult:
                 TpcHIntermediateResult reducedResult = mapper.readValue(message.message, TpcHIntermediateResult.class);
-                processReducedResult(reducedResult, info);
+                processReducedResult(reducedResult);
                 break;
             default:
                 throw new IllegalArgumentException("Invalid message type detected!");
@@ -109,8 +109,8 @@ public class TpcHMessageProcessor {
             BenchmarkProducer producer = this.producers.get(producerIndex);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
             TpcHMessage message = new TpcHMessage(
-                    TpcHMessageType.IntermediateResult,
-                    messageWriter.writeValueAsString(result)
+                TpcHMessageType.IntermediateResult,
+                messageWriter.writeValueAsString(result)
             );
             String key = keyDistributor.next();
             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
@@ -124,7 +124,7 @@ public class TpcHMessageProcessor {
         }
     }
 
-    private void processIntermediateResult(TpcHIntermediateResult intermediateResult, TpcHInfo info) throws IOException {
+    private void processIntermediateResult(TpcHIntermediateResult intermediateResult) throws IOException {
         String chunkId = this.getChunkId(intermediateResult);
         String batchId = intermediateResult.batchId;
         if (processedIntermediateResults.contains(chunkId)) {
@@ -141,13 +141,13 @@ public class TpcHMessageProcessor {
             existingIntermediateResult = this.collectedIntermediateResults.get(batchId);
             existingIntermediateResult.aggregateIntermediateResult(intermediateResult);
         }
-        if (existingIntermediateResult.numberOfAggregatedResults.intValue() == info.numberOfMapResults.intValue()) {
+        if (existingIntermediateResult.numberOfAggregatedResults.intValue() == intermediateResult.numberOfMapResults.intValue()) {
             BenchmarkProducer producer = this.producers.get(TpcHConstants.REDUCE_DST_INDEX);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
             String reducedResult = messageWriter.writeValueAsString(existingIntermediateResult);
             TpcHMessage message = new TpcHMessage(
-                    TpcHMessageType.ReducedResult,
-                    reducedResult
+                TpcHMessageType.ReducedResult,
+                reducedResult
             );
             String key = keyDistributor.next();
             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
@@ -160,7 +160,7 @@ public class TpcHMessageProcessor {
         }
     }
 
-    private void processReducedResult(TpcHIntermediateResult reducedResult, TpcHInfo info) throws IOException {
+    private void processReducedResult(TpcHIntermediateResult reducedResult) throws IOException {
         String batchId = reducedResult.batchId;
         if (processedReducedResults.contains(batchId)) {
             log.info("Ignored reduced result with batch ID {} due to duplicity!", batchId);
@@ -179,11 +179,10 @@ public class TpcHMessageProcessor {
         log.debug(
                 "Detected reduced result: {}\n\n{}\n\n{}",
                 writer.writeValueAsString(reducedResult),
-                writer.writeValueAsString(existingReducedResult),
-                writer.writeValueAsString(info)
+                writer.writeValueAsString(existingReducedResult)
         );
-        if (existingReducedResult.numberOfAggregatedResults.intValue() == info.numberOfReduceResults.intValue()) {
-            TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult, info.query);
+        if (existingReducedResult.numberOfAggregatedResults.intValue() == reducedResult.numberOfMapResults.intValue()) {
+            TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
             log.info("[LocalWorker] TPC-H query result: {}", writer.writeValueAsString(result));
             onTestCompleted.run();
         }
