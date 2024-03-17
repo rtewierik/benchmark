@@ -84,7 +84,7 @@ public class TpcHMessageProcessor {
         switch (message.type) {
             case ConsumerAssignment:
                 TpcHConsumerAssignment assignment = mapper.readValue(message.message, TpcHConsumerAssignment.class);
-                processConsumerAssignment(assignment, info);
+                processConsumerAssignment(assignment);
                 break;
             case IntermediateResult:
                 TpcHIntermediateResult intermediateResult = mapper.readValue(message.message, TpcHIntermediateResult.class);
@@ -99,12 +99,12 @@ public class TpcHMessageProcessor {
         }
     }
 
-    private void processConsumerAssignment(TpcHConsumerAssignment assignment, TpcHInfo info) {
+    private void processConsumerAssignment(TpcHConsumerAssignment assignment) {
         String s3Uri = assignment.sourceDataS3Uri;
         log.info("[INFO] Applying map to chunk \"{}\"...", s3Uri);
-        try (InputStream stream = this.s3Client.readTpcHChunkFromS3(s3Uri)) {
+        try (InputStream stream = s3Client.readTpcHChunkFromS3(s3Uri)) {
             List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
-            TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, info.query, assignment);
+            TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, assignment.query, assignment);
             int producerIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.producerIndex;
             BenchmarkProducer producer = this.producers.get(producerIndex);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);

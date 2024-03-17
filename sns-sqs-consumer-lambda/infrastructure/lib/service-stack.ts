@@ -24,6 +24,7 @@ import { addAlerting } from '../modules/alerting'
 import { IKey, Key } from 'aws-cdk-lib/aws-kms'
 import { ApiGatewayToSqs } from '@aws-solutions-constructs/aws-apigateway-sqs'
 import { AttributeType, BillingMode, Table, TableEncryption } from 'aws-cdk-lib/aws-dynamodb'
+import path = require('path')
 
 interface DataIngestionLayer {
   sqsQueue: IQueue
@@ -88,7 +89,7 @@ export class ServiceStack extends Stack {
     return sqsQueue
   }
 
-  private createSnsSqsConsumerLambdaLambda(SnsSqsConsumerLambdaQueue: IQueue, SnsSqsConsumerLambdaKmsKey: IKey, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps): LambdaFunction {
+  private createSnsSqsConsumerLambdaLambda(snsSqsConsumerLambdaQueue: IQueue, SnsSqsConsumerLambdaKmsKey: IKey, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps): LambdaFunction {
     const iamRole = new Role(
       this,
       'SnsSqsConsumerLambdaLambdaIamRole',
@@ -109,7 +110,7 @@ export class ServiceStack extends Stack {
     iamRole.addToPolicy(
       new PolicyStatement({
         actions: ['SQS:ReceiveMessage', 'SQS:SendMessage'],
-        resources: [SnsSqsConsumerLambdaQueue.queueArn],
+        resources: [snsSqsConsumerLambdaQueue.queueArn],
       })
     )
     iamRole.addToPolicy(
@@ -119,33 +120,37 @@ export class ServiceStack extends Stack {
       })
     )
 
+    const lambda = new LambdaFunction(this, 'SnsSqsConsumerLambdaFunction', {
+      description: 'This Lambda function ingests experimental results from infrastructure participating in experiments and stores collected data in a DynamoDB table',
+      runtime: Runtime.JAVA_8_CORRETTO,
+      code: Code.fromAsset(path.join(__dirname, '../path/to/your/jar'), {
+        bundling: {
+          image: Runtime.JAVA_8_CORRETTO.bundlingImage,
+          command: [
+            'bash', '-c',
+            'cp -R /asset-input/* /asset-output/',
+          ],
+        },
+      }),
+      functionName: props.appName,
+      handler: 'com.example.MyLambdaHandler::handleRequest', // Your Lambda handler
+      timeout: Duration.seconds(props.functionTimeoutSeconds),
+      memorySize: 512,
+      tracing: Tracing.ACTIVE,
+      role: iamRole,
+      environment: {
+        REGION: this.region,
+        DEBUG: props.debug ? 'TRUE' : 'FALSE',
+      },
+      retryAttempts: 0
+    });
+
     iamRole.addManagedPolicy(
       ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole')
     )
 
-    const lambda = new LambdaFunction(
-      this,
-      'SnsSqsConsumerLambdaLambda',
-      {
-        description: 'This Lambda function ingests experimental results from infrastructure participating in experiments and stores collected data in a DynamoDB table',
-        runtime: Runtime.NODEJS_18_X,
-        code: Code.fromAsset('../lambda/build'),
-        functionName: props.appName,
-        handler: 'index.handler',
-        timeout: Duration.seconds(props.functionTimeoutSeconds),
-        memorySize: 512,
-        tracing: Tracing.ACTIVE,
-        role: iamRole,
-        environment: {
-          REGION: this.region,
-          DEBUG: props.debug ? 'TRUE' : 'FALSE',
-        },
-        retryAttempts: 0
-      }
-    )
-
     lambda.addEventSource(
-      new SqsEventSource(SnsSqsConsumerLambdaQueue,
+      new SqsEventSource(snsSqsConsumerLambdaQueue,
         {
           batchSize: props.batchSize,
           maxBatchingWindow: props.maxBatchingWindow,
