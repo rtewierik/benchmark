@@ -5,8 +5,9 @@ import { Function as LambdaFunction } from 'aws-cdk-lib/aws-lambda'
 import { IQueue } from 'aws-cdk-lib/aws-sqs'
 
 export function addMonitoring(stack: Stack, queue: IQueue, lambda: LambdaFunction, deadLetterQueue: IQueue, snsDeadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps, id: string) {
+  const lowerCaseId = id.toLowerCase()
   const widgetWidth = 8
-  const dashboardName = `${props.appName}-dashboard`
+  const dashboardName = `${props.appName}-dashboard-${lowerCaseId}`
 
   const sqsInOut = new GraphWidget({
     width: widgetWidth,

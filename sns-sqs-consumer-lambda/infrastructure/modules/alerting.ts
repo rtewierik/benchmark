@@ -97,7 +97,7 @@ export function addAlerting(stack: Stack, lambda: LambdaFunction, deadLetterQueu
   snsDeadLetterQueueMessagesAddedAlarm.addAlarmAction(new SnsAction(alertTopic))
   snsDeadLetterQueueMessagesAddedAlarm.addOkAction(new SnsAction(alertTopic))
 
-  const snsDeadLetterQueueMessageCount = snsDeadLetterQueueMessageCountMetric.createAlarm(stack, `SnsSqsConsumerLambdaSnsDlqMessageCountAlarm`, {
+  const snsDeadLetterQueueMessageCount = snsDeadLetterQueueMessageCountMetric.createAlarm(stack, `SnsSqsConsumerLambdaSnsDlqMessageCountAlarm${id}`, {
     alarmName: `sns-sqs-consumer-lambda-sns-dlq-message-count-${lowerCaseId}`,
     actionsEnabled: props.alertingEnabled,
     comparisonOperator: ComparisonOperator.GREATER_THAN_THRESHOLD,

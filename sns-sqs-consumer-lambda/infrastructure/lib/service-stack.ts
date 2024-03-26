@@ -46,15 +46,15 @@ export class ServiceStack extends Stack {
     super(scope, id, props)
     const mapTopic = this.createSnsSqsConsumerLambdaSnsTopic(props, MAP_ID)
     for (var i = 0; i < props.numberOfConsumers; i++) {
-      this.createDataIngestionLayer(props, MAP_ID, mapTopic)
-      this.createDataIngestionLayer(props, REDUCE_ID)
+      this.createDataIngestionLayer(props, `${MAP_ID}${i}`, mapTopic)
+      this.createDataIngestionLayer(props, `${REDUCE_ID}${i}`)
     }
     this.createDataIngestionLayer(props, RESULT_ID)
   }
 
   private createDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, existingTopic?: SnsTopic) {
     const { queue, snsDeadLetterQueue, lambdaDeadLetterQueue } = this.createSnsSqsConsumerLambdaDataIngestionLayer(props, id, existingTopic)
-    const lambda = this.createSnsSqsConsumerLambda(queue, lambdaDeadLetterQueue, props)
+    const lambda = this.createSnsSqsConsumerLambda(queue, lambdaDeadLetterQueue, props, id)
     addMonitoring(this, queue, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
     addAlerting(this, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
   }
@@ -108,13 +108,14 @@ export class ServiceStack extends Stack {
       })
   }
 
-  private createSnsSqsConsumerLambda(snsSqsConsumerLambdaQueue: IQueue, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps): LambdaFunction {
+  private createSnsSqsConsumerLambda(snsSqsConsumerLambdaQueue: IQueue, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps, id: string): LambdaFunction {
+    const lowerCaseId = id.toLowerCase()
     const iamRole = new Role(
       this,
-      'SnsSqsConsumerLambdaIamRole',
+      `SnsSqsConsumerLambdaIamRole${id}`,
       {
         assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
-        roleName: `${props.appName}-lambda-role`,
+        roleName: `${props.appName}-lambda-role-${lowerCaseId}`,
         description:
           'IAM Role for granting Lambda receive message to the Benchmark Monitoring queue and send message to the DLQ',
       }
@@ -133,19 +134,11 @@ export class ServiceStack extends Stack {
       })
     )
 
-    const lambda = new LambdaFunction(this, 'SnsSqsConsumerLambdaFunction', {
+    const lambda = new LambdaFunction(this, `SnsSqsConsumerLambdaFunction${id}`, {
       description: 'This Lambda function ingests experimental results from infrastructure participating in experiments and stores collected data in a DynamoDB table',
       runtime: Runtime.JAVA_8_CORRETTO,
-      code: Code.fromAsset(path.join(__dirname, '../../driver-sns-sqs-package/target/openmessaging-benchmark-driver-sns-sqs-0.0.1-SNAPSHOT-jar-with-dependencies.jar'), {
-        bundling: {
-          image: Runtime.JAVA_8_CORRETTO.bundlingImage,
-          command: [
-            'bash', '-c',
-            'cp -R /asset-input/* /asset-output/',
-          ],
-        },
-      }),
-      functionName: props.appName,
+      code: Code.fromAsset(path.join(__dirname, '../../../driver-sns-sqs-package/target/openmessaging-benchmark-driver-sns-sqs-0.0.1-SNAPSHOT-jar-with-dependencies.jar')),
+      functionName: `${props.appName}-${lowerCaseId}`,
       handler: 'io.openmessaging.benchmark.driver.sns.sqsSnsSqsBenchmarkConsumer::handleRequest',
       timeout: Duration.seconds(props.functionTimeoutSeconds),
       memorySize: 512,
