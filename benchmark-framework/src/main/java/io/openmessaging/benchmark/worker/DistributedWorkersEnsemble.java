@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import io.openmessaging.benchmark.EnvironmentConfiguration;
 import io.openmessaging.tpch.TpcHConstants;
 import io.openmessaging.benchmark.utils.ListPartition;
 import io.openmessaging.benchmark.utils.RandomGenerator;
@@ -75,6 +76,9 @@ public class DistributedWorkersEnsemble implements Worker {
      */
     @VisibleForTesting
     static int getNumberOfProducerWorkers(List<Worker> workers, boolean extraConsumerWorkers) {
+        if (EnvironmentConfiguration.isProduceWithAllWorkers()) {
+            return workers.size();
+        }
         return extraConsumerWorkers ? (workers.size() + 2) / 3 : workers.size() / 2;
     }
 

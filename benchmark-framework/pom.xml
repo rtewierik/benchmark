@@ -67,6 +67,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>driver-sns-sqs</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>tpc-h-driver</artifactId>
             <version>${project.version}</version>
         </dependency>
