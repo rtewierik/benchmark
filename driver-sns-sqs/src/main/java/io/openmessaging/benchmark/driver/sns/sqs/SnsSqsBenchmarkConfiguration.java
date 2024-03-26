@@ -32,7 +32,7 @@ public class SnsSqsBenchmarkConfiguration {
     static {
         snsUri = System.getenv("SNS_URI");
         snsUris = Arrays.asList(System.getenv("SNS_URIS").split(","));
-        region = System.getenv("AWS_REGION");
+        region = System.getenv("REGION");
         isTpcH = Boolean.parseBoolean(System.getenv("IS_TPC_H"));
     }
 }

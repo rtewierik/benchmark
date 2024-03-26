@@ -155,7 +155,7 @@ export class ServiceStack extends Stack {
       tracing: Tracing.ACTIVE,
       role: iamRole,
       environment: {
-        AWS_REGION: this.region,
+        REGION: this.region,
         SNS_URI: targetTopic ? `arn:aws:sns:${this.region}:${this.account}:${targetTopic}` : '',
         SNS_URIS: targetTopic ? targetTopic : '',
         IS_TPC_H: `${props.isTpcH}`,

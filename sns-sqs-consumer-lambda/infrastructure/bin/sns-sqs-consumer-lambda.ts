@@ -17,7 +17,8 @@ const stackProps: SnsSqsConsumerLambdaStackProps = {
   functionTimeoutSeconds: 30,
   eventsVisibilityTimeoutSeconds: 30,
   numberOfConsumers: 3,
-  alertingEnabled: true
+  alertingEnabled: true,
+  isTpcH: false
 }
 
 new ServiceStack(app, 'sns-sqs-consumer-lambda', stackProps)
