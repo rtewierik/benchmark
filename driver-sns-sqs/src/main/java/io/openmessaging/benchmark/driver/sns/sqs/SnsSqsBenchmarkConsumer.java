@@ -52,18 +52,30 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
 
     @Override
     public Void handleRequest(SQSEvent event, Context context) {
-        for (SQSMessage message : event.getRecords()) {
-            if (SnsSqsBenchmarkConfiguration.isTpcH()) {
-                try {
-                    String body = message.getBody();
-                    TpcHMessage tpcHMessage = mapper.readValue(body, TpcHMessage.class);
-                    messageProcessor.processTpcHMessage(tpcHMessage);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+        if (SnsSqsBenchmarkConfiguration.isTpcH()) {
+            handleTpcHRequest(event);
+        } else {
+            handleThroughputRequest(event);
         }
         return null;
+    }
+
+    private void handleTpcHRequest(SQSEvent event) {
+        for (SQSMessage message : event.getRecords()) {
+            try {
+                String body = message.getBody();
+                TpcHMessage tpcHMessage = mapper.readValue(body, TpcHMessage.class);
+                messageProcessor.processTpcHMessage(tpcHMessage);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void handleThroughputRequest(SQSEvent event) {
+        for (SQSMessage message : event.getRecords()) {
+            // TO DO: Consume message here.
+        }
     }
 
     @Override

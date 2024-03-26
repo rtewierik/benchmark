@@ -21,8 +21,6 @@ import java.util.List;
 public class SnsSqsBenchmarkConfiguration {
 
     @Getter
-    private static final String sqsUri;
-    @Getter
     private static final String snsUri;
     @Getter
     private static final List<String> snsUris;
@@ -32,7 +30,6 @@ public class SnsSqsBenchmarkConfiguration {
     private static final boolean isTpcH;
 
     static {
-        sqsUri = System.getenv("SQS_URI");
         snsUri = System.getenv("SNS_URI");
         snsUris = Arrays.asList(System.getenv("SNS_URIS").split(","));
         region = System.getenv("AWS_REGION");

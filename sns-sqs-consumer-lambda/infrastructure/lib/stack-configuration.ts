@@ -9,4 +9,5 @@ export interface SnsSqsConsumerLambdaStackProps extends StackProps {
   eventsVisibilityTimeoutSeconds: number
   alertingEnabled: boolean
   numberOfConsumers: number
+  isTpcH: boolean
 }

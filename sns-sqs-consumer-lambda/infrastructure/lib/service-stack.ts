@@ -40,21 +40,31 @@ interface DataIngestionLayer {
 const MAP_ID = 'Map'
 const REDUCE_ID = 'Reduce'
 const RESULT_ID = 'Result'
+const DEFAULT_ID = 'Default'
 
 export class ServiceStack extends Stack {
   constructor(scope: App, id: string, props: SnsSqsConsumerLambdaStackProps) {
     super(scope, id, props)
-    const mapTopic = this.createSnsSqsConsumerLambdaSnsTopic(props, MAP_ID)
-    for (var i = 0; i < props.numberOfConsumers; i++) {
-      this.createDataIngestionLayer(props, `${MAP_ID}${i}`, mapTopic)
-      this.createDataIngestionLayer(props, `${REDUCE_ID}${i}`)
+    if (props.isTpcH) {
+      const mapTopic = this.createSnsSqsConsumerLambdaSnsTopic(props, MAP_ID)
+      for (var i = 0; i < props.numberOfConsumers; i++) {
+        const reduceTopicId = `${REDUCE_ID}${i}`
+        this.createDataIngestionLayer(props, `${MAP_ID}${i}`, this.getSnsTopicName(props, reduceTopicId), mapTopic)
+        this.createDataIngestionLayer(props, reduceTopicId, this.getSnsTopicName(props, RESULT_ID))
+      }
+      this.createDataIngestionLayer(props, RESULT_ID)
+    } else {
+      this.createDataIngestionLayer(props, DEFAULT_ID)
     }
-    this.createDataIngestionLayer(props, RESULT_ID)
   }
 
-  private createDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, existingTopic?: SnsTopic) {
+  private getSnsTopicName(props: SnsSqsConsumerLambdaStackProps, id: string) {
+    return `${props.appName}-sns-topic-${id.toLowerCase()}`
+  }
+
+  private createDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, targetTopic?: string, existingTopic?: SnsTopic) {
     const { queue, snsDeadLetterQueue, lambdaDeadLetterQueue } = this.createSnsSqsConsumerLambdaDataIngestionLayer(props, id, existingTopic)
-    const lambda = this.createSnsSqsConsumerLambda(queue, lambdaDeadLetterQueue, props, id)
+    const lambda = this.createSnsSqsConsumerLambda(queue, lambdaDeadLetterQueue, props, id, targetTopic)
     addMonitoring(this, queue, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
     addAlerting(this, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
   }
@@ -78,7 +88,7 @@ export class ServiceStack extends Stack {
         retentionPeriod: Duration.days(7)
       })
     const topic = new Topic(this, `SnsSqsConsumerLambdaSnsTopic${id}`, {
-      topicName: `${props.appName}-sns-topic-${lowerCaseId}`,
+      topicName: this.getSnsTopicName(props, id),
       enforceSSL: false
     })
     return { topic, deadLetterQueue }
@@ -108,7 +118,7 @@ export class ServiceStack extends Stack {
       })
   }
 
-  private createSnsSqsConsumerLambda(snsSqsConsumerLambdaQueue: IQueue, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps, id: string): LambdaFunction {
+  private createSnsSqsConsumerLambda(snsSqsConsumerLambdaQueue: IQueue, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps, id: string, targetTopic: string | undefined): LambdaFunction {
     const lowerCaseId = id.toLowerCase()
     const iamRole = new Role(
       this,
@@ -145,7 +155,10 @@ export class ServiceStack extends Stack {
       tracing: Tracing.ACTIVE,
       role: iamRole,
       environment: {
-        REGION: this.region,
+        AWS_REGION: this.region,
+        SNS_URI: targetTopic ? `arn:aws:sns:${this.region}:${this.account}:${targetTopic}` : '',
+        SNS_URIS: targetTopic ? targetTopic : '',
+        IS_TPC_H: `${props.isTpcH}`,
         DEBUG: props.debug ? 'TRUE' : 'FALSE',
       },
       retryAttempts: 0
