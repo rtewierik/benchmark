@@ -11,13 +11,12 @@ const stackProps: SnsSqsConsumerLambdaStackProps = {
     region: 'eu-west-1'
   },
   appName: 'sns-sqs-consumer-lambda',
-  maxBatchingWindow: Duration.minutes(1),
-  batchSize: 100,
+  maxBatchingWindow: undefined,
+  batchSize: 10,
   debug: true,
   functionTimeoutSeconds: 30,
   eventsVisibilityTimeoutSeconds: 30,
-  readCapacity: 1,
-  writeCapacity: 1,
+  numberOfConsumers: 3,
   alertingEnabled: true
 }
 
