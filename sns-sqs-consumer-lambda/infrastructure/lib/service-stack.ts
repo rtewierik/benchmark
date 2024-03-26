@@ -55,8 +55,8 @@ export class ServiceStack extends Stack {
   private createDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, existingTopic?: SnsTopic) {
     const { queue, snsDeadLetterQueue, lambdaDeadLetterQueue } = this.createSnsSqsConsumerLambdaDataIngestionLayer(props, id, existingTopic)
     const lambda = this.createSnsSqsConsumerLambda(queue, lambdaDeadLetterQueue, props)
-    addMonitoring(this, queue, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props)
-    addAlerting(this, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props)
+    addMonitoring(this, queue, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
+    addAlerting(this, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
   }
 
   private createSnsSqsConsumerLambdaDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, existingTopic: SnsTopic | undefined): DataIngestionLayer {
