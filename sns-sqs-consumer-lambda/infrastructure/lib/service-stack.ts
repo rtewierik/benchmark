@@ -1,4 +1,4 @@
-import { App, Duration, RemovalPolicy, Stack } from 'aws-cdk-lib'
+import { App, Duration, Stack } from 'aws-cdk-lib'
 import {
   Tracing,
   Runtime,
@@ -21,91 +21,106 @@ import { SnsSqsConsumerLambdaStackProps } from './stack-configuration'
 
 import { addMonitoring } from '../modules/monitoring'
 import { addAlerting } from '../modules/alerting'
-import { IKey, Key } from 'aws-cdk-lib/aws-kms'
-import { ApiGatewayToSqs } from '@aws-solutions-constructs/aws-apigateway-sqs'
-import { AttributeType, BillingMode, Table, TableEncryption } from 'aws-cdk-lib/aws-dynamodb'
 import path = require('path')
+import { ITopic, Topic } from 'aws-cdk-lib/aws-sns'
+import { SqsSubscription } from 'aws-cdk-lib/aws-sns-subscriptions'
+
+interface SnsTopic {
+  topic: ITopic
+  deadLetterQueue: IQueue
+}
 
 interface DataIngestionLayer {
-  sqsQueue: IQueue
-  ingestionDeadLetterQueue: IQueue
+  topic: ITopic
+  queue: IQueue
+  snsDeadLetterQueue: IQueue
+  lambdaDeadLetterQueue: IQueue
 }
+
+const MAP_ID = 'Map'
+const REDUCE_ID = 'Reduce'
+const RESULT_ID = 'Result'
 
 export class ServiceStack extends Stack {
   constructor(scope: App, id: string, props: SnsSqsConsumerLambdaStackProps) {
     super(scope, id, props)
-
-    const kmsKey = this.createSnsSqsConsumerLambdaKmsKey(props)
-    const { sqsQueue, ingestionDeadLetterQueue } = this.createSnsSqsConsumerLambdaDataIngestionLayer(kmsKey, props)
-    const deadLetterQueue = this.createSnsSqsConsumerLambdaLambdaDeadLetterQueue(props)
-    const lambda = this.createSnsSqsConsumerLambda(sqsQueue, kmsKey, deadLetterQueue, props)
-    addMonitoring(this, sqsQueue, lambda, deadLetterQueue, ingestionDeadLetterQueue, props)
-    addAlerting(this, lambda, deadLetterQueue, ingestionDeadLetterQueue, props)
-  }
-
-  private createSnsSqsConsumerLambdaKmsKey(props: SnsSqsConsumerLambdaStackProps): Key {
-    return new Key(this, 'SnsSqsConsumerLambdaKmsKey', {
-      description:
-        'The KMS key used to encrypt the SQS queue used in Benchmark Monitoring',
-      alias: `${props.appName}-sqs-encryption`,
-      enableKeyRotation: true,
-      enabled: true,
-    })
-  }
-
-  private createSnsSqsConsumerLambdaDataIngestionLayer(kmsKey: Key, props: SnsSqsConsumerLambdaStackProps): DataIngestionLayer {
-    const { sqsQueue, deadLetterQueue, apiGatewayRole } = new ApiGatewayToSqs(this, 'SnsSqsConsumerLambdaDataIngestion', {
-      queueProps: {
-        queueName: props.appName,
-        visibilityTimeout: Duration.seconds(props.eventsVisibilityTimeoutSeconds),
-        encryption: QueueEncryption.KMS,
-        dataKeyReuse: Duration.seconds(300),
-        retentionPeriod: Duration.days(14),
-      },
-      deployDeadLetterQueue: true,
-      maxReceiveCount: 10,
-      allowCreateOperation: true,
-      encryptionKey: kmsKey
-    })
-    if (!deadLetterQueue) {
-      throw new Error('The ApiGatewayToSqs dependency did not yield a dead letter queue!')
+    const mapTopic = this.createSnsSqsConsumerLambdaSnsTopic(props, MAP_ID)
+    for (var i = 0; i < props.numberOfConsumers; i++) {
+      this.createDataIngestionLayer(props, `${MAP_ID}${i}`, mapTopic)
+      this.createDataIngestionLayer(props, `${REDUCE_ID}${i}`)
     }
-    kmsKey.grantEncryptDecrypt(apiGatewayRole);
-    return { sqsQueue, ingestionDeadLetterQueue: deadLetterQueue.queue }
+    this.createDataIngestionLayer(props, RESULT_ID)
   }
 
-  private createSnsSqsConsumerLambdaLambdaDeadLetterQueue(props: SnsSqsConsumerLambdaStackProps): IQueue {
-    const sqsQueue = new Queue(
+  private createDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, existingTopic?: SnsTopic) {
+    const { queue, snsDeadLetterQueue, lambdaDeadLetterQueue } = this.createSnsSqsConsumerLambdaDataIngestionLayer(props, id, existingTopic)
+    const lambda = this.createSnsSqsConsumerLambda(queue, lambdaDeadLetterQueue, props, id)
+    addMonitoring(this, queue, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
+    addAlerting(this, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
+  }
+
+  private createSnsSqsConsumerLambdaDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, existingTopic: SnsTopic | undefined): DataIngestionLayer {
+    const { topic, deadLetterQueue } = existingTopic ?? this.createSnsSqsConsumerLambdaSnsTopic(props, id)
+    const queue = this.createSnsSqsConsumerLambdaQueue(props, id)
+    const lambdaDeadLetterQueue = this.createSnsSqsConsumerLambdaDeadLetterQueue(props, id)
+    topic.addSubscription(new SqsSubscription(queue, { deadLetterQueue }))
+    return { topic, queue, snsDeadLetterQueue: deadLetterQueue, lambdaDeadLetterQueue }
+  }
+
+  private createSnsSqsConsumerLambdaSnsTopic(props: SnsSqsConsumerLambdaStackProps, id: string): SnsTopic {
+    const lowerCaseId = id.toLowerCase()
+    const deadLetterQueue = new Queue(
       this,
-      'SnsSqsConsumerLambdaLambdaDeadLetterQueue',
+      `SnsSqsConsumerLambdaSnsDeadLetterQueue${id}`,
       {
-        queueName: `${props.appName}-dlq`,
-        encryption: QueueEncryption.KMS_MANAGED,
-        dataKeyReuse: Duration.seconds(300),
-        retentionPeriod: Duration.days(14)
+        queueName: `${props.appName}-sns-dlq-${lowerCaseId}`,
+        encryption: QueueEncryption.UNENCRYPTED,
+        retentionPeriod: Duration.days(7)
       })
-
-    return sqsQueue
+    const topic = new Topic(this, `SnsSqsConsumerLambdaSnsTopic${id}`, {
+      topicName: `${props.appName}-sns-topic-${lowerCaseId}`,
+      enforceSSL: false
+    })
+    return { topic, deadLetterQueue }
   }
 
-  private createSnsSqsConsumerLambda(snsSqsConsumerLambdaQueue: IQueue, SnsSqsConsumerLambdaKmsKey: IKey, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps): LambdaFunction {
+  private createSnsSqsConsumerLambdaQueue(props: SnsSqsConsumerLambdaStackProps, id: string): IQueue {
+    const lowerCaseId = id.toLowerCase()
+    return new Queue(
+      this,
+      `SnsSqsConsumerLambdaQueue${id}`,
+      {
+        queueName: `${props.appName}-${lowerCaseId}`,
+        encryption: QueueEncryption.UNENCRYPTED,
+        retentionPeriod: Duration.days(7)
+      })
+  }
+
+  private createSnsSqsConsumerLambdaDeadLetterQueue(props: SnsSqsConsumerLambdaStackProps, id: string): IQueue {
+    const lowerCaseId = id.toLowerCase()
+    return new Queue(
+      this,
+      `SnsSqsConsumerLambdaDeadLetterQueue${id}`,
+      {
+        queueName: `${props.appName}-dlq-${lowerCaseId}`,
+        encryption: QueueEncryption.UNENCRYPTED,
+        retentionPeriod: Duration.days(7)
+      })
+  }
+
+  private createSnsSqsConsumerLambda(snsSqsConsumerLambdaQueue: IQueue, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps, id: string): LambdaFunction {
+    const lowerCaseId = id.toLowerCase()
     const iamRole = new Role(
       this,
-      'SnsSqsConsumerLambdaLambdaIamRole',
+      `SnsSqsConsumerLambdaIamRole${id}`,
       {
         assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
-        roleName: `${props.appName}-lambda-role`,
+        roleName: `${props.appName}-lambda-role-${lowerCaseId}`,
         description:
           'IAM Role for granting Lambda receive message to the Benchmark Monitoring queue and send message to the DLQ',
       }
     )
-
-    iamRole.addToPolicy(
-      new PolicyStatement({
-        actions: ['kms:Decrypt', 'kms:GenerateDataKey'],
-        resources: [SnsSqsConsumerLambdaKmsKey.keyArn],
-      })
-    )
+    
     iamRole.addToPolicy(
       new PolicyStatement({
         actions: ['SQS:ReceiveMessage', 'SQS:SendMessage'],
@@ -119,20 +134,12 @@ export class ServiceStack extends Stack {
       })
     )
 
-    const lambda = new LambdaFunction(this, 'SnsSqsConsumerLambdaFunction', {
+    const lambda = new LambdaFunction(this, `SnsSqsConsumerLambdaFunction${id}`, {
       description: 'This Lambda function ingests experimental results from infrastructure participating in experiments and stores collected data in a DynamoDB table',
       runtime: Runtime.JAVA_8_CORRETTO,
-      code: Code.fromAsset(path.join(__dirname, '../path/to/your/jar'), {
-        bundling: {
-          image: Runtime.JAVA_8_CORRETTO.bundlingImage,
-          command: [
-            'bash', '-c',
-            'cp -R /asset-input/* /asset-output/',
-          ],
-        },
-      }),
-      functionName: props.appName,
-      handler: 'com.example.MyLambdaHandler::handleRequest', // Your Lambda handler
+      code: Code.fromAsset(path.join(__dirname, '../../../driver-sns-sqs-package/target/openmessaging-benchmark-driver-sns-sqs-0.0.1-SNAPSHOT-jar-with-dependencies.jar')),
+      functionName: `${props.appName}-${lowerCaseId}`,
+      handler: 'io.openmessaging.benchmark.driver.sns.sqsSnsSqsBenchmarkConsumer::handleRequest',
       timeout: Duration.seconds(props.functionTimeoutSeconds),
       memorySize: 512,
       tracing: Tracing.ACTIVE,

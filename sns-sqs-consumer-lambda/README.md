@@ -17,7 +17,7 @@ git clone https://github.com/rtewierik/benchmark.git
 Navigate to the root directory of the Lambda project.
 
 ``
-cd benchmark/sns-sqs-consumer-lambda
+cd benchmark/sns-sqs-consumer-lambda/infrastructure
 ``
 
 Install the project dependencies using NPM.
@@ -32,7 +32,6 @@ Ensure the environment variable `AWS_DEFAULT_PROFILE` is set if you want to use 
 
 Run the following commands locally to deploy the AWS CDK project to AWS.
 
-* **Navigate to the `lambda` project and build it using npm:** `cd lambda && npm install && npm run build && cd ..`
 * **Navigate to the `infrastructure` project, verify AWS environment and CDK version and build the CDK project:** `cd infrastructure && cdk doctor && npm install && npm run build`
 * **Verify staged changes:** `npx aws-cdk diff sns-sqs-consumer-lambda`
 * **Deploy staged changes:** `npx aws-cdk deploy sns-sqs-consumer-lambda --require-approval never`
