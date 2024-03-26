@@ -1,36 +1,3 @@
-variable "public_key_path" {
-  description = <<DESCRIPTION
-Path to the SSH public key to be used for authentication.
-Ensure this keypair is added to your local SSH agent so provisioners can
-connect.
-
-Example: ~/.ssh/sns_sqs_aws.pub
-DESCRIPTION
-}
-
-resource "random_id" "hash" {
-  byte_length = 8
-}
-
-variable "key_name" {
-  default     = "benchmark-key-sns-sqs"
-  description = "Desired name of AWS key pair"
-}
-
-variable "region" {}
-
-variable "ami" {}
-
-variable "az" {}
-
-variable "instance_types" {
-  type = map(string)
-}
-
-variable "num_instances" {
-  type = map(string)
-}
-
 # Create a VPC to launch our instances into
 resource "aws_vpc" "benchmark_vpc" {
   cidr_block = "10.0.0.0/16"
@@ -110,12 +77,18 @@ resource "aws_spot_instance_request" "client" {
   key_name               = aws_key_pair.auth.id
   subnet_id              = aws_subnet.benchmark_subnet.id
   vpc_security_group_ids = [aws_security_group.benchmark_security_group.id]
-  availability_zone      = "us-west-2a"
+  availability_zone      = var.az
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = var.num_instances["client"]
 
   iam_instance_profile = aws_iam_instance_profile.sns_sqs_ec2_instance_profile.name
+
+  user_data = <<-EOF
+    #!/bin/bash
+    echo "export SNS_URIS=${var.sns_uris}" >> /etc/profile.d/myenvvars.sh
+    echo "export REGION=${var.region}" >> /etc/profile.d/myenvvars.sh
+    EOF
 
   tags = {
     Name = "sns_sqs_client_${count.index}"

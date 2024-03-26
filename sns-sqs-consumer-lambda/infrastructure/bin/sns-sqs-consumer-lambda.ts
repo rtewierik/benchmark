@@ -8,7 +8,7 @@ const stackProps: SnsSqsConsumerLambdaStackProps = {
   description: 'SNS/SQS driver',
   env: {
     account: '138945776678',
-    region: 'eu-west-1'
+    region: 'us-west-2'
   },
   appName: 'sns-sqs-consumer-lambda',
   maxBatchingWindow: undefined,

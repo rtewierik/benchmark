@@ -54,6 +54,7 @@ export class ServiceStack extends Stack {
       }
       this.createDataIngestionLayer(props, RESULT_ID)
     } else {
+      // TO DO: Consider using `props.numberOfConsumers` here to create more than one SNS/SQS pair. Might not be necessary since infrastructure should be isolated.
       this.createDataIngestionLayer(props, DEFAULT_ID)
     }
   }
