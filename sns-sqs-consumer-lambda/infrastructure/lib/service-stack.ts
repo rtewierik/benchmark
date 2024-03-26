@@ -136,7 +136,7 @@ export class ServiceStack extends Stack {
     const lambda = new LambdaFunction(this, 'SnsSqsConsumerLambdaFunction', {
       description: 'This Lambda function ingests experimental results from infrastructure participating in experiments and stores collected data in a DynamoDB table',
       runtime: Runtime.JAVA_8_CORRETTO,
-      code: Code.fromAsset(path.join(__dirname, '../path/to/your/jar'), {
+      code: Code.fromAsset(path.join(__dirname, '../../driver-sns-sqs-package/target/openmessaging-benchmark-driver-sns-sqs-0.0.1-SNAPSHOT-jar-with-dependencies.jar'), {
         bundling: {
           image: Runtime.JAVA_8_CORRETTO.bundlingImage,
           command: [
@@ -146,7 +146,7 @@ export class ServiceStack extends Stack {
         },
       }),
       functionName: props.appName,
-      handler: 'com.example.MyLambdaHandler::handleRequest', // Your Lambda handler
+      handler: 'io.openmessaging.benchmark.driver.sns.sqsSnsSqsBenchmarkConsumer::handleRequest',
       timeout: Duration.seconds(props.functionTimeoutSeconds),
       memorySize: 512,
       tracing: Tracing.ACTIVE,
