@@ -75,6 +75,7 @@ public class TpcHMessageProcessor {
 
     public void processTpcHMessage(TpcHMessage message) throws IOException {
         String messageId = message.messageId;
+        log.info("Processing TPC-H message: {}", writer.writeValueAsString(message));
         if (processedMessages.contains(messageId)) {
             return;
         } else {
@@ -176,11 +177,11 @@ public class TpcHMessageProcessor {
             existingReducedResult.aggregateReducedResult(reducedResult);
         }
         log.debug(
-                "Detected reduced result: {}\n\n{}\n\n{}",
+                "Detected reduced result: {}\n\n{}",
                 writer.writeValueAsString(reducedResult),
                 writer.writeValueAsString(existingReducedResult)
         );
-        if (existingReducedResult.numberOfAggregatedResults.intValue() == reducedResult.numberOfMapResults.intValue()) {
+        if (existingReducedResult.numberOfAggregatedResults.intValue() == reducedResult.numberOfChunks.intValue()) {
             TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
             log.info("[LocalWorker] TPC-H query result: {}", writer.writeValueAsString(result));
             onTestCompleted.run();

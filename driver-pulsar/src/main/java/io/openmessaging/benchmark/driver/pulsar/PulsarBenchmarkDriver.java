@@ -181,13 +181,16 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
     }
 
     @Override
-    public CompletableFuture<Void> createTopic(String topic, int partitions) {
+    public CompletableFuture<TopicInfo> createTopic(TopicInfo info) {
+        String topic = info.getTopic();
+        int partitions = info.getPartitions();
         if (partitions == 1) {
             // No-op
             return CompletableFuture.completedFuture(null);
         }
 
-        return adminClient.topics().createPartitionedTopicAsync(topic, partitions);
+        return adminClient.topics().createPartitionedTopicAsync(topic, partitions)
+            .thenApply(unused -> info);
     }
 
     @Override

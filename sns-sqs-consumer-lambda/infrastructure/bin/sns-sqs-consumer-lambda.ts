@@ -1,4 +1,4 @@
-import { App, Duration } from 'aws-cdk-lib'
+import { App } from 'aws-cdk-lib'
 import { SnsSqsConsumerLambdaStackProps } from '../lib/stack-configuration'
 import { ServiceStack } from '../lib/service-stack'
 
@@ -8,18 +8,17 @@ const stackProps: SnsSqsConsumerLambdaStackProps = {
   description: 'SNS-SQS driver',
   env: {
     account: '138945776678',
-    region: 'us-west-2'
+    region: 'eu-west-1'
   },
   appName: 'sns-sqs-consumer-lambda',
   maxBatchingWindow: undefined,
-  batchSize: 10,
+  batchSize: 1,
   reportBatchItemFailures: false,
   debug: true,
-  functionTimeoutSeconds: 30,
-  eventsVisibilityTimeoutSeconds: 30,
+  functionTimeoutSeconds: 300,
   numberOfConsumers: 3,
   alertingEnabled: true,
-  isTpcH: false
+  isTpcH: true
 }
 
 new ServiceStack(app, 'sns-sqs-consumer-lambda', stackProps)

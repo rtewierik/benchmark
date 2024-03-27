@@ -7,7 +7,6 @@ export interface SnsSqsConsumerLambdaStackProps extends StackProps {
   reportBatchItemFailures: boolean
   debug: boolean
   functionTimeoutSeconds: number
-  eventsVisibilityTimeoutSeconds: number
   alertingEnabled: boolean
   numberOfConsumers: number
   isTpcH: boolean

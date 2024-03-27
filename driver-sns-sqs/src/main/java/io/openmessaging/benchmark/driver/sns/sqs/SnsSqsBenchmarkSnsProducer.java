@@ -35,9 +35,9 @@ public class SnsSqsBenchmarkSnsProducer implements BenchmarkProducer {
         this.snsClient = snsClient;
     }
 
-    public SnsSqsBenchmarkSnsProducer() {
+    public SnsSqsBenchmarkSnsProducer(String snsUri) {
         this(
-            SnsSqsBenchmarkConfiguration.getSnsUri(),
+            snsUri,
             AmazonSNSClientBuilder
                 .standard()
                 .withRegion(SnsSqsBenchmarkConfiguration.getRegion())

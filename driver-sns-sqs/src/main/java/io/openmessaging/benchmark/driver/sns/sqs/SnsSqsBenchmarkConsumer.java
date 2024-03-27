@@ -23,44 +23,37 @@ import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
-import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import io.openmessaging.benchmark.driver.MessageProducer;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, BenchmarkConsumer {
 
-    private final BenchmarkProducer producer;
-    private final MessageProducer messageProducer;
-    private final TpcHMessageProcessor messageProcessor;
-    private final AmazonSQS sqsClient;
-    private final String sqsUri;
-
-    // TO DO: How to implement updating rate limiting?
-    public SnsSqsBenchmarkConsumer() {
-        this.producer = new SnsSqsBenchmarkSnsProducer();
-        this.messageProducer = new SnsSqsBenchmarkMessageProducer(new UniformRateLimiter(1.0));
-        this.messageProcessor = new TpcHMessageProcessor(
-            Collections.singletonList(this.producer),
-            this.messageProducer,
+    private static final ObjectMapper mapper =
+            new ObjectMapper(new YAMLFactory())
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
+    private static final Logger log = LoggerFactory.getLogger(SnsSqsBenchmarkConsumer.class);
+    private static final TpcHMessageProcessor messageProcessor = new TpcHMessageProcessor(
+            SnsSqsBenchmarkConfiguration.getSnsUris().stream().map(SnsSqsBenchmarkSnsProducer::new).collect(Collectors.toList()),
+            new SnsSqsBenchmarkMessageProducer(new UniformRateLimiter(1.0)),
             () -> {},
             log
-        );
-        this.sqsClient = AmazonSQSClientBuilder
-                .standard()
-                .withRegion(SnsSqsBenchmarkConfiguration.getRegion())
-                .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
-                .build();
-        this.sqsUri = SnsSqsBenchmarkConfiguration.getSqsUri();
-    }
+    );
+    private static final AmazonSQS sqsClient = AmazonSQSClientBuilder
+            .standard()
+            .withRegion(SnsSqsBenchmarkConfiguration.getRegion())
+            .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
+            .build();
+    private static final String sqsUri = SnsSqsBenchmarkConfiguration.getSqsUri();
 
     @Override
     public Void handleRequest(SQSEvent event, Context context) {
@@ -75,6 +68,7 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
     private void handleTpcHRequest(SQSEvent event) {
         for (SQSMessage message : event.getRecords()) {
             try {
+                log.info("Received message: {}", writer.writeValueAsString(message));
                 String body = message.getBody();
                 TpcHMessage tpcHMessage = mapper.readValue(body, TpcHMessage.class);
                 messageProcessor.processTpcHMessage(tpcHMessage);
@@ -92,15 +86,10 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
     }
 
     private void deleteMessage(String receiptHandle) {
-        this.sqsClient.deleteMessage(new DeleteMessageRequest(this.sqsUri, receiptHandle));
+        sqsClient.deleteMessage(new DeleteMessageRequest(sqsUri, receiptHandle));
         System.out.println("Message deleted from the queue");
     }
 
     @Override
     public void close() throws Exception {}
-
-    private static final ObjectMapper mapper =
-            new ObjectMapper(new YAMLFactory())
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    private static final Logger log = LoggerFactory.getLogger(SnsSqsBenchmarkConsumer.class);
 }

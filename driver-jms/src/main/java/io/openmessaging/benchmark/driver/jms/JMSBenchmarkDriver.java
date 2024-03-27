@@ -122,9 +122,9 @@ public class JMSBenchmarkDriver implements BenchmarkDriver {
     }
 
     @Override
-    public CompletableFuture<Void> createTopic(String topic, int partitions) {
+    public CompletableFuture<TopicInfo> createTopic(TopicInfo info) {
         if (delegateForAdminOperations != null) {
-            return delegateForAdminOperations.createTopic(topic, partitions);
+            return delegateForAdminOperations.createTopic(info);
         }
         return CompletableFuture.completedFuture(null);
     }

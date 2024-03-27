@@ -98,8 +98,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
         log.info("Driver: {}", writer.writeValueAsString(driverConfiguration));
         log.info(
-            "Configuration: {} {} {} {}",
-            SnsSqsBenchmarkConfiguration.getSnsUri(),
+            "Configuration: {} {} {}",
             SnsSqsBenchmarkConfiguration.getSnsUris(),
             SnsSqsBenchmarkConfiguration.getRegion(),
             SnsSqsBenchmarkConfiguration.isTpcH()
@@ -127,9 +126,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                 i -> new TopicInfo(generateTopicName(i), topicsInfo.numberOfPartitionsPerTopic))
                         .collect(toList());
 
-        benchmarkDriver.createTopics(topicInfos).join();
-
-        List<String> topics = topicInfos.stream().map(TopicInfo::getTopic).collect(toList());
+        List<String> topics = benchmarkDriver.createTopics(topicInfos).join().stream().map(TopicInfo::getTopic).collect(toList());
 
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
         return topics;
