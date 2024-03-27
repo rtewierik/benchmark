@@ -11,5 +11,5 @@ instance_types = {
 }
 
 num_instances = {
-  "client"    = 2
+  "client"    = 3
 }

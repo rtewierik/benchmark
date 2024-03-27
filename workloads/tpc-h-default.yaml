@@ -12,8 +12,8 @@
 # limitations under the License.
 #
 
-queryId: test-query-23032024-1704
-query: PricingSummaryReport
+queryId: test-query-23032024-1755
+query: ForecastingRevenueChange
 sourceDataS3FolderUri: s3://tpc-h-chunks/reference-data/chunked
 numberOfChunks: 10
-numberOfReducers: 2
+numberOfReducers: 3

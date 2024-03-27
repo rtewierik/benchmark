@@ -37,10 +37,21 @@ interface DataIngestionLayer {
   lambdaDeadLetterQueue: IQueue
 }
 
+interface LambdaConfiguration {
+  snsTopicNames: string[]
+  numberOfConsumers?: number
+  functionTimeoutSeconds: number
+}
+
 const MAP_ID = 'Map'
 const REDUCE_ID = 'Reduce'
 const RESULT_ID = 'Result'
 const DEFAULT_ID = 'Default'
+
+const AGGREGATE_CONFIG = {
+  snsTopicNames: [],
+  functionTimeoutSeconds: 15
+}
 
 export class ServiceStack extends Stack {
   constructor(scope: App, id: string, props: SnsSqsConsumerLambdaStackProps) {
@@ -54,19 +65,21 @@ export class ServiceStack extends Stack {
         const reduceTopicId = `${REDUCE_ID}${i}`
         snsTopicNames.push(this.getSnsTopicName(props, reduceTopicId))
       }
+      const aggregateConfig = { ...AGGREGATE_CONFIG, snsTopicNames }
       const mapTopic = this.createSnsSqsConsumerLambdaSnsTopic(props, MAP_ID)
       const { topic, deadLetterQueue } = mapTopic
-      const mapQueue = this.createSnsSqsConsumerLambdaQueue(props, MAP_ID)
+      const mapConfiguration = { snsTopicNames, ...props }
+      const mapQueue = this.createSnsSqsConsumerLambdaQueue(props, MAP_ID, mapConfiguration)
       topic.addSubscription(new SqsSubscription(mapQueue, { deadLetterQueue, rawMessageDelivery: true }))
-      this.createDataIngestionLayer(props, MAP_ID, snsTopicNames, mapTopic, mapQueue, props.numberOfConsumers)
+      this.createDataIngestionLayer(props, MAP_ID, mapConfiguration, mapTopic, mapQueue)
       for (var i = 0; i < props.numberOfConsumers; i++) {
         const reduceTopicId = `${REDUCE_ID}${i}`
-        this.createDataIngestionLayer(props, reduceTopicId, snsTopicNames)
+        this.createDataIngestionLayer(props, reduceTopicId, aggregateConfig)
       }
-      this.createDataIngestionLayer(props, RESULT_ID, snsTopicNames)
+      this.createDataIngestionLayer(props, RESULT_ID, aggregateConfig)
     } else {
       // TO DO: Consider using `props.numberOfConsumers` here to create more than one SNS/SQS pair. Might not be necessary since infrastructure should be isolated.
-      this.createDataIngestionLayer(props, DEFAULT_ID, [])
+      this.createDataIngestionLayer(props, DEFAULT_ID, AGGREGATE_CONFIG)
     }
   }
 
@@ -74,16 +87,16 @@ export class ServiceStack extends Stack {
     return `${props.appName}-sns-topic-${id.toLowerCase()}`
   }
 
-  private createDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, snsTopicNames: string[], existingTopic?: SnsTopic, existingQueue?: IQueue, numberOfConsumers?: number) {
-    const { queue, snsDeadLetterQueue, lambdaDeadLetterQueue } = this.createSnsSqsConsumerLambdaDataIngestionLayer(props, id, existingTopic, existingQueue)
-    const lambda = this.createSnsSqsConsumerLambda(queue, lambdaDeadLetterQueue, props, id, snsTopicNames, numberOfConsumers)
+  private createDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, lambdaConfiguration: LambdaConfiguration, existingTopic?: SnsTopic, existingQueue?: IQueue) {
+    const { queue, snsDeadLetterQueue, lambdaDeadLetterQueue } = this.createSnsSqsConsumerLambdaDataIngestionLayer(props, id, lambdaConfiguration, existingTopic, existingQueue)
+    const lambda = this.createSnsSqsConsumerLambda(queue, lambdaDeadLetterQueue, props, id, lambdaConfiguration)
     addMonitoring(this, queue, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
     addAlerting(this, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
   }
 
-  private createSnsSqsConsumerLambdaDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, existingTopic: SnsTopic | undefined, existingQueue: IQueue | undefined): DataIngestionLayer {
+  private createSnsSqsConsumerLambdaDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, lambdaConfiguration: LambdaConfiguration, existingTopic: SnsTopic | undefined, existingQueue: IQueue | undefined): DataIngestionLayer {
     const { topic, deadLetterQueue } = existingTopic ?? this.createSnsSqsConsumerLambdaSnsTopic(props, id)
-    const queue = existingQueue ?? this.createSnsSqsConsumerLambdaQueue(props, id)
+    const queue = existingQueue ?? this.createSnsSqsConsumerLambdaQueue(props, id, lambdaConfiguration)
     const lambdaDeadLetterQueue = this.createSnsSqsConsumerLambdaDeadLetterQueue(props, id)
     !existingQueue && topic.addSubscription(new SqsSubscription(queue, { deadLetterQueue, rawMessageDelivery: true }))
     return { topic, queue, snsDeadLetterQueue: deadLetterQueue, lambdaDeadLetterQueue }
@@ -106,7 +119,7 @@ export class ServiceStack extends Stack {
     return { topic, deadLetterQueue }
   }
 
-  private createSnsSqsConsumerLambdaQueue(props: SnsSqsConsumerLambdaStackProps, id: string): IQueue {
+  private createSnsSqsConsumerLambdaQueue(props: SnsSqsConsumerLambdaStackProps, id: string, lambdaConfiguration: LambdaConfiguration): IQueue {
     const lowerCaseId = id.toLowerCase()
     return new Queue(
       this,
@@ -115,7 +128,7 @@ export class ServiceStack extends Stack {
         queueName: `${props.appName}-${lowerCaseId}`,
         encryption: QueueEncryption.UNENCRYPTED,
         retentionPeriod: Duration.days(7),
-        visibilityTimeout: Duration.seconds(props.eventsVisibilityTimeoutSeconds)
+        visibilityTimeout: Duration.seconds(lambdaConfiguration.functionTimeoutSeconds)
       })
   }
 
@@ -131,7 +144,8 @@ export class ServiceStack extends Stack {
       })
   }
 
-  private createSnsSqsConsumerLambda(snsSqsConsumerLambdaQueue: IQueue, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps, id: string, snsTopicNames: string[], numberOfConsumers: number | undefined): LambdaFunction {
+  private createSnsSqsConsumerLambda(snsSqsConsumerLambdaQueue: IQueue, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps, id: string, lambdaConfiguration: LambdaConfiguration): LambdaFunction {
+    const { snsTopicNames, numberOfConsumers, functionTimeoutSeconds } = lambdaConfiguration
     const lowerCaseId = id.toLowerCase()
     const iamRole = new Role(
       this,
@@ -170,7 +184,7 @@ export class ServiceStack extends Stack {
       functionName: `${props.appName}-${lowerCaseId}`,
       handler: 'io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkConsumer::handleRequest',
       reservedConcurrentExecutions: numberOfConsumers ?? 1,
-      timeout: Duration.seconds(props.functionTimeoutSeconds),
+      timeout: Duration.seconds(functionTimeoutSeconds),
       memorySize: 1024,
       tracing: Tracing.ACTIVE,
       role: iamRole,
