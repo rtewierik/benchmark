@@ -18,9 +18,13 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import io.openmessaging.benchmark.common.utils.RandomGenerator;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -53,5 +57,15 @@ public class AmazonS3Client {
         } catch (Exception exception) {
             throw new IOException("Failed to read and CSV from S3: " + exception.getMessage(), exception);
         }
+    }
+
+    public void writeMessageToS3(String bucketName, String s3Prefix, String message) {
+        String fileName = String.format("%s-%s", RandomGenerator.getRandomString(), RandomGenerator.getRandomString());
+        String s3Uri = String.format("%s/%s", s3Prefix, fileName);
+        byte[] messageBytes = message.getBytes();
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(messageBytes.length);
+        PutObjectRequest request = new PutObjectRequest(bucketName, s3Uri, new ByteArrayInputStream(messageBytes), metadata);
+        s3Client.putObject(request);
     }
 }
