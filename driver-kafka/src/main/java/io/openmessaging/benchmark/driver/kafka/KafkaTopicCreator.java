@@ -51,11 +51,11 @@ class KafkaTopicCreator {
         this(admin, topicConfigs, replicationFactor, MAX_BATCH_SIZE);
     }
 
-    CompletableFuture<Void> create(List<TopicInfo> topicInfos) {
-        return CompletableFuture.runAsync(() -> createBlocking(topicInfos));
+    CompletableFuture<List<TopicInfo>> create(List<TopicInfo> topicInfos) {
+        return CompletableFuture.completedFuture(createBlocking(topicInfos));
     }
 
-    private void createBlocking(List<TopicInfo> topicInfos) {
+    private List<TopicInfo> createBlocking(List<TopicInfo> topicInfos) {
         BlockingQueue<TopicInfo> queue = new ArrayBlockingQueue<>(topicInfos.size(), true, topicInfos);
         List<TopicInfo> batch = new ArrayList<>();
         AtomicInteger succeeded = new AtomicInteger();
@@ -87,6 +87,9 @@ class KafkaTopicCreator {
         } finally {
             loggingFuture.cancel(true);
         }
+
+        // TO DO: Should we return all topic info items when not all topics were created?
+        return topicInfos;
     }
 
     private Map<TopicInfo, Boolean> executeBatch(List<TopicInfo> batch) {

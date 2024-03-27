@@ -87,7 +87,9 @@ public class PravegaBenchmarkDriver implements BenchmarkDriver {
     }
 
     @Override
-    public CompletableFuture<Void> createTopic(String topic, int partitions) {
+    public CompletableFuture<TopicInfo> createTopic(TopicInfo info) {
+        String topic = info.getTopic();
+        int partitions = info.getPartitions();
         topic = cleanName(topic);
         log.info("createTopic: topic={}, partitions={}", topic, partitions);
         synchronized (createdTopics) {
@@ -96,6 +98,13 @@ public class PravegaBenchmarkDriver implements BenchmarkDriver {
         if (config.createScope) {
             streamManager.createScope(scopeName);
         }
+        ScalingPolicy scalingPolicy = getScalingPolicy(partitions);
+        streamManager.createStream(
+                scopeName, topic, StreamConfiguration.builder().scalingPolicy(scalingPolicy).build());
+        return CompletableFuture.completedFuture(info);
+    }
+
+    private ScalingPolicy getScalingPolicy(int partitions) {
         ScalingPolicy scalingPolicy;
         // Create a fixed or auto-scaling Stream based on user configuration.
         if (config.enableStreamAutoScaling
@@ -108,9 +117,7 @@ public class PravegaBenchmarkDriver implements BenchmarkDriver {
         } else {
             scalingPolicy = ScalingPolicy.fixed(partitions);
         }
-        streamManager.createStream(
-                scopeName, topic, StreamConfiguration.builder().scalingPolicy(scalingPolicy).build());
-        return CompletableFuture.completedFuture(null);
+        return scalingPolicy;
     }
 
     @Override

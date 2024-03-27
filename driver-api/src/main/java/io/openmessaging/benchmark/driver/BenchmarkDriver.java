@@ -17,6 +17,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -48,11 +49,10 @@ public interface BenchmarkDriver extends AutoCloseable {
     /**
      * Create a new topic with a given number of partitions.
      *
-     * @param topic
-     * @param partitions
+     * @param info an object containing the topic name and number of desired partitions
      * @return a future the completes when the topic is created
      */
-    CompletableFuture<Void> createTopic(String topic, int partitions);
+    CompletableFuture<TopicInfo> createTopic(TopicInfo info);
 
     /**
      * Create a list of new topics with the given number of partitions.
@@ -60,13 +60,14 @@ public interface BenchmarkDriver extends AutoCloseable {
      * @param topicInfos
      * @return a future the completes when the topics are created
      */
-    default CompletableFuture<Void> createTopics(List<TopicInfo> topicInfos) {
+    default CompletableFuture<List<TopicInfo>> createTopics(List<TopicInfo> topicInfos) {
         @SuppressWarnings("unchecked")
-        CompletableFuture<Void>[] futures =
+        CompletableFuture<TopicInfo>[] futures =
                 topicInfos.stream()
-                        .map(topicInfo -> createTopic(topicInfo.getTopic(), topicInfo.getPartitions()))
+                        .map(this::createTopic)
                         .toArray(CompletableFuture[]::new);
-        return CompletableFuture.allOf(futures);
+        return CompletableFuture.allOf(futures)
+                .thenApply(v -> Arrays.stream(futures).map(CompletableFuture::join).collect(toList()));
     }
 
     /**

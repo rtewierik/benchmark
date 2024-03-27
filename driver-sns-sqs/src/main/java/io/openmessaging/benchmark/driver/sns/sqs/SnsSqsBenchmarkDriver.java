@@ -49,24 +49,20 @@ public class SnsSqsBenchmarkDriver implements BenchmarkDriver {
     }
 
     @Override
-    public CompletableFuture<Void> createTopic(String topic, int partitions) {
-        // Topics are pre-created by AWS CDK project.
-        return CompletableFuture.runAsync(() -> {});
+    public CompletableFuture<TopicInfo> createTopic(TopicInfo info) {
+        throw new IllegalArgumentException("This method should never be called!");
+    }
+
+    @Override
+    public CompletableFuture<List<TopicInfo>> createTopics(List<TopicInfo> topics) {
+        return CompletableFuture.completedFuture(
+            SnsSqsBenchmarkConfiguration.getSnsUris().stream().map(topic -> new TopicInfo(topic, 1)).collect(toList())
+        );
     }
 
     @Override
     public CompletableFuture<BenchmarkProducer> createProducer(String topic) {
-        return CompletableFuture.completedFuture(new SnsSqsBenchmarkSnsProducer());
-    }
-
-    @Override
-    public CompletableFuture<List<BenchmarkProducer>> createProducers(List<ProducerInfo> producers) {
-        List<BenchmarkProducer> createdProducers =
-                SnsSqsBenchmarkConfiguration
-                    .getSnsUris()
-                    .stream()
-                    .map(uri -> new SnsSqsBenchmarkSnsProducer(uri, snsClient)).collect(toList());
-        return CompletableFuture.completedFuture(createdProducers);
+        return CompletableFuture.completedFuture(new SnsSqsBenchmarkSnsProducer(topic, snsClient));
     }
 
     @Override
