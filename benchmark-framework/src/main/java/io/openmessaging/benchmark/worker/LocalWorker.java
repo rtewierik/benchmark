@@ -173,7 +173,11 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                                         new ConsumerInfo(
                                                                 consumerIndex.getAndIncrement(), c.topic, c.subscription, this))
                                         .collect(toList()))
-                        .join());
+                        .join()
+                        .stream()
+                        .filter(Objects::nonNull)
+                        .collect(toList())
+        );
 
         log.info("Created {} consumers in {} ms", consumers.size(), timer.elapsedMillis());
     }
