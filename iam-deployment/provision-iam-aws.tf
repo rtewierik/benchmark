@@ -1,5 +1,5 @@
 variable "tpc_h_s3_bucket_arn" {
-  type  = string
+  type = string
 }
 
 resource "aws_iam_role" "kafka_iam_role" {
@@ -37,7 +37,7 @@ resource "aws_iam_role" "kafka_iam_role" {
             "s3:GetObject",
             "s3:ListBucket"
           ],
-          Effect = "Allow",
+          Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
         }
       ]
@@ -80,7 +80,7 @@ resource "aws_iam_role" "pravega_iam_role" {
             "s3:GetObject",
             "s3:ListBucket"
           ],
-          Effect = "Allow",
+          Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
         }
       ]
@@ -123,7 +123,7 @@ resource "aws_iam_role" "pulsar_iam_role" {
             "s3:GetObject",
             "s3:ListBucket"
           ],
-          Effect = "Allow",
+          Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
         }
       ]
@@ -166,7 +166,7 @@ resource "aws_iam_role" "rabbitmq_iam_role" {
             "s3:GetObject",
             "s3:ListBucket"
           ],
-          Effect = "Allow",
+          Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
         }
       ]
@@ -201,7 +201,7 @@ resource "aws_iam_role" "redis_iam_role" {
             "s3:GetObject",
             "s3:ListBucket"
           ],
-          Effect = "Allow",
+          Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
         }
       ]
@@ -236,8 +236,13 @@ resource "aws_iam_role" "sns_sqs_iam_role" {
             "s3:GetObject",
             "s3:ListBucket"
           ],
-          Effect = "Allow",
+          Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
+        },
+        {
+          Action    = "sns:Publish"
+          Effect    = "Allow"
+          Resource  = "arn:aws:sns:*:*:sns-sqs-consumer-lambda-sns-topic*"
         }
       ]
     })

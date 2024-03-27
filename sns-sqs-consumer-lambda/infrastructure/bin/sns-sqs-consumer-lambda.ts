@@ -13,6 +13,7 @@ const stackProps: SnsSqsConsumerLambdaStackProps = {
   appName: 'sns-sqs-consumer-lambda',
   maxBatchingWindow: undefined,
   batchSize: 10,
+  reportBatchItemFailures: false,
   debug: true,
   functionTimeoutSeconds: 30,
   eventsVisibilityTimeoutSeconds: 30,

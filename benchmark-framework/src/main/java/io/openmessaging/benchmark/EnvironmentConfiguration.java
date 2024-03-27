@@ -19,8 +19,11 @@ public class EnvironmentConfiguration {
 
     @Getter
     private static final boolean produceWithAllWorkers;
+    @Getter
+    private static final boolean skipReadinessCheck;
 
     static {
         produceWithAllWorkers = Boolean.parseBoolean(System.getenv("PRODUCE_WITH_ALL_WORKERS"));
+        skipReadinessCheck = Boolean.parseBoolean(System.getenv("SKIP_READINESS_CHECK"));
     }
 }

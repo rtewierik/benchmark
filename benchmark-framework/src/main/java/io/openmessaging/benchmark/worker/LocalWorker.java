@@ -28,6 +28,7 @@ import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.*;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ConsumerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
+import io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkConfiguration;
 import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.worker.commands.*;
@@ -96,6 +97,13 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 mapper.readValue(driverConfigFile, DriverConfiguration.class);
 
         log.info("Driver: {}", writer.writeValueAsString(driverConfiguration));
+        log.info(
+            "Configuration: {} {} {} {}",
+            SnsSqsBenchmarkConfiguration.getSnsUri(),
+            SnsSqsBenchmarkConfiguration.getSnsUris(),
+            SnsSqsBenchmarkConfiguration.getRegion(),
+            SnsSqsBenchmarkConfiguration.isTpcH()
+        );
 
         try {
             benchmarkDriver =

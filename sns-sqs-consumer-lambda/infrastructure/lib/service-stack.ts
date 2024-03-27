@@ -134,7 +134,7 @@ export class ServiceStack extends Stack {
     
     iamRole.addToPolicy(
       new PolicyStatement({
-        actions: ['SQS:ReceiveMessage', 'SQS:SendMessage'],
+        actions: ['SQS:ReceiveMessage', 'SQS:SendMessage', 'SQS:DeleteMessage'],
         resources: [snsSqsConsumerLambdaQueue.queueArn],
       })
     )
@@ -146,11 +146,11 @@ export class ServiceStack extends Stack {
     )
 
     const lambda = new LambdaFunction(this, `SnsSqsConsumerLambdaFunction${id}`, {
-      description: 'This Lambda function ingests experimental results from infrastructure participating in experiments and stores collected data in a DynamoDB table',
+      description: 'This Lambda function processes messages from SNS/SQS in the context of throughput- and TPC-H benchmarks',
       runtime: Runtime.JAVA_8_CORRETTO,
-      code: Code.fromAsset(path.join(__dirname, '../../../driver-sns-sqs-package/target/openmessaging-benchmark-driver-sns-sqs-0.0.1-SNAPSHOT-jar-with-dependencies.jar')),
+      code: Code.fromAsset(path.join(__dirname, '../../../driver-sns-sqs-package/target/driver-sns-sqs-package-0.0.1-SNAPSHOT.jar')),
       functionName: `${props.appName}-${lowerCaseId}`,
-      handler: 'io.openmessaging.benchmark.driver.sns.sqsSnsSqsBenchmarkConsumer::handleRequest',
+      handler: 'io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkConsumer::handleRequest',
       timeout: Duration.seconds(props.functionTimeoutSeconds),
       memorySize: 512,
       tracing: Tracing.ACTIVE,
@@ -159,6 +159,7 @@ export class ServiceStack extends Stack {
         REGION: this.region,
         SNS_URI: targetTopic ? `arn:aws:sns:${this.region}:${this.account}:${targetTopic}` : '',
         SNS_URIS: targetTopic ? targetTopic : '',
+        SQS_URI: snsSqsConsumerLambdaQueue.queueUrl,
         IS_TPC_H: `${props.isTpcH}`,
         DEBUG: props.debug ? 'TRUE' : 'FALSE',
       },
@@ -174,7 +175,7 @@ export class ServiceStack extends Stack {
         {
           batchSize: props.batchSize,
           maxBatchingWindow: props.maxBatchingWindow,
-          reportBatchItemFailures: true
+          reportBatchItemFailures: props.reportBatchItemFailures
         })
     )
 

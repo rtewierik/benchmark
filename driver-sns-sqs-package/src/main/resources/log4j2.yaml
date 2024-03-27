@@ -12,16 +12,19 @@
 # limitations under the License.
 #
 
-
-name: Simple Workload 1 producer on 2 topics
-
-topics: 2
-partitionsPerTopic: 10
-messageSize: 1024
-payloadFile: "payload/payload-1Kb.data"
-subscriptionsPerTopic: 1
-producersPerTopic: 1
-consumerPerSubscription: 1
-producerRate: 100
-consumerBacklogSizeGB: 0
-testDurationMinutes: 2
+Configuration:
+  status: INFO
+  name: messaging-benchmark
+  
+  Appenders:
+    Console:
+      name: Console
+      target: SYSTEM_OUT
+      PatternLayout:
+        Pattern: "%d{HH:mm:ss.SSS} [%t] %-4level %c{1} - %msg%n"
+  Loggers: 
+    Root:
+      level: info
+      additivity: false
+      AppenderRef:
+        - ref: Console
