@@ -87,10 +87,10 @@ resource "aws_spot_instance_request" "client" {
   user_data = <<-EOF
     #!/bin/bash
     echo "export SNS_URIS=${var.sns_uris}" >> /etc/profile.d/myenvvars.sh
-    echo "export REGION=${var.region}" >> /etc/profile.d/myenvvars.sh
+    echo "export REGION=eu-west-1" >> /etc/profile.d/myenvvars.sh
     echo "export PRODUCE_WITH_ALL_WORKERS=true" >> /etc/profile.d/myenvvars.sh
     echo "SNS_URIS=${var.sns_uris}" >> /etc/environment
-    echo "REGION=${var.region}" >> /etc/environment
+    echo "REGION=eu-west-1" >> /etc/environment
     echo "PRODUCE_WITH_ALL_WORKERS=true" >> /etc/environment
     echo "SKIP_READINESS_CHECK=true" >> /etc/environment
     EOF

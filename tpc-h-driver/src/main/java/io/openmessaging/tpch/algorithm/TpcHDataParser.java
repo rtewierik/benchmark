@@ -36,6 +36,7 @@ public class TpcHDataParser {
             TpcHRow row = parseCsvRow(values);
             csvRows.add(row);
         }
+        stream.close();
         return csvRows;
     }
 

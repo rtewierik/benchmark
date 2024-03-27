@@ -37,7 +37,7 @@ public class TpcHIntermediateResult {
     public TpcHIntermediateResult(TpcHConsumerAssignment assignment, Map<String, TpcHIntermediateResultGroup> groups) {
         this.query = assignment.query;
         this.queryId = assignment.queryId;
-        this.batchId = assignment.queryId;
+        this.batchId = assignment.batchId;
         this.chunkIndex = assignment.chunkIndex;
         this.numberOfAggregatedResults = 1;
         this.numberOfMapResults = assignment.numberOfMapResults;

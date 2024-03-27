@@ -177,11 +177,11 @@ public class TpcHMessageProcessor {
             existingReducedResult.aggregateReducedResult(reducedResult);
         }
         log.debug(
-                "Detected reduced result: {}\n\n{}\n\n{}",
+                "Detected reduced result: {}\n\n{}",
                 writer.writeValueAsString(reducedResult),
                 writer.writeValueAsString(existingReducedResult)
         );
-        if (existingReducedResult.numberOfAggregatedResults.intValue() == reducedResult.numberOfMapResults.intValue()) {
+        if (existingReducedResult.numberOfAggregatedResults.intValue() == reducedResult.numberOfChunks.intValue()) {
             TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
             log.info("[LocalWorker] TPC-H query result: {}", writer.writeValueAsString(result));
             onTestCompleted.run();

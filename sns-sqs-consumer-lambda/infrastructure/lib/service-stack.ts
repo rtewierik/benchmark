@@ -54,14 +54,13 @@ export class ServiceStack extends Stack {
         const reduceTopicId = `${REDUCE_ID}${i}`
         snsTopicNames.push(this.getSnsTopicName(props, reduceTopicId))
       }
-      
       const mapTopic = this.createSnsSqsConsumerLambdaSnsTopic(props, MAP_ID)
       const { topic, deadLetterQueue } = mapTopic
       const mapQueue = this.createSnsSqsConsumerLambdaQueue(props, MAP_ID)
       topic.addSubscription(new SqsSubscription(mapQueue, { deadLetterQueue, rawMessageDelivery: true }))
+      this.createDataIngestionLayer(props, MAP_ID, snsTopicNames, mapTopic, mapQueue, props.numberOfConsumers)
       for (var i = 0; i < props.numberOfConsumers; i++) {
         const reduceTopicId = `${REDUCE_ID}${i}`
-        this.createDataIngestionLayer(props, `${MAP_ID}${i}`, snsTopicNames, mapTopic, mapQueue)
         this.createDataIngestionLayer(props, reduceTopicId, snsTopicNames)
       }
       this.createDataIngestionLayer(props, RESULT_ID, snsTopicNames)
@@ -75,9 +74,9 @@ export class ServiceStack extends Stack {
     return `${props.appName}-sns-topic-${id.toLowerCase()}`
   }
 
-  private createDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, snsTopicNames: string[], existingTopic?: SnsTopic, existingQueue?: IQueue) {
+  private createDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, snsTopicNames: string[], existingTopic?: SnsTopic, existingQueue?: IQueue, numberOfConsumers?: number) {
     const { queue, snsDeadLetterQueue, lambdaDeadLetterQueue } = this.createSnsSqsConsumerLambdaDataIngestionLayer(props, id, existingTopic, existingQueue)
-    const lambda = this.createSnsSqsConsumerLambda(queue, lambdaDeadLetterQueue, props, id, snsTopicNames)
+    const lambda = this.createSnsSqsConsumerLambda(queue, lambdaDeadLetterQueue, props, id, snsTopicNames, numberOfConsumers)
     addMonitoring(this, queue, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
     addAlerting(this, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
   }
@@ -132,7 +131,7 @@ export class ServiceStack extends Stack {
       })
   }
 
-  private createSnsSqsConsumerLambda(snsSqsConsumerLambdaQueue: IQueue, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps, id: string, snsTopicNames: string[]): LambdaFunction {
+  private createSnsSqsConsumerLambda(snsSqsConsumerLambdaQueue: IQueue, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps, id: string, snsTopicNames: string[], numberOfConsumers: number | undefined): LambdaFunction {
     const lowerCaseId = id.toLowerCase()
     const iamRole = new Role(
       this,
@@ -157,6 +156,12 @@ export class ServiceStack extends Stack {
         resources: [deadLetterQueue.queueArn],
       })
     )
+    iamRole.addToPolicy(
+      new PolicyStatement({
+        actions: ['SNS:Publish'],
+        resources: [`arn:aws:sns:${this.region}:${this.account}:sns-sqs-consumer-lambda-sns-topic-*`]
+      })
+    )
 
     const lambda = new LambdaFunction(this, `SnsSqsConsumerLambdaFunction${id}`, {
       description: 'This Lambda function processes messages from SNS/SQS in the context of throughput- and TPC-H benchmarks',
@@ -164,13 +169,14 @@ export class ServiceStack extends Stack {
       code: Code.fromAsset(path.join(__dirname, '../../../driver-sns-sqs-package/target/driver-sns-sqs-package-0.0.1-SNAPSHOT.jar')),
       functionName: `${props.appName}-${lowerCaseId}`,
       handler: 'io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkConsumer::handleRequest',
+      reservedConcurrentExecutions: numberOfConsumers ?? 1,
       timeout: Duration.seconds(props.functionTimeoutSeconds),
       memorySize: 1024,
       tracing: Tracing.ACTIVE,
       role: iamRole,
       environment: {
         REGION: this.region,
-        SNS_URIS: snsTopicNames.join(','),
+        SNS_URIS: snsTopicNames.map(name => `arn:aws:sns:${this.region}:${this.account}:${name}`).join(','),
         SQS_URI: snsSqsConsumerLambdaQueue.queueUrl,
         IS_TPC_H: `${props.isTpcH}`,
         DEBUG: props.debug ? 'TRUE' : 'FALSE',
@@ -188,6 +194,7 @@ export class ServiceStack extends Stack {
           batchSize: props.batchSize,
           maxBatchingWindow: props.maxBatchingWindow,
           reportBatchItemFailures: props.reportBatchItemFailures,
+          maxConcurrency: numberOfConsumers
         })
     )
 

@@ -39,7 +39,7 @@ public class AmazonS3Client {
         this.s3Client = AmazonS3ClientBuilder
             .standard()
             .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-                .withRegion("eu-west-1")
+            .withRegion("eu-west-1")
             .build();
     }
 

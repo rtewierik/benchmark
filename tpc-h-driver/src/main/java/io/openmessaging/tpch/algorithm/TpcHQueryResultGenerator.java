@@ -49,11 +49,11 @@ public class TpcHQueryResultGenerator {
             TpcHQueryResultRow row = new TpcHQueryResultRow();
             row.columns.putAll(group.identifiers);
             Map<String, Number> aggregates = group.aggregates;
-            BigDecimal quantity = (BigDecimal)aggregates.get("quantity");
-            BigDecimal basePrice = (BigDecimal)aggregates.get("basePrice");
-            BigDecimal discount = (BigDecimal)aggregates.get("discount");
-            BigDecimal discountedPrice = (BigDecimal)aggregates.get("discountedPrice");
-            BigDecimal charge = (BigDecimal)aggregates.get("charge");
+            BigDecimal quantity = getDecimalValue(aggregates.get("quantity"));
+            BigDecimal basePrice = getDecimalValue(aggregates.get("basePrice"));
+            BigDecimal discount = getDecimalValue(aggregates.get("discount"));
+            BigDecimal discountedPrice = getDecimalValue(aggregates.get("discountedPrice"));
+            BigDecimal charge = getDecimalValue(aggregates.get("charge"));
             Long orderCount = aggregates.get("orderCount").longValue();
             BigDecimal orderCountAsDecimal = new BigDecimal(orderCount);
             BigDecimal averageQuantity = quantity.divide(orderCountAsDecimal, RoundingMode.HALF_UP);
@@ -70,6 +70,18 @@ public class TpcHQueryResultGenerator {
             result.rows.add(row);
         }
         return result;
+    }
+
+    private static BigDecimal getDecimalValue(Number number) {
+        try {
+            if (number instanceof Double) {
+                return BigDecimal.valueOf(number.doubleValue());
+            }
+            if (number instanceof Long) {
+                return BigDecimal.valueOf(number.longValue());
+            }
+        } catch (NumberFormatException ignored) {}
+        return (BigDecimal)number;
     }
 
     private static TpcHQueryResult generateForecastingRevenueChangeResult(TpcHIntermediateResult intermediateResult) {
