@@ -181,7 +181,7 @@ export class ServiceStack extends Stack {
         IS_TPC_H: `${props.isTpcH}`,
         DEBUG: props.debug ? 'TRUE' : 'FALSE',
       },
-      retryAttempts: 0
+      retryAttempts: 2
     });
 
     iamRole.addManagedPolicy(

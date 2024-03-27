@@ -1,4 +1,4 @@
-import { App, Duration } from 'aws-cdk-lib'
+import { App } from 'aws-cdk-lib'
 import { SnsSqsConsumerLambdaStackProps } from '../lib/stack-configuration'
 import { ServiceStack } from '../lib/service-stack'
 
@@ -17,7 +17,7 @@ const stackProps: SnsSqsConsumerLambdaStackProps = {
   debug: true,
   functionTimeoutSeconds: 300,
   eventsVisibilityTimeoutSeconds: 300,
-  numberOfConsumers: 3,
+  numberOfConsumers: 2,
   alertingEnabled: true,
   isTpcH: true
 }
