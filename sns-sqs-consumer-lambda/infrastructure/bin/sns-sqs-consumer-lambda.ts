@@ -5,7 +5,7 @@ import { ServiceStack } from '../lib/service-stack'
 const app = new App()
 
 const stackProps: SnsSqsConsumerLambdaStackProps = {
-  description: 'SNS/SQS driver',
+  description: 'SNS-SQS driver',
   env: {
     account: '138945776678',
     region: 'us-west-2'

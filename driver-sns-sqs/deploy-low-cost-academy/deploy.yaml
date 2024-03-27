@@ -12,7 +12,7 @@
 # limitations under the License.
 #
 
-- name: SNS/SQS benchmarking client setup
+- name: SNS-SQS benchmarking client setup
   hosts: client
   connection: ssh
   become: true

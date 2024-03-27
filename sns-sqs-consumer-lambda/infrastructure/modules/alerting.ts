@@ -22,7 +22,7 @@ export function addAlerting(stack: Stack, lambda: LambdaFunction, deadLetterQueu
   })
 
   const alertTopic = new Topic(stack, `SnsSqsConsumerLambdaAlertTopic${id}`, {
-    displayName: `SNS/SQS driver alert topic (${id})`,
+    displayName: `SNS-SQS driver alert topic (${id})`,
   })
   alertTopic.addSubscription(new EmailSubscription(PERSONAL_EMAIL))
   alertTopic.addSubscription(new EmailSubscription(STUDENT_EMAIL))

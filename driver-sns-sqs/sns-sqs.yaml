@@ -12,5 +12,5 @@
 # limitations under the License.
 #
 
-name: SNS/SQS
+name: SNS-SQS
 driverClass: io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkDriver
