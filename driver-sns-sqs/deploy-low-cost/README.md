@@ -10,6 +10,12 @@ sudo bin/benchmark \
   --drivers driver-sns-sqs/sns-sqs-default.yaml \
   workloads/simple-workload.yaml
 ```
+```
+sudo bin/benchmark \
+  --drivers driver-sns-sqs/sns-sqs-default.yaml \
+  --tpc-h-file workloads/tpc-h-default.yaml \
+  workloads/simple-workload.yaml
+```
 
 ### Locations to configure memory in case of changing instance size
 
