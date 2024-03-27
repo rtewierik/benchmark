@@ -5,19 +5,21 @@ import { ServiceStack } from '../lib/service-stack'
 const app = new App()
 
 const stackProps: SnsSqsConsumerLambdaStackProps = {
-  description: 'SNS/SQS driver',
+  description: 'SNS-SQS driver',
   env: {
     account: '138945776678',
-    region: 'eu-west-1'
+    region: 'us-west-2'
   },
   appName: 'sns-sqs-consumer-lambda',
   maxBatchingWindow: undefined,
   batchSize: 10,
+  reportBatchItemFailures: false,
   debug: true,
   functionTimeoutSeconds: 30,
   eventsVisibilityTimeoutSeconds: 30,
   numberOfConsumers: 3,
-  alertingEnabled: true
+  alertingEnabled: true,
+  isTpcH: false
 }
 
 new ServiceStack(app, 'sns-sqs-consumer-lambda', stackProps)

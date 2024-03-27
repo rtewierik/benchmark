@@ -13,10 +13,14 @@
  */
 package io.openmessaging.benchmark.driver.sns.sqs;
 
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent.SQSMessage;
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
+import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -37,6 +41,8 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
     private final BenchmarkProducer producer;
     private final MessageProducer messageProducer;
     private final TpcHMessageProcessor messageProcessor;
+    private final AmazonSQS sqsClient;
+    private final String sqsUri;
 
     // TO DO: How to implement updating rate limiting?
     public SnsSqsBenchmarkConsumer() {
@@ -48,22 +54,46 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
             () -> {},
             log
         );
+        this.sqsClient = AmazonSQSClientBuilder
+                .standard()
+                .withRegion(SnsSqsBenchmarkConfiguration.getRegion())
+                .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
+                .build();
+        this.sqsUri = SnsSqsBenchmarkConfiguration.getSqsUri();
     }
 
     @Override
     public Void handleRequest(SQSEvent event, Context context) {
-        for (SQSMessage message : event.getRecords()) {
-            if (SnsSqsBenchmarkConfiguration.isTpcH()) {
-                try {
-                    String body = message.getBody();
-                    TpcHMessage tpcHMessage = mapper.readValue(body, TpcHMessage.class);
-                    messageProcessor.processTpcHMessage(tpcHMessage);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+        if (SnsSqsBenchmarkConfiguration.isTpcH()) {
+            handleTpcHRequest(event);
+        } else {
+            handleThroughputRequest(event);
         }
         return null;
+    }
+
+    private void handleTpcHRequest(SQSEvent event) {
+        for (SQSMessage message : event.getRecords()) {
+            try {
+                String body = message.getBody();
+                TpcHMessage tpcHMessage = mapper.readValue(body, TpcHMessage.class);
+                messageProcessor.processTpcHMessage(tpcHMessage);
+                this.deleteMessage(message.getReceiptHandle());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void handleThroughputRequest(SQSEvent event) {
+        for (SQSMessage message : event.getRecords()) {
+            this.deleteMessage(message.getReceiptHandle());
+        }
+    }
+
+    private void deleteMessage(String receiptHandle) {
+        this.sqsClient.deleteMessage(new DeleteMessageRequest(this.sqsUri, receiptHandle));
+        System.out.println("Message deleted from the queue");
     }
 
     @Override

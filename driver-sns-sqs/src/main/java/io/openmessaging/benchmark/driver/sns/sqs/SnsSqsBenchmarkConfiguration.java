@@ -16,14 +16,15 @@ package io.openmessaging.benchmark.driver.sns.sqs;
 import lombok.Getter;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class SnsSqsBenchmarkConfiguration {
 
     @Getter
-    private static final String sqsUri;
-    @Getter
     private static final String snsUri;
+    @Getter
+    private static final String sqsUri;
     @Getter
     private static final List<String> snsUris;
     @Getter
@@ -32,10 +33,15 @@ public class SnsSqsBenchmarkConfiguration {
     private static final boolean isTpcH;
 
     static {
-        sqsUri = System.getenv("SQS_URI");
         snsUri = System.getenv("SNS_URI");
-        snsUris = Arrays.asList(System.getenv("SNS_URIS").split(","));
-        region = System.getenv("AWS_REGION");
+        sqsUri = System.getenv("SQS_URI");
+        snsUris = SnsSqsBenchmarkConfiguration.getSnsUrisFromEnvironment();
+        region = System.getenv("REGION");
         isTpcH = Boolean.parseBoolean(System.getenv("IS_TPC_H"));
+    }
+
+    private static List<String> getSnsUrisFromEnvironment() {
+        String snsUris = System.getenv("SNS_URIS");
+        return (snsUris != null) ? Arrays.asList(snsUris.split(",")) : Collections.emptyList();
     }
 }

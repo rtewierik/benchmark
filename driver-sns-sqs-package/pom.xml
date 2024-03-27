@@ -25,8 +25,8 @@
     </parent>
 
     <artifactId>driver-sns-sqs-package</artifactId>
-    <packaging>pom</packaging>
-    <name>SNS/SQS driver packaging</name>
+    <packaging>jar</packaging>
+    <name>SNS-SQS driver packaging</name>
 
     <dependencies>
         <dependency>
@@ -34,33 +34,51 @@
             <artifactId>driver-sns-sqs</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                    <execution>
-                        <id>distro-assembly</id>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <phase>package</phase>
-                        <configuration>
-                            <attach>true</attach>
-                            <tarLongFileMode>posix</tarLongFileMode>
-                            <finalName>openmessaging-benchmark-driver-sns-sqs-${project.version}</finalName>
-                            <descriptors>
-                                <descriptor>src/assemble/bin.xml</descriptor>
-                                <descriptor>src/assemble/src.xml</descriptor>
-                                <descriptor>src/assemble/jar.xml</descriptor>
-                            </descriptors>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.5.2</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+                    <configuration>
+                        <createDependencyReducedPom>false</createDependencyReducedPom>
+                        <shadedArtifactAttached>false</shadedArtifactAttached>
+                        <transformers>
+                            <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <mainClass>io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkConsumer</mainClass>
+                            </transformer>
+                        </transformers>
+                        <resource>
+                            <directory>${project.basedir}/src/main/resources</directory>
+                            <targetPath>/</targetPath>
+                            <includes>
+                                <include>log4j2.yaml</include>
+                            </includes>
+                        </resource>
+                        <filters>
+                            <filter>
+                                <artifact>*:*</artifact>
+                                <excludes>
+                                <exclude>**/Log4j2Plugins.dat</exclude>
+                                </excludes>
+                            </filter>
+                        </filters>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
         </plugins>
     </build>
 

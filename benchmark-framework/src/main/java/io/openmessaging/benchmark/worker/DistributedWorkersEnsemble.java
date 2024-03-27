@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import io.openmessaging.benchmark.EnvironmentConfiguration;
 import io.openmessaging.tpch.TpcHConstants;
 import io.openmessaging.benchmark.utils.ListPartition;
 import io.openmessaging.benchmark.utils.RandomGenerator;
@@ -29,10 +30,7 @@ import io.openmessaging.benchmark.worker.commands.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -54,10 +52,15 @@ public class DistributedWorkersEnsemble implements Worker {
         this.workers = unmodifiableList(workers);
         leader = workers.get(LEADER_WORKER_INDEX);
         int numberOfProducerWorkers = getNumberOfProducerWorkers(workers, extraConsumerWorkers);
-        List<List<Worker>> partitions =
-                Lists.partition(Lists.reverse(workers), workers.size() - numberOfProducerWorkers);
-        this.producerWorkers = partitions.get(1);
-        this.consumerWorkers = partitions.get(0);
+        if (numberOfProducerWorkers == workers.size()) {
+            this.producerWorkers = new ArrayList<>(this.workers);
+            this.consumerWorkers = new ArrayList<>(this.workers);
+        } else {
+            List<List<Worker>> partitions =
+                    Lists.partition(Lists.reverse(workers), workers.size() - numberOfProducerWorkers);
+            this.producerWorkers = partitions.get(1);
+            this.consumerWorkers = partitions.get(0);
+        }
 
         log.info(
                 "Workers list - producers: [{}]",
@@ -75,6 +78,9 @@ public class DistributedWorkersEnsemble implements Worker {
      */
     @VisibleForTesting
     static int getNumberOfProducerWorkers(List<Worker> workers, boolean extraConsumerWorkers) {
+        if (EnvironmentConfiguration.isProduceWithAllWorkers()) {
+            return workers.size();
+        }
         return extraConsumerWorkers ? (workers.size() + 2) / 3 : workers.size() / 2;
     }
 

@@ -213,6 +213,9 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     private void ensureTopicsAreReady() throws IOException {
+        if (EnvironmentConfiguration.isProduceWithAllWorkers()) {
+            return;
+        }
         log.info("Waiting for consumers to be ready");
         // This is work around the fact that there's no way to have a consumer ready in Kafka without
         // first publishing
