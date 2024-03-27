@@ -75,6 +75,7 @@ public class TpcHMessageProcessor {
 
     public void processTpcHMessage(TpcHMessage message) throws IOException {
         String messageId = message.messageId;
+        log.info("Processing TPC-H message: {}", writer.writeValueAsString(message));
         if (processedMessages.contains(messageId)) {
             return;
         } else {

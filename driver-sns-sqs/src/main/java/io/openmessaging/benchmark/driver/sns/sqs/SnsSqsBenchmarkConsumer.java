@@ -23,6 +23,7 @@ import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
@@ -32,16 +33,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, BenchmarkConsumer {
 
     private static final ObjectMapper mapper =
             new ObjectMapper(new YAMLFactory())
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final Logger log = LoggerFactory.getLogger(SnsSqsBenchmarkConsumer.class);
     private static final TpcHMessageProcessor messageProcessor = new TpcHMessageProcessor(
-            Collections.singletonList(new SnsSqsBenchmarkSnsProducer()),
+            SnsSqsBenchmarkConfiguration.getSnsUris().stream().map(SnsSqsBenchmarkSnsProducer::new).collect(Collectors.toList()),
             new SnsSqsBenchmarkMessageProducer(new UniformRateLimiter(1.0)),
             () -> {},
             log
@@ -66,6 +68,7 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
     private void handleTpcHRequest(SQSEvent event) {
         for (SQSMessage message : event.getRecords()) {
             try {
+                log.info("Received message: {}", writer.writeValueAsString(message));
                 String body = message.getBody();
                 TpcHMessage tpcHMessage = mapper.readValue(body, TpcHMessage.class);
                 messageProcessor.processTpcHMessage(tpcHMessage);
@@ -83,7 +86,7 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
     }
 
     private void deleteMessage(String receiptHandle) {
-        this.sqsClient.deleteMessage(new DeleteMessageRequest(this.sqsUri, receiptHandle));
+        sqsClient.deleteMessage(new DeleteMessageRequest(sqsUri, receiptHandle));
         System.out.println("Message deleted from the queue");
     }
 

@@ -98,8 +98,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
         log.info("Driver: {}", writer.writeValueAsString(driverConfiguration));
         log.info(
-            "Configuration: {} {} {} {}",
-            SnsSqsBenchmarkConfiguration.getSnsUri(),
+            "Configuration: {} {} {}",
             SnsSqsBenchmarkConfiguration.getSnsUris(),
             SnsSqsBenchmarkConfiguration.getRegion(),
             SnsSqsBenchmarkConfiguration.isTpcH()
