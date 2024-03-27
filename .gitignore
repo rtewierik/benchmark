@@ -31,3 +31,6 @@ core/*.json
 
 # sns-sqs-consumer-lambda
 !sns-sqs-consumer-lambda/**/*.json
+
+# s3-consumer-lambda
+!s3-consumer-lambda/**/*.json
