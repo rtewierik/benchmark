@@ -32,7 +32,7 @@ public class AmazonS3Client {
     private final AmazonS3 s3Client;
 
     public AmazonS3Client() {
-        String accessKeyId = "AKIASAWOQJQTKCRZ4T5Z";
+        String accessKeyId = "AKIASAWOQJQTC65ZFRVI";
         String secretAccessKey = "";
 
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKeyId, secretAccessKey);
