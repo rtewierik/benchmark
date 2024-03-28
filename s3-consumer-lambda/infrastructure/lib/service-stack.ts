@@ -130,7 +130,7 @@ export class ServiceStack extends Stack {
       role: iamRole,
       environment: {
         REGION: this.region,
-        S3_URIS: s3Prefixes.map(prefix => `s3://:${props.bucketName}/${prefix}`).join(','),
+        S3_URIS: s3Prefixes.map(prefix => `s3://${props.bucketName}/${prefix}`).join(','),
         IS_TPC_H: `${props.isTpcH}`,
         DEBUG: props.debug ? 'TRUE' : 'FALSE',
       },
