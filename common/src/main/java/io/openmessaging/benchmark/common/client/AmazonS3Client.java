@@ -11,16 +11,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.tpch.client;
+package io.openmessaging.benchmark.common.client;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.*;
 import io.openmessaging.benchmark.common.utils.RandomGenerator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,13 +38,13 @@ public class AmazonS3Client {
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKeyId, secretAccessKey);
 
         this.s3Client = AmazonS3ClientBuilder
-            .standard()
-            .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-            .withRegion("eu-west-1")
-            .build();
+                .standard()
+                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+                .withRegion("eu-west-1")
+                .build();
     }
 
-    public InputStream readTpcHChunkFromS3(String s3Uri) throws IOException {
+    public InputStream readFileFromS3(String s3Uri) throws IOException {
         try {
             URI uri = URI.create(s3Uri);
             String bucketName = uri.getHost();
@@ -59,13 +56,20 @@ public class AmazonS3Client {
         }
     }
 
-    public void writeMessageToS3(String bucketName, String s3Prefix, String message) {
+    public void writeMessageToS3(String bucketName, String key, byte[] message) {
         String fileName = String.format("%s-%s", RandomGenerator.getRandomString(), RandomGenerator.getRandomString());
-        String s3Uri = String.format("%s/%s", s3Prefix, fileName);
-        byte[] messageBytes = message.getBytes();
+        String s3Uri = String.format("%s/%s", key, fileName);
         ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(messageBytes.length);
-        PutObjectRequest request = new PutObjectRequest(bucketName, s3Uri, new ByteArrayInputStream(messageBytes), metadata);
+        metadata.setContentLength(message.length);
+        PutObjectRequest request = new PutObjectRequest(bucketName, s3Uri, new ByteArrayInputStream(message), metadata);
         s3Client.putObject(request);
+    }
+
+    public void writeMessageToS3(String bucketName, String key, String message) {
+        this.writeMessageToS3(bucketName, key, message.getBytes());
+    }
+
+    public void deleteFileFromS3(String bucketName, String key) {
+        s3Client.deleteObject(new DeleteObjectRequest(bucketName, key));
     }
 }

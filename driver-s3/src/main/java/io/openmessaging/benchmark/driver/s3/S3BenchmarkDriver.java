@@ -13,9 +13,6 @@
  */
 package io.openmessaging.benchmark.driver.s3;
 
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import com.amazonaws.services.sns.AmazonSNS;
-import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
@@ -32,12 +29,6 @@ import java.util.concurrent.CompletableFuture;
 import static java.util.stream.Collectors.toList;
 
 public class S3BenchmarkDriver implements BenchmarkDriver {
-
-    private final AmazonSNS snsClient = AmazonSNSClientBuilder
-        .standard()
-        .withRegion(S3BenchmarkConfiguration.getRegion())
-        .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
-        .build();
 
     @Override
     public void initialize(File configurationFile, StatsLogger statsLogger) throws IOException, InterruptedException {}
@@ -56,13 +47,13 @@ public class S3BenchmarkDriver implements BenchmarkDriver {
     @Override
     public CompletableFuture<List<TopicInfo>> createTopics(List<TopicInfo> topics) {
         return CompletableFuture.completedFuture(
-            S3BenchmarkConfiguration.getSnsUris().stream().map(topic -> new TopicInfo(topic, 1)).collect(toList())
+            S3BenchmarkConfiguration.getS3Prefixes().stream().map(topic -> new TopicInfo(topic, 1)).collect(toList())
         );
     }
 
     @Override
     public CompletableFuture<BenchmarkProducer> createProducer(String topic) {
-        return CompletableFuture.completedFuture(new S3BenchmarkSnsProducer(topic, snsClient));
+        return CompletableFuture.completedFuture(new S3BenchmarkS3Producer(topic));
     }
 
     @Override

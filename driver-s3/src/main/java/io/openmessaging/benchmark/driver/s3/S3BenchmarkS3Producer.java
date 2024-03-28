@@ -13,33 +13,30 @@
  */
 package io.openmessaging.benchmark.driver.s3;
 
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import com.amazonaws.services.sns.AmazonSNS;
-import com.amazonaws.services.sns.AmazonSNSClientBuilder;
-import com.amazonaws.services.sns.model.PublishRequest;
+import io.openmessaging.benchmark.common.client.AmazonS3Client;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import io.openmessaging.tpch.client.AmazonS3Client;
 
-import java.nio.charset.StandardCharsets;
+import java.net.URI;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public class S3BenchmarkSnsProducer implements BenchmarkProducer {
+public class S3BenchmarkS3Producer implements BenchmarkProducer {
 
-    private final AmazonS3Client s3Client;
-    private final String snsUri;
+    private static final AmazonS3Client s3Client = new AmazonS3Client();
+    private final String bucketName;
+    private final String key;
 
-    public S3BenchmarkSnsProducer(String snsUri) {
-        this.s3Client = new AmazonS3Client();
-        this.snsUri = snsUri;
+    public S3BenchmarkS3Producer(String s3Prefix) {
+        URI uri = URI.create(s3Prefix);
+        this.bucketName = uri.getHost();
+        this.key = uri.getPath().substring(1);
     }
 
     @Override
     public CompletableFuture<Void> sendAsync(Optional<String> key, byte[] payload) {
-        PublishRequest request = new PublishRequest(snsUri, new String(payload, StandardCharsets.UTF_8));
         CompletableFuture<Void> future = new CompletableFuture<>();
         try {
-            this.s3C.publish(request);
+            s3Client.writeMessageToS3(this.bucketName, this.key, payload);
             future.complete(null);
         } catch (Exception e) {
             future.completeExceptionally(e);

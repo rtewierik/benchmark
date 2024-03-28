@@ -13,18 +13,14 @@
  */
 package io.openmessaging.benchmark.driver.s3;
 
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.SQSEvent;
-import com.amazonaws.services.lambda.runtime.events.SQSEvent.SQSMessage;
-import com.amazonaws.services.sqs.AmazonSQS;
-import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
-import com.amazonaws.services.sqs.model.DeleteMessageRequest;
+import com.amazonaws.services.lambda.runtime.events.S3Event;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import io.openmessaging.benchmark.common.client.AmazonS3Client;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.tpch.model.TpcHMessage;
@@ -33,9 +29,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.stream.Collectors;
 
-public class S3BenchmarkConsumer implements RequestHandler<SQSEvent, Void>, BenchmarkConsumer {
+public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, BenchmarkConsumer {
 
     private static final ObjectMapper mapper =
             new ObjectMapper(new YAMLFactory())
@@ -43,20 +40,15 @@ public class S3BenchmarkConsumer implements RequestHandler<SQSEvent, Void>, Benc
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final Logger log = LoggerFactory.getLogger(S3BenchmarkConsumer.class);
     private static final TpcHMessageProcessor messageProcessor = new TpcHMessageProcessor(
-            S3BenchmarkConfiguration.getSnsUris().stream().map(S3BenchmarkSnsProducer::new).collect(Collectors.toList()),
+            S3BenchmarkConfiguration.getS3Prefixes().stream().map(S3BenchmarkS3Producer::new).collect(Collectors.toList()),
             new S3BenchmarkMessageProducer(new UniformRateLimiter(1.0)),
             () -> {},
             log
     );
-    private static final AmazonSQS sqsClient = AmazonSQSClientBuilder
-            .standard()
-            .withRegion(S3BenchmarkConfiguration.getRegion())
-            .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
-            .build();
-    private static final String sqsUri = S3BenchmarkConfiguration.getSqsUri();
+    private static final AmazonS3Client s3Client = new AmazonS3Client();
 
     @Override
-    public Void handleRequest(SQSEvent event, Context context) {
+    public Void handleRequest(S3Event event, Context context) {
         if (S3BenchmarkConfiguration.isTpcH()) {
             handleTpcHRequest(event);
         } else {
@@ -65,29 +57,34 @@ public class S3BenchmarkConsumer implements RequestHandler<SQSEvent, Void>, Benc
         return null;
     }
 
-    private void handleTpcHRequest(SQSEvent event) {
-        for (SQSMessage message : event.getRecords()) {
+    private void handleTpcHRequest(S3Event event) {
+        for (S3Event.S3EventNotificationRecord record : event.getRecords()) {
             try {
-                log.info("Received message: {}", writer.writeValueAsString(message));
-                String body = message.getBody();
-                TpcHMessage tpcHMessage = mapper.readValue(body, TpcHMessage.class);
-                messageProcessor.processTpcHMessage(tpcHMessage);
-                this.deleteMessage(message.getReceiptHandle());
+                log.info("Received message: {}", writer.writeValueAsString(record));
+                String bucketName = record.getS3().getBucket().getName();
+                String key = record.getS3().getObject().getKey();
+                String uri = String.format("s3://%s/%s", bucketName, key);
+                try (InputStream stream = s3Client.readFileFromS3(uri)) {
+                    TpcHMessage tpcHMessage = mapper.readValue(stream, TpcHMessage.class);
+                    messageProcessor.processTpcHMessage(tpcHMessage);
+                    this.deleteMessage(record);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    private void handleThroughputRequest(SQSEvent event) {
-        for (SQSMessage message : event.getRecords()) {
-            this.deleteMessage(message.getReceiptHandle());
+    private void handleThroughputRequest(S3Event event) {
+        for (S3Event.S3EventNotificationRecord record : event.getRecords()) {
+            this.deleteMessage(record);
         }
     }
 
-    private void deleteMessage(String receiptHandle) {
-        sqsClient.deleteMessage(new DeleteMessageRequest(sqsUri, receiptHandle));
-        System.out.println("Message deleted from the queue");
+    private void deleteMessage(S3Event.S3EventNotificationRecord record) {
+        String bucketName = record.getS3().getBucket().getName();
+        String key = record.getS3().getObject().getKey();
+        s3Client.deleteFileFromS3(bucketName, key);
     }
 
     @Override
