@@ -11,20 +11,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.benchmark.driver;
+package io.openmessaging.benchmark.common.utils;
 
 
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
+import com.google.common.io.BaseEncoding;
+import java.util.Random;
 
-public interface BenchmarkProducer extends AutoCloseable {
+public class RandomGenerator {
 
-    /**
-     * Publish a message and return a callback to track the completion of the operation.
-     *
-     * @param key the key associated with this message
-     * @param payload the message payload
-     * @return a future that will be triggered when the message is successfully published
-     */
-    CompletableFuture<Void> sendAsync(Optional<String> key, byte[] payload);
+    private static final Random random = new Random();
+
+    public static String getRandomString() {
+        byte[] buffer = new byte[5];
+        random.nextBytes(buffer);
+        return BaseEncoding.base64Url().omitPadding().encode(buffer);
+    }
 }

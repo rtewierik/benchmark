@@ -23,9 +23,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import io.openmessaging.benchmark.EnvironmentConfiguration;
+import io.openmessaging.benchmark.common.utils.RandomGenerator;
 import io.openmessaging.tpch.TpcHConstants;
 import io.openmessaging.benchmark.utils.ListPartition;
-import io.openmessaging.benchmark.utils.RandomGenerator;
 import io.openmessaging.benchmark.worker.commands.*;
 
 import java.io.File;

@@ -18,13 +18,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.openmessaging.benchmark.common.ObjectMappers;
+import io.openmessaging.benchmark.common.client.AmazonS3Client;
 import io.openmessaging.benchmark.common.key.distribution.KeyDistributor;
 import io.openmessaging.benchmark.common.key.distribution.KeyDistributorType;
 import io.openmessaging.tpch.*;
 import io.openmessaging.tpch.algorithm.TpcHAlgorithm;
 import io.openmessaging.tpch.algorithm.TpcHDataParser;
 import io.openmessaging.tpch.algorithm.TpcHQueryResultGenerator;
-import io.openmessaging.tpch.client.AmazonS3Client;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.MessageProducer;
 import io.openmessaging.tpch.model.*;
@@ -102,7 +102,7 @@ public class TpcHMessageProcessor {
     private void processConsumerAssignment(TpcHConsumerAssignment assignment) {
         String s3Uri = assignment.sourceDataS3Uri;
         log.info("[INFO] Applying map to chunk \"{}\"...", s3Uri);
-        try (InputStream stream = s3Client.readTpcHChunkFromS3(s3Uri)) {
+        try (InputStream stream = s3Client.readFileFromS3(s3Uri)) {
             List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
             TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, assignment.query, assignment);
             int producerIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.producerIndex;
