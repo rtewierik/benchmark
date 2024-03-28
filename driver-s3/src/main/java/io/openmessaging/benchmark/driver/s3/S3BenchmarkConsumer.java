@@ -63,8 +63,7 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                 log.info("Received message: {}", writer.writeValueAsString(record));
                 String bucketName = record.getS3().getBucket().getName();
                 String key = record.getS3().getObject().getKey();
-                String uri = String.format("s3://%s/%s", bucketName, key);
-                try (InputStream stream = s3Client.readFileFromS3(uri)) {
+                try (InputStream stream = s3Client.readFileFromS3(bucketName, key)) {
                     TpcHMessage tpcHMessage = mapper.readValue(stream, TpcHMessage.class);
                     messageProcessor.processTpcHMessage(tpcHMessage);
                     this.deleteMessage(record);
