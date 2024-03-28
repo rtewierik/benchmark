@@ -157,8 +157,8 @@
 
     <build>
         <plugins>
-            <!-- <plugin>
-                Check formats of various source files
+            <plugin>
+                <!-- Check formats of various source files -->
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
                 <version>${spotless.plugin.version}</version>
@@ -222,9 +222,9 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin> -->
-            <!-- <plugin>
-                Check for typical bugs
+            </plugin>
+            <plugin>
+                <!-- Check for typical bugs -->
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>${spotbugs.plugin.version}</version>
@@ -238,7 +238,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin> -->
+            </plugin>
             <plugin>
                 <!-- Check that source files have appropriate license headers -->
                 <groupId>com.mycila</groupId>
@@ -259,6 +259,9 @@
                         <exclude>**/deploy/**</exclude>
                         <exclude>**/deploy-low-cost/**</exclude>
                         <exclude>**/tf_ansible_vars.yml</exclude>
+                        <exclude>**/.terraform*/**</exclude>
+                        <exclude>**/*.tf</exclude>
+                        <exclude>**/*.tfvars</exclude>
                     </excludes>
                     <mapping>
                         <benchmark>SCRIPT_STYLE</benchmark>
@@ -293,8 +296,8 @@
                 <version>${checkstyle.plugin.version}</version>
                 <configuration>
                     <consoleOutput>true</consoleOutput>
-                    <failOnViolation>false</failOnViolation>
-                    <failsOnError>false</failsOnError>
+                    <failOnViolation>true</failOnViolation>
+                    <failsOnError>true</failsOnError>
                     <configLocation>etc/checkstyle.xml</configLocation>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
                 </configuration>
