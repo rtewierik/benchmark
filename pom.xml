@@ -50,6 +50,7 @@
         <module>driver-jms</module>
         <module>driver-redis</module>
         <module>driver-s3</module>
+        <module>driver-s3-package</module>
         <module>driver-sns-sqs</module>
         <module>driver-sns-sqs-package</module>
         <module>tpc-h-driver</module>
@@ -255,6 +256,7 @@
                         <exclude>.github/**</exclude>
                         <exclude>benchmark-monitoring/**</exclude>
                         <exclude>sns-sqs-consumer-lambda/**</exclude>
+                        <exclude>s3-consumer-lambda/**</exclude>
                         <exclude>**/deploy/**</exclude>
                         <exclude>**/deploy-low-cost/**</exclude>
                         <exclude>**/tf_ansible_vars.yml</exclude>

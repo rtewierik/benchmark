@@ -49,16 +49,16 @@ export class ServiceStack extends Stack {
       const resultPrefix = this.getS3Prefix(props, RESULT_ID)
       const s3Prefixes = [mapPrefix, resultPrefix]
       for (var i = 0; i < props.numberOfConsumers; i++) {
-        const reduceTopicId = `${REDUCE_ID}${i}`
-        s3Prefixes.push(this.getS3Prefix(props, reduceTopicId))
+        const reducePrefixId = `${REDUCE_ID}${i}`
+        s3Prefixes.push(this.getS3Prefix(props, reducePrefixId))
       }
       const aggregateConfig = { ...AGGREGATE_CONFIG, s3Prefixes }
       const mapConfiguration = { s3Prefixes, ...props }
       this.createDataIngestionLayer(props, MAP_ID, bucket, mapConfiguration, mapPrefix)
       for (var i = 0; i < props.numberOfConsumers; i++) {
         const prefix = s3Prefixes[2 + i]
-        const reduceTopicId = `${REDUCE_ID}${i}`
-        this.createDataIngestionLayer(props, reduceTopicId, bucket, aggregateConfig, prefix)
+        const reducePrefixId = `${REDUCE_ID}${i}`
+        this.createDataIngestionLayer(props, reducePrefixId, bucket, aggregateConfig, prefix)
       }
       this.createDataIngestionLayer(props, RESULT_ID, bucket, aggregateConfig, resultPrefix)
     } else {
