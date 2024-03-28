@@ -22,20 +22,20 @@ import java.util.List;
 public class S3BenchmarkConfiguration {
 
     @Getter
-    private static final List<String> s3Prefixes;
+    private static final List<String> s3Uris;
     @Getter
     private static final String region;
     @Getter
     private static final boolean isTpcH;
 
     static {
-        s3Prefixes = S3BenchmarkConfiguration.getS3PrefixesFromEnvironment();
+        s3Uris = S3BenchmarkConfiguration.getS3UrisFromEnvironment();
         region = System.getenv("REGION");
         isTpcH = Boolean.parseBoolean(System.getenv("IS_TPC_H"));
     }
 
-    private static List<String> getS3PrefixesFromEnvironment() {
-        String snsUris = System.getenv("S3_PREFIXES");
+    private static List<String> getS3UrisFromEnvironment() {
+        String snsUris = System.getenv("S3_URIS");
         return (snsUris != null) ? Arrays.asList(snsUris.split(",")) : Collections.emptyList();
     }
 }

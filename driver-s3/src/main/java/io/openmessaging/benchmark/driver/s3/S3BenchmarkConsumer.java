@@ -40,7 +40,7 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final Logger log = LoggerFactory.getLogger(S3BenchmarkConsumer.class);
     private static final TpcHMessageProcessor messageProcessor = new TpcHMessageProcessor(
-            S3BenchmarkConfiguration.getS3Prefixes().stream().map(S3BenchmarkS3Producer::new).collect(Collectors.toList()),
+            S3BenchmarkConfiguration.getS3Uris().stream().map(S3BenchmarkS3Producer::new).collect(Collectors.toList()),
             new S3BenchmarkMessageProducer(new UniformRateLimiter(1.0)),
             () -> {},
             log

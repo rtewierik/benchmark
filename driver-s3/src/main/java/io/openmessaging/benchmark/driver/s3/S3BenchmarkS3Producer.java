@@ -26,8 +26,8 @@ public class S3BenchmarkS3Producer implements BenchmarkProducer {
     private final String bucketName;
     private final String key;
 
-    public S3BenchmarkS3Producer(String s3Prefix) {
-        URI uri = URI.create(s3Prefix);
+    public S3BenchmarkS3Producer(String s3Uri) {
+        URI uri = URI.create(s3Uri);
         this.bucketName = uri.getHost();
         this.key = uri.getPath().substring(1);
     }
