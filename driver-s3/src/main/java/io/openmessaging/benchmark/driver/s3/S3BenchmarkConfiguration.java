@@ -35,7 +35,7 @@ public class S3BenchmarkConfiguration {
     }
 
     private static List<String> getS3UrisFromEnvironment() {
-        String snsUris = System.getenv("S3_URIS");
-        return (snsUris != null) ? Arrays.asList(snsUris.split(",")) : Collections.emptyList();
+        String s3Uris = System.getenv("S3_URIS");
+        return (s3Uris != null) ? Arrays.asList(s3Uris.split(",")) : Collections.emptyList();
     }
 }

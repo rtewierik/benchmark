@@ -248,3 +248,48 @@ resource "aws_iam_role" "sns_sqs_iam_role" {
     })
   }
 }
+
+
+resource "aws_iam_role" "s3_iam_role" {
+  name = "s3-iam-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  inline_policy {
+    name = "allow_tpc_h_chunks_retrieval"
+
+    policy = jsonencode({
+      Version = "2012-10-17",
+      Statement = [
+        {
+          Action = [
+            "s3:GetObject",
+            "s3:ListBucket"
+          ],
+          Effect   = "Allow",
+          Resource = var.tpc_h_s3_bucket_arn
+        },
+        {
+          Action    = [
+            "s3:GetObject",
+            "s3:ListBucket",
+            "s3:PutObject"
+          ]
+          Effect    = "Allow"
+          Resource  = "arn:aws:s3:::benchmarking-events"
+        }
+      ]
+    })
+  }
+}
