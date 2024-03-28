@@ -283,9 +283,13 @@ resource "aws_iam_role" "s3_iam_role" {
         {
           Action    = [
             "s3:GetObject",
-            "s3:ListBucket",
             "s3:PutObject"
           ]
+          Effect    = "Allow"
+          Resource  = "arn:aws:s3:::benchmarking-events/*"
+        },
+        {
+          Action    = "s3:ListBucket"
           Effect    = "Allow"
           Resource  = "arn:aws:s3:::benchmarking-events"
         }

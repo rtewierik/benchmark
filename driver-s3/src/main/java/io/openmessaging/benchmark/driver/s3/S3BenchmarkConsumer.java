@@ -60,7 +60,7 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
     private void handleTpcHRequest(S3Event event) {
         for (S3Event.S3EventNotificationRecord record : event.getRecords()) {
             try {
-                log.info("Received message: {}", writer.writeValueAsString(record));
+                log.info("Received message: {}", writer.writeValueAsString(record.getS3()));
                 String bucketName = record.getS3().getBucket().getName();
                 String key = record.getS3().getObject().getKey();
                 try (InputStream stream = s3Client.readFileFromS3(bucketName, key)) {
