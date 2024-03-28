@@ -10,7 +10,7 @@ import {
   Queue,
   QueueEncryption,
 } from 'aws-cdk-lib/aws-sqs'
-import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources'
+import { S3EventSourceV2 } from 'aws-cdk-lib/aws-lambda-event-sources'
 import {
   ManagedPolicy,
   PolicyStatement,
@@ -22,6 +22,7 @@ import { S3ConsumerLambdaStackProps } from './stack-configuration'
 import { addMonitoring } from '../modules/monitoring'
 import { addAlerting } from '../modules/alerting'
 import path = require('path')
+import { Bucket, EventType, IBucket } from 'aws-cdk-lib/aws-s3'
 
 interface LambdaConfiguration {
   s3Prefixes: string[]
@@ -42,35 +43,32 @@ const AGGREGATE_CONFIG = {
 export class ServiceStack extends Stack {
   constructor(scope: App, id: string, props: S3ConsumerLambdaStackProps) {
     super(scope, id, props)
+    const bucket = Bucket.fromBucketName(this, 'S3ConsumerLambdaSourceBucket', props.bucketName)
     if (props.isTpcH) {
-      const s3Prefixes = [
-        this.getS3Prefix(props, MAP_ID),
-        this.getS3Prefix(props, RESULT_ID)
-      ]
+      const mapPrefix = this.getS3Prefix(props, MAP_ID)
+      const resultPrefix = this.getS3Prefix(props, RESULT_ID)
+      const s3Prefixes = [mapPrefix, resultPrefix]
       for (var i = 0; i < props.numberOfConsumers; i++) {
         const reduceTopicId = `${REDUCE_ID}${i}`
         s3Prefixes.push(this.getS3Prefix(props, reduceTopicId))
       }
       const aggregateConfig = { ...AGGREGATE_CONFIG, s3Prefixes }
-      const mapTopic = this.createS3ConsumerLambdaSnsTopic(props, MAP_ID)
-      const { topic, deadLetterQueue } = mapTopic
       const mapConfiguration = { s3Prefixes, ...props }
-      const mapQueue = this.createS3ConsumerLambdaQueue(props, MAP_ID, mapConfiguration)
-      topic.addSubscription(new SqsSubscription(mapQueue, { deadLetterQueue, rawMessageDelivery: true }))
-      this.createDataIngestionLayer(props, MAP_ID, mapConfiguration, mapTopic, mapQueue)
+      this.createDataIngestionLayer(props, MAP_ID, bucket, mapConfiguration, mapPrefix)
       for (var i = 0; i < props.numberOfConsumers; i++) {
+        const prefix = s3Prefixes[2 + i]
         const reduceTopicId = `${REDUCE_ID}${i}`
-        this.createDataIngestionLayer(props, reduceTopicId, aggregateConfig)
+        this.createDataIngestionLayer(props, reduceTopicId, bucket, aggregateConfig, prefix)
       }
-      this.createDataIngestionLayer(props, RESULT_ID, aggregateConfig)
+      this.createDataIngestionLayer(props, RESULT_ID, bucket, aggregateConfig, resultPrefix)
     } else {
       // TO DO: Consider using `props.numberOfConsumers` here to create more than one SNS/SQS pair. Might not be necessary since infrastructure should be isolated.
-      this.createDataIngestionLayer(props, DEFAULT_ID, AGGREGATE_CONFIG)
+      const prefix = this.getS3Prefix(props, DEFAULT_ID)
+      this.createDataIngestionLayer(props, DEFAULT_ID, bucket, AGGREGATE_CONFIG, prefix)
     }
   }
 
   private getS3Prefix(props: S3ConsumerLambdaStackProps, id: string) {
-    // TODO: Use props.bucketName instead.
     return `${props.appName}-s3-${id.toLowerCase()}-${this.getRandomString()}`
   }
   
@@ -78,24 +76,11 @@ export class ServiceStack extends Stack {
     return Math.random().toString(36).substr(2, 5);
   }
 
-  private createDataIngestionLayer(props: S3ConsumerLambdaStackProps, id: string, lambdaConfiguration: LambdaConfiguration) {
+  private createDataIngestionLayer(props: S3ConsumerLambdaStackProps, id: string, bucket: IBucket, lambdaConfiguration: LambdaConfiguration, s3Prefix: string) {
     const lambdaDeadLetterQueue = this.createS3ConsumerLambdaDeadLetterQueue(props, id)
-    const lambda = this.createS3ConsumerLambda(queue, lambdaDeadLetterQueue, props, id, lambdaConfiguration)
-    addMonitoring(this, queue, lambda, lambdaDeadLetterQueue, props, id)
+    const lambda = this.createS3ConsumerLambda(bucket, lambdaDeadLetterQueue, props, id, lambdaConfiguration, s3Prefix)
+    addMonitoring(this, lambda, lambdaDeadLetterQueue, props, id)
     addAlerting(this, lambda, lambdaDeadLetterQueue, props, id)
-  }
-
-  private createS3ConsumerLambdaQueue(props: S3ConsumerLambdaStackProps, id: string, lambdaConfiguration: LambdaConfiguration): IQueue {
-    const lowerCaseId = id.toLowerCase()
-    return new Queue(
-      this,
-      `S3ConsumerLambdaQueue${id}`,
-      {
-        queueName: `${props.appName}-${lowerCaseId}`,
-        encryption: QueueEncryption.UNENCRYPTED,
-        retentionPeriod: Duration.days(7),
-        visibilityTimeout: Duration.seconds(lambdaConfiguration.functionTimeoutSeconds)
-      })
   }
 
   private createS3ConsumerLambdaDeadLetterQueue(props: S3ConsumerLambdaStackProps, id: string): IQueue {
@@ -110,7 +95,7 @@ export class ServiceStack extends Stack {
       })
   }
 
-  private createS3ConsumerLambda(S3ConsumerLambdaQueue: IQueue, deadLetterQueue: IQueue, props: S3ConsumerLambdaStackProps, id: string, lambdaConfiguration: LambdaConfiguration): LambdaFunction {
+  private createS3ConsumerLambda(bucket: IBucket, deadLetterQueue: IQueue, props: S3ConsumerLambdaStackProps, id: string, lambdaConfiguration: LambdaConfiguration, s3Prefix: string): LambdaFunction {
     const { s3Prefixes, numberOfConsumers, functionTimeoutSeconds } = lambdaConfiguration
     const lowerCaseId = id.toLowerCase()
     const iamRole = new Role(
@@ -123,12 +108,12 @@ export class ServiceStack extends Stack {
           'IAM Role for granting Lambda receive message to the Benchmark Monitoring queue and send message to the DLQ',
       }
     )
-    
-    // TO DO: Add permissions to read and write to S3 bucket whose name is provided in configuration.
+
+    bucket.grantReadWrite(iamRole)
     iamRole.addToPolicy(
       new PolicyStatement({
-        actions: [],
-        resources: []
+        actions: ['SQS:SendMessage'],
+        resources: [deadLetterQueue.queueArn],
       })
     )
 
@@ -145,7 +130,7 @@ export class ServiceStack extends Stack {
       role: iamRole,
       environment: {
         REGION: this.region,
-        S3_PREFIXES: s3Prefixes.map(name => `arn:aws:sns:${this.region}:${this.account}:${name}`).join(','),
+        S3_PREFIXES: s3Prefixes.map(prefix => `s3://:${props.bucketName}/${prefix}`).join(','),
         IS_TPC_H: `${props.isTpcH}`,
         DEBUG: props.debug ? 'TRUE' : 'FALSE',
       },
@@ -156,15 +141,11 @@ export class ServiceStack extends Stack {
       ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole')
     )
 
-    // TO DO: Create S3 event source for each S3 prefix.
     lambda.addEventSource(
-      new SqsEventSource(S3ConsumerLambdaQueue,
-        {
-          batchSize: props.batchSize,
-          maxBatchingWindow: props.maxBatchingWindow,
-          reportBatchItemFailures: props.reportBatchItemFailures,
-          maxConcurrency: numberOfConsumers
-        })
+      new S3EventSourceV2(bucket, {
+        events: [EventType.OBJECT_CREATED],
+        filters: [{ prefix: s3Prefix }]
+      })
     )
 
     return lambda

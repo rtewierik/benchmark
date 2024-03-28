@@ -4,33 +4,10 @@ import { Duration, Stack } from 'aws-cdk-lib'
 import { Function as LambdaFunction } from 'aws-cdk-lib/aws-lambda'
 import { IQueue } from 'aws-cdk-lib/aws-sqs'
 
-export function addMonitoring(stack: Stack, queue: IQueue, lambda: LambdaFunction, deadLetterQueue: IQueue, props: S3ConsumerLambdaStackProps, id: string) {
+export function addMonitoring(stack: Stack, lambda: LambdaFunction, deadLetterQueue: IQueue, props: S3ConsumerLambdaStackProps, id: string) {
   const lowerCaseId = id.toLowerCase()
   const widgetWidth = 8
   const dashboardName = `${props.appName}-dashboard-${lowerCaseId}`
-
-  const sqsInOut = new GraphWidget({
-    width: widgetWidth,
-    title: 'SQS: IN & OUT',
-    left: [new Metric({
-      metricName: 'NumberOfMessagesSent',
-      namespace: 'AWS/SQS',
-      dimensionsMap: { 'QueueName': queue.queueName },
-      statistic: 'sum',
-      label: 'IN',
-      period: Duration.minutes(1)
-    }), new Metric({
-      metricName: 'NumberOfMessagesDeleted',
-      namespace: 'AWS/SQS',
-      dimensionsMap: { 'QueueName': queue.queueName },
-      statistic: 'sum',
-      label: 'OUT',
-      period: Duration.minutes(1)
-    })],
-    leftYAxis: {
-      min: 0
-    }
-  })
 
   const sqsTimeInStream = new GraphWidget({
     width: widgetWidth,
@@ -57,22 +34,6 @@ export function addMonitoring(stack: Stack, queue: IQueue, lambda: LambdaFunctio
       dimensionsMap: { 'FunctionName': lambda.functionName },
       statistic: 'sum',
       label: 'Invocations',
-      period: Duration.minutes(1)
-    })],
-    leftYAxis: {
-      min: 0
-    }
-  })
-
-  const lambdaMaxBatchSize = new GraphWidget({
-    width: widgetWidth,
-    title: 'Lambda: max # of messages processed in one invocation',
-    left: [new Metric({
-      metricName: 'NumberOfMessagesSent',
-      namespace: 'AWS/SQS',
-      dimensionsMap: { 'QueueName': queue.queueName },
-      statistic: 'max',
-      label: 'max batch size',
       period: Duration.minutes(1)
     })],
     leftYAxis: {
@@ -141,7 +102,6 @@ export function addMonitoring(stack: Stack, queue: IQueue, lambda: LambdaFunctio
     dashboardName: dashboardName
   })
 
-  dashboard.addWidgets(new Row(sqsInOut, sqsTimeInStream, lambdaInvocations))
-  dashboard.addWidgets(new Row(lambdaErrors, lambdaMaxBatchSize, lambdaExecutionDuration))
-  dashboard.addWidgets(new Row(dlqMessagesCount))
+  dashboard.addWidgets(new Row(sqsTimeInStream, lambdaInvocations, lambdaErrors))
+  dashboard.addWidgets(new Row(lambdaErrors, lambdaExecutionDuration, dlqMessagesCount))
 }
