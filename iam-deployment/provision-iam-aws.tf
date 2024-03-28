@@ -2,6 +2,10 @@ variable "tpc_h_s3_bucket_arn" {
   type = string
 }
 
+variable "s3_benchmarking_bucket_arn" {
+  type = string
+}
+
 resource "aws_iam_role" "kafka_iam_role" {
   name = "kafka-iam-role"
 
@@ -33,10 +37,12 @@ resource "aws_iam_role" "kafka_iam_role" {
           Resource = "*"
         },
         {
-          Action = [
-            "s3:GetObject",
-            "s3:ListBucket"
-          ],
+          Action   = "s3:GetObject",
+          Effect   = "Allow",
+          Resource = "${var.tpc_h_s3_bucket_arn}/*"
+        },
+        {
+          Action   = "s3:ListBucket",
           Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
         }
@@ -76,10 +82,12 @@ resource "aws_iam_role" "pravega_iam_role" {
           Resource = "*"
         },
         {
-          Action = [
-            "s3:GetObject",
-            "s3:ListBucket"
-          ],
+          Action   = "s3:GetObject",
+          Effect   = "Allow",
+          Resource = "${var.tpc_h_s3_bucket_arn}/*"
+        },
+        {
+          Action   = "s3:ListBucket",
           Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
         }
@@ -119,10 +127,12 @@ resource "aws_iam_role" "pulsar_iam_role" {
           Resource = "*"
         },
         {
-          Action = [
-            "s3:GetObject",
-            "s3:ListBucket"
-          ],
+          Action   = "s3:GetObject",
+          Effect   = "Allow",
+          Resource = "${var.tpc_h_s3_bucket_arn}/*"
+        },
+        {
+          Action   = "s3:ListBucket",
           Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
         }
@@ -162,10 +172,12 @@ resource "aws_iam_role" "rabbitmq_iam_role" {
           Resource = "*"
         },
         {
-          Action = [
-            "s3:GetObject",
-            "s3:ListBucket"
-          ],
+          Action   = "s3:GetObject",
+          Effect   = "Allow",
+          Resource = "${var.tpc_h_s3_bucket_arn}/*"
+        },
+        {
+          Action   = "s3:ListBucket",
           Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
         }
@@ -197,10 +209,12 @@ resource "aws_iam_role" "redis_iam_role" {
       Version = "2012-10-17",
       Statement = [
         {
-          Action = [
-            "s3:GetObject",
-            "s3:ListBucket"
-          ],
+          Action   = "s3:GetObject",
+          Effect   = "Allow",
+          Resource = "${var.tpc_h_s3_bucket_arn}/*"
+        },
+        {
+          Action   = "s3:ListBucket",
           Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
         }
@@ -226,23 +240,25 @@ resource "aws_iam_role" "sns_sqs_iam_role" {
   })
 
   inline_policy {
-    name = "allow_tpc_h_chunks_retrieval"
+    name = "allow_sns_publish_tpc_h_chunks_retrieval"
 
     policy = jsonencode({
       Version = "2012-10-17",
       Statement = [
         {
-          Action = [
-            "s3:GetObject",
-            "s3:ListBucket"
-          ],
-          Effect   = "Allow",
-          Resource = var.tpc_h_s3_bucket_arn
-        },
-        {
           Action    = "sns:Publish"
           Effect    = "Allow"
           Resource  = "arn:aws:sns:*:*:sns-sqs-consumer-lambda-sns-topic*"
+        },
+        {
+          Action   = "s3:GetObject",
+          Effect   = "Allow",
+          Resource = "${var.tpc_h_s3_bucket_arn}/*"
+        },
+        {
+          Action   = "s3:ListBucket",
+          Effect   = "Allow",
+          Resource = var.tpc_h_s3_bucket_arn
         }
       ]
     })
@@ -267,31 +283,33 @@ resource "aws_iam_role" "s3_iam_role" {
   })
 
   inline_policy {
-    name = "allow_tpc_h_chunks_retrieval"
+    name = "allow_s3_read_write_tpc_h_chunks_retrieval"
 
     policy = jsonencode({
       Version = "2012-10-17",
       Statement = [
-        {
-          Action = [
-            "s3:GetObject",
-            "s3:ListBucket"
-          ],
-          Effect   = "Allow",
-          Resource = var.tpc_h_s3_bucket_arn
-        },
         {
           Action    = [
             "s3:GetObject",
             "s3:PutObject"
           ]
           Effect    = "Allow"
-          Resource  = "arn:aws:s3:::benchmarking-events/*"
+          Resource  = "${var.s3_benchmarking_bucket_arn}/*"
         },
         {
           Action    = "s3:ListBucket"
           Effect    = "Allow"
-          Resource  = "arn:aws:s3:::benchmarking-events"
+          Resource  = var.s3_benchmarking_bucket_arn
+        },
+        {
+          Action   = "s3:GetObject",
+          Effect   = "Allow",
+          Resource = "${var.tpc_h_s3_bucket_arn}/*"
+        },
+        {
+          Action   = "s3:ListBucket",
+          Effect   = "Allow",
+          Resource = var.tpc_h_s3_bucket_arn
         }
       ]
     })
