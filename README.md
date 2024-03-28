@@ -37,16 +37,6 @@ Common build actions:
 
 This section covers how to run experiments.
 
-### Building the project into a deployable Docker container
-
-Run the following commands in the root directory.
-
-```
-  mvn package
-  export BENCHMARK_TARBALL=package/target/openmessaging-benchmark-0.0.1-SNAPSHOT-bin.tar.gz
-  docker build -t rubentewierik/benchmark-framework --build-arg BENCHMARK_TARBALL . -f docker/Dockerfile
-```
-
 ### Deploying the workers to Kubernetes
 
 The first step is to deploy the Helm chart.
