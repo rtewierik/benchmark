@@ -9,5 +9,6 @@ export interface S3ConsumerLambdaStackProps extends StackProps {
   functionTimeoutSeconds: number
   alertingEnabled: boolean
   numberOfConsumers: number
+  bucketName: string
   isTpcH: boolean
 }

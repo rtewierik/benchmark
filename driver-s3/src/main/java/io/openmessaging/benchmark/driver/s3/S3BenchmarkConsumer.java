@@ -40,7 +40,7 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final Logger log = LoggerFactory.getLogger(S3BenchmarkConsumer.class);
     private static final TpcHMessageProcessor messageProcessor = new TpcHMessageProcessor(
-            S3BenchmarkConfiguration.getS3Prefixes().stream().map(S3BenchmarkS3Producer::new).collect(Collectors.toList()),
+            S3BenchmarkConfiguration.getS3Uris().stream().map(S3BenchmarkS3Producer::new).collect(Collectors.toList()),
             new S3BenchmarkMessageProducer(new UniformRateLimiter(1.0)),
             () -> {},
             log
@@ -60,11 +60,10 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
     private void handleTpcHRequest(S3Event event) {
         for (S3Event.S3EventNotificationRecord record : event.getRecords()) {
             try {
-                log.info("Received message: {}", writer.writeValueAsString(record));
+                log.info("Received message: {}", writer.writeValueAsString(record.getS3()));
                 String bucketName = record.getS3().getBucket().getName();
                 String key = record.getS3().getObject().getKey();
-                String uri = String.format("s3://%s/%s", bucketName, key);
-                try (InputStream stream = s3Client.readFileFromS3(uri)) {
+                try (InputStream stream = s3Client.readFileFromS3(bucketName, key)) {
                     TpcHMessage tpcHMessage = mapper.readValue(stream, TpcHMessage.class);
                     messageProcessor.processTpcHMessage(tpcHMessage);
                     this.deleteMessage(record);

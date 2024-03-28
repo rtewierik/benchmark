@@ -47,7 +47,7 @@ public class S3BenchmarkDriver implements BenchmarkDriver {
     @Override
     public CompletableFuture<List<TopicInfo>> createTopics(List<TopicInfo> topics) {
         return CompletableFuture.completedFuture(
-            S3BenchmarkConfiguration.getS3Prefixes().stream().map(topic -> new TopicInfo(topic, 1)).collect(toList())
+            S3BenchmarkConfiguration.getS3Uris().stream().map(topic -> new TopicInfo(topic, 1)).collect(toList())
         );
     }
 

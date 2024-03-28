@@ -44,16 +44,20 @@ public class AmazonS3Client {
                 .build();
     }
 
-    public InputStream readFileFromS3(String s3Uri) throws IOException {
+    public InputStream readFileFromS3(String bucketName, String key) throws IOException {
         try {
-            URI uri = URI.create(s3Uri);
-            String bucketName = uri.getHost();
-            String key = uri.getPath().substring(1);
             S3Object s3Object = this.s3Client.getObject(new GetObjectRequest(bucketName, key));
             return s3Object.getObjectContent();
         } catch (Exception exception) {
             throw new IOException("Failed to read and CSV from S3: " + exception.getMessage(), exception);
         }
+    }
+
+    public InputStream readFileFromS3(String s3Uri) throws IOException {
+        URI uri = URI.create(s3Uri);
+        String bucketName = uri.getHost();
+        String key = uri.getPath().substring(1);
+        return readFileFromS3(bucketName, key);
     }
 
     public void writeMessageToS3(String bucketName, String key, byte[] message) {

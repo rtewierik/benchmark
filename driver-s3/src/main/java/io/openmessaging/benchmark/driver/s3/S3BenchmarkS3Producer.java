@@ -15,6 +15,8 @@ package io.openmessaging.benchmark.driver.s3;
 
 import io.openmessaging.benchmark.common.client.AmazonS3Client;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.Optional;
@@ -26,8 +28,8 @@ public class S3BenchmarkS3Producer implements BenchmarkProducer {
     private final String bucketName;
     private final String key;
 
-    public S3BenchmarkS3Producer(String s3Prefix) {
-        URI uri = URI.create(s3Prefix);
+    public S3BenchmarkS3Producer(String s3Uri) {
+        URI uri = URI.create(s3Uri);
         this.bucketName = uri.getHost();
         this.key = uri.getPath().substring(1);
     }
@@ -39,6 +41,7 @@ public class S3BenchmarkS3Producer implements BenchmarkProducer {
             s3Client.writeMessageToS3(this.bucketName, this.key, payload);
             future.complete(null);
         } catch (Exception e) {
+            log.error("Failed sendAsync for {} {} due to {}", this.bucketName, this.key, e.getMessage());
             future.completeExceptionally(e);
         }
         return future;
@@ -46,4 +49,6 @@ public class S3BenchmarkS3Producer implements BenchmarkProducer {
 
     @Override
     public void close() throws Exception {}
+
+    private static final Logger log = LoggerFactory.getLogger(S3BenchmarkS3Producer.class);
 }
