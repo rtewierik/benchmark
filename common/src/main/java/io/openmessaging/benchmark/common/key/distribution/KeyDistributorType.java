@@ -37,6 +37,6 @@ public enum KeyDistributorType {
     /** Generate a finite number of "keys" and cycle through them in round-robin fashion. */
     KEY_ROUND_ROBIN,
 
-    /** RandomUtils distribution based on System.nanoTime(). */
+    /** Random distribution based on System.nanoTime(). */
     RANDOM_NANO,
 }
