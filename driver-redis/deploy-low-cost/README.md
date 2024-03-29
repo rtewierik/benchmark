@@ -5,6 +5,7 @@ sudo bin/benchmark \
   --drivers driver-redis/redis-default.yaml \
   workloads/max-rate-10-topics-1-partition-1kb.yaml
 ```
+
 ```
 sudo bin/benchmark \
   --drivers driver-redis/redis-default.yaml \
@@ -19,3 +20,4 @@ sudo bin/benchmark \
 
 * `deploy.yaml`requires modification of the `Configure memory` task
 * The rest of the infrastructure is all provided by AWS. The instance size and number of nodes in the Redis cluster should be verified to ensure benchmark success.
+

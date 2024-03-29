@@ -13,25 +13,25 @@
  */
 package io.openmessaging.benchmark.driver.s3;
 
+import static java.util.stream.Collectors.toList;
+
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
-import org.apache.bookkeeper.stats.StatsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-
-import static java.util.stream.Collectors.toList;
+import org.apache.bookkeeper.stats.StatsLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class S3BenchmarkDriver implements BenchmarkDriver {
 
     @Override
-    public void initialize(File configurationFile, StatsLogger statsLogger) throws IOException, InterruptedException {}
+    public void initialize(File configurationFile, StatsLogger statsLogger)
+            throws IOException, InterruptedException {}
 
     @Override
     public String getTopicNamePrefix() {
@@ -47,8 +47,9 @@ public class S3BenchmarkDriver implements BenchmarkDriver {
     @Override
     public CompletableFuture<List<TopicInfo>> createTopics(List<TopicInfo> topics) {
         return CompletableFuture.completedFuture(
-            S3BenchmarkConfiguration.getS3Uris().stream().map(topic -> new TopicInfo(topic, 1)).collect(toList())
-        );
+                S3BenchmarkConfiguration.s3Uris.stream()
+                        .map(topic -> new TopicInfo(topic, 1))
+                        .collect(toList()));
     }
 
     @Override
@@ -57,7 +58,8 @@ public class S3BenchmarkDriver implements BenchmarkDriver {
     }
 
     @Override
-    public CompletableFuture<BenchmarkConsumer> createConsumer(String topic, String subscriptionName, ConsumerCallback consumerCallback) {
+    public CompletableFuture<BenchmarkConsumer> createConsumer(
+            String topic, String subscriptionName, ConsumerCallback consumerCallback) {
         // Consumers are pre-created by AWS CDK project.
         return CompletableFuture.completedFuture(null);
     }

@@ -13,16 +13,21 @@
  */
 package io.openmessaging.benchmark.common.client;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.*;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import io.openmessaging.benchmark.common.utils.RandomGenerator;
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AmazonS3Client {
@@ -30,10 +35,7 @@ public class AmazonS3Client {
     private final AmazonS3 s3Client;
 
     public AmazonS3Client() {
-        this.s3Client = AmazonS3ClientBuilder
-                .standard()
-                .withRegion("eu-west-1")
-                .build();
+        this.s3Client = AmazonS3ClientBuilder.standard().withRegion("eu-west-1").build();
     }
 
     public InputStream readFileFromS3(String bucketName, String key) throws IOException {
@@ -53,16 +55,19 @@ public class AmazonS3Client {
     }
 
     public void writeMessageToS3(String bucketName, String key, byte[] message) {
-        String fileName = String.format("%s-%s", RandomGenerator.getRandomString(), RandomGenerator.getRandomString());
+        String fileName =
+                String.format(
+                        "%s-%s", RandomGenerator.getRandomString(), RandomGenerator.getRandomString());
         String s3Uri = String.format("%s/%s", key, fileName);
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(message.length);
-        PutObjectRequest request = new PutObjectRequest(bucketName, s3Uri, new ByteArrayInputStream(message), metadata);
+        PutObjectRequest request =
+                new PutObjectRequest(bucketName, s3Uri, new ByteArrayInputStream(message), metadata);
         s3Client.putObject(request);
     }
 
     public void writeMessageToS3(String bucketName, String key, String message) {
-        this.writeMessageToS3(bucketName, key, message.getBytes());
+        this.writeMessageToS3(bucketName, key, message.getBytes(UTF_8));
     }
 
     public void deleteFileFromS3(String bucketName, String key) {

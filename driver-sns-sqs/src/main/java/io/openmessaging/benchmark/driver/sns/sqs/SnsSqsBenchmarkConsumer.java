@@ -13,6 +13,7 @@
  */
 package io.openmessaging.benchmark.driver.sns.sqs;
 
+
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
@@ -29,11 +30,10 @@ import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, BenchmarkConsumer {
 
@@ -42,22 +42,24 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final Logger log = LoggerFactory.getLogger(SnsSqsBenchmarkConsumer.class);
-    private static final TpcHMessageProcessor messageProcessor = new TpcHMessageProcessor(
-            SnsSqsBenchmarkConfiguration.getSnsUris().stream().map(SnsSqsBenchmarkSnsProducer::new).collect(Collectors.toList()),
-            new SnsSqsBenchmarkMessageProducer(new UniformRateLimiter(1.0)),
-            () -> {},
-            log
-    );
-    private static final AmazonSQS sqsClient = AmazonSQSClientBuilder
-            .standard()
-            .withRegion(SnsSqsBenchmarkConfiguration.getRegion())
-            .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
-            .build();
-    private static final String sqsUri = SnsSqsBenchmarkConfiguration.getSqsUri();
+    private static final TpcHMessageProcessor messageProcessor =
+            new TpcHMessageProcessor(
+                    SnsSqsBenchmarkConfiguration.snsUris.stream()
+                            .map(SnsSqsBenchmarkSnsProducer::new)
+                            .collect(Collectors.toList()),
+                    new SnsSqsBenchmarkMessageProducer(new UniformRateLimiter(1.0)),
+                    () -> {},
+                    log);
+    private static final AmazonSQS sqsClient =
+            AmazonSQSClientBuilder.standard()
+                    .withRegion(SnsSqsBenchmarkConfiguration.region)
+                    .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
+                    .build();
+    private static final String sqsUri = SnsSqsBenchmarkConfiguration.sqsUri;
 
     @Override
     public Void handleRequest(SQSEvent event, Context context) {
-        if (SnsSqsBenchmarkConfiguration.isTpcH()) {
+        if (SnsSqsBenchmarkConfiguration.isTpcH) {
             handleTpcHRequest(event);
         } else {
             handleThroughputRequest(event);

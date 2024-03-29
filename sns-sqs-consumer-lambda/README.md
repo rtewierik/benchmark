@@ -1,13 +1,17 @@
 # SNS/SQS driver
+
 The mission of this service is to deploy required infrastructure for push-based SNS/SQS benchmarks to AWS.
 
 ## Getting Started
+
 The project can be set up for local development as follows.
 
 ### Requirements
+
 * Node 18.x
 
 ### Install
+
 Use Git to clone this repository to your computer.
 
 ```
@@ -35,3 +39,4 @@ Run the following commands locally to deploy the AWS CDK project to AWS.
 * **Navigate to the `infrastructure` project, verify AWS environment and CDK version and build the CDK project:** `cd infrastructure && cdk doctor && npm install && npm run build`
 * **Verify staged changes:** `npx aws-cdk diff sns-sqs-consumer-lambda`
 * **Deploy staged changes:** `npx aws-cdk deploy sns-sqs-consumer-lambda --require-approval never`
+

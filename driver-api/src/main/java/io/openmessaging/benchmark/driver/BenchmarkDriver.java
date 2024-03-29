@@ -63,9 +63,7 @@ public interface BenchmarkDriver extends AutoCloseable {
     default CompletableFuture<List<TopicInfo>> createTopics(List<TopicInfo> topicInfos) {
         @SuppressWarnings("unchecked")
         CompletableFuture<TopicInfo>[] futures =
-                topicInfos.stream()
-                        .map(this::createTopic)
-                        .toArray(CompletableFuture[]::new);
+                topicInfos.stream().map(this::createTopic).toArray(CompletableFuture[]::new);
         return CompletableFuture.allOf(futures)
                 .thenApply(v -> Arrays.stream(futures).map(CompletableFuture::join).collect(toList()));
     }

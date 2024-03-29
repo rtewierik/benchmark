@@ -22,7 +22,6 @@ import com.rabbitmq.client.Envelope;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
 import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +43,8 @@ public class RabbitMqBenchmarkConsumer extends DefaultConsumer implements Benchm
 
     @Override
     public void handleDelivery(
-            String consumerTag, Envelope envelope, BasicProperties properties, byte[] body) throws IOException {
+            String consumerTag, Envelope envelope, BasicProperties properties, byte[] body)
+            throws IOException {
         callback.messageReceived(body, properties.getTimestamp().getTime());
     }
 

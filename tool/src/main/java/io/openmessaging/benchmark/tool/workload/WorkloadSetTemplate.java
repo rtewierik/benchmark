@@ -13,10 +13,10 @@
  */
 package io.openmessaging.benchmark.tool.workload;
 
-import java.util.Collections;
-import java.util.List;
 
 import io.openmessaging.benchmark.common.key.distribution.KeyDistributorType;
+import java.util.Collections;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

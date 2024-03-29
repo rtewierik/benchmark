@@ -18,7 +18,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import io.openmessaging.benchmark.driver.*;
+import io.openmessaging.benchmark.driver.BenchmarkConsumer;
+import io.openmessaging.benchmark.driver.BenchmarkDriver;
+import io.openmessaging.benchmark.driver.BenchmarkProducer;
+import io.openmessaging.benchmark.driver.ConsumerCallback;
 import io.openmessaging.benchmark.driver.jms.config.JMSConfig;
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +29,6 @@ import java.io.StringReader;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -201,8 +203,6 @@ public class JMSBenchmarkDriver implements BenchmarkDriver {
     private static JMSConfig readConfig(File configurationFile) throws IOException {
         return mapper.readValue(configurationFile, JMSConfig.class);
     }
-
-    private static final Random random = new Random();
 
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final Logger log = LoggerFactory.getLogger(JMSBenchmarkDriver.class);

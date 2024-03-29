@@ -13,6 +13,7 @@
  */
 package io.openmessaging.tpch.model;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TpcHConsumerAssignment {
@@ -25,15 +26,16 @@ public class TpcHConsumerAssignment {
     public final Integer numberOfChunks;
     public final String sourceDataS3Uri;
 
+    @SuppressWarnings("checkstyle:ParameterNumber")
     public TpcHConsumerAssignment(
-        @JsonProperty("query") TpcHQuery query,
-        @JsonProperty("queryId") String queryId,
-        @JsonProperty("batchId") String batchId,
-        @JsonProperty("chunkIndex") Integer chunkIndex,
-        @JsonProperty("producerIndex") Integer producerIndex,
-        @JsonProperty("numberOfMapResults") Integer numberOfMapResults,
-        @JsonProperty("numberOfChunks") Integer numberOfChunks,
-        @JsonProperty("sourceDataS3Uri") String sourceDataS3Uri) {
+            @JsonProperty("query") TpcHQuery query,
+            @JsonProperty("queryId") String queryId,
+            @JsonProperty("batchId") String batchId,
+            @JsonProperty("chunkIndex") Integer chunkIndex,
+            @JsonProperty("producerIndex") Integer producerIndex,
+            @JsonProperty("numberOfMapResults") Integer numberOfMapResults,
+            @JsonProperty("numberOfChunks") Integer numberOfChunks,
+            @JsonProperty("sourceDataS3Uri") String sourceDataS3Uri) {
         this.query = query;
         this.queryId = queryId;
         this.batchId = batchId;

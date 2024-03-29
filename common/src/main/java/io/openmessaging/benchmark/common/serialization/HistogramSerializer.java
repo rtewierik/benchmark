@@ -24,7 +24,9 @@ import org.HdrHistogram.Histogram;
 
 public class HistogramSerializer extends StdSerializer<Histogram> {
 
-    private final ThreadLocal<ByteBuffer> threadBuffer =
+    private static final long serialVersionUID = 1905162041950251407L;
+
+    private final transient ThreadLocal<ByteBuffer> threadBuffer =
             ThreadLocal.withInitial(() -> ByteBuffer.allocate(8 * 1024 * 1024));
 
     public HistogramSerializer() {

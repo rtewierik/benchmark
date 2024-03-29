@@ -5,6 +5,7 @@ sudo bin/benchmark \
   --drivers driver-redis/redis-default.yaml \
   workloads/max-rate-10-topics-1-partition-1kb.yaml
 ```
+
 ```
 sudo bin/benchmark \
   --drivers driver-redis/redis-default.yaml \
@@ -27,11 +28,12 @@ sudo bin/benchmark \
 * Add `inventory.ini` as follows
 
 ```
-  [ec2_instances]
-  ec2-01 ansible_host=xx.xx.xx.xx
-  ec2-02 ansible_host=yy.yy.yy.yy
-  ec2-03 ansible_host=zz.zz.zz.zz
+[ec2_instances]
+ec2-01 ansible_host=xx.xx.xx.xx
+ec2-02 ansible_host=yy.yy.yy.yy
+ec2-03 ansible_host=zz.zz.zz.zz
 ```
+
 * Update `host_vars/*` with the private IP addresses of each of the EC2 instances.
 * Execute playbook e.g. `ansible-playbook -i inventory.ini your_playbook.yml`
 
@@ -50,13 +52,17 @@ ansible-playbook -K \
 * Build the project using `mvn clean package`.
 * Update `workloads/redis-default.yaml` and `workloads/tpc-h-default.yaml` based on your preferences.
 * Set up an SSH tunnel using the following command.
+
 ```
-  ssh -i ~/redis_aws_academy.pem -L 6379:REDIS_PRIVATE_IP:6379 ec2-user@EC2_INSTANCE_HOST -N
+ssh -i ~/redis_aws_academy.pem -L 6379:REDIS_PRIVATE_IP:6379 ec2-user@EC2_INSTANCE_HOST -N
 ```
+
 * Run the following command to start the TPC-H benchmark.
+
 ```
-  sudo bin/benchmark \
-  --drivers workloads/redis-default.yaml \
-  --tpc-h-file workloads/tpc-h-default.yaml \
-  workloads/simple-workload.yaml
+sudo bin/benchmark \
+--drivers workloads/redis-default.yaml \
+--tpc-h-file workloads/tpc-h-default.yaml \
+workloads/simple-workload.yaml
 ```
+

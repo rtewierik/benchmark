@@ -33,7 +33,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.base.Preconditions;
 import io.openmessaging.benchmark.common.ObjectMappers;
-import io.openmessaging.benchmark.worker.commands.*;
+import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
+import io.openmessaging.benchmark.worker.commands.CountersStats;
+import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
+import io.openmessaging.benchmark.worker.commands.PeriodStats;
+import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
+import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
+import io.openmessaging.benchmark.worker.commands.TopicsInfo;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -285,7 +291,7 @@ public class HttpWorkerClient implements Worker {
                 .join();
     }
 
-    private static final ObjectMapper mapper = ObjectMappers.DEFAULT.mapper();
-    private static final ObjectWriter writer = ObjectMappers.DEFAULT.writer();
+    private static final ObjectMapper mapper = ObjectMappers.mapper;
+    private static final ObjectWriter writer = ObjectMappers.writer;
     private static final Logger log = LoggerFactory.getLogger(HttpWorkerClient.class);
 }

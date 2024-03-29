@@ -13,6 +13,7 @@
  */
 package io.openmessaging.tpch.model;
 
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -36,23 +37,42 @@ public class TpcHRow {
 
     @Override
     public String toString() {
-        return "TpcHRow{" +
-                "orderKey=" + orderKey +
-                ", partKey=" + partKey +
-                ", suppKey=" + suppKey +
-                ", lineNumber=" + lineNumber +
-                ", quantity=" + quantity +
-                ", extendedPrice=" + extendedPrice +
-                ", discount=" + discount +
-                ", tax=" + tax +
-                ", returnFlag=" + returnFlag +
-                ", lineStatus=" + lineStatus +
-                ", shipDate=" + shipDate +
-                ", commitDate=" + commitDate +
-                ", receiptDate=" + receiptDate +
-                ", shipInstruct='" + shipInstruct + '\'' +
-                ", shipMode='" + shipMode + '\'' +
-                ", comment='" + comment + '\'' +
-                '}';
+        return "TpcHRow{"
+                + "orderKey="
+                + orderKey
+                + ", partKey="
+                + partKey
+                + ", suppKey="
+                + suppKey
+                + ", lineNumber="
+                + lineNumber
+                + ", quantity="
+                + quantity
+                + ", extendedPrice="
+                + extendedPrice
+                + ", discount="
+                + discount
+                + ", tax="
+                + tax
+                + ", returnFlag="
+                + returnFlag
+                + ", lineStatus="
+                + lineStatus
+                + ", shipDate="
+                + shipDate
+                + ", commitDate="
+                + commitDate
+                + ", receiptDate="
+                + receiptDate
+                + ", shipInstruct='"
+                + shipInstruct
+                + '\''
+                + ", shipMode='"
+                + shipMode
+                + '\''
+                + ", comment='"
+                + comment
+                + '\''
+                + '}';
     }
 }

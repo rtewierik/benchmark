@@ -11,40 +11,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.openmessaging.benchmark.common.key.distribution;
 
+import static io.openmessaging.benchmark.common.random.RandomUtils.RANDOM;
 
 import com.google.common.io.BaseEncoding;
-
-import java.util.Random;
 
 public abstract class KeyDistributor {
 
     private static final int UNIQUE_COUNT = 10_000;
     private static final int KEY_BYTE_SIZE = 7;
+    private static final byte[] BUFFER = new byte[KEY_BYTE_SIZE];
 
     private static final String[] randomKeys = new String[UNIQUE_COUNT];
 
     static {
         // Generate a number of random keys to be used when publishing
-        byte[] buffer = new byte[KEY_BYTE_SIZE];
-        Random random = new Random();
         for (int i = 0; i < randomKeys.length; i++) {
-            random.nextBytes(buffer);
-            randomKeys[i] = BaseEncoding.base64Url().omitPadding().encode(buffer);
+            RANDOM.nextBytes(BUFFER);
+            randomKeys[i] = BaseEncoding.base64Url().omitPadding().encode(BUFFER);
         }
     }
 
@@ -59,7 +44,7 @@ public abstract class KeyDistributor {
     public abstract String next();
 
     public static KeyDistributor build(KeyDistributorType keyType) {
-        KeyDistributor keyDistributor = null;
+        KeyDistributor keyDistributor;
         switch (keyType) {
             case NO_KEY:
                 keyDistributor = new NoKeyDistributor();

@@ -32,11 +32,6 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>driver-jms</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -67,12 +62,12 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>driver-sns-sqs</artifactId>
+            <artifactId>driver-s3</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>driver-s3</artifactId>
+            <artifactId>driver-sns-sqs</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

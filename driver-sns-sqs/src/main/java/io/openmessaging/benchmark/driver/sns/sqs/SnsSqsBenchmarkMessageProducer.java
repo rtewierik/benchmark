@@ -13,16 +13,15 @@
  */
 package io.openmessaging.benchmark.driver.sns.sqs;
 
+import static io.openmessaging.benchmark.common.utils.UniformRateLimiter.uninterruptibleSleepNs;
+
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.MessageProducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Optional;
 import java.util.function.Supplier;
-
-import static io.openmessaging.benchmark.common.utils.UniformRateLimiter.uninterruptibleSleepNs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SnsSqsBenchmarkMessageProducer implements MessageProducer {
     private final UniformRateLimiter rateLimiter;
@@ -41,9 +40,7 @@ public class SnsSqsBenchmarkMessageProducer implements MessageProducer {
         final long intendedSendTime = rateLimiter.acquire();
         uninterruptibleSleepNs(intendedSendTime);
         // final long sendTime = nanoClock.get();
-        producer
-            .sendAsync(key, payload)
-            .exceptionally(this::failure);
+        producer.sendAsync(key, payload).exceptionally(this::failure);
     }
 
     private void success(long payloadLength, long intendedSendTime, long sendTime) {

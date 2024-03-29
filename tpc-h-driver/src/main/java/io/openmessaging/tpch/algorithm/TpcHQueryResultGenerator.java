@@ -13,12 +13,12 @@
  */
 package io.openmessaging.tpch.algorithm;
 
-import io.openmessaging.tpch.model.TpcHQuery;
-import io.openmessaging.tpch.model.TpcHQueryResultRow;
+
 import io.openmessaging.tpch.model.TpcHIntermediateResult;
 import io.openmessaging.tpch.model.TpcHIntermediateResultGroup;
+import io.openmessaging.tpch.model.TpcHQuery;
 import io.openmessaging.tpch.model.TpcHQueryResult;
-
+import io.openmessaging.tpch.model.TpcHQueryResultRow;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
@@ -26,13 +26,11 @@ import java.util.Map;
 public class TpcHQueryResultGenerator {
 
     public static TpcHQueryResult generateResult(TpcHIntermediateResult intermediateResult) {
-        return TpcHQueryResultGenerator.generateResult(
-            intermediateResult,
-            intermediateResult.query
-        );
+        return TpcHQueryResultGenerator.generateResult(intermediateResult, intermediateResult.query);
     }
 
-    public static TpcHQueryResult generateResult(TpcHIntermediateResult intermediateResult, TpcHQuery query) {
+    public static TpcHQueryResult generateResult(
+            TpcHIntermediateResult intermediateResult, TpcHQuery query) {
         switch (query) {
             case PricingSummaryReport:
                 return generatePricingSummaryReportResult(intermediateResult);
@@ -43,7 +41,8 @@ public class TpcHQueryResultGenerator {
         }
     }
 
-    private static TpcHQueryResult generatePricingSummaryReportResult(TpcHIntermediateResult intermediateResult) {
+    private static TpcHQueryResult generatePricingSummaryReportResult(
+            TpcHIntermediateResult intermediateResult) {
         TpcHQueryResult result = new TpcHQueryResult();
         for (TpcHIntermediateResultGroup group : intermediateResult.groups) {
             TpcHQueryResultRow row = new TpcHQueryResultRow();
@@ -80,11 +79,13 @@ public class TpcHQueryResultGenerator {
             if (number instanceof Long) {
                 return BigDecimal.valueOf(number.longValue());
             }
-        } catch (NumberFormatException ignored) {}
-        return (BigDecimal)number;
+        } catch (NumberFormatException ignored) {
+        }
+        return (BigDecimal) number;
     }
 
-    private static TpcHQueryResult generateForecastingRevenueChangeResult(TpcHIntermediateResult intermediateResult) {
+    private static TpcHQueryResult generateForecastingRevenueChangeResult(
+            TpcHIntermediateResult intermediateResult) {
         TpcHQueryResult result = new TpcHQueryResult();
         for (TpcHIntermediateResultGroup group : intermediateResult.groups) {
             TpcHQueryResultRow row = new TpcHQueryResultRow();

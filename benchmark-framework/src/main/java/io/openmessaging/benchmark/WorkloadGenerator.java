@@ -13,31 +13,36 @@
  */
 package io.openmessaging.benchmark;
 
+import static io.openmessaging.benchmark.common.random.RandomUtils.RANDOM;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.common.utils.RandomGenerator;
-import io.openmessaging.tpch.model.TpcHArguments;
-import io.openmessaging.tpch.TpcHConstants;
 import io.openmessaging.benchmark.utils.PaddingDecimalFormat;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.utils.payload.FilePayloadReader;
 import io.openmessaging.benchmark.utils.payload.PayloadReader;
 import io.openmessaging.benchmark.worker.LocalWorker;
 import io.openmessaging.benchmark.worker.Worker;
-import io.openmessaging.benchmark.worker.commands.*;
-
+import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
+import io.openmessaging.benchmark.worker.commands.CountersStats;
+import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
+import io.openmessaging.benchmark.worker.commands.PeriodStats;
+import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
+import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
+import io.openmessaging.benchmark.worker.commands.TopicSubscription;
+import io.openmessaging.benchmark.worker.commands.TopicsInfo;
+import io.openmessaging.tpch.TpcHConstants;
+import io.openmessaging.tpch.model.TpcHArguments;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +63,12 @@ public class WorkloadGenerator implements AutoCloseable {
 
     private volatile double targetPublishRate;
 
-    public WorkloadGenerator(String driverName, Workload workload, TpcHArguments arguments, Worker worker, LocalWorker localWorker) {
+    public WorkloadGenerator(
+            String driverName,
+            Workload workload,
+            TpcHArguments arguments,
+            Worker worker,
+            LocalWorker localWorker) {
         this.driverName = driverName;
         this.workload = workload;
         this.arguments = arguments;
@@ -86,7 +96,8 @@ public class WorkloadGenerator implements AutoCloseable {
          * x topics to send intermediate results to;
          */
         int numberOfTopics = 1 + 1 + this.arguments.numberOfReducers;
-        List<String> topics = worker.createTopics(new TopicsInfo(numberOfTopics, workload.partitionsPerTopic));
+        List<String> topics =
+                worker.createTopics(new TopicsInfo(numberOfTopics, workload.partitionsPerTopic));
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
 
         ConsumerAssignment internalConsumerAssignment = createTpcHConsumers(topics);
@@ -115,7 +126,9 @@ public class WorkloadGenerator implements AutoCloseable {
         worker.startLoad(producerWorkAssignment);
         log.info("----- Starting benchmark traffic ------");
 
-        TestResult result = printAndCollectStats(workload.testDurationMinutes, TimeUnit.MINUTES, localWorker::getTestCompleted);
+        TestResult result =
+                printAndCollectStats(
+                        workload.testDurationMinutes, TimeUnit.MINUTES, localWorker::getTestCompleted);
         runCompleted = true;
 
         log.info("----- Completed run. Stopping worker and yielding results ------");
@@ -165,12 +178,11 @@ public class WorkloadGenerator implements AutoCloseable {
         if (workload.useRandomizedPayloads) {
             // create messages that are part random and part zeros
             // better for testing effects of compression
-            Random r = new Random();
             int randomBytes = (int) (workload.messageSize * workload.randomBytesRatio);
             int zerodBytes = workload.messageSize - randomBytes;
             for (int i = 0; i < workload.randomizedPayloadPoolSize; i++) {
                 byte[] randArray = new byte[randomBytes];
-                r.nextBytes(randArray);
+                RANDOM.nextBytes(randArray);
                 byte[] zerodArray = new byte[zerodBytes];
                 byte[] combined = ArrayUtils.addAll(randArray, zerodArray);
                 producerWorkAssignment.payloadData.add(combined);
@@ -200,7 +212,8 @@ public class WorkloadGenerator implements AutoCloseable {
         worker.resetStats();
         log.info("----- Starting benchmark traffic ({}m)------", workload.testDurationMinutes);
 
-        TestResult result = printAndCollectStats(workload.testDurationMinutes, TimeUnit.MINUTES, () -> false);
+        TestResult result =
+                printAndCollectStats(workload.testDurationMinutes, TimeUnit.MINUTES, () -> false);
         runCompleted = true;
 
         log.info("----- Completed run. Stopping worker and yielding results ------");
@@ -305,7 +318,8 @@ public class WorkloadGenerator implements AutoCloseable {
             for (int i = 0; i < workload.subscriptionsPerTopic; i++) {
                 String subscriptionName = generateSubscriptionName(i);
                 for (int j = 0; j < workload.consumerPerSubscription; j++) {
-                    consumerAssignment.topicsSubscriptions.add(new TopicSubscription(topic, subscriptionName));
+                    consumerAssignment.topicsSubscriptions.add(
+                            new TopicSubscription(topic, subscriptionName));
                 }
             }
         }
@@ -326,27 +340,21 @@ public class WorkloadGenerator implements AutoCloseable {
         ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment(true);
 
         consumerAssignment.topicsSubscriptions.add(
-            new TopicSubscription(
-                topics.get(TpcHConstants.MAP_CMD_INDEX),
-                generateSubscriptionName(TpcHConstants.MAP_CMD_INDEX)
-            )
-        );
+                new TopicSubscription(
+                        topics.get(TpcHConstants.MAP_CMD_INDEX),
+                        generateSubscriptionName(TpcHConstants.MAP_CMD_INDEX)));
 
-        TopicSubscription orchestratorSubscription = new TopicSubscription(
-            topics.get(TpcHConstants.REDUCE_DST_INDEX),
-            generateSubscriptionName(TpcHConstants.REDUCE_DST_INDEX)
-        );
+        TopicSubscription orchestratorSubscription =
+                new TopicSubscription(
+                        topics.get(TpcHConstants.REDUCE_DST_INDEX),
+                        generateSubscriptionName(TpcHConstants.REDUCE_DST_INDEX));
         consumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
         orchestratorConsumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
 
         for (int i = 0; i < this.arguments.numberOfReducers; i++) {
             int sourceIndex = TpcHConstants.REDUCE_SRC_START_INDEX + i;
             consumerAssignment.topicsSubscriptions.add(
-                new TopicSubscription(
-                    topics.get(sourceIndex),
-                    generateSubscriptionName(sourceIndex)
-                )
-            );
+                    new TopicSubscription(topics.get(sourceIndex), generateSubscriptionName(sourceIndex)));
         }
 
         Timer timer = new Timer();
@@ -372,7 +380,8 @@ public class WorkloadGenerator implements AutoCloseable {
         Timer timer = new Timer();
 
         worker.createProducers(producerAssignment);
-        log.info("Created {} producers in {} ms", producerAssignment.topics.size(), timer.elapsedMillis());
+        log.info(
+                "Created {} producers in {} ms", producerAssignment.topics.size(), timer.elapsedMillis());
     }
 
     private void createTpcHProducers(List<String> topics) throws IOException {
@@ -446,7 +455,8 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     @SuppressWarnings({"checkstyle:LineLength", "checkstyle:MethodLength"})
-    private TestResult printAndCollectStats(long testDurations, TimeUnit unit, BooleanSupplier isFinished) throws IOException {
+    private TestResult printAndCollectStats(
+            long testDurations, TimeUnit unit, BooleanSupplier isFinished) throws IOException {
         long startTime = System.nanoTime();
 
         // Print report stats
@@ -646,6 +656,7 @@ public class WorkloadGenerator implements AutoCloseable {
     private static String generateSubscriptionName(int index) {
         return String.format("sub-%03d-%s", index, RandomGenerator.getRandomString());
     }
+
     private static double microsToMillis(double timeInMicros) {
         return timeInMicros / 1000.0;
     }

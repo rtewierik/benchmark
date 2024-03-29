@@ -24,16 +24,24 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import io.openmessaging.benchmark.EnvironmentConfiguration;
 import io.openmessaging.benchmark.common.utils.RandomGenerator;
-import io.openmessaging.tpch.TpcHConstants;
 import io.openmessaging.benchmark.utils.ListPartition;
-import io.openmessaging.benchmark.worker.commands.*;
-
+import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
+import io.openmessaging.benchmark.worker.commands.CountersStats;
+import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
+import io.openmessaging.benchmark.worker.commands.PeriodStats;
+import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
+import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
+import io.openmessaging.benchmark.worker.commands.TopicSubscription;
+import io.openmessaging.benchmark.worker.commands.TopicsInfo;
+import io.openmessaging.tpch.TpcHConstants;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,23 +124,26 @@ public class DistributedWorkersEnsemble implements Worker {
     public void startLoad(ProducerWorkAssignment producerWorkAssignment) throws IOException {
         double newRate = producerWorkAssignment.publishRate / numberOfUsedProducerWorkers;
         log.debug("Setting worker assigned publish rate to {} msgs/sec", newRate);
-        List<Worker> workersToStart = producerWorkAssignment.tpcHArguments != null ? this.workers : this.producerWorkers;
-        List<AbstractMap.SimpleEntry<Worker, Integer>> workersToStartWithIndices = IntStream.range(0, workersToStart.size())
-                .mapToObj(i -> new AbstractMap.SimpleEntry<Worker, Integer>(workersToStart.get(i), i) {})
-                .collect(Collectors.toList());
+        List<Worker> workersToStart =
+                producerWorkAssignment.tpcHArguments != null ? this.workers : this.producerWorkers;
+        List<AbstractMap.SimpleEntry<Worker, Integer>> workersToStartWithIndices =
+                IntStream.range(0, workersToStart.size())
+                        .mapToObj(
+                                i -> new AbstractMap.SimpleEntry<Worker, Integer>(workersToStart.get(i), i) {})
+                        .collect(Collectors.toList());
         workersToStartWithIndices.parallelStream()
-            .forEach(
-                w -> {
-                    try {
-                        w.getKey().startLoad(
-                            producerWorkAssignment
-                                .withPublishRate(newRate)
-                                .withProducerIndex(w.getValue())
-                        );
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                .forEach(
+                        w -> {
+                            try {
+                                w.getKey()
+                                        .startLoad(
+                                                producerWorkAssignment
+                                                        .withPublishRate(newRate)
+                                                        .withProducerIndex(w.getValue()));
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
     }
 
     @Override
@@ -213,7 +224,9 @@ public class DistributedWorkersEnsemble implements Worker {
 
     private void createTpcHConsumers(ConsumerAssignment assignment) throws IOException {
         List<TopicSubscription> subscriptions = assignment.topicsSubscriptions;
-        List<TopicSubscription> distributableConsumerSubscriptions = new ArrayList<>(subscriptions.subList(TpcHConstants.REDUCE_SRC_START_INDEX, subscriptions.size()));;
+        List<TopicSubscription> distributableConsumerSubscriptions =
+                new ArrayList<>(
+                        subscriptions.subList(TpcHConstants.REDUCE_SRC_START_INDEX, subscriptions.size()));
         TopicSubscription mapSubscription = subscriptions.get(TpcHConstants.MAP_CMD_INDEX);
         List<List<TopicSubscription>> reduceSubscriptionsPerConsumer =
                 ListPartition.partitionList(distributableConsumerSubscriptions, workers.size());
@@ -294,7 +307,6 @@ public class DistributedWorkersEnsemble implements Worker {
                             } catch (IOException ex) {
                                 throw new RuntimeException(ex);
                             }
-
                         });
     }
 

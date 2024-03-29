@@ -13,6 +13,7 @@
  */
 package io.openmessaging.benchmark.driver;
 
+
 import java.util.Optional;
 
 public interface MessageProducer {

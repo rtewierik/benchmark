@@ -26,22 +26,39 @@ import io.openmessaging.benchmark.common.ObjectMappers;
 import io.openmessaging.benchmark.common.key.distribution.KeyDistributor;
 import io.openmessaging.benchmark.common.utils.RandomGenerator;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
-import io.openmessaging.benchmark.driver.*;
+import io.openmessaging.benchmark.driver.BenchmarkConsumer;
+import io.openmessaging.benchmark.driver.BenchmarkDriver;
+import io.openmessaging.benchmark.driver.BenchmarkProducer;
+import io.openmessaging.benchmark.driver.ConsumerCallback;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ConsumerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
 import io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkConfiguration;
 import io.openmessaging.benchmark.utils.Timer;
-import io.openmessaging.benchmark.worker.commands.*;
+import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
+import io.openmessaging.benchmark.worker.commands.CountersStats;
+import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
+import io.openmessaging.benchmark.worker.commands.PeriodStats;
+import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
+import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
+import io.openmessaging.benchmark.worker.commands.TopicsInfo;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.TreeMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
-import io.openmessaging.tpch.*;
+import io.openmessaging.tpch.TpcHConstants;
 import io.openmessaging.tpch.model.TpcHConsumerAssignment;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.model.TpcHMessageType;
@@ -71,7 +88,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final WorkerStats stats;
     private boolean testCompleted = false;
     private boolean consumersArePaused = false;
-    private static final ObjectWriter messageWriter = ObjectMappers.DEFAULT.writer();
+    private static final ObjectWriter messageWriter = ObjectMappers.writer;
 
     public LocalWorker() {
         this(NullStatsLogger.INSTANCE);
@@ -99,9 +116,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
         log.info("Driver: {}", writer.writeValueAsString(driverConfiguration));
         log.info(
             "Configuration: {} {} {}",
-            SnsSqsBenchmarkConfiguration.getSnsUris(),
-            SnsSqsBenchmarkConfiguration.getRegion(),
-            SnsSqsBenchmarkConfiguration.isTpcH()
+            SnsSqsBenchmarkConfiguration.snsUris,
+            SnsSqsBenchmarkConfiguration.region,
+            SnsSqsBenchmarkConfiguration.isTpcH
         );
 
         try {
@@ -126,7 +143,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                 i -> new TopicInfo(generateTopicName(i), topicsInfo.numberOfPartitionsPerTopic))
                         .collect(toList());
 
-        List<String> topics = benchmarkDriver.createTopics(topicInfos).join().stream().map(TopicInfo::getTopic).collect(toList());
+        List<String> topics = benchmarkDriver
+                .createTopics(topicInfos).join().stream().map(TopicInfo::getTopic).collect(toList());
 
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
         return topics;
@@ -153,22 +171,21 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     @Override
-    public void createConsumers(ConsumerAssignment consumerAssignment) throws IOException {
+    public void createConsumers(ConsumerAssignment assignment) throws IOException {
         Timer timer = new Timer();
         AtomicInteger consumerIndex = new AtomicInteger();
         // This subscription should only be done on the orchestrator host.
-        if (consumerAssignment.isTpcH && consumerAssignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
-            consumerAssignment.topicsSubscriptions.remove(TpcHConstants.REDUCE_DST_INDEX);
+        if (assignment.isTpcH && assignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
+            assignment.topicsSubscriptions.remove(TpcHConstants.REDUCE_DST_INDEX);
         }
-        log.debug("Creating consumers: {}", writer.writeValueAsString(consumerAssignment));
+        log.debug("Creating consumers: {}", writer.writeValueAsString(assignment));
         consumers.addAll(
                 benchmarkDriver
                         .createConsumers(
-                                consumerAssignment.topicsSubscriptions.stream()
+                                assignment.topicsSubscriptions.stream()
                                         .map(
-                                                c ->
-                                                        new ConsumerInfo(
-                                                                consumerIndex.getAndIncrement(), c.topic, c.subscription, this))
+                                                c -> new ConsumerInfo(
+                                                        consumerIndex.getAndIncrement(), c.topic, c.subscription, this))
                                         .collect(toList()))
                         .join()
                         .stream()
@@ -210,7 +227,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     Integer batchSize = assignment.batchSize;
                     Integer start = assignment.offset * batchSize;
                     Integer numberOfMapResults = assignment.numberOfMapResults;
-                    String batchId = String.format("%s-batch-%d-%s", assignment.queryId, assignment.offset, assignment.batchSize);
+                    String batchId = String.format(
+                            "%s-batch-%d-%s", assignment.queryId, assignment.offset, assignment.batchSize);
                     try {
                         while (currentAssignment.get() < numberOfMapResults) {
                             Integer chunkIndex = start + currentAssignment.incrementAndGet();

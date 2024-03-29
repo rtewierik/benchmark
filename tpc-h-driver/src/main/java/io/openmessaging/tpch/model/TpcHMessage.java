@@ -13,8 +13,8 @@
  */
 package io.openmessaging.tpch.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
 public class TpcHMessage {
@@ -29,10 +29,9 @@ public class TpcHMessage {
     }
 
     public TpcHMessage(
-        @JsonProperty("messageId") String messageId,
-        @JsonProperty("type") TpcHMessageType type,
-        @JsonProperty("message") String message
-    ) {
+            @JsonProperty("messageId") String messageId,
+            @JsonProperty("type") TpcHMessageType type,
+            @JsonProperty("message") String message) {
         this.messageId = messageId;
         this.type = type;
         this.message = message;

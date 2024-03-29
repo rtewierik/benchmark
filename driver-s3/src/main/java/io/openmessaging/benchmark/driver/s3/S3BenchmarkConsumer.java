@@ -13,6 +13,7 @@
  */
 package io.openmessaging.benchmark.driver.s3;
 
+
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.S3Event;
@@ -25,12 +26,11 @@ import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, BenchmarkConsumer {
 
@@ -39,17 +39,19 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final Logger log = LoggerFactory.getLogger(S3BenchmarkConsumer.class);
-    private static final TpcHMessageProcessor messageProcessor = new TpcHMessageProcessor(
-            S3BenchmarkConfiguration.getS3Uris().stream().map(S3BenchmarkS3Producer::new).collect(Collectors.toList()),
-            new S3BenchmarkMessageProducer(new UniformRateLimiter(1.0)),
-            () -> {},
-            log
-    );
+    private static final TpcHMessageProcessor messageProcessor =
+            new TpcHMessageProcessor(
+                    S3BenchmarkConfiguration.s3Uris.stream()
+                            .map(S3BenchmarkS3Producer::new)
+                            .collect(Collectors.toList()),
+                    new S3BenchmarkMessageProducer(new UniformRateLimiter(1.0)),
+                    () -> {},
+                    log);
     private static final AmazonS3Client s3Client = new AmazonS3Client();
 
     @Override
     public Void handleRequest(S3Event event, Context context) {
-        if (S3BenchmarkConfiguration.isTpcH()) {
+        if (S3BenchmarkConfiguration.isTpcH) {
             handleTpcHRequest(event);
         } else {
             handleThroughputRequest(event);

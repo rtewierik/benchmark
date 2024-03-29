@@ -13,34 +13,25 @@
  */
 package io.openmessaging.benchmark.driver.sns.sqs;
 
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import com.amazonaws.services.sns.AmazonSNS;
-import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import static java.util.stream.Collectors.toList;
+
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
-import org.apache.bookkeeper.stats.StatsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-
-import static java.util.stream.Collectors.toList;
+import org.apache.bookkeeper.stats.StatsLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SnsSqsBenchmarkDriver implements BenchmarkDriver {
 
-    private final AmazonSNS snsClient = AmazonSNSClientBuilder
-        .standard()
-        .withRegion(SnsSqsBenchmarkConfiguration.getRegion())
-        .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
-        .build();
-
     @Override
-    public void initialize(File configurationFile, StatsLogger statsLogger) throws IOException, InterruptedException {}
+    public void initialize(File configurationFile, StatsLogger statsLogger)
+            throws IOException, InterruptedException {}
 
     @Override
     public String getTopicNamePrefix() {
@@ -56,17 +47,19 @@ public class SnsSqsBenchmarkDriver implements BenchmarkDriver {
     @Override
     public CompletableFuture<List<TopicInfo>> createTopics(List<TopicInfo> topics) {
         return CompletableFuture.completedFuture(
-            SnsSqsBenchmarkConfiguration.getSnsUris().stream().map(topic -> new TopicInfo(topic, 1)).collect(toList())
-        );
+                SnsSqsBenchmarkConfiguration.snsUris.stream()
+                        .map(topic -> new TopicInfo(topic, 1))
+                        .collect(toList()));
     }
 
     @Override
     public CompletableFuture<BenchmarkProducer> createProducer(String topic) {
-        return CompletableFuture.completedFuture(new SnsSqsBenchmarkSnsProducer(topic, snsClient));
+        return CompletableFuture.completedFuture(new SnsSqsBenchmarkSnsProducer(topic));
     }
 
     @Override
-    public CompletableFuture<BenchmarkConsumer> createConsumer(String topic, String subscriptionName, ConsumerCallback consumerCallback) {
+    public CompletableFuture<BenchmarkConsumer> createConsumer(
+            String topic, String subscriptionName, ConsumerCallback consumerCallback) {
         // Consumers are pre-created by AWS CDK project.
         return CompletableFuture.completedFuture(null);
     }
