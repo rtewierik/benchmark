@@ -248,9 +248,10 @@ public class Benchmark {
                                         localWorker.initializeDriver(new File(driverConfig));
                                     }
 
+                                    String driverName = driverConfiguration.name;
                                     WorkloadGenerator generator =
                                             new WorkloadGenerator(
-                                                    driverConfiguration.name, workload, tpcHArguments, worker, localWorker);
+                                                    driverName, workload, tpcHArguments, worker, localWorker);
 
                                     TestResult result = generator.run();
 

@@ -19,7 +19,7 @@ public enum TpcHQuery {
 
     private final int id;
 
-    private TpcHQuery(int id) {
+    TpcHQuery(int id) {
         this.id = id;
     }
 }

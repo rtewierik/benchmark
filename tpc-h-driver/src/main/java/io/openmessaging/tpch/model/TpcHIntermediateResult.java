@@ -46,6 +46,7 @@ public class TpcHIntermediateResult {
         this.groups = new ArrayList<>(groups.values());
     }
 
+    @SuppressWarnings("checkstyle:ParameterNumber")
     public TpcHIntermediateResult(
             @JsonProperty("query") TpcHQuery query,
             @JsonProperty("queryId") String queryId,
@@ -126,7 +127,6 @@ public class TpcHIntermediateResult {
             this.numberOfAggregatedResults += result.numberOfAggregatedResults;
         } finally {
             lock.unlock();
-            ;
         }
     }
 

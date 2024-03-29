@@ -26,6 +26,7 @@ public class TpcHConsumerAssignment {
     public final Integer numberOfChunks;
     public final String sourceDataS3Uri;
 
+    @SuppressWarnings("checkstyle:ParameterNumber")
     public TpcHConsumerAssignment(
             @JsonProperty("query") TpcHQuery query,
             @JsonProperty("queryId") String queryId,

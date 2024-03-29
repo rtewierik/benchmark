@@ -172,7 +172,6 @@ public class TpcHMessageProcessor {
         }
         TpcHIntermediateResult existingReducedResult;
         if (!this.collectedReducedResults.containsKey(reducedResult.queryId)) {
-            ;
             this.collectedReducedResults.put(reducedResult.queryId, reducedResult);
             existingReducedResult = reducedResult;
         } else {

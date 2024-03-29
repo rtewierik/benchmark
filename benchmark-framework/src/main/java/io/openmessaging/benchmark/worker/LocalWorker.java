@@ -143,7 +143,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                 i -> new TopicInfo(generateTopicName(i), topicsInfo.numberOfPartitionsPerTopic))
                         .collect(toList());
 
-        List<String> topics = benchmarkDriver.createTopics(topicInfos).join().stream().map(TopicInfo::getTopic).collect(toList());
+        List<String> topics = benchmarkDriver
+                .createTopics(topicInfos).join().stream().map(TopicInfo::getTopic).collect(toList());
 
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
         return topics;
@@ -170,22 +171,21 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     @Override
-    public void createConsumers(ConsumerAssignment consumerAssignment) throws IOException {
+    public void createConsumers(ConsumerAssignment assignment) throws IOException {
         Timer timer = new Timer();
         AtomicInteger consumerIndex = new AtomicInteger();
         // This subscription should only be done on the orchestrator host.
-        if (consumerAssignment.isTpcH && consumerAssignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
-            consumerAssignment.topicsSubscriptions.remove(TpcHConstants.REDUCE_DST_INDEX);
+        if (assignment.isTpcH && assignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
+            assignment.topicsSubscriptions.remove(TpcHConstants.REDUCE_DST_INDEX);
         }
-        log.debug("Creating consumers: {}", writer.writeValueAsString(consumerAssignment));
+        log.debug("Creating consumers: {}", writer.writeValueAsString(assignment));
         consumers.addAll(
                 benchmarkDriver
                         .createConsumers(
-                                consumerAssignment.topicsSubscriptions.stream()
+                                assignment.topicsSubscriptions.stream()
                                         .map(
-                                                c ->
-                                                        new ConsumerInfo(
-                                                                consumerIndex.getAndIncrement(), c.topic, c.subscription, this))
+                                                c -> new ConsumerInfo(
+                                                        consumerIndex.getAndIncrement(), c.topic, c.subscription, this))
                                         .collect(toList()))
                         .join()
                         .stream()
@@ -227,7 +227,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     Integer batchSize = assignment.batchSize;
                     Integer start = assignment.offset * batchSize;
                     Integer numberOfMapResults = assignment.numberOfMapResults;
-                    String batchId = String.format("%s-batch-%d-%s", assignment.queryId, assignment.offset, assignment.batchSize);
+                    String batchId = String.format(
+                            "%s-batch-%d-%s", assignment.queryId, assignment.offset, assignment.batchSize);
                     try {
                         while (currentAssignment.get() < numberOfMapResults) {
                             Integer chunkIndex = start + currentAssignment.incrementAndGet();

@@ -227,7 +227,6 @@ public class DistributedWorkersEnsemble implements Worker {
         List<TopicSubscription> distributableConsumerSubscriptions =
                 new ArrayList<>(
                         subscriptions.subList(TpcHConstants.REDUCE_SRC_START_INDEX, subscriptions.size()));
-        ;
         TopicSubscription mapSubscription = subscriptions.get(TpcHConstants.MAP_CMD_INDEX);
         List<List<TopicSubscription>> reduceSubscriptionsPerConsumer =
                 ListPartition.partitionList(distributableConsumerSubscriptions, workers.size());
