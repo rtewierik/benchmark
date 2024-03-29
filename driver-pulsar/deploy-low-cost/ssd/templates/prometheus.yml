@@ -14,7 +14,7 @@
 
 ---
 global:
-  scrape_interval:     10s # By default, scrape targets every 15 seconds.
+  scrape_interval: 10s # By default, scrape targets every 15 seconds.
   evaluation_interval: 10s # By default, scrape targets every 15 seconds.
   # scrape_timeout is set to the global default (10s).
   external_labels:
@@ -32,38 +32,38 @@ scrape_configs:
     honor_labels: true # don't overwrite job & instance labels
     static_configs:
       - targets:
-{% for worker in groups['client'] %}
-          - {{ hostvars[worker].private_ip }}:8080
-{% endfor %}
+  { % for worker in groups[ 'client' ] % }
+- { { hostvars[ worker ].private_ip } }:8080
+  { % endfor % }
 
-  - job_name: "broker"
-    honor_labels: true # don't overwrite job & instance labels
-    static_configs:
-      - targets:
-{% for broker in groups['pulsar'] %}
-          - {{ hostvars[broker].private_ip }}:8080
-{% endfor %}
+- job_name: "broker"
+  honor_labels: true # don't overwrite job & instance labels
+  static_configs:
+    - targets:
+  { % for broker in groups[ 'pulsar' ] % }
+- { { hostvars[ broker ].private_ip } }:8080
+  { % endfor % }
 
-  - job_name: "bookie"
-    honor_labels: true # don't overwrite job & instance labels
-    static_configs:
-      - targets:
-{% for broker in groups['pulsar'] %}
-          - {{ hostvars[broker].private_ip }}:8000
-{% endfor %}
+- job_name: "bookie"
+  honor_labels: true # don't overwrite job & instance labels
+  static_configs:
+    - targets:
+  { % for broker in groups[ 'pulsar' ] % }
+- { { hostvars[ broker ].private_ip } }:8000
+  { % endfor % }
 
-  - job_name: "zookeeper"
-    honor_labels: true
-    static_configs:
-      - targets:
-{% for zkserver in groups['zookeeper'] %}
-          - {{ hostvars[zkserver].private_ip }}:8000
-{% endfor %}
+- job_name: "zookeeper"
+  honor_labels: true
+  static_configs:
+    - targets:
+  { % for zkserver in groups[ 'zookeeper' ] % }
+- { { hostvars[ zkserver ].private_ip } }:8000
+  { % endfor % }
 
-  - job_name: "node_metrics"
-    honor_labels: true # don't overwrite job & instance labels
-    static_configs:
-      - targets:
-{% for broker in groups['pulsar'] %}
-          - {{ hostvars[broker].private_ip }}:9100
-{% endfor %}
+- job_name: "node_metrics"
+  honor_labels: true # don't overwrite job & instance labels
+  static_configs:
+    - targets:
+  { % for broker in groups[ 'pulsar' ] % }
+- { { hostvars[ broker ].private_ip } }:9100
+  { % endfor % }

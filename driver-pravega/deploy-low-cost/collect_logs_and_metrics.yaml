@@ -13,16 +13,16 @@
 #
 
 - name: Get current time
-  hosts: ["localhost"]
-  tags: ["always"]
+  hosts: [ "localhost" ]
+  tags: [ "always" ]
   become: false
   tasks:
     - set_fact:
         output_dir: "../../data/pravega_logs/pravega_logs_{{ ansible_date_time.iso8601_basic_short }}"
 
 - name: Set output directory
-  hosts: ["!tier2"]
-  tags: ["always"]
+  hosts: [ "!tier2" ]
+  tags: [ "always" ]
   become: false
   gather_facts: no
   tasks:
@@ -30,8 +30,8 @@
         output_dir: "{{ hostvars['localhost'].output_dir }}"
 
 - name: Download Controller logs
-  hosts: ["controller"]
-  tags: ["controller"]
+  hosts: [ "controller" ]
+  tags: [ "controller" ]
   connection: ssh
   become: true
   tasks:
@@ -46,8 +46,8 @@
         flat: yes
 
 - name: Download Segment Store logs
-  hosts: ["segmentstore"]
-  tags: ["segmentstore"]
+  hosts: [ "segmentstore" ]
+  tags: [ "segmentstore" ]
   connection: ssh
   become: true
   tasks:
@@ -62,8 +62,8 @@
         flat: yes
 
 - name: Download BookKeeper logs
-  hosts: ["bookkeeper"]
-  tags: ["bookkeeper"]
+  hosts: [ "bookkeeper" ]
+  tags: [ "bookkeeper" ]
   connection: ssh
   become: true
   tasks:
@@ -78,8 +78,8 @@
         flat: yes
 
 - name: Download ZooKeeper logs
-  hosts: ["zookeeper"]
-  tags: ["zookeeper"]
+  hosts: [ "zookeeper" ]
+  tags: [ "zookeeper" ]
   connection: ssh
   become: true
   tasks:
@@ -94,8 +94,8 @@
         flat: yes
 
 - name: Download Benchmark logs
-  hosts: ["client"]
-  tags: ["client"]
+  hosts: [ "client" ]
+  tags: [ "client" ]
   connection: ssh
   become: true
   tasks:
@@ -110,8 +110,8 @@
         flat: yes
 
 - name: Download Prometheus Metrics
-  hosts: ["metrics"]
-  tags: ["prometheus"]
+  hosts: [ "metrics" ]
+  tags: [ "prometheus" ]
   connection: ssh
   become: true
   tasks:
@@ -130,8 +130,8 @@
         state: started
 
 - name: Download InfluxDB Metrics
-  hosts: ["metrics"]
-  tags: ["influxdb"]
+  hosts: [ "metrics" ]
+  tags: [ "influxdb" ]
   connection: ssh
   become: true
   tasks:
@@ -147,8 +147,8 @@
         flat: yes
 
 - name: Show output directory
-  hosts: ["localhost"]
-  tags: ["always"]
+  hosts: [ "localhost" ]
+  tags: [ "always" ]
   become: false
   tasks:
     - shell: "ls -lhR {{ output_dir }}"

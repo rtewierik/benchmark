@@ -17,7 +17,7 @@
   connection: ssh
   become: true
   tasks:
-    - name:  Benchmark - Tune kernel
+    - name: Benchmark - Tune kernel
       shell: tuned-adm profile latency-performance
     - name: Benchmark - Install RPM packages
       yum: pkg={{ item }} state=latest
@@ -29,45 +29,45 @@
         - vim
     - name: Benchmark - Clean folder
       file: path=/opt/benchmark state=absent
-      tags: [client-code]
+      tags: [ client-code ]
     - name: Benchmark - Copy and unpack
       unarchive:
         src: ../../package/target/openmessaging-benchmark-0.0.1-SNAPSHOT-bin.tar.gz
         dest: /opt
-      tags: [client-code]
+      tags: [ client-code ]
     - name: Benchmark - Install binary
       shell: mv /opt/openmessaging-benchmark-0.0.1-SNAPSHOT /opt/benchmark
-      tags: [client-code]
+      tags: [ client-code ]
     - name: Benchmark - Configure worker
       template:
         src: "templates/workers.yaml"
         dest: "/opt/benchmark/workers.yaml"
-      tags: [client-code]
+      tags: [ client-code ]
     - name: Benchmark - Configure driver
       template:
         src: "templates/s3.yaml"
         dest: "/opt/benchmark/driver-s3/s3-default.yaml"
-      tags: [client-code]
+      tags: [ client-code ]
     - name: Benchmark - Configure worker JVM memory
       lineinfile:
         dest: /opt/benchmark/bin/benchmark-worker
         regexp: '^JVM_MEM='
         line: 'JVM_MEM="-Xms4G -Xmx4G -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -XX:+ParallelRefProcEnabled -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=6 -XX:ConcGCThreads=6 -XX:+DisableExplicitGC -XX:-ResizePLAB"'
-      tags: [client-code]
+      tags: [ client-code ]
     - name: Benchmark - Configure client JVM memory
       lineinfile:
         dest: /opt/benchmark/bin/benchmark
         regexp: '^JVM_MEM='
         line: 'JVM_MEM="-Xmx4G"'
-      tags: [client-code]
+      tags: [ client-code ]
     - name: Benchmark - Install systemd service
       template:
         src: "templates/benchmark-worker.service"
         dest: "/etc/systemd/system/benchmark-worker.service"
-      tags: [client-code]
+      tags: [ client-code ]
     - name: Benchmark - Start worker
       systemd:
         state: restarted
         daemon_reload: yes
         name: "benchmark-worker"
-      tags: [client-code]
+      tags: [ client-code ]

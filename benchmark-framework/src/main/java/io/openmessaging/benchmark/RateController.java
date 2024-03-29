@@ -13,12 +13,12 @@
  */
 package io.openmessaging.benchmark;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static lombok.AccessLevel.PACKAGE;
-
 import io.openmessaging.benchmark.utils.Env;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static lombok.AccessLevel.PACKAGE;
 
 @Slf4j
 class RateController {

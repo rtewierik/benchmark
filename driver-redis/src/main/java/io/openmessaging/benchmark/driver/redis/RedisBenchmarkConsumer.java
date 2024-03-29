@@ -13,17 +13,8 @@
  */
 package io.openmessaging.benchmark.driver.redis;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
@@ -32,7 +23,17 @@ import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.params.XReadGroupParams;
 import redis.clients.jedis.resps.StreamEntry;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public class RedisBenchmarkConsumer implements BenchmarkConsumer {
+    private static final Logger log = LoggerFactory.getLogger(RedisBenchmarkDriver.class);
     private final JedisPool pool;
     private final String topic;
     private final String subscriptionName;
@@ -94,6 +95,4 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
         log.info("[RedisBenchmarkConsumer] Attempting to shut down pool...");
         pool.close();
     }
-
-    private static final Logger log = LoggerFactory.getLogger(RedisBenchmarkDriver.class);
 }

@@ -19,6 +19,9 @@ import com.rabbitmq.client.AlreadyClosedException;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ConfirmListener;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -27,22 +30,21 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
 
     private static final Logger log = LoggerFactory.getLogger(RabbitMqBenchmarkProducer.class);
-
+    private static final BasicProperties defaultProperties = new BasicProperties();
     private final Channel channel;
     private final String exchange;
     private final ConfirmListener listener;
-    /** To record msg and it's future structure. */
-    volatile SortedSet<Long> ackSet = Collections.synchronizedSortedSet(new TreeSet<>());
-
     private final ConcurrentHashMap<Long, CompletableFuture<Void>> futureConcurrentHashMap =
             new ConcurrentHashMap<>();
     private final boolean messagePersistence;
+    /**
+     * To record msg and it's future structure.
+     */
+    volatile SortedSet<Long> ackSet = Collections.synchronizedSortedSet(new TreeSet<>());
 
     public RabbitMqBenchmarkProducer(Channel channel, String exchange, boolean messagePersistence) {
         this.channel = channel;
@@ -115,8 +117,6 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
             log.warn("Channel already closed", e);
         }
     }
-
-    private static final BasicProperties defaultProperties = new BasicProperties();
 
     @Override
     public CompletableFuture<Void> sendAsync(Optional<String> key, byte[] payload) {

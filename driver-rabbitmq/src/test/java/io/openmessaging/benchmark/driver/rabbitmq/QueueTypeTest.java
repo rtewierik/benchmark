@@ -13,9 +13,9 @@
  */
 package io.openmessaging.benchmark.driver.rabbitmq;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class QueueTypeTest {
 

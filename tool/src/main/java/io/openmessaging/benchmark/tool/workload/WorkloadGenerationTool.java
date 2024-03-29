@@ -22,18 +22,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import io.openmessaging.benchmark.Workload;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 
-/** Generates a set of {@link Workload} definition files from a {@link WorkloadSetTemplate} file. */
+/**
+ * Generates a set of {@link Workload} definition files from a {@link WorkloadSetTemplate} file.
+ */
 @Slf4j
 public class WorkloadGenerationTool {
 
     private static final ObjectMapper mapper =
             new ObjectMapper(
-                            new YAMLFactory().configure(YAMLGenerator.Feature.WRITE_DOC_START_MARKER, false))
+                    new YAMLFactory().configure(YAMLGenerator.Feature.WRITE_DOC_START_MARKER, false))
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     static {

@@ -208,7 +208,7 @@
         src: "{{ pulsar_binary.src }}"
         remote_src: "{{ pulsar_binary.remote }}"
         dest: /opt/pulsar
-        extra_opts: ["--strip-components=1"]
+        extra_opts: [ "--strip-components=1" ]
     - set_fact:
         max_heap_memory: "{{ pulsar_max_heap_memory | default('4g') }}"
         max_direct_memory: "{{ pulsar_max_direct_memory | default('4g') }}"
@@ -325,32 +325,32 @@
     - template:
         src: "templates/pulsar.service"
         dest: "/etc/systemd/system/pulsar.service"
-#    - template:
-#        src: "templates/{{ item.conf }}"
-#        dest: "/opt/pulsar/conf/{{ item.conf }}"
-#      loop: "{{ protocol_handlers }}"
-#      when: protocol_handlers is defined
-#    - set_fact:
-#        protocols: "{{ protocols | default([]) + [ item.protocol ]}}"
-#      loop: "{{ protocol_handlers }}"
-#      when: protocol_handlers is defined
-#    - name: Enable protocol handlers
-#      lineinfile:
-#        path: /opt/pulsar/conf/broker.conf
-#        line: "messagingProtocols={{ protocols | join(',') }}"
-#      when: protocols is defined
-#    - name: Read configurations of all protocol handlers
-#      shell: |
-#        grep -v "^#" "{{ '/opt/pulsar/conf/' + item.conf }}"
-#      loop: "{{ protocol_handlers }}"
-#      when: protocol_handlers is defined
-#      register: conf_files
-#    - name: Update broker.conf for protocol handlers
-#      lineinfile:
-#        path: /opt/pulsar/conf/broker.conf
-#        line: "{{ item.stdout_lines | join('\n') }}"
-#      loop: "{{ conf_files.results }}"
-#      when: conf_files is defined
+    #    - template:
+    #        src: "templates/{{ item.conf }}"
+    #        dest: "/opt/pulsar/conf/{{ item.conf }}"
+    #      loop: "{{ protocol_handlers }}"
+    #      when: protocol_handlers is defined
+    #    - set_fact:
+    #        protocols: "{{ protocols | default([]) + [ item.protocol ]}}"
+    #      loop: "{{ protocol_handlers }}"
+    #      when: protocol_handlers is defined
+    #    - name: Enable protocol handlers
+    #      lineinfile:
+    #        path: /opt/pulsar/conf/broker.conf
+    #        line: "messagingProtocols={{ protocols | join(',') }}"
+    #      when: protocols is defined
+    #    - name: Read configurations of all protocol handlers
+    #      shell: |
+    #        grep -v "^#" "{{ '/opt/pulsar/conf/' + item.conf }}"
+    #      loop: "{{ protocol_handlers }}"
+    #      when: protocol_handlers is defined
+    #      register: conf_files
+    #    - name: Update broker.conf for protocol handlers
+    #      lineinfile:
+    #        path: /opt/pulsar/conf/broker.conf
+    #        line: "{{ item.stdout_lines | join('\n') }}"
+    #      loop: "{{ conf_files.results }}"
+    #      when: conf_files is defined
     - systemd:
         state: restarted
         daemon_reload: yes
@@ -395,15 +395,15 @@
 
     - name: Configure service URL
       lineinfile:
-         dest: '{{ item }}'
-         regexp: '^  serviceUrl\: '
-         line: '  serviceUrl: {{ serviceUrl }}'
+        dest: '{{ item }}'
+        regexp: '^  serviceUrl\: '
+        line: '  serviceUrl: {{ serviceUrl }}'
       with_items: '{{ drivers_list.stdout_lines }}'
     - name: Configure http URL
       lineinfile:
-         dest: '{{ item }}'
-         regexp: '^  httpUrl: '
-         line: '  httpUrl: {{ httpUrl }}'
+        dest: '{{ item }}'
+        regexp: '^  httpUrl: '
+        line: '  httpUrl: {{ httpUrl }}'
       with_items: '{{ drivers_list.stdout_lines }}'
 
     - name: Get list of jms driver config files
@@ -412,39 +412,39 @@
 
     - name: Configure JMS service URL
       lineinfile:
-         dest: '{{ item }}'
-         regexp: '^  serviceUrl\: '
-         line: '  serviceUrl: {{ serviceUrl }}'
+        dest: '{{ item }}'
+        regexp: '^  serviceUrl\: '
+        line: '  serviceUrl: {{ serviceUrl }}'
       with_items: '{{ jms_drivers_list.stdout_lines }}'
     - name: Configure JMS service Connection Handler
       ansible.builtin.replace:
-         dest: '{{ item }}'
-         regexp: 'pulsar\:\/\/localhost\:6650'
-         replace: '{{ serviceUrl }}'
+        dest: '{{ item }}'
+        regexp: 'pulsar\:\/\/localhost\:6650'
+        replace: '{{ serviceUrl }}'
       with_items: '{{ jms_drivers_list.stdout_lines }}'
     - name: Configure JMS http URL
       lineinfile:
-         dest: '{{ item }}'
-         regexp: '^  httpUrl: '
-         line: '  httpUrl: {{ httpUrl }}'
+        dest: '{{ item }}'
+        regexp: '^  httpUrl: '
+        line: '  httpUrl: {{ httpUrl }}'
       with_items: '{{ jms_drivers_list.stdout_lines }}'
     - name: Configure JMS http Connection Handler
       ansible.builtin.replace:
-         dest: '{{ item }}'
-         regexp: 'http\:\/\/localhost\:8080'
-         replace: '{{ httpUrl }}'
+        dest: '{{ item }}'
+        regexp: 'http\:\/\/localhost\:8080'
+        replace: '{{ httpUrl }}'
       with_items: '{{ jms_drivers_list.stdout_lines }}'
 
     - name: Configure memory
       lineinfile:
-         dest: /opt/benchmark/bin/benchmark-worker
-         regexp: '^JVM_MEM='
-         line: 'JVM_MEM="-Xms3G -Xmx3G -XX:+UnlockExperimentalVMOptions -XX:+UseZGC"'
+        dest: /opt/benchmark/bin/benchmark-worker
+        regexp: '^JVM_MEM='
+        line: 'JVM_MEM="-Xms3G -Xmx3G -XX:+UnlockExperimentalVMOptions -XX:+UseZGC"'
     - name: Configure memory
       lineinfile:
-         dest: /opt/benchmark/bin/benchmark
-         regexp: '^JVM_MEM='
-         line: 'JVM_MEM="-Xmx3G"'
+        dest: /opt/benchmark/bin/benchmark
+        regexp: '^JVM_MEM='
+        line: 'JVM_MEM="-Xmx3G"'
     - name: Install benchmark systemd service
       template:
         src: "templates/benchmark-worker.service"

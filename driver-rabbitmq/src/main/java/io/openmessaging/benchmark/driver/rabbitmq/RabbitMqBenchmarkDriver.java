@@ -13,9 +13,6 @@
  */
 package io.openmessaging.benchmark.driver.rabbitmq;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -32,6 +29,10 @@ import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
 import io.openmessaging.benchmark.driver.ResourceCreator;
 import io.openmessaging.benchmark.driver.ResourceCreator.CreationResult;
+import org.apache.bookkeeper.stats.StatsLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -45,19 +46,31 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
-import org.apache.bookkeeper.stats.StatsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
 
-    private RabbitMqConfig config;
+    private static final ObjectMapper mapper =
+            new ObjectMapper(new YAMLFactory())
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private static final Logger log = LoggerFactory.getLogger(RabbitMqBenchmarkDriver.class);
     private final AtomicInteger uriIndex = new AtomicInteger();
     /**
      * Map of client's primary broker to the connection -- the connection may still be able to fall
      * back to secondary brokers.
      */
     private final Map<String, Connection> connections = new ConcurrentHashMap<>();
+    private RabbitMqConfig config;
+
+    private static URI newURI(String uri) {
+        try {
+            return new URI(uri);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public void initialize(File configurationFile, StatsLogger statsLogger) throws IOException {
@@ -67,7 +80,7 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
     @Override
     public void close() {
         for (Iterator<Map.Entry<String, Connection>> it = connections.entrySet().iterator();
-                it.hasNext(); ) {
+             it.hasNext(); ) {
             Connection connection = it.next().getValue();
             try {
                 connection.close();
@@ -124,51 +137,51 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
     @Override
     public CompletableFuture<List<BenchmarkProducer>> createProducers(List<ProducerInfo> producers) {
         return new ResourceCreator<ProducerInfo, BenchmarkProducer>(
-                        "producer",
-                        config.producerCreationBatchSize,
-                        config.producerCreationDelay,
-                        ps -> ps.stream().collect(toMap(p -> p, p -> createProducer(p.getTopic()))),
-                        fc -> {
-                            try {
-                                return new CreationResult<>(fc.get(), true);
-                            } catch (InterruptedException e) {
-                                Thread.currentThread().interrupt();
-                                throw new RuntimeException(e);
-                            } catch (ExecutionException e) {
-                                log.debug(e.getMessage());
-                                return new CreationResult<>(null, false);
-                            }
-                        })
+                "producer",
+                config.producerCreationBatchSize,
+                config.producerCreationDelay,
+                ps -> ps.stream().collect(toMap(p -> p, p -> createProducer(p.getTopic()))),
+                fc -> {
+                    try {
+                        return new CreationResult<>(fc.get(), true);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        throw new RuntimeException(e);
+                    } catch (ExecutionException e) {
+                        log.debug(e.getMessage());
+                        return new CreationResult<>(null, false);
+                    }
+                })
                 .create(producers);
     }
 
     @Override
     public CompletableFuture<List<BenchmarkConsumer>> createConsumers(List<ConsumerInfo> consumers) {
         return new ResourceCreator<ConsumerInfo, BenchmarkConsumer>(
-                        "consumer",
-                        config.consumerCreationBatchSize,
-                        config.consumerCreationDelay,
-                        cs ->
-                                cs.stream()
-                                        .collect(
-                                                toMap(
-                                                        c -> c,
-                                                        c ->
-                                                                createConsumer(
-                                                                        c.getTopic(),
-                                                                        c.getSubscriptionName(),
-                                                                        c.getConsumerCallback()))),
-                        fc -> {
-                            try {
-                                return new CreationResult<>(fc.get(), true);
-                            } catch (InterruptedException e) {
-                                Thread.currentThread().interrupt();
-                                throw new RuntimeException(e);
-                            } catch (ExecutionException e) {
-                                log.debug(e.getMessage());
-                                return new CreationResult<>(null, false);
-                            }
-                        })
+                "consumer",
+                config.consumerCreationBatchSize,
+                config.consumerCreationDelay,
+                cs ->
+                        cs.stream()
+                                .collect(
+                                        toMap(
+                                                c -> c,
+                                                c ->
+                                                        createConsumer(
+                                                                c.getTopic(),
+                                                                c.getSubscriptionName(),
+                                                                c.getConsumerCallback()))),
+                fc -> {
+                    try {
+                        return new CreationResult<>(fc.get(), true);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        throw new RuntimeException(e);
+                    } catch (ExecutionException e) {
+                        log.debug(e.getMessage());
+                        return new CreationResult<>(null, false);
+                    }
+                })
                 .create(consumers);
     }
 
@@ -236,19 +249,5 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
                         throw new RuntimeException("Couldn't establish connection to: " + primaryBrokerUri, e);
                     }
                 });
-    }
-
-    private static final ObjectMapper mapper =
-            new ObjectMapper(new YAMLFactory())
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-    private static final Logger log = LoggerFactory.getLogger(RabbitMqBenchmarkDriver.class);
-
-    private static URI newURI(String uri) {
-        try {
-            return new URI(uri);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

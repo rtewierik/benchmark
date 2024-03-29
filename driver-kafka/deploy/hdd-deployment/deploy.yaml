@@ -21,8 +21,8 @@
         tuned-adm profile latency-performance
     - name: Format disks
       filesystem:
-         fstype: xfs
-         dev: '{{ item }}'
+        fstype: xfs
+        dev: '{{ item }}'
       with_items:
         - '/dev/xvdb'
         - '/dev/xvdc'
@@ -70,11 +70,11 @@
     - name: Install RPM packages
       yum: pkg={{ item }} state=latest
       with_items:
-          - wget
-          - java
-          - sysstat
-          - vim
-          - chrony
+        - wget
+        - java
+        - sysstat
+        - vim
+        - chrony
     - file: path=/opt/kafka state=absent
     - file: path=/opt/kafka state=directory
     - set_fact:
@@ -88,7 +88,7 @@
         src: "http://archive.apache.org/dist/kafka/{{ kafkaVersion }}/kafka_2.13-{{ kafkaVersion }}.tgz"
         remote_src: yes
         dest: /opt/kafka
-        extra_opts: ["--strip-components=1"]
+        extra_opts: [ "--strip-components=1" ]
     - set_fact:
         privateIp: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
     - name: Change locale to en_US.utf-8
@@ -172,9 +172,9 @@
 
     - name: Configure URL
       lineinfile:
-         dest: '{{ item }}'
-         regexp: '^  bootstrap.servers='
-         line: '  bootstrap.servers={{ boostrapServers }}'
+        dest: '{{ item }}'
+        regexp: '^  bootstrap.servers='
+        line: '  bootstrap.servers={{ boostrapServers }}'
       with_items: '{{ drivers_list.stdout_lines }}'
 
     - name: Get list of jms driver config files
@@ -183,28 +183,28 @@
 
     - name: Configure JMS Bootstrap Servers
       lineinfile:
-         dest: '{{ item }}'
-         regexp: '^  bootstrap.servers='
-         line: '  bootstrap.servers={{ boostrapServers }}'
+        dest: '{{ item }}'
+        regexp: '^  bootstrap.servers='
+        line: '  bootstrap.servers={{ boostrapServers }}'
       with_items: '{{ jms_drivers_list.stdout_lines }}'
 
     - name: Configure JMS Connection Handlers
       ansible.builtin.replace:
-         dest: '{{ item }}'
-         regexp: 'localhost\:9092'
-         replace: '{{ boostrapServers }}'
+        dest: '{{ item }}'
+        regexp: 'localhost\:9092'
+        replace: '{{ boostrapServers }}'
       with_items: '{{ jms_drivers_list.stdout_lines }}'
 
     - name: Configure memory
       lineinfile:
-         dest: /opt/benchmark/bin/benchmark-worker
-         regexp: '^JVM_MEM='
-         line: 'JVM_MEM="-Xms12G -Xmx12G -XX:+UseG1GC -XX:MaxGCPauseMillis=10 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=32 -XX:ConcGCThreads=32 -XX:G1NewSizePercent=50 -XX:+DisableExplicitGC -XX:-ResizePLAB -XX:+PerfDisableSharedMem -XX:+AlwaysPreTouch -XX:-UseBiasedLocking"'
+        dest: /opt/benchmark/bin/benchmark-worker
+        regexp: '^JVM_MEM='
+        line: 'JVM_MEM="-Xms12G -Xmx12G -XX:+UseG1GC -XX:MaxGCPauseMillis=10 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=32 -XX:ConcGCThreads=32 -XX:G1NewSizePercent=50 -XX:+DisableExplicitGC -XX:-ResizePLAB -XX:+PerfDisableSharedMem -XX:+AlwaysPreTouch -XX:-UseBiasedLocking"'
     - name: Configure memory
       lineinfile:
-         dest: /opt/benchmark/bin/benchmark
-         regexp: '^JVM_MEM='
-         line: 'JVM_MEM="-Xmx1G"'
+        dest: /opt/benchmark/bin/benchmark
+        regexp: '^JVM_MEM='
+        line: 'JVM_MEM="-Xmx1G"'
     - template:
         src: "templates/workers.yaml"
         dest: "/opt/benchmark/workers.yaml"
@@ -217,7 +217,7 @@
         daemon_reload: yes
         name: "benchmark-worker"
 
-- name:  Hosts addresses
+- name: Hosts addresses
   hosts: localhost
   become: false
   tasks:

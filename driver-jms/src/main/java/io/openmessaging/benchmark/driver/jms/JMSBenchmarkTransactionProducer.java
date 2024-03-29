@@ -16,11 +16,9 @@ package io.openmessaging.benchmark.driver.jms;
 
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.jms.config.JMSConfig;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.jms.BytesMessage;
 import javax.jms.CompletionListener;
 import javax.jms.Connection;
@@ -28,11 +26,15 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 public class JMSBenchmarkTransactionProducer implements BenchmarkProducer {
 
+    private static final Logger log = LoggerFactory.getLogger(JMSBenchmarkTransactionProducer.class);
     private final String destination;
     private final boolean useAsyncSend;
     private final Connection connection;
@@ -51,7 +53,8 @@ public class JMSBenchmarkTransactionProducer implements BenchmarkProducer {
     }
 
     @Override
-    public void close() {}
+    public void close() {
+    }
 
     @Override
     public CompletableFuture<Void> sendAsync(Optional<String> key, byte[] payload) {
@@ -130,6 +133,4 @@ public class JMSBenchmarkTransactionProducer implements BenchmarkProducer {
             log.error("Error closing session {}", err.toString());
         }
     }
-
-    private static final Logger log = LoggerFactory.getLogger(JMSBenchmarkTransactionProducer.class);
 }

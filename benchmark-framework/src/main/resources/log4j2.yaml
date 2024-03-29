@@ -33,7 +33,7 @@ Configuration:
           size: 100MB
       DefaultRollOverStrategy:
         max: 10
-  Loggers: 
+  Loggers:
     Root:
       level: info
       additivity: false

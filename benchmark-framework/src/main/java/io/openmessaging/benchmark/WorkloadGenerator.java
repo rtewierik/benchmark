@@ -13,12 +13,8 @@
  */
 package io.openmessaging.benchmark;
 
-import static java.util.concurrent.TimeUnit.MINUTES;
-
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.common.utils.RandomGenerator;
-import io.openmessaging.tpch.model.TpcHArguments;
-import io.openmessaging.tpch.TpcHConstants;
 import io.openmessaging.benchmark.utils.PaddingDecimalFormat;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.utils.payload.FilePayloadReader;
@@ -31,8 +27,13 @@ import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
 import io.openmessaging.benchmark.worker.commands.PeriodStats;
 import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
 import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
-import io.openmessaging.benchmark.worker.commands.TopicsInfo;
 import io.openmessaging.benchmark.worker.commands.TopicSubscription;
+import io.openmessaging.benchmark.worker.commands.TopicsInfo;
+import io.openmessaging.tpch.TpcHConstants;
+import io.openmessaging.tpch.model.TpcHArguments;
+import org.apache.commons.lang.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -45,27 +46,27 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static java.util.concurrent.TimeUnit.MINUTES;
 
 public class WorkloadGenerator implements AutoCloseable {
 
+    private static final DecimalFormat rateFormat = new PaddingDecimalFormat("0.0", 7);
+    private static final DecimalFormat throughputFormat = new PaddingDecimalFormat("0.0", 4);
+    private static final DecimalFormat dec = new PaddingDecimalFormat("0.0", 4);
+    private static final Logger log = LoggerFactory.getLogger(WorkloadGenerator.class);
     private final String driverName;
     private final Workload workload;
     private final TpcHArguments arguments;
     private final Worker worker;
     private final LocalWorker localWorker;
-
     private final ExecutorService executor =
             Executors.newCachedThreadPool(new DefaultThreadFactory("messaging-benchmark"));
-
     private volatile boolean runCompleted = false;
     private volatile boolean needToWaitForBacklogDraining = false;
-
     private volatile double targetPublishRate;
 
-    public WorkloadGenerator(String driverName, Workload workload, TpcHArguments arguments, Worker worker, LocalWorker localWorker) {
+    public WorkloadGenerator(String driverName, Workload workload, TpcHArguments arguments, Worker worker,
+                             LocalWorker localWorker) {
         this.driverName = driverName;
         this.workload = workload;
         this.arguments = arguments;
@@ -76,6 +77,18 @@ public class WorkloadGenerator implements AutoCloseable {
             throw new IllegalArgumentException(
                     "Cannot probe producer sustainable rate when building backlog");
         }
+    }
+
+    private static String generateSubscriptionName(int index) {
+        return String.format("sub-%03d-%s", index, RandomGenerator.getRandomString());
+    }
+
+    private static double microsToMillis(double timeInMicros) {
+        return timeInMicros / 1000.0;
+    }
+
+    private static double microsToMillis(long timeInMicros) {
+        return timeInMicros / 1000.0;
     }
 
     public TestResult run() throws Exception {
@@ -122,7 +135,8 @@ public class WorkloadGenerator implements AutoCloseable {
         worker.startLoad(producerWorkAssignment);
         log.info("----- Starting benchmark traffic ------");
 
-        TestResult result = printAndCollectStats(workload.testDurationMinutes, TimeUnit.MINUTES, localWorker::getTestCompleted);
+        TestResult result =
+                printAndCollectStats(workload.testDurationMinutes, TimeUnit.MINUTES, localWorker::getTestCompleted);
         runCompleted = true;
 
         log.info("----- Completed run. Stopping worker and yielding results ------");
@@ -333,15 +347,15 @@ public class WorkloadGenerator implements AutoCloseable {
         ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment(true);
 
         consumerAssignment.topicsSubscriptions.add(
-            new TopicSubscription(
-                topics.get(TpcHConstants.MAP_CMD_INDEX),
-                generateSubscriptionName(TpcHConstants.MAP_CMD_INDEX)
-            )
+                new TopicSubscription(
+                        topics.get(TpcHConstants.MAP_CMD_INDEX),
+                        generateSubscriptionName(TpcHConstants.MAP_CMD_INDEX)
+                )
         );
 
         TopicSubscription orchestratorSubscription = new TopicSubscription(
-            topics.get(TpcHConstants.REDUCE_DST_INDEX),
-            generateSubscriptionName(TpcHConstants.REDUCE_DST_INDEX)
+                topics.get(TpcHConstants.REDUCE_DST_INDEX),
+                generateSubscriptionName(TpcHConstants.REDUCE_DST_INDEX)
         );
         consumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
         orchestratorConsumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
@@ -349,10 +363,10 @@ public class WorkloadGenerator implements AutoCloseable {
         for (int i = 0; i < this.arguments.numberOfReducers; i++) {
             int sourceIndex = TpcHConstants.REDUCE_SRC_START_INDEX + i;
             consumerAssignment.topicsSubscriptions.add(
-                new TopicSubscription(
-                    topics.get(sourceIndex),
-                    generateSubscriptionName(sourceIndex)
-                )
+                    new TopicSubscription(
+                            topics.get(sourceIndex),
+                            generateSubscriptionName(sourceIndex)
+                    )
             );
         }
 
@@ -453,7 +467,8 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     @SuppressWarnings({"checkstyle:LineLength", "checkstyle:MethodLength"})
-    private TestResult printAndCollectStats(long testDurations, TimeUnit unit, BooleanSupplier isFinished) throws IOException {
+    private TestResult printAndCollectStats(long testDurations, TimeUnit unit, BooleanSupplier isFinished)
+            throws IOException {
         long startTime = System.nanoTime();
 
         // Print report stats
@@ -645,21 +660,4 @@ public class WorkloadGenerator implements AutoCloseable {
 
         return result;
     }
-
-    private static final DecimalFormat rateFormat = new PaddingDecimalFormat("0.0", 7);
-    private static final DecimalFormat throughputFormat = new PaddingDecimalFormat("0.0", 4);
-    private static final DecimalFormat dec = new PaddingDecimalFormat("0.0", 4);
-
-    private static String generateSubscriptionName(int index) {
-        return String.format("sub-%03d-%s", index, RandomGenerator.getRandomString());
-    }
-    private static double microsToMillis(double timeInMicros) {
-        return timeInMicros / 1000.0;
-    }
-
-    private static double microsToMillis(long timeInMicros) {
-        return timeInMicros / 1000.0;
-    }
-
-    private static final Logger log = LoggerFactory.getLogger(WorkloadGenerator.class);
 }

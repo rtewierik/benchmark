@@ -36,6 +36,10 @@ public class PulsarClientConfig {
     public TopicDomain topicType = TopicDomain.persistent;
 
     public PersistenceConfiguration persistence = new PersistenceConfiguration();
+    public boolean tlsAllowInsecureConnection = false;
+    public boolean tlsEnableHostnameVerification = false;
+    public String tlsTrustCertsFilePath;
+    public AuthenticationConfiguration authentication = new AuthenticationConfiguration();
 
     public static class PersistenceConfiguration {
         public int ensembleSize = 3;
@@ -44,14 +48,6 @@ public class PulsarClientConfig {
 
         public boolean deduplicationEnabled = false;
     }
-
-    public boolean tlsAllowInsecureConnection = false;
-
-    public boolean tlsEnableHostnameVerification = false;
-
-    public String tlsTrustCertsFilePath;
-
-    public AuthenticationConfiguration authentication = new AuthenticationConfiguration();
 
     public static class AuthenticationConfiguration {
         public String plugin;

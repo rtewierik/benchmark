@@ -25,6 +25,7 @@ import java.util.concurrent.CompletableFuture;
 public class S3BenchmarkS3Producer implements BenchmarkProducer {
 
     private static final AmazonS3Client s3Client = new AmazonS3Client();
+    private static final Logger log = LoggerFactory.getLogger(S3BenchmarkS3Producer.class);
     private final String bucketName;
     private final String key;
 
@@ -48,7 +49,6 @@ public class S3BenchmarkS3Producer implements BenchmarkProducer {
     }
 
     @Override
-    public void close() throws Exception {}
-
-    private static final Logger log = LoggerFactory.getLogger(S3BenchmarkS3Producer.class);
+    public void close() throws Exception {
+    }
 }

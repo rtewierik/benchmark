@@ -16,17 +16,18 @@ package io.openmessaging.benchmark.driver.jms;
 
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class JMSBenchmarkConsumer implements BenchmarkConsumer {
 
+    private static final Logger log = LoggerFactory.getLogger(JMSBenchmarkConsumer.class);
     private final Connection connection;
     private final Session session;
     private final MessageConsumer consumer;
@@ -67,8 +68,6 @@ public class JMSBenchmarkConsumer implements BenchmarkConsumer {
         // It should be enough to just close the connection.
         connection.close();
     }
-
-    private static final Logger log = LoggerFactory.getLogger(JMSBenchmarkConsumer.class);
 
     private byte[] getPayload(Message message) throws Exception {
         if (useGetBody) {

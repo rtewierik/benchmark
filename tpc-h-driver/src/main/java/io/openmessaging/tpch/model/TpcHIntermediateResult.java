@@ -28,11 +28,11 @@ public class TpcHIntermediateResult {
     public final String queryId;
     public final String batchId;
     public final Integer chunkIndex;
-    public Integer numberOfAggregatedResults;
     public final Integer numberOfMapResults;
     public final Integer numberOfChunks;
     public final List<TpcHIntermediateResultGroup> groups;
     private final Lock lock = new ReentrantLock();
+    public Integer numberOfAggregatedResults;
 
     public TpcHIntermediateResult(TpcHConsumerAssignment assignment, Map<String, TpcHIntermediateResultGroup> groups) {
         this.query = assignment.query;
@@ -67,7 +67,8 @@ public class TpcHIntermediateResult {
     public void aggregateIntermediateResult(TpcHIntermediateResult intermediateResult) {
         String batchId = intermediateResult.batchId;
         if (!this.batchId.equals(batchId)) {
-            throw new IllegalArgumentException(String.format("Inconsistent batch ID \"%s\" found relative to \"%s\".", batchId, this.batchId));
+            throw new IllegalArgumentException(
+                    String.format("Inconsistent batch ID \"%s\" found relative to \"%s\".", batchId, this.batchId));
         }
         this.aggregateResult(intermediateResult);
     }
@@ -80,7 +81,8 @@ public class TpcHIntermediateResult {
         lock.lock();
         String queryId = result.queryId;
         if (!this.queryId.equals(queryId)) {
-            throw new IllegalArgumentException(String.format("Inconsistent query ID \"%s\" found relative to \"%s\".", queryId, this.queryId));
+            throw new IllegalArgumentException(
+                    String.format("Inconsistent query ID \"%s\" found relative to \"%s\".", queryId, this.queryId));
         }
         try {
             for (TpcHIntermediateResultGroup group : result.groups) {
@@ -94,11 +96,15 @@ public class TpcHIntermediateResult {
                         Number existingAggregate = existingAggregates.get(key);
                         Number additionalAggregate = aggregate.getValue();
                         Number updatedAggregate;
-                        if ((existingAggregate instanceof Long || existingAggregate instanceof Integer) && (additionalAggregate instanceof Long || additionalAggregate instanceof Integer)) {
+                        if ((existingAggregate instanceof Long || existingAggregate instanceof Integer) &&
+                                (additionalAggregate instanceof Long || additionalAggregate instanceof Integer)) {
                             updatedAggregate = existingAggregate.longValue() + additionalAggregate.longValue();
-                        } else if ((existingAggregate instanceof Double || existingAggregate instanceof BigDecimal) && (additionalAggregate instanceof Double || additionalAggregate instanceof BigDecimal)) {
-                            BigDecimal existingAggregateDecimal = existingAggregate instanceof Double ? BigDecimal.valueOf((Double)existingAggregate) : (BigDecimal) existingAggregate;
-                            BigDecimal additionalAggregateDecimal = additionalAggregate instanceof Double ? BigDecimal.valueOf((Double)additionalAggregate) : (BigDecimal) additionalAggregate;
+                        } else if ((existingAggregate instanceof Double || existingAggregate instanceof BigDecimal) &&
+                                (additionalAggregate instanceof Double || additionalAggregate instanceof BigDecimal)) {
+                            BigDecimal existingAggregateDecimal = existingAggregate instanceof Double ?
+                                    BigDecimal.valueOf((Double) existingAggregate) : (BigDecimal) existingAggregate;
+                            BigDecimal additionalAggregateDecimal = additionalAggregate instanceof Double ?
+                                    BigDecimal.valueOf((Double) additionalAggregate) : (BigDecimal) additionalAggregate;
                             updatedAggregate = existingAggregateDecimal.add(additionalAggregateDecimal);
                         } else {
                             throw new ArithmeticException("Invalid aggregates detected.");
@@ -109,15 +115,16 @@ public class TpcHIntermediateResult {
             }
             this.numberOfAggregatedResults += result.numberOfAggregatedResults;
         } finally {
-            lock.unlock();;
+            lock.unlock();
+            ;
         }
     }
 
     public TpcHIntermediateResultGroup findGroupByIdentifiers(Map<String, Object> identifiers) {
         int numIdentifiers = identifiers.size();
         List<Map.Entry<String, Object>> identifiersCollection = identifiers
-            .entrySet()
-            .stream().collect(Collectors.toList());
+                .entrySet()
+                .stream().collect(Collectors.toList());
         for (TpcHIntermediateResultGroup group : this.groups) {
             if (group.identifiers.size() != numIdentifiers) {
                 continue;

@@ -13,9 +13,6 @@
  */
 package io.openmessaging.benchmark.worker;
 
-import static java.util.Collections.unmodifiableList;
-import static java.util.stream.Collectors.joining;
-
 import com.beust.jcommander.internal.Maps;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -24,7 +21,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import io.openmessaging.benchmark.EnvironmentConfiguration;
 import io.openmessaging.benchmark.common.utils.RandomGenerator;
-import io.openmessaging.tpch.TpcHConstants;
 import io.openmessaging.benchmark.utils.ListPartition;
 import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
 import io.openmessaging.benchmark.worker.commands.CountersStats;
@@ -32,8 +28,11 @@ import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
 import io.openmessaging.benchmark.worker.commands.PeriodStats;
 import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
 import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
-import io.openmessaging.benchmark.worker.commands.TopicsInfo;
 import io.openmessaging.benchmark.worker.commands.TopicSubscription;
+import io.openmessaging.benchmark.worker.commands.TopicsInfo;
+import io.openmessaging.tpch.TpcHConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,17 +43,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static java.util.Collections.unmodifiableList;
+import static java.util.stream.Collectors.joining;
 
 public class DistributedWorkersEnsemble implements Worker {
     private static final int LEADER_WORKER_INDEX = 0;
-    private final Thread shutdownHook = new Thread(this::stopAll);
+    private static final Logger log = LoggerFactory.getLogger(DistributedWorkersEnsemble.class);
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private final List<Worker> workers;
+    private final Thread shutdownHook = new Thread(this::stopAll);
     private final List<Worker> producerWorkers;
     private final List<Worker> consumerWorkers;
     private final Worker leader;
-
     private int numberOfUsedProducerWorkers;
 
     public DistributedWorkersEnsemble(List<Worker> workers, boolean extraConsumerWorkers) {
@@ -94,6 +94,10 @@ public class DistributedWorkersEnsemble implements Worker {
         return extraConsumerWorkers ? (workers.size() + 2) / 3 : workers.size() / 2;
     }
 
+    private static String generateSubscriptionName(int index) {
+        return String.format("sub-%03d-%s", index, RandomGenerator.getRandomString());
+    }
+
     @Override
     public void initializeDriver(File configurationFile) throws IOException {
         workers.parallelStream()
@@ -126,23 +130,26 @@ public class DistributedWorkersEnsemble implements Worker {
     public void startLoad(ProducerWorkAssignment producerWorkAssignment) throws IOException {
         double newRate = producerWorkAssignment.publishRate / numberOfUsedProducerWorkers;
         log.debug("Setting worker assigned publish rate to {} msgs/sec", newRate);
-        List<Worker> workersToStart = producerWorkAssignment.tpcHArguments != null ? this.workers : this.producerWorkers;
-        List<AbstractMap.SimpleEntry<Worker, Integer>> workersToStartWithIndices = IntStream.range(0, workersToStart.size())
-                .mapToObj(i -> new AbstractMap.SimpleEntry<Worker, Integer>(workersToStart.get(i), i) {})
-                .collect(Collectors.toList());
+        List<Worker> workersToStart =
+                producerWorkAssignment.tpcHArguments != null ? this.workers : this.producerWorkers;
+        List<AbstractMap.SimpleEntry<Worker, Integer>> workersToStartWithIndices =
+                IntStream.range(0, workersToStart.size())
+                        .mapToObj(i -> new AbstractMap.SimpleEntry<Worker, Integer>(workersToStart.get(i), i) {
+                        })
+                        .collect(Collectors.toList());
         workersToStartWithIndices.parallelStream()
-            .forEach(
-                w -> {
-                    try {
-                        w.getKey().startLoad(
-                            producerWorkAssignment
-                                .withPublishRate(newRate)
-                                .withProducerIndex(w.getValue())
-                        );
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                .forEach(
+                        w -> {
+                            try {
+                                w.getKey().startLoad(
+                                        producerWorkAssignment
+                                                .withPublishRate(newRate)
+                                                .withProducerIndex(w.getValue())
+                                );
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
     }
 
     @Override
@@ -223,7 +230,9 @@ public class DistributedWorkersEnsemble implements Worker {
 
     private void createTpcHConsumers(ConsumerAssignment assignment) throws IOException {
         List<TopicSubscription> subscriptions = assignment.topicsSubscriptions;
-        List<TopicSubscription> distributableConsumerSubscriptions = new ArrayList<>(subscriptions.subList(TpcHConstants.REDUCE_SRC_START_INDEX, subscriptions.size()));;
+        List<TopicSubscription> distributableConsumerSubscriptions =
+                new ArrayList<>(subscriptions.subList(TpcHConstants.REDUCE_SRC_START_INDEX, subscriptions.size()));
+        ;
         TopicSubscription mapSubscription = subscriptions.get(TpcHConstants.MAP_CMD_INDEX);
         List<List<TopicSubscription>> reduceSubscriptionsPerConsumer =
                 ListPartition.partitionList(distributableConsumerSubscriptions, workers.size());
@@ -373,12 +382,5 @@ public class DistributedWorkersEnsemble implements Worker {
                 log.trace("Ignored error while closing worker {}", w, ignored);
             }
         }
-    }
-
-    private static final Logger log = LoggerFactory.getLogger(DistributedWorkersEnsemble.class);
-    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
-
-    private static String generateSubscriptionName(int index) {
-        return String.format("sub-%03d-%s", index, RandomGenerator.getRandomString());
     }
 }

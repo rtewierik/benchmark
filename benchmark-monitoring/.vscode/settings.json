@@ -1,7 +1,7 @@
 {
   "eslint.workingDirectories": [
-      "infrastructure",
-      "lambda"
+    "infrastructure",
+    "lambda"
   ],
   "editor.tabSize": 2
 }

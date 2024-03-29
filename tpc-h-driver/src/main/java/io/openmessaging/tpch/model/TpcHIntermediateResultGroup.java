@@ -26,14 +26,15 @@ public class TpcHIntermediateResultGroup {
         this.identifiers = new HashMap<>();
         this.aggregates = aggregates;
     }
+
     public TpcHIntermediateResultGroup(TpcHIntermediateResultGroup otherGroup) {
         this.identifiers = otherGroup.identifiers;
-        this.aggregates = (Map<String, Number>)((HashMap<String, Number>)otherGroup.aggregates).clone();
+        this.aggregates = (Map<String, Number>) ((HashMap<String, Number>) otherGroup.aggregates).clone();
     }
 
     public TpcHIntermediateResultGroup(
-        @JsonProperty("identifiers") Map<String, Object> identifiers,
-        @JsonProperty("aggregates") Map<String, Number> aggregates
+            @JsonProperty("identifiers") Map<String, Object> identifiers,
+            @JsonProperty("aggregates") Map<String, Number> aggregates
     ) {
         this.identifiers = identifiers;
         this.aggregates = aggregates;

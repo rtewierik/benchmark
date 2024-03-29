@@ -13,7 +13,8 @@
  */
 package io.openmessaging.benchmark.driver;
 
-import static java.util.stream.Collectors.toList;
+import lombok.Value;
+import org.apache.bookkeeper.stats.StatsLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,10 +22,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import lombok.Value;
-import org.apache.bookkeeper.stats.StatsLogger;
 
-/** Base driver interface. */
+import static java.util.stream.Collectors.toList;
+
+/**
+ * Base driver interface.
+ */
 public interface BenchmarkDriver extends AutoCloseable {
     /**
      * Driver implementation can use this method to initialize the client libraries, with the provided
@@ -33,7 +36,7 @@ public interface BenchmarkDriver extends AutoCloseable {
      * <p>The format of the configuration file is specific to the driver implementation.
      *
      * @param configurationFile
-     * @param statsLogger stats logger to collect stats from benchmark driver
+     * @param statsLogger       stats logger to collect stats from benchmark driver
      * @throws IOException
      */
     void initialize(File configurationFile, StatsLogger statsLogger)

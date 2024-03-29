@@ -17,7 +17,8 @@ public class TopicSubscription {
     public String topic;
     public String subscription;
 
-    public TopicSubscription() {}
+    public TopicSubscription() {
+    }
 
     public TopicSubscription(String topic, String subscription) {
         this.topic = topic;

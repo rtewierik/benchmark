@@ -29,29 +29,36 @@ import io.pravega.client.admin.ReaderGroupManager;
 import io.pravega.client.admin.StreamManager;
 import io.pravega.client.stream.ScalingPolicy;
 import io.pravega.client.stream.StreamConfiguration;
+import org.apache.bookkeeper.stats.StatsLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import org.apache.bookkeeper.stats.StatsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class PravegaBenchmarkDriver implements BenchmarkDriver {
     private static final Logger log = LoggerFactory.getLogger(PravegaBenchmarkDriver.class);
 
     private static final ObjectWriter objectWriter =
             new ObjectMapper().writerWithDefaultPrettyPrinter();
-
+    private static final ObjectMapper mapper =
+            new ObjectMapper(new YAMLFactory())
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private final List<String> createdTopics = new ArrayList<>();
     private PravegaConfig config;
     private ClientConfig clientConfig;
     private String scopeName;
     private StreamManager streamManager;
     private ReaderGroupManager readerGroupManager;
     private EventStreamClientFactory clientFactory;
-    private final List<String> createdTopics = new ArrayList<>();
+
+    private static PravegaConfig readConfig(File configurationFile) throws IOException {
+        return mapper.readValue(configurationFile, PravegaConfig.class);
+    }
 
     @Override
     public void initialize(File configurationFile, StatsLogger statsLogger) throws IOException {
@@ -64,14 +71,6 @@ public class PravegaBenchmarkDriver implements BenchmarkDriver {
         streamManager = StreamManager.create(clientConfig);
         readerGroupManager = ReaderGroupManager.withScope(scopeName, clientConfig);
         clientFactory = EventStreamClientFactory.withScope(scopeName, clientConfig);
-    }
-
-    private static final ObjectMapper mapper =
-            new ObjectMapper(new YAMLFactory())
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-    private static PravegaConfig readConfig(File configurationFile) throws IOException {
-        return mapper.readValue(configurationFile, PravegaConfig.class);
     }
 
     /**
@@ -112,7 +111,7 @@ public class PravegaBenchmarkDriver implements BenchmarkDriver {
         // Create a fixed or auto-scaling Stream based on user configuration.
         if (config.enableStreamAutoScaling
                 && (config.eventsPerSecond != PravegaConfig.DEFAULT_STREAM_AUTOSCALING_VALUE
-                        || config.kbytesPerSecond != PravegaConfig.DEFAULT_STREAM_AUTOSCALING_VALUE)) {
+                || config.kbytesPerSecond != PravegaConfig.DEFAULT_STREAM_AUTOSCALING_VALUE)) {
             scalingPolicy =
                     config.eventsPerSecond != PravegaConfig.DEFAULT_STREAM_AUTOSCALING_VALUE
                             ? ScalingPolicy.byEventRate(config.eventsPerSecond, 2, partitions)

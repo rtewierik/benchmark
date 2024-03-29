@@ -13,10 +13,10 @@
  */
 package io.openmessaging.benchmark.worker.commands;
 
+import org.HdrHistogram.Histogram;
+
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.SECONDS;
-
-import org.HdrHistogram.Histogram;
 
 public class CumulativeLatencies {
 

@@ -14,21 +14,21 @@
 
 # my global config
 global:
-  scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
   evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
   # scrape_timeout is set to the global default (10s).
 
 # Alertmanager configuration
 alerting:
   alertmanagers:
-  - static_configs:
-    - targets:
-      # - alertmanager:9093
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
-  # - "first_rules.yml"
-  # - "second_rules.yml"
+# - "first_rules.yml"
+# - "second_rules.yml"
 
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
@@ -39,59 +39,59 @@ scrape_configs:
 
     static_configs:
 
-#
-# Node Exporter
-#
+      #
+      # Node Exporter
+      #
 
       - targets:
-{% for worker in groups['controller'] %}
-          - {{ hostvars[worker].private_ip }}:9100
-{% endfor %}
-        labels:
-          group: 'controller'
+  { % for worker in groups[ 'controller' ] % }
+- { { hostvars[ worker ].private_ip } }:9100
+  { % endfor % }
+labels:
+  group: 'controller'
 
-      - targets:
-{% for worker in groups['bookkeeper'] %}
-          - {{ hostvars[worker].private_ip }}:9100
-{% endfor %}
-        labels:
-          group: 'segmentstore'
+- targets:
+  { % for worker in groups[ 'bookkeeper' ] % }
+- { { hostvars[ worker ].private_ip } }:9100
+  { % endfor % }
+labels:
+  group: 'segmentstore'
 
-      - targets:
-{% for worker in groups['bookkeeper'] %}
-          - {{ hostvars[worker].private_ip }}:9100
-{% endfor %}
-        labels:
-          group: 'bookkeeper'
+- targets:
+  { % for worker in groups[ 'bookkeeper' ] % }
+- { { hostvars[ worker ].private_ip } }:9100
+  { % endfor % }
+labels:
+  group: 'bookkeeper'
 
-      - targets:
-{% for worker in groups['zookeeper'] %}
-          - {{ hostvars[worker].private_ip }}:9100
-{% endfor %}
-        labels:
-          group: 'zookeeper'
+- targets:
+  { % for worker in groups[ 'zookeeper' ] % }
+- { { hostvars[ worker ].private_ip } }:9100
+  { % endfor % }
+labels:
+  group: 'zookeeper'
 
-      - targets:
-{% for worker in groups['client'] %}
-          - {{ hostvars[worker].private_ip }}:9100
-{% endfor %}
-        labels:
-          group: 'client'
+- targets:
+  { % for worker in groups[ 'client' ] % }
+- { { hostvars[ worker ].private_ip } }:9100
+  { % endfor % }
+labels:
+  group: 'client'
 
-      - targets:
-{% for worker in groups['metrics'] %}
-          - {{ hostvars[worker].private_ip }}:9100
-{% endfor %}
-        labels:
-          group: 'metrics'
+- targets:
+  { % for worker in groups[ 'metrics' ] % }
+- { { hostvars[ worker ].private_ip } }:9100
+  { % endfor % }
+labels:
+  group: 'metrics'
 
 #
 # BookKeeper
 #
 
-      - targets:
-{% for worker in groups['bookkeeper'] %}
-          - {{ hostvars[worker].private_ip }}:8000
-{% endfor %}
-        labels:
-          group: 'bookie'
+- targets:
+  { % for worker in groups[ 'bookkeeper' ] % }
+- { { hostvars[ worker ].private_ip } }:8000
+  { % endfor % }
+labels:
+  group: 'bookie'

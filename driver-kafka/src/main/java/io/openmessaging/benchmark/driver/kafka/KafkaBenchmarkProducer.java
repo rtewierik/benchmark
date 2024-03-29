@@ -28,10 +28,11 @@ package io.openmessaging.benchmark.driver.kafka;
 
 
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public class KafkaBenchmarkProducer implements BenchmarkProducer {
 

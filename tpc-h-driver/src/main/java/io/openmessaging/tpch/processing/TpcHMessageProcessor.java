@@ -21,18 +21,18 @@ import io.openmessaging.benchmark.common.ObjectMappers;
 import io.openmessaging.benchmark.common.client.AmazonS3Client;
 import io.openmessaging.benchmark.common.key.distribution.KeyDistributor;
 import io.openmessaging.benchmark.common.key.distribution.KeyDistributorType;
+import io.openmessaging.benchmark.driver.BenchmarkProducer;
+import io.openmessaging.benchmark.driver.MessageProducer;
 import io.openmessaging.tpch.TpcHConstants;
 import io.openmessaging.tpch.algorithm.TpcHAlgorithm;
 import io.openmessaging.tpch.algorithm.TpcHDataParser;
 import io.openmessaging.tpch.algorithm.TpcHQueryResultGenerator;
-import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import io.openmessaging.benchmark.driver.MessageProducer;
 import io.openmessaging.tpch.model.TpcHConsumerAssignment;
 import io.openmessaging.tpch.model.TpcHIntermediateResult;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.model.TpcHMessageType;
-import io.openmessaging.tpch.model.TpcHRow;
 import io.openmessaging.tpch.model.TpcHQueryResult;
+import io.openmessaging.tpch.model.TpcHRow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,27 +46,27 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public class TpcHMessageProcessor {
-    private final Map<String, TpcHIntermediateResult> collectedIntermediateResults = new ConcurrentHashMap<>();
-    private final Map<String, TpcHIntermediateResult> collectedReducedResults = new ConcurrentHashMap<>();
-    private final Set<String> processedMessages = new ConcurrentSkipListSet<>();
-    private final Set<String> processedIntermediateResults = new ConcurrentSkipListSet<>();
-    private final Set<String> processedReducedResults = new ConcurrentSkipListSet<>();
-    private final List<BenchmarkProducer> producers;
-    private volatile MessageProducer messageProducer;
-    private final Runnable onTestCompleted;
-    private final Logger log;
     private static final AmazonS3Client s3Client = new AmazonS3Client();
     private static final ObjectWriter messageWriter = ObjectMappers.DEFAULT.writer();
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final ObjectMapper mapper =
             new ObjectMapper(new YAMLFactory())
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private final Map<String, TpcHIntermediateResult> collectedIntermediateResults = new ConcurrentHashMap<>();
+    private final Map<String, TpcHIntermediateResult> collectedReducedResults = new ConcurrentHashMap<>();
+    private final Set<String> processedMessages = new ConcurrentSkipListSet<>();
+    private final Set<String> processedIntermediateResults = new ConcurrentSkipListSet<>();
+    private final Set<String> processedReducedResults = new ConcurrentSkipListSet<>();
+    private final List<BenchmarkProducer> producers;
+    private final Runnable onTestCompleted;
+    private final Logger log;
+    private volatile MessageProducer messageProducer;
 
     public TpcHMessageProcessor(
-        List<BenchmarkProducer> producers,
-        MessageProducer messageProducer,
-        Runnable onTestCompleted,
-        Logger log
+            List<BenchmarkProducer> producers,
+            MessageProducer messageProducer,
+            Runnable onTestCompleted,
+            Logger log
     ) {
         this.producers = producers;
         this.messageProducer = messageProducer;
@@ -92,7 +92,8 @@ public class TpcHMessageProcessor {
                 processConsumerAssignment(assignment);
                 break;
             case IntermediateResult:
-                TpcHIntermediateResult intermediateResult = mapper.readValue(message.message, TpcHIntermediateResult.class);
+                TpcHIntermediateResult intermediateResult =
+                        mapper.readValue(message.message, TpcHIntermediateResult.class);
                 processIntermediateResult(intermediateResult);
                 break;
             case ReducedResult:
@@ -114,8 +115,8 @@ public class TpcHMessageProcessor {
             BenchmarkProducer producer = this.producers.get(producerIndex);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
             TpcHMessage message = new TpcHMessage(
-                TpcHMessageType.IntermediateResult,
-                messageWriter.writeValueAsString(result)
+                    TpcHMessageType.IntermediateResult,
+                    messageWriter.writeValueAsString(result)
             );
             String key = keyDistributor.next();
             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
@@ -146,13 +147,14 @@ public class TpcHMessageProcessor {
             existingIntermediateResult = this.collectedIntermediateResults.get(batchId);
             existingIntermediateResult.aggregateIntermediateResult(intermediateResult);
         }
-        if (existingIntermediateResult.numberOfAggregatedResults.intValue() == intermediateResult.numberOfMapResults.intValue()) {
+        if (existingIntermediateResult.numberOfAggregatedResults.intValue() ==
+                intermediateResult.numberOfMapResults.intValue()) {
             BenchmarkProducer producer = this.producers.get(TpcHConstants.REDUCE_DST_INDEX);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
             String reducedResult = messageWriter.writeValueAsString(existingIntermediateResult);
             TpcHMessage message = new TpcHMessage(
-                TpcHMessageType.ReducedResult,
-                reducedResult
+                    TpcHMessageType.ReducedResult,
+                    reducedResult
             );
             String key = keyDistributor.next();
             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
@@ -174,7 +176,8 @@ public class TpcHMessageProcessor {
             processedReducedResults.add(batchId);
         }
         TpcHIntermediateResult existingReducedResult;
-        if (!this.collectedReducedResults.containsKey(reducedResult.queryId)) {;
+        if (!this.collectedReducedResults.containsKey(reducedResult.queryId)) {
+            ;
             this.collectedReducedResults.put(reducedResult.queryId, reducedResult);
             existingReducedResult = reducedResult;
         } else {

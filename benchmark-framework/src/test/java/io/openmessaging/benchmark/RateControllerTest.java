@@ -13,10 +13,10 @@
  */
 package io.openmessaging.benchmark;
 
+import org.junit.jupiter.api.Test;
+
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.Test;
 
 class RateControllerTest {
     private final RateController rateController = new RateController();

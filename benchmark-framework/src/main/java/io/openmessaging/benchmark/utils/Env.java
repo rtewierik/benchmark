@@ -18,7 +18,8 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public final class Env {
-    private Env() {}
+    private Env() {
+    }
 
     public static long getLong(String key, long defaultValue) {
         return get(key, Long::parseLong, defaultValue);

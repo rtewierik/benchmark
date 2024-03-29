@@ -17,15 +17,17 @@ package io.openmessaging.benchmark.worker;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.MessageProducer;
-import java.util.Optional;
-import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import static io.openmessaging.benchmark.common.utils.UniformRateLimiter.uninterruptibleSleepNs;
 
 public class MessageProducerImpl implements MessageProducer {
 
+    private static final Logger log = LoggerFactory.getLogger(MessageProducerImpl.class);
     private final WorkerStats stats;
     private UniformRateLimiter rateLimiter;
     private Supplier<Long> nanoClock;
@@ -64,6 +66,4 @@ public class MessageProducerImpl implements MessageProducer {
         log.warn("Write error on message", t);
         return null;
     }
-
-    private static final Logger log = LoggerFactory.getLogger(MessageProducerImpl.class);
 }

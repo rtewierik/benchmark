@@ -22,25 +22,22 @@ import io.pravega.client.stream.Transaction;
 import io.pravega.client.stream.TransactionalEventStreamWriter;
 import io.pravega.client.stream.TxnFailedException;
 import io.pravega.client.stream.impl.ByteBufferSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.nio.ByteBuffer;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class PravegaBenchmarkTransactionProducer implements BenchmarkProducer {
     private static final Logger log = LoggerFactory.getLogger(PravegaBenchmarkProducer.class);
-
-    private TransactionalEventStreamWriter<ByteBuffer> transactionWriter;
-
     private final boolean includeTimestampInEvent;
-
+    private final int eventsPerTransaction;
+    private TransactionalEventStreamWriter<ByteBuffer> transactionWriter;
     // If null, a transaction has not been started.
     @GuardedBy("this")
     private Transaction<ByteBuffer> transaction;
-
-    private final int eventsPerTransaction;
     private int eventCount = 0;
     private ByteBuffer timestampAndPayload;
 

@@ -14,6 +14,6 @@
 
 
 workers:
-{% for worker in groups['client'] %}
-  - http://{{ hostvars[worker].private_ip }}:8080
-{% endfor %}
+  { % for worker in groups[ 'client' ] % }
+- http://{{ hostvars[worker].private_ip }}:8080
+  { % endfor % }

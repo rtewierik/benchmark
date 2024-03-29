@@ -29,9 +29,9 @@ public class TpcHMessage {
     }
 
     public TpcHMessage(
-        @JsonProperty("messageId") String messageId,
-        @JsonProperty("type") TpcHMessageType type,
-        @JsonProperty("message") String message
+            @JsonProperty("messageId") String messageId,
+            @JsonProperty("type") TpcHMessageType type,
+            @JsonProperty("message") String message
     ) {
         this.messageId = messageId;
         this.type = type;

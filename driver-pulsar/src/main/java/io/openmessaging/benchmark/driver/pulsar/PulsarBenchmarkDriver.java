@@ -26,16 +26,6 @@ import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
 import io.openmessaging.benchmark.driver.pulsar.config.PulsarClientConfig.PersistenceConfiguration;
 import io.openmessaging.benchmark.driver.pulsar.config.PulsarConfig;
-import java.io.File;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.pulsar.client.admin.PulsarAdmin;
 import org.apache.pulsar.client.admin.PulsarAdminBuilder;
@@ -55,15 +45,40 @@ import org.apache.pulsar.common.util.FutureUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 public class PulsarBenchmarkDriver implements BenchmarkDriver {
 
+    private static final ObjectMapper mapper =
+            new ObjectMapper(new YAMLFactory())
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private static final Random random = new Random();
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
+    private static final Logger log = LoggerFactory.getLogger(PulsarBenchmarkProducer.class);
     private PulsarClient client;
     private PulsarAdmin adminClient;
-
     private PulsarConfig config;
-
     private String namespace;
     private ProducerBuilder<byte[]> producerBuilder;
+
+    private static PulsarConfig readConfig(File configurationFile) throws IOException {
+        return mapper.readValue(configurationFile, PulsarConfig.class);
+    }
+
+    private static String getRandomString() {
+        byte[] buffer = new byte[5];
+        random.nextBytes(buffer);
+        return BaseEncoding.base64Url().omitPadding().encode(buffer);
+    }
 
     @Override
     public void initialize(File configurationFile, StatsLogger statsLogger) throws IOException {
@@ -193,7 +208,7 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
         }
 
         return adminClient.topics().createPartitionedTopicAsync(topic, partitions)
-            .thenApply(unused -> info);
+                .thenApply(unused -> info);
     }
 
     @Override
@@ -258,23 +273,4 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
 
         log.info("Pulsar benchmark driver successfully shut down");
     }
-
-    private static final ObjectMapper mapper =
-            new ObjectMapper(new YAMLFactory())
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-    private static PulsarConfig readConfig(File configurationFile) throws IOException {
-        return mapper.readValue(configurationFile, PulsarConfig.class);
-    }
-
-    private static final Random random = new Random();
-
-    private static String getRandomString() {
-        byte[] buffer = new byte[5];
-        random.nextBytes(buffer);
-        return BaseEncoding.base64Url().omitPadding().encode(buffer);
-    }
-
-    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
-    private static final Logger log = LoggerFactory.getLogger(PulsarBenchmarkProducer.class);
 }

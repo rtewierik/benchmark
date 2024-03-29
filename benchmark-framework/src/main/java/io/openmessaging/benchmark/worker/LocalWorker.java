@@ -13,8 +13,6 @@
  */
 package io.openmessaging.benchmark.worker;
 
-import static java.util.stream.Collectors.toList;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -28,10 +26,10 @@ import io.openmessaging.benchmark.common.utils.RandomGenerator;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
-import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import io.openmessaging.benchmark.driver.ConsumerCallback;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ConsumerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
+import io.openmessaging.benchmark.driver.BenchmarkProducer;
+import io.openmessaging.benchmark.driver.ConsumerCallback;
 import io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkConfiguration;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
@@ -41,23 +39,6 @@ import io.openmessaging.benchmark.worker.commands.PeriodStats;
 import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
 import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
 import io.openmessaging.benchmark.worker.commands.TopicsInfo;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.TreeMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
-
 import io.openmessaging.tpch.TpcHConstants;
 import io.openmessaging.tpch.model.TpcHConsumerAssignment;
 import io.openmessaging.tpch.model.TpcHMessage;
@@ -69,9 +50,37 @@ import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.TreeMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toList;
+
 public class LocalWorker implements Worker, ConsumerCallback {
 
-    private BenchmarkDriver benchmarkDriver = null;
+    private static final ObjectWriter messageWriter = ObjectMappers.DEFAULT.writer();
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
+    private static final ObjectMapper mapper =
+            new ObjectMapper(new YAMLFactory())
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private static final Logger log = LoggerFactory.getLogger(LocalWorker.class);
+
+    static {
+        mapper.enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);
+    }
+
     /*
         For TPC-H queries, the producers list is allocated with the producer for Map messages and producers for all the
         assigned reducers.
@@ -81,14 +90,14 @@ public class LocalWorker implements Worker, ConsumerCallback {
         For TPC-H queries, the consumers list is allocated with the consumers for all the assigned reducers.
      */
     private final List<BenchmarkConsumer> consumers = new ArrayList<>();
-    private volatile MessageProducerImpl messageProducer;
     private final TpcHMessageProcessor tpcHMessageProcessor;
     private final ExecutorService executor =
             Executors.newCachedThreadPool(new DefaultThreadFactory("local-worker"));
     private final WorkerStats stats;
+    private BenchmarkDriver benchmarkDriver = null;
+    private volatile MessageProducerImpl messageProducer;
     private boolean testCompleted = false;
     private boolean consumersArePaused = false;
-    private static final ObjectWriter messageWriter = ObjectMappers.DEFAULT.writer();
 
     public LocalWorker() {
         this(NullStatsLogger.INSTANCE);
@@ -98,10 +107,10 @@ public class LocalWorker implements Worker, ConsumerCallback {
         this.stats = new WorkerStats(statsLogger);
         this.messageProducer = new MessageProducerImpl(new UniformRateLimiter(1.0), stats);
         this.tpcHMessageProcessor = new TpcHMessageProcessor(
-            this.producers,
-            this.messageProducer,
-            () -> testCompleted = true,
-            log
+                this.producers,
+                this.messageProducer,
+                () -> testCompleted = true,
+                log
         );
     }
 
@@ -115,10 +124,10 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
         log.info("Driver: {}", writer.writeValueAsString(driverConfiguration));
         log.info(
-            "Configuration: {} {} {}",
-            SnsSqsBenchmarkConfiguration.getSnsUris(),
-            SnsSqsBenchmarkConfiguration.getRegion(),
-            SnsSqsBenchmarkConfiguration.isTpcH()
+                "Configuration: {} {} {}",
+                SnsSqsBenchmarkConfiguration.getSnsUris(),
+                SnsSqsBenchmarkConfiguration.getRegion(),
+                SnsSqsBenchmarkConfiguration.isTpcH()
         );
 
         try {
@@ -126,9 +135,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     (BenchmarkDriver) Class.forName(driverConfiguration.driverClass).newInstance();
             benchmarkDriver.initialize(driverConfigFile, stats.getStatsLogger());
         } catch (InstantiationException
-                | IllegalAccessException
-                | ClassNotFoundException
-                | InterruptedException e) {
+                 | IllegalAccessException
+                 | ClassNotFoundException
+                 | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
@@ -143,7 +152,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                 i -> new TopicInfo(generateTopicName(i), topicsInfo.numberOfPartitionsPerTopic))
                         .collect(toList());
 
-        List<String> topics = benchmarkDriver.createTopics(topicInfos).join().stream().map(TopicInfo::getTopic).collect(toList());
+        List<String> topics =
+                benchmarkDriver.createTopics(topicInfos).join().stream().map(TopicInfo::getTopic).collect(toList());
 
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
         return topics;
@@ -174,7 +184,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
         Timer timer = new Timer();
         AtomicInteger consumerIndex = new AtomicInteger();
         // This subscription should only be done on the orchestrator host.
-        if (consumerAssignment.isTpcH && consumerAssignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
+        if (consumerAssignment.isTpcH &&
+                consumerAssignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
             consumerAssignment.topicsSubscriptions.remove(TpcHConstants.REDUCE_DST_INDEX);
         }
         log.debug("Creating consumers: {}", writer.writeValueAsString(consumerAssignment));
@@ -185,7 +196,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                         .map(
                                                 c ->
                                                         new ConsumerInfo(
-                                                                consumerIndex.getAndIncrement(), c.topic, c.subscription, this))
+                                                                consumerIndex.getAndIncrement(), c.topic,
+                                                                c.subscription, this))
                                         .collect(toList()))
                         .join()
                         .stream()
@@ -208,10 +220,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
     @Override
     public void probeProducers() throws IOException {
         producers.forEach(
-            producer ->
-                producer.sendAsync(Optional.of("key"), new byte[10]).thenRun(stats::recordMessageSent));
+                producer ->
+                        producer.sendAsync(Optional.of("key"), new byte[10]).thenRun(stats::recordMessageSent));
     }
-
 
     private void startLoadForTpcHProducers(ProducerWorkAssignment producerWorkAssignment) {
         updateMessageProducer(producerWorkAssignment.publishRate);
@@ -219,38 +230,39 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 () -> {
                     BenchmarkProducer producer = producers.get(TpcHConstants.MAP_CMD_INDEX);
                     TpcHProducerAssignment assignment = new TpcHProducerAssignment(
-                        producerWorkAssignment.tpcHArguments,
-                        producerWorkAssignment.producerIndex
+                            producerWorkAssignment.tpcHArguments,
+                            producerWorkAssignment.producerIndex
                     );
                     AtomicInteger currentAssignment = new AtomicInteger();
                     KeyDistributor keyDistributor = KeyDistributor.build(producerWorkAssignment.keyDistributorType);
                     Integer batchSize = assignment.batchSize;
                     Integer start = assignment.offset * batchSize;
                     Integer numberOfMapResults = assignment.numberOfMapResults;
-                    String batchId = String.format("%s-batch-%d-%s", assignment.queryId, assignment.offset, assignment.batchSize);
+                    String batchId = String.format("%s-batch-%d-%s", assignment.queryId, assignment.offset,
+                            assignment.batchSize);
                     try {
                         while (currentAssignment.get() < numberOfMapResults) {
                             Integer chunkIndex = start + currentAssignment.incrementAndGet();
                             TpcHConsumerAssignment consumerAssignment = new TpcHConsumerAssignment(
-                                assignment.query,
-                                assignment.queryId,
-                                batchId,
-                                chunkIndex,
-                                producerWorkAssignment.producerIndex,
-                                numberOfMapResults,
-                                assignment.numberOfChunks,
-                                String.format("%s/chunk_%d.csv", assignment.sourceDataS3FolderUri, chunkIndex)
+                                    assignment.query,
+                                    assignment.queryId,
+                                    batchId,
+                                    chunkIndex,
+                                    producerWorkAssignment.producerIndex,
+                                    numberOfMapResults,
+                                    assignment.numberOfChunks,
+                                    String.format("%s/chunk_%d.csv", assignment.sourceDataS3FolderUri, chunkIndex)
                             );
                             TpcHMessage message = new TpcHMessage(
-                                TpcHMessageType.ConsumerAssignment,
-                                messageWriter.writeValueAsString(consumerAssignment)
+                                    TpcHMessageType.ConsumerAssignment,
+                                    messageWriter.writeValueAsString(consumerAssignment)
                             );
                             String key = keyDistributor.next();
                             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
                             messageProducer.sendMessage(
-                                producer,
-                                optionalKey,
-                                messageWriter.writeValueAsBytes(message)
+                                    producer,
+                                    optionalKey,
+                                    messageWriter.writeValueAsBytes(message)
                             );
                         }
                     } catch (Throwable t) {
@@ -269,20 +281,20 @@ public class LocalWorker implements Worker, ConsumerCallback {
         int processorIdx = 0;
         for (BenchmarkProducer p : producers) {
             processorAssignment
-                .computeIfAbsent(processorIdx, x -> new ArrayList<>())
-                .add(p);
+                    .computeIfAbsent(processorIdx, x -> new ArrayList<>())
+                    .add(p);
 
             processorIdx = (processorIdx + 1) % processors;
         }
 
         processorAssignment
-            .values()
-            .forEach(
-                producers ->
-                    submitThroughputProducersToExecutor(
-                        producers,
-                        KeyDistributor.build(producerWorkAssignment.keyDistributorType),
-                        producerWorkAssignment.payloadData));
+                .values()
+                .forEach(
+                        producers ->
+                                submitThroughputProducersToExecutor(
+                                        producers,
+                                        KeyDistributor.build(producerWorkAssignment.keyDistributorType),
+                                        producerWorkAssignment.payloadData));
     }
 
     private void submitThroughputProducersToExecutor(
@@ -435,16 +447,4 @@ public class LocalWorker implements Worker, ConsumerCallback {
     public void close() throws Exception {
         executor.shutdown();
     }
-
-    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
-
-    private static final ObjectMapper mapper =
-            new ObjectMapper(new YAMLFactory())
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-    static {
-        mapper.enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);
-    }
-
-    private static final Logger log = LoggerFactory.getLogger(LocalWorker.class);
 }

@@ -13,26 +13,18 @@
  */
 package io.openmessaging.benchmark.worker;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class DistributedWorkersEnsembleTest {
+import java.util.List;
+import java.util.stream.Stream;
 
-    @ParameterizedTest
-    @MethodSource("producerCountExpectations")
-    void getNumberOfProducerWorkers(int workerCount, boolean extraConsumers, int expected) {
-        List<Worker> workers = mock(List.class);
-        when(workers.size()).thenReturn(workerCount);
-        assertThat(DistributedWorkersEnsemble.getNumberOfProducerWorkers(workers, extraConsumers))
-                .isEqualTo(expected);
-    }
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+class DistributedWorkersEnsembleTest {
 
     private static Stream<Arguments> producerCountExpectations() {
         return Stream.of(
@@ -52,5 +44,14 @@ class DistributedWorkersEnsembleTest {
                 Arguments.of(7, false, 3),
                 Arguments.of(8, false, 4),
                 Arguments.of(9, false, 4));
+    }
+
+    @ParameterizedTest
+    @MethodSource("producerCountExpectations")
+    void getNumberOfProducerWorkers(int workerCount, boolean extraConsumers, int expected) {
+        List<Worker> workers = mock(List.class);
+        when(workers.size()).thenReturn(workerCount);
+        assertThat(DistributedWorkersEnsemble.getNumberOfProducerWorkers(workers, extraConsumers))
+                .isEqualTo(expected);
     }
 }

@@ -18,10 +18,14 @@ import io.openmessaging.benchmark.common.key.distribution.KeyDistributorType;
 public class Workload {
     public String name;
 
-    /** Number of topics to create in the test. */
+    /**
+     * Number of topics to create in the test.
+     */
     public int topics;
 
-    /** Number of partitions each topic will contain. */
+    /**
+     * Number of partitions each topic will contain.
+     */
     public int partitionsPerTopic;
 
     public KeyDistributorType keyDistributor = KeyDistributorType.NO_KEY;

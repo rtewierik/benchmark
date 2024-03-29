@@ -17,42 +17,37 @@ package io.openmessaging.benchmark.worker;
 import io.openmessaging.benchmark.worker.commands.CountersStats;
 import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
 import io.openmessaging.benchmark.worker.commands.PeriodStats;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.LongAdder;
 import org.HdrHistogram.Recorder;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.LongAdder;
+
 public class WorkerStats {
 
+    private static final long highestTrackableValue = TimeUnit.SECONDS.toMicros(60);
     private final StatsLogger statsLogger;
-
     private final OpStatsLogger publishDelayLatencyStats;
-
     private final Recorder endToEndLatencyRecorder = new Recorder(TimeUnit.HOURS.toMicros(12), 5);
     private final Recorder endToEndCumulativeLatencyRecorder =
             new Recorder(TimeUnit.HOURS.toMicros(12), 5);
     private final OpStatsLogger endToEndLatencyStats;
-
     private final LongAdder messagesSent = new LongAdder();
     private final LongAdder messageSendErrors = new LongAdder();
     private final LongAdder bytesSent = new LongAdder();
     private final Counter messageSendErrorCounter;
     private final Counter messagesSentCounter;
     private final Counter bytesSentCounter;
-
     private final LongAdder messagesReceived = new LongAdder();
     private final LongAdder bytesReceived = new LongAdder();
     private final Counter messagesReceivedCounter;
     private final Counter bytesReceivedCounter;
-
     private final LongAdder totalMessagesSent = new LongAdder();
     private final LongAdder totalMessageSendErrors = new LongAdder();
     private final LongAdder totalMessagesReceived = new LongAdder();
-
-    private static final long highestTrackableValue = TimeUnit.SECONDS.toMicros(60);
     private final Recorder publishLatencyRecorder = new Recorder(highestTrackableValue, 5);
     private final Recorder cumulativePublishLatencyRecorder = new Recorder(highestTrackableValue, 5);
     private final OpStatsLogger publishLatencyStats;

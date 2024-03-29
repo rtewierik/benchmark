@@ -15,13 +15,13 @@
 apiVersion: 1
 
 datasources:
-{% for prom in groups['prometheus'] %}
-  - name: {{ hostvars[prom].inventory_hostname }}
-    url: http://{{ hostvars[prom].private_ip }}:9090
-    type: prometheus
-    access: proxy
-    orgId: 1
-    isDefault: true
-    version: 1
-    editable: false
-{% endfor %}
+  { % for prom in groups[ 'prometheus' ] % }
+- name: { { hostvars[ prom ].inventory_hostname } }
+  url: http://{{ hostvars[prom].private_ip }}:9090
+  type: prometheus
+  access: proxy
+  orgId: 1
+  isDefault: true
+  version: 1
+  editable: false
+  { % endfor % }

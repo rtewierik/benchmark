@@ -13,14 +13,15 @@
  */
 package io.openmessaging.benchmark.utils;
 
+import org.junit.jupiter.api.Test;
+
+import java.util.function.Supplier;
+
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.util.function.Supplier;
-import org.junit.jupiter.api.Test;
 
 class TimerTest {
 

@@ -16,10 +16,9 @@ package io.openmessaging.benchmark.driver.jms;
 
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.jms.config.JMSConfig;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.jms.BytesMessage;
 import javax.jms.CompletionListener;
 import javax.jms.Destination;
@@ -27,11 +26,14 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public class JMSBenchmarkProducer implements BenchmarkProducer {
 
+    private static final Logger log = LoggerFactory.getLogger(JMSBenchmarkProducer.class);
     private final Session session;
     private final Destination destination;
     private final MessageProducer producer;
@@ -95,6 +97,4 @@ public class JMSBenchmarkProducer implements BenchmarkProducer {
         }
         return res;
     }
-
-    private static final Logger log = LoggerFactory.getLogger(JMSBenchmarkProducer.class);
 }
