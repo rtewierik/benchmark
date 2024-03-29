@@ -13,14 +13,14 @@
  */
 package io.openmessaging.benchmark.driver.s3;
 
+
 import io.openmessaging.benchmark.common.client.AmazonS3Client;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.URI;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class S3BenchmarkS3Producer implements BenchmarkProducer {
 

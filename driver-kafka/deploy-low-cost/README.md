@@ -37,30 +37,33 @@ When using 4 client VMs or less you may see lower throughput when using compress
 Obviously, throughput may not be your primary goal when using compression.
 
 ## SSH keys
+
 Once you’re all set up with AWS and have the necessary tools installed locally, you’ll need to create both a public and a private SSH key at `~/.ssh/kafka_aws` (private) and ~/.ssh/`kafka_aws.pub` (public), respectively.
 
 ```
-  $ ssh-keygen -f ~/.ssh/kafka_aws
+$ ssh-keygen -f ~/.ssh/kafka_aws
 ```
 
 When prompted to enter a passphrase, simply hit Enter twice. Then, make sure that the keys have been created:
 
 ```
-  $ ls ~/.ssh/kafka_aws*
+$ ls ~/.ssh/kafka_aws*
 ```
 
 ## Create resource using Terraform
+
 With SSH keys in place, you can create the necessary AWS resources using just a few Terraform commands:
 
 ```
-  $ cd driver-kafka/deploy
-  $ terraform init
-  $ terraform apply
+$ cd driver-kafka/deploy
+$ terraform init
+$ terraform apply
 ```
 
 Once the installation is complete, you will see a confirmation message listing the resources that have been installed.
 
 ## Variables
+
 There’s a handful of configurable parameters related to the Terraform deployment that you can alter by modifying the defaults in the terraform.tfvars file.
 
 | Variable  | Description | Default |
@@ -73,6 +76,7 @@ There’s a handful of configurable parameters related to the Terraform deployme
 If you modify the public_key_path, make sure that you point to the appropriate SSH key path when running the Ansible playbook.
 
 ## Running the Ansible playbook
+
 With the appropriate infrastructure in place, you can install and start the Kafka cluster using Ansible with just one command:
 
 ```
@@ -85,6 +89,7 @@ $ ansible-playbook \
 If you’re using an SSH private key path different from `~/.ssh/kafka_aws`, you can specify that path using the `--private-key` flag, for example `--private-key=~/.ssh/my_key`.
 
 ## SSH'ing into the client host
+
 In the output produced by Terraform, there’s a `client_ssh_host` variable that provides the IP address for the client EC2 host from which benchmarks can be run. You can SSH into that host using this command:
 
 ```
@@ -96,12 +101,13 @@ $ ssh -i ~/.ssh/kafka_aws ec2-user@$(terraform output client_ssh_host)
 If benchmark workers did not properly start, they will not respond to API calls. For each of the IP addresses in `/opt/benchmark/workers.yaml`, one can run
 
 ```
-  curl -o - -I -H "Accept: application/json" -X POST http://${IP_ADDRESS}/stop-all
+curl -o - -I -H "Accept: application/json" -X POST http://${IP_ADDRESS}/stop-all
 ```
 
 which should yield a `200 OK` response.
 
 ## Running the benchmarks from the client hosts
+
 The benchmark scripts can be run from the `/opt/benchmark` working directory.
 
 Once you’ve successfully SSH'ed into the client host, you can run any of the existing benchmarking workloads by specifying the YAML file for that workload when running the benchmark executable. All workloads are in the workloads folder. Here’s an example:
@@ -113,6 +119,7 @@ $ sudo /opt/benchmark/bin/benchmark \
 ```
 
 ## Specify client hosts
+
 By default, benchmarks will be run from the set of hosts created by Terraform. You can also specify a comma-separated list of client hosts using the `--workers` flag (or `-w` for short):
 
 ```
@@ -140,6 +147,7 @@ Failing benchmarks can be debugged by running the following commands on the EC2 
 * `deploy.yaml`requires modification of the `Configure memory` task
 
 ## Downloading your benchmarking results
+
 The OpenMessaging benchmarking suite stores results in JSON files in the `/opt/benchmark` folder on the client host from which the benchmarks are run. You can download those results files onto your local machine using scp. You can download all generated JSON results files using this command:
 
 ```
@@ -149,6 +157,7 @@ $ scp -i ~/.ssh/kafka_aws ec2-user@$(terraform output client_ssh_host):/opt/benc
 **NOTE:** On MacOS, the wildcard needs to be escaped.
 
 ## Tearing down your benchmarking infrastructure
+
 Once you’re finished running your benchmarks, you should tear down the AWS infrastructure you deployed for the sake of saving costs. You can do that with one command:
 
 ```

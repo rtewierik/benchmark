@@ -99,7 +99,8 @@ public class WorkerHandler {
 
         log.info("ConsumerAssignment payload: {}", ctx.body());
         log.info(
-                "Received create consumers request for topics: {}", writer.writeValueAsString(consumerAssignment.topicsSubscriptions));
+                "Received create consumers request for topics: {}",
+                writer.writeValueAsString(consumerAssignment.topicsSubscriptions));
         localWorker.createConsumers(consumerAssignment);
     }
 
@@ -115,9 +116,10 @@ public class WorkerHandler {
         ProducerWorkAssignment producerWorkAssignment =
                 mapper.readValue(ctx.body(), ProducerWorkAssignment.class);
 
-        int length = producerWorkAssignment.payloadData.isEmpty()
-            ? 0
-            : producerWorkAssignment.payloadData.get(0).length;
+        int length =
+                producerWorkAssignment.payloadData.isEmpty()
+                        ? 0
+                        : producerWorkAssignment.payloadData.get(0).length;
         log.info(
                 "Start load publish-rate: {} msg/s -- payload-size: {} -- producer index: {}",
                 producerWorkAssignment.publishRate,
@@ -157,6 +159,6 @@ public class WorkerHandler {
 
     private static final Logger log = LoggerFactory.getLogger(WorkerHandler.class);
 
-    private static final ObjectMapper mapper = ObjectMappers.DEFAULT.mapper();
-    private static final ObjectWriter writer = ObjectMappers.DEFAULT.writer();
+    private static final ObjectMapper mapper = ObjectMappers.mapper;
+    private static final ObjectWriter writer = ObjectMappers.writer;
 }

@@ -13,6 +13,7 @@
  */
 package io.openmessaging.benchmark.common;
 
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -24,8 +25,9 @@ import org.HdrHistogram.Histogram;
 public enum ObjectMappers {
     DEFAULT;
 
-    private static final ObjectMapper mapper =
+    public static final ObjectMapper mapper =
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    public static final ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
 
     static {
         mapper.enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);
@@ -33,15 +35,5 @@ public enum ObjectMappers {
         module.addSerializer(Histogram.class, new HistogramSerializer());
         module.addDeserializer(Histogram.class, new HistogramDeserializer());
         mapper.registerModule(module);
-    }
-
-    private static final ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
-
-    public ObjectMapper mapper() {
-        return mapper;
-    }
-
-    public ObjectWriter writer() {
-        return writer;
     }
 }

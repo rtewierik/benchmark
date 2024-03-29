@@ -291,7 +291,7 @@ public class HttpWorkerClient implements Worker {
                 .join();
     }
 
-    private static final ObjectMapper mapper = ObjectMappers.DEFAULT.mapper();
-    private static final ObjectWriter writer = ObjectMappers.DEFAULT.writer();
+    private static final ObjectMapper mapper = ObjectMappers.mapper;
+    private static final ObjectWriter writer = ObjectMappers.writer;
     private static final Logger log = LoggerFactory.getLogger(HttpWorkerClient.class);
 }

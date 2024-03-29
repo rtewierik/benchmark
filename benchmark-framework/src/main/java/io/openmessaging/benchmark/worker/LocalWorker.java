@@ -88,7 +88,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final WorkerStats stats;
     private boolean testCompleted = false;
     private boolean consumersArePaused = false;
-    private static final ObjectWriter messageWriter = ObjectMappers.DEFAULT.writer();
+    private static final ObjectWriter messageWriter = ObjectMappers.writer;
 
     public LocalWorker() {
         this(NullStatsLogger.INSTANCE);

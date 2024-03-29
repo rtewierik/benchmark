@@ -13,11 +13,11 @@
  */
 package io.openmessaging.benchmark.common.utils;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.locks.LockSupport;
 import java.util.function.Supplier;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * Provides a next operation time for rate limited operation streams.<br>

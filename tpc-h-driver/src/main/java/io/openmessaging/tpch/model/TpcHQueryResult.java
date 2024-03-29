@@ -13,6 +13,7 @@
  */
 package io.openmessaging.tpch.model;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +23,6 @@ public class TpcHQueryResult {
 
     @Override
     public String toString() {
-        return "TpcHQueryResult{" +
-                "rows=" + rows +
-                '}';
+        return "TpcHQueryResult{" + "rows=" + rows + '}';
     }
 }

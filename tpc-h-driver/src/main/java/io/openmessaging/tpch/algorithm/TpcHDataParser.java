@@ -13,8 +13,8 @@
  */
 package io.openmessaging.tpch.algorithm;
 
-import io.openmessaging.tpch.model.TpcHRow;
 
+import io.openmessaging.tpch.model.TpcHRow;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +27,7 @@ import java.util.List;
 public class TpcHDataParser {
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-    public static List<TpcHRow> readTpcHRowsFromStream(InputStream stream) throws IOException  {
+    public static List<TpcHRow> readTpcHRowsFromStream(InputStream stream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         List<TpcHRow> csvRows = new ArrayList<>();
         String dataLine;

@@ -24,7 +24,6 @@ import io.pravega.client.stream.ReaderGroupConfig;
 import io.pravega.client.stream.ReinitializationRequiredException;
 import io.pravega.client.stream.Stream;
 import io.pravega.client.stream.impl.ByteBufferSerializer;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.UUID;

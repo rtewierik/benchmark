@@ -11,17 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.tpch.model;
+package io.openmessaging.benchmark.common.random;
 
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Random;
 
-public class TpcHQueryResultRow {
-    public final Map<String, Object> columns = new HashMap<>();
-
-    @Override
-    public String toString() {
-        return "TpcHQueryResultRow{" + "columns=" + columns + '}';
-    }
+public class RandomUtils {
+    public static final Random RANDOM = new Random();
 }

@@ -29,7 +29,6 @@ import java.io.StringReader;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -204,8 +203,6 @@ public class JMSBenchmarkDriver implements BenchmarkDriver {
     private static JMSConfig readConfig(File configurationFile) throws IOException {
         return mapper.readValue(configurationFile, JMSConfig.class);
     }
-
-    private static final Random random = new Random();
 
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final Logger log = LoggerFactory.getLogger(JMSBenchmarkDriver.class);

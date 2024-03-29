@@ -13,6 +13,7 @@
  */
 package io.openmessaging.benchmark.driver.redis;
 
+import static io.openmessaging.benchmark.common.random.RandomUtils.RANDOM;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +26,6 @@ import io.openmessaging.benchmark.driver.ConsumerCallback;
 import io.openmessaging.benchmark.driver.redis.client.RedisClientConfig;
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -83,8 +83,11 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
         GenericObjectPoolConfig<Jedis> poolConfig = new GenericObjectPoolConfig<>();
         poolConfig.setMaxTotal(this.clientConfig.jedisPoolMaxTotal);
         poolConfig.setMaxIdle(this.clientConfig.jedisPoolMaxIdle);
-        log.info("Attempting to connect to {}:{} with user {}",
-            this.clientConfig.redisHost, this.clientConfig.redisPort, this.clientConfig.redisUser);
+        log.info(
+                "Attempting to connect to {}:{} with user {}",
+                this.clientConfig.redisHost,
+                this.clientConfig.redisPort,
+                this.clientConfig.redisUser);
         if (this.clientConfig.redisPass != null) {
             if (this.clientConfig.redisUser != null) {
                 jedisPool =
@@ -125,11 +128,9 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
         return mapper.readValue(configurationFile, RedisClientConfig.class);
     }
 
-    private static final Random random = new Random();
-
     private static String getRandomString() {
         byte[] buffer = new byte[5];
-        random.nextBytes(buffer);
+        RANDOM.nextBytes(buffer);
         return BaseEncoding.base64Url().omitPadding().encode(buffer);
     }
 

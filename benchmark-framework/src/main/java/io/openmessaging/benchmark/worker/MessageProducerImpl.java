@@ -13,6 +13,7 @@
  */
 package io.openmessaging.benchmark.worker;
 
+import static io.openmessaging.benchmark.common.utils.UniformRateLimiter.uninterruptibleSleepNs;
 
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
@@ -21,8 +22,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static io.openmessaging.benchmark.common.utils.UniformRateLimiter.uninterruptibleSleepNs;
 
 public class MessageProducerImpl implements MessageProducer {
 

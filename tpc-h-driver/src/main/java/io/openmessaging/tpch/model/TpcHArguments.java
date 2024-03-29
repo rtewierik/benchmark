@@ -13,6 +13,7 @@
  */
 package io.openmessaging.tpch.model;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TpcHArguments {
@@ -23,12 +24,11 @@ public class TpcHArguments {
     public final Integer numberOfReducers;
 
     public TpcHArguments(
-        @JsonProperty("queryId") String queryId,
-        @JsonProperty("query") TpcHQuery query,
-        @JsonProperty("sourceDataS3FolderUri") String sourceDataS3FolderUri,
-        @JsonProperty("numberOfChunks") Integer numberOfChunks,
-        @JsonProperty("numberOFReducers") Integer numberOfReducers
-    ) {
+            @JsonProperty("queryId") String queryId,
+            @JsonProperty("query") TpcHQuery query,
+            @JsonProperty("sourceDataS3FolderUri") String sourceDataS3FolderUri,
+            @JsonProperty("numberOfChunks") Integer numberOfChunks,
+            @JsonProperty("numberOFReducers") Integer numberOfReducers) {
         this.queryId = queryId;
         this.query = query;
         this.sourceDataS3FolderUri = sourceDataS3FolderUri;
@@ -46,6 +46,6 @@ public class TpcHArguments {
     }
 
     public int getDefaultNumberOfMapResults() {
-        return (int)Math.ceil((double)this.numberOfChunks / this.numberOfReducers);
+        return (int) Math.ceil((double) this.numberOfChunks / this.numberOfReducers);
     }
 }

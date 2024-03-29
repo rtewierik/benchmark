@@ -13,6 +13,7 @@
  */
 package io.openmessaging.benchmark.driver.pulsar;
 
+import static io.openmessaging.benchmark.common.random.RandomUtils.RANDOM;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,7 +33,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -192,8 +192,10 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
             return CompletableFuture.completedFuture(null);
         }
 
-        return adminClient.topics().createPartitionedTopicAsync(topic, partitions)
-            .thenApply(unused -> info);
+        return adminClient
+                .topics()
+                .createPartitionedTopicAsync(topic, partitions)
+                .thenApply(unused -> info);
     }
 
     @Override
@@ -267,11 +269,9 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
         return mapper.readValue(configurationFile, PulsarConfig.class);
     }
 
-    private static final Random random = new Random();
-
     private static String getRandomString() {
         byte[] buffer = new byte[5];
-        random.nextBytes(buffer);
+        RANDOM.nextBytes(buffer);
         return BaseEncoding.base64Url().omitPadding().encode(buffer);
     }
 

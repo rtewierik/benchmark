@@ -289,6 +289,30 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- <plugin>
+                <groupId>com.theoryinpractise</groupId>
+                <artifactId>googleformatter-maven-plugin</artifactId>
+                <version>1.7.3</version>
+                <executions>
+                    <execution>
+                        <id>reformat-sources</id>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <includeStale>false</includeStale>
+                            <style>GOOGLE</style>
+                            <formatMain>true</formatMain>
+                            <formatTest>true</formatTest>
+                            <filterModified>false</filterModified>
+                            <skip>false</skip>
+                            <fixImports>false</fixImports>
+                            <maxLineLength>100</maxLineLength>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin> -->
             <plugin>
                 <!-- Deeper code style check -->
                 <groupId>org.apache.maven.plugins</groupId>

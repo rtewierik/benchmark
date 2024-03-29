@@ -13,22 +13,18 @@
  */
 package io.openmessaging.benchmark.driver.sns.sqs;
 
-import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
 
 public class SnsSqsBenchmarkConfiguration {
 
-    @Getter
-    private static final String sqsUri;
-    @Getter
-    private static final List<String> snsUris;
-    @Getter
-    private static final String region;
-    @Getter
-    private static final boolean isTpcH;
+    @Getter private static final String sqsUri;
+    @Getter private static final List<String> snsUris;
+    @Getter private static final String region;
+    @Getter private static final boolean isTpcH;
 
     static {
         sqsUri = System.getenv("SQS_URI");
