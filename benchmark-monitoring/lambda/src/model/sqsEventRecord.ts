@@ -1,6 +1,6 @@
 interface SqsEventRecord {
-    messageId: string;
-    body: string;
+  messageId: string;
+  body: string;
 }
 
 export default SqsEventRecord

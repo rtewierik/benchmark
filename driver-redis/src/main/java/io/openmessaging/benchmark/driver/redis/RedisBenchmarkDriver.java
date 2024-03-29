@@ -23,6 +23,10 @@ import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
 import io.openmessaging.benchmark.driver.redis.client.RedisClientConfig;
+import java.io.File;
+import java.io.IOException;
+import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
@@ -30,29 +34,9 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Random;
-import java.util.concurrent.CompletableFuture;
-
 public class RedisBenchmarkDriver implements BenchmarkDriver {
-    private static final ObjectMapper mapper =
-            new ObjectMapper(new YAMLFactory())
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    private static final Random random = new Random();
-    private static final Logger log = LoggerFactory.getLogger(RedisBenchmarkDriver.class);
     JedisPool jedisPool;
     private RedisClientConfig clientConfig;
-
-    private static RedisClientConfig readConfig(File configurationFile) throws IOException {
-        return mapper.readValue(configurationFile, RedisClientConfig.class);
-    }
-
-    private static String getRandomString() {
-        byte[] buffer = new byte[5];
-        random.nextBytes(buffer);
-        return BaseEncoding.base64Url().omitPadding().encode(buffer);
-    }
 
     @Override
     public void initialize(final File configurationFile, final StatsLogger statsLogger)
@@ -100,7 +84,7 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
         poolConfig.setMaxTotal(this.clientConfig.jedisPoolMaxTotal);
         poolConfig.setMaxIdle(this.clientConfig.jedisPoolMaxIdle);
         log.info("Attempting to connect to {}:{} with user {}",
-                this.clientConfig.redisHost, this.clientConfig.redisPort, this.clientConfig.redisUser);
+            this.clientConfig.redisHost, this.clientConfig.redisPort, this.clientConfig.redisUser);
         if (this.clientConfig.redisPass != null) {
             if (this.clientConfig.redisUser != null) {
                 jedisPool =
@@ -132,4 +116,22 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
             this.jedisPool.close();
         }
     }
+
+    private static final ObjectMapper mapper =
+            new ObjectMapper(new YAMLFactory())
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    private static RedisClientConfig readConfig(File configurationFile) throws IOException {
+        return mapper.readValue(configurationFile, RedisClientConfig.class);
+    }
+
+    private static final Random random = new Random();
+
+    private static String getRandomString() {
+        byte[] buffer = new byte[5];
+        random.nextBytes(buffer);
+        return BaseEncoding.base64Url().omitPadding().encode(buffer);
+    }
+
+    private static final Logger log = LoggerFactory.getLogger(RedisBenchmarkDriver.class);
 }

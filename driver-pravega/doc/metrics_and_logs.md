@@ -45,11 +45,11 @@ Login using user name "admin" and any password.
 Configure Grafana with the following data sources:
 
 - Prometheus
-    - Name: Prometheus
-    - HTTP URL: http://prometheus:9090
+  - Name: Prometheus
+  - HTTP URL: http://prometheus:9090
 - InfluxDB
-    - Name: pravega-influxdb
-    - HTTP URL: http://influxdb:8086
-    - InfluxDB Details Database: pravega
+  - Name: pravega-influxdb
+  - HTTP URL: http://influxdb:8086
+  - InfluxDB Details Database: pravega
 
 Load dashboards from [deploy/templates/dashboards](../deploy/templates/dashboards).

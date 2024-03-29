@@ -14,81 +14,79 @@
 
 -->
 <assembly
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
-        xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
-    <id>jar-with-dependencies</id>
-    <formats>
-        <format>jar</format>
-    </formats>
-    <includeBaseDirectory>true</includeBaseDirectory>
-    <moduleSets>
-        <moduleSet>
-            <useAllReactorProjects>true</useAllReactorProjects>
-        </moduleSet>
-    </moduleSets>
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+  <id>jar-with-dependencies</id>
+  <formats>
+    <format>jar</format>
+  </formats>
+	<includeBaseDirectory>true</includeBaseDirectory>
+	<moduleSets>
+		<moduleSet>
+			<useAllReactorProjects>true</useAllReactorProjects>
+		</moduleSet>
+	</moduleSets>
 
-    <fileSets>
-        <fileSet>
-            <directory>${basedir}/../driver-sns-sqs</directory>
+	<fileSets>
+		<fileSet>
+			<directory>${basedir}/../driver-sns-sqs</directory>
 
-            <includes>
-                <include>**/driver-*/deploy/**</include>
-                <include>**/driver-*/*.yaml</include>
-            </includes>
+			<includes>
+				<include>**/driver-*/deploy/**</include>
+				<include>**/driver-*/*.yaml</include>
+			</includes>
 
-            <excludes>
-                <exclude>**/.terraform/**</exclude>
-                <exclude>**/terraform.tfstate</exclude>
-                <exclude>**/terraform.tfstate.backup</exclude>
-                <exclude>**/*.retry</exclude>
-            </excludes>
-        </fileSet>
-    </fileSets>
+			<excludes>
+				<exclude>**/.terraform/**</exclude>
+				<exclude>**/terraform.tfstate</exclude>
+				<exclude>**/terraform.tfstate.backup</exclude>
+				<exclude>**/*.retry</exclude>
+			</excludes>
+		</fileSet>
+	</fileSets>
 
-    <files>
-        <file>
-            <source>${basedir}/../README.md</source>
-            <outputDirectory>.</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>${basedir}/../LICENSE</source>
-            <destName>LICENSE</destName>
-            <outputDirectory>.</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-    </files>
-    <dependencySets>
-        <dependencySet>
-            <outputDirectory>/</outputDirectory>
-            <unpack>false</unpack>
-            <scope>compile</scope>
-            <useProjectArtifact>true</useProjectArtifact>
-            <!-- Include 'groupId' in the dependencies Jar names to better identify
-                the provenance of the jar -->
-            <outputFileNameMapping>
-                ${artifact.groupId}-${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}
-            </outputFileNameMapping>
+	<files>
+		<file>
+			<source>${basedir}/../README.md</source>
+			<outputDirectory>.</outputDirectory>
+			<fileMode>644</fileMode>
+		</file>
+		<file>
+			<source>${basedir}/../LICENSE</source>
+			<destName>LICENSE</destName>
+			<outputDirectory>.</outputDirectory>
+			<fileMode>644</fileMode>
+		</file>
+	</files>
+	<dependencySets>
+		<dependencySet>
+      <outputDirectory>/</outputDirectory>
+      <unpack>false</unpack>
+			<scope>compile</scope>
+      <useProjectArtifact>true</useProjectArtifact>
+			<!-- Include 'groupId' in the dependencies Jar names to better identify 
+				the provenance of the jar -->
+			<outputFileNameMapping>${artifact.groupId}-${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
 
-            <excludes>
-                <!-- All these dependencies are already included in netty-all -->
-                <exclude>io.netty:netty-common</exclude>
-                <exclude>io.netty:netty-buffer</exclude>
-                <exclude>io.netty:netty-codec-http</exclude>
-                <exclude>io.netty:netty-codec</exclude>
-                <exclude>io.netty:netty-transport</exclude>
-                <exclude>io.netty:netty-handler</exclude>
-                <exclude>io.netty:netty-transport-native-epoll</exclude>
-                <exclude>io.netty:netty-transport-native-kqueue</exclude>
-                <exclude>io.netty:netty-codec-http</exclude>
-                <exclude>io.netty:netty-codec-dns</exclude>
-                <exclude>io.netty:netty-resolver</exclude>
-                <exclude>io.netty:netty-resolver-dns</exclude>
-                <exclude>io.netty:netty-transport-native-unix-common</exclude>
-                <exclude>ch.qos.logback:*</exclude>
-                <exclude>com.amazonaws*</exclude>
-            </excludes>
-        </dependencySet>
-    </dependencySets>
+			<excludes>
+				<!-- All these dependencies are already included in netty-all -->
+				<exclude>io.netty:netty-common</exclude>
+				<exclude>io.netty:netty-buffer</exclude>
+				<exclude>io.netty:netty-codec-http</exclude>
+				<exclude>io.netty:netty-codec</exclude>
+				<exclude>io.netty:netty-transport</exclude>
+				<exclude>io.netty:netty-handler</exclude>
+				<exclude>io.netty:netty-transport-native-epoll</exclude>
+				<exclude>io.netty:netty-transport-native-kqueue</exclude>
+				<exclude>io.netty:netty-codec-http</exclude>
+				<exclude>io.netty:netty-codec-dns</exclude>
+				<exclude>io.netty:netty-resolver</exclude>
+				<exclude>io.netty:netty-resolver-dns</exclude>
+				<exclude>io.netty:netty-transport-native-unix-common</exclude>
+				<exclude>ch.qos.logback:*</exclude>
+				<exclude>com.amazonaws*</exclude>
+			</excludes>
+    </dependencySet>
+	</dependencySets>
 </assembly>

@@ -17,6 +17,8 @@ import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.model.SendMessageRequest;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 
 import java.nio.charset.StandardCharsets;
@@ -35,12 +37,12 @@ public class SnsSqsBenchmarkSnsProducer implements BenchmarkProducer {
 
     public SnsSqsBenchmarkSnsProducer(String snsUri) {
         this(
-                snsUri,
-                AmazonSNSClientBuilder
-                        .standard()
-                        .withRegion(SnsSqsBenchmarkConfiguration.getRegion())
-                        .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
-                        .build()
+            snsUri,
+            AmazonSNSClientBuilder
+                .standard()
+                .withRegion(SnsSqsBenchmarkConfiguration.getRegion())
+                .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
+                .build()
         );
     }
 
@@ -58,6 +60,5 @@ public class SnsSqsBenchmarkSnsProducer implements BenchmarkProducer {
     }
 
     @Override
-    public void close() throws Exception {
-    }
+    public void close() throws Exception {}
 }

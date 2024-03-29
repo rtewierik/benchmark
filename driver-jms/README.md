@@ -2,8 +2,7 @@
 
 With this driver you can run the benchmark against any messaging system that supports JMS 1.1 or JMS 2.0 API.
 
-For instructions on running the OpenMessaging benchmarks for JMS, see
-the [official documentation](https://github.com/openmessaging/openmessaging.github.io/blob/source/docs/benchmarks/jms.md).
+For instructions on running the OpenMessaging benchmarks for JMS, see the [official documentation](https://github.com/openmessaging/openmessaging.github.io/blob/source/docs/benchmarks/jms.md).
 
 ## Modifying the Openmessaging Benchmark Tar for JMS
 
@@ -52,8 +51,7 @@ Follow these instructions to compile the openmessaging benchmark for Confluent J
   ```
   mvn clean package
   ```
-- Run the repacking script passing in the location of the fat jar.
-  EG. `~/kafka-jms-client/target/kafka-jms-client-fat-6.2.1.jar`
+- Run the repacking script passing in the location of the fat jar. EG. `~/kafka-jms-client/target/kafka-jms-client-fat-6.2.1.jar`
 
   ```
   bash driver-jms/package-kafka.sh /path/to/the/kafka-jms-client.jar

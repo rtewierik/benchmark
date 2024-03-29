@@ -13,8 +13,8 @@
 #
 
 - name: Get common facts
-  hosts: [ "!tier2" ]
-  tags: [ "always" ]
+  hosts: ["!tier2"]
+  tags: ["always"]
   connection: ssh
   become: true
   vars_files:
@@ -41,8 +41,8 @@
         pravegaContainerCount: "{{ segmentStoreCount|int * pravegaContainersPerSegmentStore|int }}"
 
 - name: Uninstall
-  hosts: [ "!tier2" ]
-  tags: [ "uninstall" ]
+  hosts: ["!tier2"]
+  tags: ["uninstall"]
   connection: ssh
   become: true
   tasks:
@@ -70,8 +70,8 @@
       ignore_errors: yes
 
 - name: Common installation
-  hosts: [ "!tier2" ]
-  tags: [ "controller", "segmentstore", "bookkeeper", "zookeeper", "client", "metrics" ]
+  hosts: ["!tier2"]
+  tags: ["controller", "segmentstore", "bookkeeper", "zookeeper", "client", "metrics"]
   connection: ssh
   become: true
   tasks:
@@ -97,8 +97,8 @@
               LC_ALL=en_US.utf-8' > /etc/environment
 
 - name: Metrics installation
-  hosts: [ "metrics" ]
-  tags: [ "metrics" ]
+  hosts: ["metrics"]
+  tags: ["metrics"]
   connection: ssh
   become: true
   tasks:
@@ -131,7 +131,7 @@
     - name: Installing docker
       yum:
         state: latest
-        pkg: [ 'slirp4netns', 'fuse-overlayfs', 'container-selinux', 'docker-ce' ]
+        pkg: ['slirp4netns', 'fuse-overlayfs', 'container-selinux', 'docker-ce']
     - name: Start docker
       service:
         name: docker
@@ -139,8 +139,8 @@
         enabled: yes
 
 - name: Prometheus installation
-  hosts: [ "metrics" ]
-  tags: [ "prometheus" ]
+  hosts: ["metrics"]
+  tags: ["prometheus"]
   connection: ssh
   become: true
   tasks:
@@ -151,7 +151,7 @@
         src: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheusVersion }}/prometheus-{{ prometheusVersion }}.linux-amd64.tar.gz"
         remote_src: yes
         dest: /opt/prometheus
-        extra_opts: [ "--strip-components=1" ]
+        extra_opts: ["--strip-components=1"]
     - file:
         path: "/opt/prometheus/data"
         state: directory
@@ -168,8 +168,8 @@
         enabled: yes
 
 - name: InfluxDB installation
-  hosts: [ "metrics" ]
-  tags: [ "influxdb" ]
+  hosts: ["metrics"]
+  tags: ["influxdb"]
   connection: ssh
   become: true
   tasks:
@@ -183,8 +183,8 @@
         enabled: yes
 
 - name: Pravega Dashboard installation
-  hosts: [ "metrics" ]
-  tags: [ "dashboard" ]
+  hosts: ["metrics"]
+  tags: ["dashboard"]
   connection: ssh
   become: true
   tasks:
@@ -199,7 +199,7 @@
 
 - name: ZooKeeper setup
   hosts: zookeeper
-  tags: [ "zookeeper" ]
+  tags: ["zookeeper"]
   connection: ssh
   become: true
   tasks:
@@ -210,7 +210,7 @@
         src: "http://archive.apache.org/dist/zookeeper/zookeeper-{{ zookeeperVersion }}/apache-zookeeper-{{ zookeeperVersion }}-bin.tar.gz"
         remote_src: yes
         dest: /opt/zookeeper
-        extra_opts: [ "--strip-components=1" ]
+        extra_opts: ["--strip-components=1"]
     - set_fact:
         zid: "{{ groups['zookeeper'].index(inventory_hostname) }}"
         max_heap_memory: "512m"
@@ -253,8 +253,8 @@
         - /pravega/pravega-cluster/bookkeeper
 
 - name: Pravega common installation
-  hosts: [ "controller", "bookkeeper" ]
-  tags: [ "controller", "segmentstore" ]
+  hosts: ["controller", "bookkeeper"]
+  tags: ["controller", "segmentstore"]
   connection: ssh
   become: true
   tasks:
@@ -265,7 +265,7 @@
         src: "{{ pravegaSrc }}"
         remote_src: "{{ pravegaSrcRemote }}"
         dest: /opt/pravega
-        extra_opts: [ "--strip-components=1" ]
+        extra_opts: ["--strip-components=1"]
     - template:
         src: "templates/config.properties"
         dest: "/opt/pravega/conf/config.properties"
@@ -278,7 +278,7 @@
 
 - name: Pravega Controller installation
   hosts: controller
-  tags: [ "controller" ]
+  tags: ["controller"]
   connection: ssh
   become: true
   tasks:
@@ -293,7 +293,7 @@
 
 - name: Format and mount disks for BookKeeper hosts
   hosts: bookkeeper
-  tags: [ "bookkeeper" ]
+  tags: ["bookkeeper"]
   connection: ssh
   become: true
   tasks:
@@ -340,7 +340,7 @@
 
 - name: BookKeeper setup
   hosts: bookkeeper
-  tags: [ "bookkeeper" ]
+  tags: ["bookkeeper"]
   connection: ssh
   become: true
   tasks:
@@ -351,7 +351,7 @@
         src: "https://archive.apache.org/dist/bookkeeper/bookkeeper-{{ bookkeeperVersion }}/bookkeeper-all-{{ bookkeeperVersion }}-bin.tar.gz"
         remote_src: yes
         dest: /opt/bookkeeper
-        extra_opts: [ "--strip-components=1" ]
+        extra_opts: ["--strip-components=1"]
     - template:
         src: "templates/bk_server.conf"
         dest: "/opt/bookkeeper/conf/bk_server.conf"
@@ -383,7 +383,7 @@
 
 - name: Pravega Segment Store installation
   hosts: bookkeeper
-  tags: [ "segmentstore" ]
+  tags: ["segmentstore"]
   connection: ssh
   become: true
   tasks:
@@ -405,7 +405,7 @@
 
 - name: Chrony setup
   hosts: client
-  tags: [ "client" ]
+  tags: ["client"]
   connection: ssh
   become: true
   tasks:
@@ -421,19 +421,19 @@
 
 - name: Benchmark client setup
   hosts: client
-  tags: [ "client" ]
+  tags: ["client"]
   connection: ssh
   become: true
   tasks:
     - file: path=/opt/benchmark state=absent
-      tags: [ client-code ]
+      tags: [client-code]
     - name: Copy benchmark code
       unarchive:
         src: ../../package/target/openmessaging-benchmark-0.0.1-SNAPSHOT-bin.tar.gz
         dest: /opt
-      tags: [ client-code ]
+      tags: [client-code]
     - shell: mv /opt/openmessaging-benchmark-0.0.1-SNAPSHOT /opt/benchmark
-      tags: [ client-code ]
+      tags: [client-code]
     - template:
         src: "templates/workers.yaml"
         dest: "/opt/benchmark/workers.yaml"
@@ -442,20 +442,20 @@
       register: drivers_list
     - name: Configure service URL
       lineinfile:
-        dest: '{{ item }}'
-        regexp: '^  controllerURI\: '
-        line: '  controllerURI: {{ controllerUrl }}'
+         dest: '{{ item }}'
+         regexp: '^  controllerURI\: '
+         line: '  controllerURI: {{ controllerUrl }}'
       with_items: '{{ drivers_list.stdout_lines }}'
     - name: Configure memory
       lineinfile:
-        dest: /opt/benchmark/bin/benchmark-worker
-        regexp: '^JVM_MEM='
-        line: 'JVM_MEM="-Xms6G -Xmx6G -XX:+UseG1GC -XX:MaxGCPauseMillis=10 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=16 -XX:ConcGCThreads=16 -XX:G1NewSizePercent=50 -XX:+DisableExplicitGC -XX:-ResizePLAB -XX:+PerfDisableSharedMem -XX:+AlwaysPreTouch -XX:-UseBiasedLocking"'
+         dest: /opt/benchmark/bin/benchmark-worker
+         regexp: '^JVM_MEM='
+         line: 'JVM_MEM="-Xms6G -Xmx6G -XX:+UseG1GC -XX:MaxGCPauseMillis=10 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=16 -XX:ConcGCThreads=16 -XX:G1NewSizePercent=50 -XX:+DisableExplicitGC -XX:-ResizePLAB -XX:+PerfDisableSharedMem -XX:+AlwaysPreTouch -XX:-UseBiasedLocking"'
     - name: Configure memory
       lineinfile:
-        dest: /opt/benchmark/bin/benchmark
-        regexp: '^JVM_MEM='
-        line: 'JVM_MEM="-Xmx4G"'
+         dest: /opt/benchmark/bin/benchmark
+         regexp: '^JVM_MEM='
+         line: 'JVM_MEM="-Xmx4G"'
     - name: Install benchmark systemd service
       template:
         src: "templates/benchmark-worker.service"

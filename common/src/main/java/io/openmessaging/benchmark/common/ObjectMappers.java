@@ -26,7 +26,6 @@ public enum ObjectMappers {
 
     private static final ObjectMapper mapper =
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    private static final ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
 
     static {
         mapper.enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);
@@ -35,6 +34,8 @@ public enum ObjectMappers {
         module.addDeserializer(Histogram.class, new HistogramDeserializer());
         mapper.registerModule(module);
     }
+
+    private static final ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
 
     public ObjectMapper mapper() {
         return mapper;

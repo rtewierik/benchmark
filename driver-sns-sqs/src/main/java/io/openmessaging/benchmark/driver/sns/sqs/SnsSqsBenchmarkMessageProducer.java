@@ -25,7 +25,6 @@ import java.util.function.Supplier;
 import static io.openmessaging.benchmark.common.utils.UniformRateLimiter.uninterruptibleSleepNs;
 
 public class SnsSqsBenchmarkMessageProducer implements MessageProducer {
-    private static final Logger log = LoggerFactory.getLogger(SnsSqsBenchmarkMessageProducer.class);
     private final UniformRateLimiter rateLimiter;
     private Supplier<Long> nanoClock;
 
@@ -43,8 +42,8 @@ public class SnsSqsBenchmarkMessageProducer implements MessageProducer {
         uninterruptibleSleepNs(intendedSendTime);
         // final long sendTime = nanoClock.get();
         producer
-                .sendAsync(key, payload)
-                .exceptionally(this::failure);
+            .sendAsync(key, payload)
+            .exceptionally(this::failure);
     }
 
     private void success(long payloadLength, long intendedSendTime, long sendTime) {
@@ -56,4 +55,6 @@ public class SnsSqsBenchmarkMessageProducer implements MessageProducer {
         log.warn("Write error on message", t);
         return null;
     }
+
+    private static final Logger log = LoggerFactory.getLogger(SnsSqsBenchmarkMessageProducer.class);
 }

@@ -15,11 +15,10 @@ package io.openmessaging.benchmark.driver.pulsar;
 
 
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import org.apache.pulsar.client.api.Producer;
-import org.apache.pulsar.client.api.TypedMessageBuilder;
-
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import org.apache.pulsar.client.api.Producer;
+import org.apache.pulsar.client.api.TypedMessageBuilder;
 
 public class PulsarBenchmarkProducer implements BenchmarkProducer {
 

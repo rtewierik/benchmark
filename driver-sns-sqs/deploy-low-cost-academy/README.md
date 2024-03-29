@@ -5,7 +5,6 @@ sudo bin/benchmark \
   --drivers driver-sns-sqs/sns-sqs-default.yaml \
   workloads/max-rate-10-topics-1-partition-1kb.yaml
 ```
-
 ```
 sudo bin/benchmark \
   --drivers driver-sns-sqs/sns-sqs-default.yaml \
@@ -18,8 +17,7 @@ sudo bin/benchmark \
 
 ## AWS Academy instructions
 
-* Create three EC2 `t3.large` instances with RHEL image and arm64 architecture (launch template saved in Academy
-  account)
+* Create three EC2 `t3.large` instances with RHEL image and arm64 architecture (launch template saved in Academy account)
 * Add `inventory.ini` as follows
 
 ```
@@ -28,7 +26,6 @@ sudo bin/benchmark \
   ec2-02 ansible_host=yy.yy.yy.yy
   ec2-03 ansible_host=zz.zz.zz.zz
 ```
-
 * Update `host_vars/*` with the private IP addresses of each of the EC2 instances.
 * Execute playbook e.g. `ansible-playbook -i inventory.ini your_playbook.yml`
 
@@ -47,7 +44,6 @@ ansible-playbook -K \
 * Build the project using `mvn clean package`.
 * Update `workloads/sns-sqs-default.yaml` and `workloads/tpc-h-default.yaml` based on your preferences.
 * Run the following command to start the TPC-H benchmark.
-
 ```
   sudo bin/benchmark \
   --drivers workloads/sns-sqs-default.yaml \

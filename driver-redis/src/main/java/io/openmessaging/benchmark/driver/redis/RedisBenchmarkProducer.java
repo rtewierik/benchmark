@@ -13,17 +13,16 @@
  */
 package io.openmessaging.benchmark.driver.redis;
 
-import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.params.XAddParams;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
+import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.params.XAddParams;
 
 public class RedisBenchmarkProducer implements BenchmarkProducer {
     private final JedisPool pool;

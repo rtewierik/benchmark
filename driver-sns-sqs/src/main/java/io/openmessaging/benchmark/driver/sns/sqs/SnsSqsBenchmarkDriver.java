@@ -33,16 +33,14 @@ import static java.util.stream.Collectors.toList;
 
 public class SnsSqsBenchmarkDriver implements BenchmarkDriver {
 
-    private static final Logger log = LoggerFactory.getLogger(SnsSqsBenchmarkDriver.class);
     private final AmazonSNS snsClient = AmazonSNSClientBuilder
-            .standard()
-            .withRegion(SnsSqsBenchmarkConfiguration.getRegion())
-            .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
-            .build();
+        .standard()
+        .withRegion(SnsSqsBenchmarkConfiguration.getRegion())
+        .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
+        .build();
 
     @Override
-    public void initialize(File configurationFile, StatsLogger statsLogger) throws IOException, InterruptedException {
-    }
+    public void initialize(File configurationFile, StatsLogger statsLogger) throws IOException, InterruptedException {}
 
     @Override
     public String getTopicNamePrefix() {
@@ -58,8 +56,7 @@ public class SnsSqsBenchmarkDriver implements BenchmarkDriver {
     @Override
     public CompletableFuture<List<TopicInfo>> createTopics(List<TopicInfo> topics) {
         return CompletableFuture.completedFuture(
-                SnsSqsBenchmarkConfiguration.getSnsUris().stream().map(topic -> new TopicInfo(topic, 1))
-                        .collect(toList())
+            SnsSqsBenchmarkConfiguration.getSnsUris().stream().map(topic -> new TopicInfo(topic, 1)).collect(toList())
         );
     }
 
@@ -69,13 +66,13 @@ public class SnsSqsBenchmarkDriver implements BenchmarkDriver {
     }
 
     @Override
-    public CompletableFuture<BenchmarkConsumer> createConsumer(String topic, String subscriptionName,
-                                                               ConsumerCallback consumerCallback) {
+    public CompletableFuture<BenchmarkConsumer> createConsumer(String topic, String subscriptionName, ConsumerCallback consumerCallback) {
         // Consumers are pre-created by AWS CDK project.
         return CompletableFuture.completedFuture(null);
     }
 
     @Override
-    public void close() throws Exception {
-    }
+    public void close() throws Exception {}
+
+    private static final Logger log = LoggerFactory.getLogger(SnsSqsBenchmarkDriver.class);
 }

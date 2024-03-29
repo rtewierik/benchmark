@@ -6536,9 +6536,7 @@
   "refresh": "10s",
   "schemaVersion": 26,
   "style": "light",
-  "tags": [
-    "pravega"
-  ],
+  "tags": [ "pravega"],
   "templating": {
     "list": [
       {

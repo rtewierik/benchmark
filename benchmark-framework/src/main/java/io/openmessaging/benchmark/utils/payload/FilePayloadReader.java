@@ -13,11 +13,11 @@
  */
 package io.openmessaging.benchmark.utils.payload;
 
+import static java.nio.file.Files.readAllBytes;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
-
-import static java.nio.file.Files.readAllBytes;
 
 public class FilePayloadReader implements PayloadReader {
 

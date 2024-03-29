@@ -1,7 +1,7 @@
 import SqsEventRecord from './sqsEventRecord'
 
 interface SqsBatchEvent {
-    Records: SqsEventRecord[]
+  Records: SqsEventRecord[]
 }
 
 export default SqsBatchEvent

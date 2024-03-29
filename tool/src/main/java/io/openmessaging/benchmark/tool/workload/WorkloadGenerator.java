@@ -13,15 +13,14 @@
  */
 package io.openmessaging.benchmark.tool.workload;
 
-import io.openmessaging.benchmark.Workload;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.unmodifiableList;
 
+import io.openmessaging.benchmark.Workload;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Collections.unmodifiableList;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Expands a {@link io.openmessaging.benchmark.tool.workload.WorkloadSetTemplate} into a set of

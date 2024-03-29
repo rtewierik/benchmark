@@ -13,28 +13,6 @@
  */
 package io.openmessaging.benchmark.worker;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.google.common.base.Preconditions;
-import io.openmessaging.benchmark.common.ObjectMappers;
-import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
-import io.openmessaging.benchmark.worker.commands.CountersStats;
-import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
-import io.openmessaging.benchmark.worker.commands.PeriodStats;
-import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
-import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
-import io.openmessaging.benchmark.worker.commands.TopicsInfo;
-import org.asynchttpclient.AsyncHttpClient;
-import org.asynchttpclient.Dsl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-
 import static io.openmessaging.benchmark.worker.WorkerHandler.ADJUST_PUBLISH_RATE;
 import static io.openmessaging.benchmark.worker.WorkerHandler.COUNTERS_STATS;
 import static io.openmessaging.benchmark.worker.WorkerHandler.CREATE_CONSUMERS;
@@ -51,13 +29,32 @@ import static io.openmessaging.benchmark.worker.WorkerHandler.START_LOAD;
 import static io.openmessaging.benchmark.worker.WorkerHandler.STOP_ALL;
 import static org.asynchttpclient.Dsl.asyncHttpClient;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.common.base.Preconditions;
+import io.openmessaging.benchmark.common.ObjectMappers;
+import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
+import io.openmessaging.benchmark.worker.commands.CountersStats;
+import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
+import io.openmessaging.benchmark.worker.commands.PeriodStats;
+import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
+import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
+import io.openmessaging.benchmark.worker.commands.TopicsInfo;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import org.asynchttpclient.AsyncHttpClient;
+import org.asynchttpclient.Dsl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class HttpWorkerClient implements Worker {
 
     private static final byte[] EMPTY_BODY = new byte[0];
     private static final int HTTP_OK = 200;
-    private static final ObjectMapper mapper = ObjectMappers.DEFAULT.mapper();
-    private static final ObjectWriter writer = ObjectMappers.DEFAULT.writer();
-    private static final Logger log = LoggerFactory.getLogger(HttpWorkerClient.class);
+
     private final AsyncHttpClient httpClient;
     private final String host;
 
@@ -293,4 +290,8 @@ public class HttpWorkerClient implements Worker {
                         })
                 .join();
     }
+
+    private static final ObjectMapper mapper = ObjectMappers.DEFAULT.mapper();
+    private static final ObjectWriter writer = ObjectMappers.DEFAULT.writer();
+    private static final Logger log = LoggerFactory.getLogger(HttpWorkerClient.class);
 }

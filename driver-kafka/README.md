@@ -1,7 +1,6 @@
 # Apache Kafka benchmarks
 
-For instructions on running the OpenMessaging bencmarks for Kafka, see
-the [official documentation](http://openmessaging.cloud/docs/benchmarks/kafka).
+For instructions on running the OpenMessaging bencmarks for Kafka, see the [official documentation](http://openmessaging.cloud/docs/benchmarks/kafka).
 
 NOTE: This is a slightly modified version with two key differences:
 

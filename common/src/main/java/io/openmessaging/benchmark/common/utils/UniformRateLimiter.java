@@ -30,11 +30,11 @@ public final class UniformRateLimiter {
     private static final AtomicLongFieldUpdater<UniformRateLimiter> START_UPDATER =
             AtomicLongFieldUpdater.newUpdater(UniformRateLimiter.class, "start");
     private static final double ONE_SEC_IN_NS = SECONDS.toNanos(1);
+    private volatile long start = Long.MIN_VALUE;
+    private volatile long virtualTime;
     private final double opsPerSec;
     private final long intervalNs;
     private final Supplier<Long> nanoClock;
-    private volatile long start = Long.MIN_VALUE;
-    private volatile long virtualTime;
 
     UniformRateLimiter(final double opsPerSec, Supplier<Long> nanoClock) {
         if (Double.isNaN(opsPerSec) || Double.isInfinite(opsPerSec)) {
@@ -50,13 +50,6 @@ public final class UniformRateLimiter {
 
     public UniformRateLimiter(final double opsPerSec) {
         this(opsPerSec, System::nanoTime);
-    }
-
-    public static void uninterruptibleSleepNs(final long intendedTime) {
-        long sleepNs;
-        while ((sleepNs = (intendedTime - System.nanoTime())) > 0) {
-            LockSupport.parkNanos(sleepNs);
-        }
     }
 
     public double getOpsPerSec() {
@@ -78,5 +71,12 @@ public final class UniformRateLimiter {
             }
         }
         return start + currOpIndex * intervalNs;
+    }
+
+    public static void uninterruptibleSleepNs(final long intendedTime) {
+        long sleepNs;
+        while ((sleepNs = (intendedTime - System.nanoTime())) > 0) {
+            LockSupport.parkNanos(sleepNs);
+        }
     }
 }

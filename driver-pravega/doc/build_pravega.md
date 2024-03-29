@@ -10,8 +10,7 @@ git checkout master
 ```
 
 This will build the file `pravega/build/distributions/pravega-0.9.0.tgz.`
-Then comment `pravegaSrc` and `pravegaSrcRemote: yes` and uncomment `pravegaSrc` `pravegaSrcRemote: no`
-in `driver-pravega/deploy/deploy.yaml`
+Then comment `pravegaSrc` and `pravegaSrcRemote: yes` and uncomment `pravegaSrc` `pravegaSrcRemote: no` in `driver-pravega/deploy/deploy.yaml`
 
 ```
 # Change below to use a published release of Pravega or a local build.

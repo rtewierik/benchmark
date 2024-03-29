@@ -48,6 +48,16 @@ public abstract class KeyDistributor {
         }
     }
 
+    protected String get(int index) {
+        return randomKeys[index];
+    }
+
+    protected int getLength() {
+        return UNIQUE_COUNT;
+    }
+
+    public abstract String next();
+
     public static KeyDistributor build(KeyDistributorType keyType) {
         KeyDistributor keyDistributor = null;
         switch (keyType) {
@@ -65,14 +75,4 @@ public abstract class KeyDistributor {
         }
         return keyDistributor;
     }
-
-    protected String get(int index) {
-        return randomKeys[index];
-    }
-
-    protected int getLength() {
-        return UNIQUE_COUNT;
-    }
-
-    public abstract String next();
 }

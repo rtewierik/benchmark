@@ -28,13 +28,27 @@ import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * A benchmark worker that listen for tasks to perform.
- */
+/** A benchmark worker that listen for tasks to perform. */
 public class BenchmarkWorker {
 
-    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
-    private static final Logger log = LoggerFactory.getLogger(BenchmarkWorker.class);
+    static class Arguments {
+
+        @Parameter(
+                names = {"-h", "--help"},
+                description = "Help message",
+                help = true)
+        boolean help;
+
+        @Parameter(
+                names = {"-p", "--port"},
+                description = "HTTP port to listen on")
+        public int httpPort = 8080;
+
+        @Parameter(
+                names = {"-sp", "--stats-port"},
+                description = "Stats port to listen on")
+        public int statsPort = 8081;
+    }
 
     public static void main(String[] args) throws Exception {
         final Arguments arguments = new Arguments();
@@ -73,20 +87,7 @@ public class BenchmarkWorker {
         new WorkerHandler(app, provider.getStatsLogger("benchmark"));
     }
 
-    static class Arguments {
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
 
-        @Parameter(
-                names = {"-p", "--port"},
-                description = "HTTP port to listen on")
-        public int httpPort = 8080;
-        @Parameter(
-                names = {"-sp", "--stats-port"},
-                description = "Stats port to listen on")
-        public int statsPort = 8081;
-        @Parameter(
-                names = {"-h", "--help"},
-                description = "Help message",
-                help = true)
-        boolean help;
-    }
+    private static final Logger log = LoggerFactory.getLogger(BenchmarkWorker.class);
 }

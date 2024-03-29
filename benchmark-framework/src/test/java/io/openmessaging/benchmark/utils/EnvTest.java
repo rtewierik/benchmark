@@ -13,10 +13,10 @@
  */
 package io.openmessaging.benchmark.utils;
 
-import org.junit.jupiter.api.Test;
-
 import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
 
 class EnvTest {
     private static final String ENV_KEY = "KEY";

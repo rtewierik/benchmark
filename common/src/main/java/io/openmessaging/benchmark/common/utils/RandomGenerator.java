@@ -15,7 +15,6 @@ package io.openmessaging.benchmark.common.utils;
 
 
 import com.google.common.io.BaseEncoding;
-
 import java.util.Random;
 
 public class RandomGenerator {

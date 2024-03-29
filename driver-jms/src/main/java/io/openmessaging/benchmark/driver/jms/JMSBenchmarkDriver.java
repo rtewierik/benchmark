@@ -23,16 +23,6 @@ import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
 import io.openmessaging.benchmark.driver.jms.config.JMSConfig;
-import org.apache.bookkeeper.stats.StatsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.MessageConsumer;
-import javax.jms.Session;
-import javax.jms.Topic;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -41,23 +31,22 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.MessageConsumer;
+import javax.jms.Session;
+import javax.jms.Topic;
+import org.apache.bookkeeper.stats.StatsLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JMSBenchmarkDriver implements BenchmarkDriver {
 
-    private static final ObjectMapper mapper =
-            new ObjectMapper(new YAMLFactory())
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    private static final Random random = new Random();
-    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
-    private static final Logger log = LoggerFactory.getLogger(JMSBenchmarkDriver.class);
     private ConnectionFactory connectionFactory;
     private Connection connection;
     private JMSConfig config;
     private BenchmarkDriver delegateForAdminOperations;
-
-    private static JMSConfig readConfig(File configurationFile) throws IOException {
-        return mapper.readValue(configurationFile, JMSConfig.class);
-    }
 
     @Override
     public void initialize(File configurationFile, StatsLogger statsLogger) throws IOException {
@@ -207,4 +196,17 @@ public class JMSBenchmarkDriver implements BenchmarkDriver {
             delegateForAdminOperations.close();
         }
     }
+
+    private static final ObjectMapper mapper =
+            new ObjectMapper(new YAMLFactory())
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    private static JMSConfig readConfig(File configurationFile) throws IOException {
+        return mapper.readValue(configurationFile, JMSConfig.class);
+    }
+
+    private static final Random random = new Random();
+
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
+    private static final Logger log = LoggerFactory.getLogger(JMSBenchmarkDriver.class);
 }

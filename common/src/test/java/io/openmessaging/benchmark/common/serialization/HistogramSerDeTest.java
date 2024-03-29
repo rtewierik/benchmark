@@ -13,16 +13,16 @@
  */
 package io.openmessaging.benchmark.common.serialization;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.HdrHistogram.Histogram;
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Random;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.HdrHistogram.Histogram;
+import org.junit.jupiter.api.Test;
 
 class HistogramSerDeTest {
 

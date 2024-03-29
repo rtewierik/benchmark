@@ -21,17 +21,15 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.util.ByteBufferBackedOutputStream;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import org.HdrHistogram.Histogram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
-
 public class HistogramDeserializer extends StdDeserializer<Histogram> {
 
-    private static final Logger log = LoggerFactory.getLogger(HistogramDeserializer.class);
     private final ThreadLocal<ByteBuffer> threadBuffer =
             ThreadLocal.withInitial(() -> ByteBuffer.allocate(8 * 1024 * 1024));
 
@@ -58,4 +56,6 @@ public class HistogramDeserializer extends StdDeserializer<Histogram> {
             throw new RuntimeException(e);
         }
     }
+
+    private static final Logger log = LoggerFactory.getLogger(HistogramDeserializer.class);
 }

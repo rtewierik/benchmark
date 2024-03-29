@@ -24,12 +24,11 @@ import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
 import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
 import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
 import io.openmessaging.benchmark.worker.commands.TopicsInfo;
+import java.io.File;
+import java.util.List;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class WorkerHandler {
@@ -48,9 +47,6 @@ public class WorkerHandler {
     public static final String CUMULATIVE_LATENCIES = "/cumulative-latencies";
     public static final String COUNTERS_STATS = "/counters-stats";
     public static final String RESET_STATS = "/reset-stats";
-    private static final Logger log = LoggerFactory.getLogger(WorkerHandler.class);
-    private static final ObjectMapper mapper = ObjectMappers.DEFAULT.mapper();
-    private static final ObjectWriter writer = ObjectMappers.DEFAULT.writer();
     private final Worker localWorker;
 
     public WorkerHandler(Javalin app, StatsLogger statsLogger) {
@@ -103,8 +99,7 @@ public class WorkerHandler {
 
         log.info("ConsumerAssignment payload: {}", ctx.body());
         log.info(
-                "Received create consumers request for topics: {}",
-                writer.writeValueAsString(consumerAssignment.topicsSubscriptions));
+                "Received create consumers request for topics: {}", writer.writeValueAsString(consumerAssignment.topicsSubscriptions));
         localWorker.createConsumers(consumerAssignment);
     }
 
@@ -121,8 +116,8 @@ public class WorkerHandler {
                 mapper.readValue(ctx.body(), ProducerWorkAssignment.class);
 
         int length = producerWorkAssignment.payloadData.isEmpty()
-                ? 0
-                : producerWorkAssignment.payloadData.get(0).length;
+            ? 0
+            : producerWorkAssignment.payloadData.get(0).length;
         log.info(
                 "Start load publish-rate: {} msg/s -- payload-size: {} -- producer index: {}",
                 producerWorkAssignment.publishRate,
@@ -159,4 +154,9 @@ public class WorkerHandler {
         log.info("Reset stats");
         localWorker.resetStats();
     }
+
+    private static final Logger log = LoggerFactory.getLogger(WorkerHandler.class);
+
+    private static final ObjectMapper mapper = ObjectMappers.DEFAULT.mapper();
+    private static final ObjectWriter writer = ObjectMappers.DEFAULT.writer();
 }

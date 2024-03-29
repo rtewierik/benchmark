@@ -13,12 +13,12 @@
  */
 package io.openmessaging.benchmark.driver.rabbitmq;
 
+import static io.openmessaging.benchmark.driver.rabbitmq.RabbitMqConfig.QueueType.CLASSIC;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import static io.openmessaging.benchmark.driver.rabbitmq.RabbitMqConfig.QueueType.CLASSIC;
 
 public class RabbitMqConfig {
 

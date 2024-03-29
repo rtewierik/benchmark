@@ -15,11 +15,10 @@ package io.openmessaging.benchmark.tool.workload;
 
 
 import io.openmessaging.benchmark.Workload;
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang.text.StrSubstitutor;
-
 import java.util.HashMap;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang.text.StrSubstitutor;
 
 /**
  * Generates {@link Workload} names based on a template. Substitutes template place-holders of the
@@ -33,20 +32,6 @@ class WorkloadNameFormat {
     private static final long MAX_PRODUCER_RATE = 10_000_000;
 
     private final String format;
-
-    private static String countToDisplaySize(long size) {
-        String displaySize;
-        if (size / 1_000_000_000L > 0L) {
-            displaySize = size / 1_000_000_000L + "g";
-        } else if (size / 1_000_000L > 0L) {
-            displaySize = size / 1_000_000L + "m";
-        } else if (size / 1_000L > 0L) {
-            displaySize = size / 1_000 + "k";
-        } else {
-            displaySize = size + "";
-        }
-        return displaySize;
-    }
 
     String from(Workload workload) {
         if (workload.name != null) {
@@ -73,5 +58,19 @@ class WorkloadNameFormat {
         params.put("testDurationMinutes", workload.testDurationMinutes);
         params.put("warmupDurationMinutes", workload.warmupDurationMinutes);
         return StrSubstitutor.replace(format, params, "${", "}");
+    }
+
+    private static String countToDisplaySize(long size) {
+        String displaySize;
+        if (size / 1_000_000_000L > 0L) {
+            displaySize = size / 1_000_000_000L + "g";
+        } else if (size / 1_000_000L > 0L) {
+            displaySize = size / 1_000_000L + "m";
+        } else if (size / 1_000L > 0L) {
+            displaySize = size / 1_000 + "k";
+        } else {
+            displaySize = size + "";
+        }
+        return displaySize;
     }
 }

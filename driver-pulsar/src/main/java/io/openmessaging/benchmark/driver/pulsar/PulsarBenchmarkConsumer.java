@@ -13,13 +13,12 @@
  */
 package io.openmessaging.benchmark.driver.pulsar;
 
-import io.openmessaging.benchmark.driver.BenchmarkConsumer;
-import org.apache.pulsar.client.api.Consumer;
+import static java.util.Collections.unmodifiableList;
 
+import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import java.nio.ByteBuffer;
 import java.util.List;
-
-import static java.util.Collections.unmodifiableList;
+import org.apache.pulsar.client.api.Consumer;
 
 public class PulsarBenchmarkConsumer implements BenchmarkConsumer {
 

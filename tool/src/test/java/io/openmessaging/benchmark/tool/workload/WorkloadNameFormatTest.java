@@ -13,10 +13,10 @@
  */
 package io.openmessaging.benchmark.tool.workload;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.openmessaging.benchmark.Workload;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class WorkloadNameFormatTest {
 

@@ -13,6 +13,8 @@
  */
 package io.openmessaging.benchmark;
 
+import static java.util.stream.Collectors.toList;
+
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
@@ -20,23 +22,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import io.openmessaging.tpch.model.TpcHQuery;
 import io.openmessaging.benchmark.worker.DistributedWorkersEnsemble;
 import io.openmessaging.benchmark.worker.HttpWorkerClient;
 import io.openmessaging.benchmark.worker.LocalWorker;
 import io.openmessaging.benchmark.worker.Worker;
-import io.openmessaging.tpch.algorithm.TpcHAlgorithm;
-import io.openmessaging.tpch.algorithm.TpcHDataParser;
-import io.openmessaging.tpch.algorithm.TpcHQueryIntermediateResultsReducer;
-import io.openmessaging.tpch.algorithm.TpcHQueryResultGenerator;
-import io.openmessaging.tpch.model.TpcHArguments;
-import io.openmessaging.tpch.model.TpcHConsumerAssignment;
-import io.openmessaging.tpch.model.TpcHIntermediateResult;
-import io.openmessaging.tpch.model.TpcHQuery;
-import io.openmessaging.tpch.model.TpcHQueryResult;
-import io.openmessaging.tpch.model.TpcHRow;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,25 +34,74 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static java.util.stream.Collectors.toList;
+import io.openmessaging.tpch.algorithm.TpcHAlgorithm;
+import io.openmessaging.tpch.algorithm.TpcHDataParser;
+import io.openmessaging.tpch.algorithm.TpcHQueryIntermediateResultsReducer;
+import io.openmessaging.tpch.model.TpcHArguments;
+import io.openmessaging.tpch.model.TpcHConsumerAssignment;
+import io.openmessaging.tpch.model.TpcHIntermediateResult;
+import io.openmessaging.tpch.model.TpcHRow;
+import io.openmessaging.tpch.model.TpcHQueryResult;
+import io.openmessaging.tpch.algorithm.TpcHQueryResultGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Benchmark {
 
-    private static final ObjectMapper mapper =
-            new ObjectMapper(new YAMLFactory())
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
-    private static final Logger log = LoggerFactory.getLogger(Benchmark.class);
+    static class Arguments {
 
-    static {
-        mapper.enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);
+        @Parameter(
+                names = {"-c", "--csv"},
+                description = "Print results from this directory to a csv file")
+        String resultsDir;
+
+        @Parameter(
+                names = {"-h", "--help"},
+                description = "Help message",
+                help = true)
+        boolean help;
+
+        @Parameter(
+                names = {"-d", "--drivers"},
+                description =
+                        "Drivers list. eg.: pulsar/pulsar.yaml,kafka/kafka.yaml") // , required = true)
+        public List<String> drivers;
+
+        @Parameter(
+                names = {"-w", "--workers"},
+                description = "List of worker nodes. eg: http://1.2.3.4:8080,http://4.5.6.7:8080")
+        public List<String> workers;
+
+        @Parameter(
+                names = {"-wf", "--workers-file"},
+                description = "Path to a YAML file containing the list of workers addresses")
+        public File workersFile;
+
+        @Parameter(
+                names = {"-tpch", "--tpc-h-file"},
+                description = "Path to a YAML file containing the TPC H command")
+        public File tpcHFile;
+
+        @Parameter(
+                names = {"-x", "--extra"},
+                description = "Allocate extra consumer workers when your backlog builds.")
+        boolean extraConsumers;
+
+        @Parameter(description = "Workloads") // , required = true)
+        public List<String> workloads;
+
+        @Parameter(
+                names = {"-o", "--output"},
+                description = "Output",
+                required = false)
+        public String output;
     }
 
     public static void main(String[] args) throws Exception {
@@ -74,16 +113,16 @@ public class Benchmark {
     private static void testTpcHAlgorithmLocally() {
         TpcHQuery query = TpcHQuery.PricingSummaryReport;
         List<String> chunkFiles = Arrays.asList(
-                "../tpc-h-chunks/ref/chunk_1.csv",
-                "../tpc-h-chunks/ref/chunk_2.csv",
-                "../tpc-h-chunks/ref/chunk_3.csv",
-                "../tpc-h-chunks/ref/chunk_4.csv",
-                "../tpc-h-chunks/ref/chunk_5.csv",
-                "../tpc-h-chunks/ref/chunk_6.csv",
-                "../tpc-h-chunks/ref/chunk_7.csv",
-                "../tpc-h-chunks/ref/chunk_8.csv",
-                "../tpc-h-chunks/ref/chunk_9.csv",
-                "../tpc-h-chunks/ref/chunk_10.csv"
+                 "../tpc-h-chunks/ref/chunk_1.csv",
+                 "../tpc-h-chunks/ref/chunk_2.csv",
+                 "../tpc-h-chunks/ref/chunk_3.csv",
+                 "../tpc-h-chunks/ref/chunk_4.csv",
+                 "../tpc-h-chunks/ref/chunk_5.csv",
+                 "../tpc-h-chunks/ref/chunk_6.csv",
+                 "../tpc-h-chunks/ref/chunk_7.csv",
+                 "../tpc-h-chunks/ref/chunk_8.csv",
+                 "../tpc-h-chunks/ref/chunk_9.csv",
+                 "../tpc-h-chunks/ref/chunk_10.csv"
                 // "../tpc-h-chunks/lineitem.tbl"
         );
         List<TpcHIntermediateResult> chunk = new ArrayList<>();
@@ -91,8 +130,7 @@ public class Benchmark {
             System.out.printf("[INFO] Applying map to chunk \"%s\"...%n", chunkFile);
             try (InputStream stream = Files.newInputStream(Paths.get(chunkFile))) {
                 List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
-                TpcHConsumerAssignment assignment =
-                        new TpcHConsumerAssignment(query, null, null, null, null, null, null, null);
+                TpcHConsumerAssignment assignment = new TpcHConsumerAssignment(query, null, null, null, null, null, null, null);
                 TpcHIntermediateResult result = TpcHAlgorithm.applyQueryToChunk(chunkData, query, assignment);
                 chunk.add(result);
             } catch (IOException exception) {
@@ -100,8 +138,7 @@ public class Benchmark {
             }
         }
         System.out.println("[INFO] Applying reducer to chunk...");
-        TpcHIntermediateResult intermediateResult =
-                TpcHQueryIntermediateResultsReducer.applyReduceToChunk(chunk, query);
+        TpcHIntermediateResult intermediateResult = TpcHQueryIntermediateResultsReducer.applyReduceToChunk(chunk, query);
         System.out.println("[INFO] Generating result from reduced intermediate result...");
         TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(intermediateResult, query);
         System.out.println(result);
@@ -208,8 +245,7 @@ public class Benchmark {
                                     }
 
                                     WorkloadGenerator generator =
-                                            new WorkloadGenerator(driverConfiguration.name, workload, tpcHArguments,
-                                                    worker, localWorker);
+                                            new WorkloadGenerator(driverConfiguration.name, workload, tpcHArguments, worker, localWorker);
 
                                     TestResult result = generator.run();
 
@@ -256,44 +292,15 @@ public class Benchmark {
         System.exit(0);
     }
 
-    static class Arguments {
+    private static final ObjectMapper mapper =
+            new ObjectMapper(new YAMLFactory())
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        @Parameter(
-                names = {"-d", "--drivers"},
-                description =
-                        "Drivers list. eg.: pulsar/pulsar.yaml,kafka/kafka.yaml") // , required = true)
-        public List<String> drivers;
-        @Parameter(
-                names = {"-w", "--workers"},
-                description = "List of worker nodes. eg: http://1.2.3.4:8080,http://4.5.6.7:8080")
-        public List<String> workers;
-        @Parameter(
-                names = {"-wf", "--workers-file"},
-                description = "Path to a YAML file containing the list of workers addresses")
-        public File workersFile;
-        @Parameter(
-                names = {"-tpch", "--tpc-h-file"},
-                description = "Path to a YAML file containing the TPC H command")
-        public File tpcHFile;
-        @Parameter(description = "Workloads") // , required = true)
-        public List<String> workloads;
-        @Parameter(
-                names = {"-o", "--output"},
-                description = "Output",
-                required = false)
-        public String output;
-        @Parameter(
-                names = {"-c", "--csv"},
-                description = "Print results from this directory to a csv file")
-        String resultsDir;
-        @Parameter(
-                names = {"-h", "--help"},
-                description = "Help message",
-                help = true)
-        boolean help;
-        @Parameter(
-                names = {"-x", "--extra"},
-                description = "Allocate extra consumer workers when your backlog builds.")
-        boolean extraConsumers;
+    static {
+        mapper.enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);
     }
+
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
+
+    private static final Logger log = LoggerFactory.getLogger(Benchmark.class);
 }

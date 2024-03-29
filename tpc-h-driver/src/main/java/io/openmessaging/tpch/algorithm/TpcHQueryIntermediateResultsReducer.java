@@ -13,8 +13,8 @@
  */
 package io.openmessaging.tpch.algorithm;
 
-import io.openmessaging.tpch.model.TpcHIntermediateResult;
 import io.openmessaging.tpch.model.TpcHQuery;
+import io.openmessaging.tpch.model.TpcHIntermediateResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,16 +36,13 @@ public class TpcHQueryIntermediateResultsReducer {
         return applyReduceToChunkGeneric(chunk);
     }
 
-    private static TpcHIntermediateResult applyForecastingRevenueChangeReportReduceToChunk(
-            List<TpcHIntermediateResult> chunk) {
+    private static TpcHIntermediateResult applyForecastingRevenueChangeReportReduceToChunk(List<TpcHIntermediateResult> chunk) {
         return applyReduceToChunkGeneric(chunk);
     }
 
     // TO DO: Break up function into two separate ones working with domain-specific models after refactor to optimize.
     private static TpcHIntermediateResult applyReduceToChunkGeneric(List<TpcHIntermediateResult> chunk) {
-        TpcHIntermediateResult result =
-                new TpcHIntermediateResult(TpcHQuery.PricingSummaryReport, "query-id", "batch-id", 0, 1, 1, 1,
-                        new ArrayList<>());
+        TpcHIntermediateResult result = new TpcHIntermediateResult(TpcHQuery.PricingSummaryReport, "query-id", "batch-id", 0, 1, 1, 1, new ArrayList<>());
         for (TpcHIntermediateResult intermediateResult : chunk) {
             result.aggregateIntermediateResult(intermediateResult);
         }

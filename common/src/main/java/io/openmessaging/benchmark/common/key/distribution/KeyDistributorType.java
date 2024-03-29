@@ -30,19 +30,13 @@ package io.openmessaging.benchmark.common.key.distribution;
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 
 public enum KeyDistributorType {
-    /**
-     * Key distributor that returns null keys to have default publish semantics.
-     */
+    /** Key distributor that returns null keys to have default publish semantics. */
     @JsonEnumDefaultValue
     NO_KEY,
 
-    /**
-     * Generate a finite number of "keys" and cycle through them in round-robin fashion.
-     */
+    /** Generate a finite number of "keys" and cycle through them in round-robin fashion. */
     KEY_ROUND_ROBIN,
 
-    /**
-     * Random distribution based on System.nanoTime().
-     */
+    /** Random distribution based on System.nanoTime(). */
     RANDOM_NANO,
 }

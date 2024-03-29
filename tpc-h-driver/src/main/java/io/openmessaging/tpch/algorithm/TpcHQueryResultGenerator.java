@@ -13,11 +13,11 @@
  */
 package io.openmessaging.tpch.algorithm;
 
+import io.openmessaging.tpch.model.TpcHQuery;
+import io.openmessaging.tpch.model.TpcHQueryResultRow;
 import io.openmessaging.tpch.model.TpcHIntermediateResult;
 import io.openmessaging.tpch.model.TpcHIntermediateResultGroup;
-import io.openmessaging.tpch.model.TpcHQuery;
 import io.openmessaging.tpch.model.TpcHQueryResult;
-import io.openmessaging.tpch.model.TpcHQueryResultRow;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -27,8 +27,8 @@ public class TpcHQueryResultGenerator {
 
     public static TpcHQueryResult generateResult(TpcHIntermediateResult intermediateResult) {
         return TpcHQueryResultGenerator.generateResult(
-                intermediateResult,
-                intermediateResult.query
+            intermediateResult,
+            intermediateResult.query
         );
     }
 
@@ -80,9 +80,8 @@ public class TpcHQueryResultGenerator {
             if (number instanceof Long) {
                 return BigDecimal.valueOf(number.longValue());
             }
-        } catch (NumberFormatException ignored) {
-        }
-        return (BigDecimal) number;
+        } catch (NumberFormatException ignored) {}
+        return (BigDecimal)number;
     }
 
     private static TpcHQueryResult generateForecastingRevenueChangeResult(TpcHIntermediateResult intermediateResult) {

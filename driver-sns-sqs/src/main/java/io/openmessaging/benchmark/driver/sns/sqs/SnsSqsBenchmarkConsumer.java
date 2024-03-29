@@ -43,11 +43,9 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final Logger log = LoggerFactory.getLogger(SnsSqsBenchmarkConsumer.class);
     private static final TpcHMessageProcessor messageProcessor = new TpcHMessageProcessor(
-            SnsSqsBenchmarkConfiguration.getSnsUris().stream().map(SnsSqsBenchmarkSnsProducer::new)
-                    .collect(Collectors.toList()),
+            SnsSqsBenchmarkConfiguration.getSnsUris().stream().map(SnsSqsBenchmarkSnsProducer::new).collect(Collectors.toList()),
             new SnsSqsBenchmarkMessageProducer(new UniformRateLimiter(1.0)),
-            () -> {
-            },
+            () -> {},
             log
     );
     private static final AmazonSQS sqsClient = AmazonSQSClientBuilder
@@ -93,6 +91,5 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
     }
 
     @Override
-    public void close() throws Exception {
-    }
+    public void close() throws Exception {}
 }

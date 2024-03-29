@@ -13,12 +13,12 @@
  */
 package io.openmessaging.benchmark.tool.workload;
 
+import java.util.Collections;
+import java.util.List;
+
 import io.openmessaging.benchmark.common.key.distribution.KeyDistributorType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * A template that defines a set of workload definitions. This is much like the {@link
@@ -33,13 +33,9 @@ public class WorkloadSetTemplate {
                     + "-${producersPerTopic}p-${consumerPerSubscription}c-${producerRate}";
     public String nameFormat = DEFAULT_NAME_TEMPLATE;
 
-    /**
-     * Number of topics to create in the test.
-     */
+    /** Number of topics to create in the test. */
     public List<Integer> topics = Collections.emptyList();
-    /**
-     * Number of partitions each topic will contain.
-     */
+    /** Number of partitions each topic will contain. */
     public List<Integer> partitionsPerTopic = Collections.emptyList();
 
     public List<Integer> messageSize = Collections.emptyList();

@@ -13,7 +13,19 @@
  */
 package io.openmessaging.benchmark.driver.kafka;
 
+import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.CreateTopicsResult;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -28,19 +40,6 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeoutException;
-
-import static java.util.Collections.singletonList;
-import static java.util.Collections.singletonMap;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 class KafkaTopicCreatorTest {
     private final Map<String, String> topicConfigs = new HashMap<>();
@@ -48,12 +47,9 @@ class KafkaTopicCreatorTest {
     private final int partitions = 1;
     private final short replicationFactor = 1;
     private final TopicInfo topicInfo = new TopicInfo(topic, partitions);
-    @Mock
-    private AdminClient admin;
-    @Mock
-    private CreateTopicsResult createTopicsResult;
-    @Captor
-    private ArgumentCaptor<List<NewTopic>> captor;
+    @Mock private AdminClient admin;
+    @Mock private CreateTopicsResult createTopicsResult;
+    @Captor private ArgumentCaptor<List<NewTopic>> captor;
     private KafkaTopicCreator topicCreator;
 
     @BeforeEach
