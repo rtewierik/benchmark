@@ -257,7 +257,7 @@
                         <exclude>sns-sqs-consumer-lambda/**</exclude>
                         <exclude>s3-consumer-lambda/**</exclude>
                         <exclude>**/deploy/**</exclude>
-                        <exclude>**/deploy-low-cost/**</exclude>
+                        <exclude>**/deploy-low-cost*/**</exclude>
                         <exclude>**/tf_ansible_vars.yml</exclude>
                         <exclude>**/.terraform*/**</exclude>
                         <exclude>**/*.tf</exclude>

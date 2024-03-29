@@ -17,13 +17,12 @@ package io.openmessaging.benchmark.driver.s3;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import lombok.Getter;
 
 public class S3BenchmarkConfiguration {
 
-    @Getter private static final List<String> s3Uris;
-    @Getter private static final String region;
-    @Getter private static final boolean isTpcH;
+    public static final List<String> s3Uris;
+    public static final String region;
+    public static final boolean isTpcH;
 
     static {
         s3Uris = S3BenchmarkConfiguration.getS3UrisFromEnvironment();

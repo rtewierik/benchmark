@@ -13,6 +13,7 @@
  */
 package io.openmessaging.tpch.algorithm;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import io.openmessaging.tpch.model.TpcHRow;
 import java.io.BufferedReader;
@@ -25,10 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TpcHDataParser {
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final ThreadLocal<SimpleDateFormat> SIMPLE_DATE_FORMAT =
+            ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd"));
 
     public static List<TpcHRow> readTpcHRowsFromStream(InputStream stream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream, UTF_8));
         List<TpcHRow> csvRows = new ArrayList<>();
         String dataLine;
         while ((dataLine = reader.readLine()) != null) {
@@ -53,9 +55,9 @@ public class TpcHDataParser {
             row.tax = new BigDecimal(values[7]);
             row.returnFlag = values[8].charAt(0);
             row.lineStatus = values[9].charAt(0);
-            row.shipDate = SIMPLE_DATE_FORMAT.parse(values[10]);
-            row.commitDate = SIMPLE_DATE_FORMAT.parse(values[11]);
-            row.receiptDate = SIMPLE_DATE_FORMAT.parse(values[12]);
+            row.shipDate = SIMPLE_DATE_FORMAT.get().parse(values[10]);
+            row.commitDate = SIMPLE_DATE_FORMAT.get().parse(values[11]);
+            row.receiptDate = SIMPLE_DATE_FORMAT.get().parse(values[12]);
             row.shipInstruct = values[13];
             row.shipMode = values[14];
             row.comment = values[15];

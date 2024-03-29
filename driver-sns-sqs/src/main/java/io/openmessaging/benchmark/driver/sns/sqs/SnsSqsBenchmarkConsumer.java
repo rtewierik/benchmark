@@ -44,7 +44,7 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
     private static final Logger log = LoggerFactory.getLogger(SnsSqsBenchmarkConsumer.class);
     private static final TpcHMessageProcessor messageProcessor =
             new TpcHMessageProcessor(
-                    SnsSqsBenchmarkConfiguration.getSnsUris().stream()
+                    SnsSqsBenchmarkConfiguration.snsUris.stream()
                             .map(SnsSqsBenchmarkSnsProducer::new)
                             .collect(Collectors.toList()),
                     new SnsSqsBenchmarkMessageProducer(new UniformRateLimiter(1.0)),
@@ -52,14 +52,14 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
                     log);
     private static final AmazonSQS sqsClient =
             AmazonSQSClientBuilder.standard()
-                    .withRegion(SnsSqsBenchmarkConfiguration.getRegion())
+                    .withRegion(SnsSqsBenchmarkConfiguration.region)
                     .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
                     .build();
-    private static final String sqsUri = SnsSqsBenchmarkConfiguration.getSqsUri();
+    private static final String sqsUri = SnsSqsBenchmarkConfiguration.sqsUri;
 
     @Override
     public Void handleRequest(SQSEvent event, Context context) {
-        if (SnsSqsBenchmarkConfiguration.isTpcH()) {
+        if (SnsSqsBenchmarkConfiguration.isTpcH) {
             handleTpcHRequest(event);
         } else {
             handleThroughputRequest(event);

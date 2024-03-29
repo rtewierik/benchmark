@@ -15,9 +15,6 @@ package io.openmessaging.benchmark.driver.sns.sqs;
 
 import static java.util.stream.Collectors.toList;
 
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import com.amazonaws.services.sns.AmazonSNS;
-import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
@@ -31,12 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SnsSqsBenchmarkDriver implements BenchmarkDriver {
-
-    private final AmazonSNS snsClient =
-            AmazonSNSClientBuilder.standard()
-                    .withRegion(SnsSqsBenchmarkConfiguration.getRegion())
-                    .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
-                    .build();
 
     @Override
     public void initialize(File configurationFile, StatsLogger statsLogger)
@@ -56,14 +47,14 @@ public class SnsSqsBenchmarkDriver implements BenchmarkDriver {
     @Override
     public CompletableFuture<List<TopicInfo>> createTopics(List<TopicInfo> topics) {
         return CompletableFuture.completedFuture(
-                SnsSqsBenchmarkConfiguration.getSnsUris().stream()
+                SnsSqsBenchmarkConfiguration.snsUris.stream()
                         .map(topic -> new TopicInfo(topic, 1))
                         .collect(toList()));
     }
 
     @Override
     public CompletableFuture<BenchmarkProducer> createProducer(String topic) {
-        return CompletableFuture.completedFuture(new SnsSqsBenchmarkSnsProducer(topic, snsClient));
+        return CompletableFuture.completedFuture(new SnsSqsBenchmarkSnsProducer(topic));
     }
 
     @Override

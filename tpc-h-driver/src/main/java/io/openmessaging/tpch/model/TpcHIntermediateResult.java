@@ -82,13 +82,13 @@ public class TpcHIntermediateResult {
 
     private void aggregateResult(TpcHIntermediateResult result) {
         lock.lock();
-        String queryId = result.queryId;
-        if (!this.queryId.equals(queryId)) {
-            throw new IllegalArgumentException(
-                    String.format(
-                            "Inconsistent query ID \"%s\" found relative to \"%s\".", queryId, this.queryId));
-        }
         try {
+            String queryId = result.queryId;
+            if (!this.queryId.equals(queryId)) {
+                throw new IllegalArgumentException(
+                        String.format(
+                                "Inconsistent query ID \"%s\" found relative to \"%s\".", queryId, this.queryId));
+            }
             for (TpcHIntermediateResultGroup group : result.groups) {
                 TpcHIntermediateResultGroup existingGroup = this.findGroupByIdentifiers(group.identifiers);
                 if (existingGroup == null) {
