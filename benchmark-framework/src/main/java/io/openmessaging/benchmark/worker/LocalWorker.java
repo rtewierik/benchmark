@@ -88,6 +88,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final WorkerStats stats;
     private boolean testCompleted = false;
     private boolean consumersArePaused = false;
+    private String queryId = null;
+    private boolean isTpcH = false;
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
 
     public LocalWorker() {
@@ -174,6 +176,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
     public void createConsumers(ConsumerAssignment assignment) throws IOException {
         Timer timer = new Timer();
         AtomicInteger consumerIndex = new AtomicInteger();
+        this.queryId = assignment.queryId;
+        this.isTpcH = assignment.isTpcH;
         // This subscription should only be done on the orchestrator host.
         if (assignment.isTpcH && assignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
             assignment.topicsSubscriptions.remove(TpcHConstants.REDUCE_DST_INDEX);
@@ -338,33 +342,37 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public void messageReceived(byte[] data, long publishTimestamp) throws IOException {
-        internalMessageReceived(data.length, publishTimestamp);
-        if (data.length != 10) {
+        if (this.isTpcH && data.length != 10) {
             TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
-            handleTpcHMessage(message);
+            String queryId = handleTpcHMessage(message);
+            internalMessageReceived(data.length, publishTimestamp, queryId, message.messageId);
+        } else {
+            internalMessageReceived(data.length, publishTimestamp, this.queryId, null);
         }
-        // TO DO: Add separate call to stats to record message processed.
     }
 
     @Override
     public void messageReceived(ByteBuffer data, long publishTimestamp) throws IOException {
-        internalMessageReceived(data.remaining(), publishTimestamp);
-        if (data.remaining() != 10) {
+        int length = data.remaining();
+        if (this.isTpcH && length != 10) {
             TpcHMessage message = mapper.readValue(data.array(), TpcHMessage.class);
-            handleTpcHMessage(message);
+            String queryId = handleTpcHMessage(message);
+            internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
+        } else {
+            internalMessageReceived(length, publishTimestamp, this.queryId, null);
         }
-        // TO DO: Add separate call to stats to record message processed.
     }
 
-    private void handleTpcHMessage(TpcHMessage message) throws IOException {
-        tpcHMessageProcessor.processTpcHMessage(message);
+    private String handleTpcHMessage(TpcHMessage message) throws IOException {
+        return tpcHMessageProcessor.processTpcHMessage(message);
     }
 
     public boolean getTestCompleted() {
         return this.testCompleted;
     }
 
-    public void internalMessageReceived(int size, long publishTimestamp) {
+    public void internalMessageReceived(int size, long publishTimestamp, String experimentId, String messageId) {
+        // TO DO: Implement call to worker stats sending message to SQS queue.
         long now = System.currentTimeMillis();
         long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
         stats.recordMessageReceived(size, endToEndLatencyMicros);

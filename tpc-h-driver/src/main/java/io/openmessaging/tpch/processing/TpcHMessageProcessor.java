@@ -80,11 +80,11 @@ public class TpcHMessageProcessor {
         this.messageProducer = messageProducer;
     }
 
-    public void processTpcHMessage(TpcHMessage message) throws IOException {
+    public String processTpcHMessage(TpcHMessage message) throws IOException {
         String messageId = message.messageId;
         log.info("Processing TPC-H message: {}", writer.writeValueAsString(message));
         if (processedMessages.contains(messageId)) {
-            return;
+            return null;
         } else {
             processedMessages.add(messageId);
         }
@@ -92,24 +92,21 @@ public class TpcHMessageProcessor {
             case ConsumerAssignment:
                 TpcHConsumerAssignment assignment =
                         mapper.readValue(message.message, TpcHConsumerAssignment.class);
-                processConsumerAssignment(assignment);
-                break;
+                return processConsumerAssignment(assignment);
             case IntermediateResult:
                 TpcHIntermediateResult intermediateResult =
                         mapper.readValue(message.message, TpcHIntermediateResult.class);
-                processIntermediateResult(intermediateResult);
-                break;
+                return processIntermediateResult(intermediateResult);
             case ReducedResult:
                 TpcHIntermediateResult reducedResult =
                         mapper.readValue(message.message, TpcHIntermediateResult.class);
-                processReducedResult(reducedResult);
-                break;
+                return processReducedResult(reducedResult);
             default:
                 throw new IllegalArgumentException("Invalid message type detected!");
         }
     }
 
-    private void processConsumerAssignment(TpcHConsumerAssignment assignment) {
+    private String processConsumerAssignment(TpcHConsumerAssignment assignment) {
         String s3Uri = assignment.sourceDataS3Uri;
         log.info("[INFO] Applying map to chunk \"{}\"...", s3Uri);
         try (InputStream stream = s3Client.readFileFromS3(s3Uri)) {
@@ -129,15 +126,17 @@ public class TpcHMessageProcessor {
         } catch (Throwable t) {
             t.printStackTrace();
         }
+        return assignment.queryId;
     }
 
-    private void processIntermediateResult(TpcHIntermediateResult intermediateResult)
+    private String processIntermediateResult(TpcHIntermediateResult intermediateResult)
             throws IOException {
+        String queryId = intermediateResult.queryId;
         String chunkId = this.getChunkId(intermediateResult);
         String batchId = intermediateResult.batchId;
         if (processedIntermediateResults.contains(chunkId)) {
             log.info("Ignored intermediate result with chunk ID {} due to duplicity!", chunkId);
-            return;
+            return queryId;
         } else {
             processedIntermediateResults.add(chunkId);
         }
@@ -161,13 +160,15 @@ public class TpcHMessageProcessor {
             this.messageProducer.sendMessage(
                     producer, optionalKey, messageWriter.writeValueAsBytes(message));
         }
+        return queryId;
     }
 
-    private void processReducedResult(TpcHIntermediateResult reducedResult) throws IOException {
+    private String processReducedResult(TpcHIntermediateResult reducedResult) throws IOException {
+        String queryId = reducedResult.queryId;
         String batchId = reducedResult.batchId;
         if (processedReducedResults.contains(batchId)) {
             log.info("Ignored reduced result with batch ID {} due to duplicity!", batchId);
-            return;
+            return queryId;
         } else {
             processedReducedResults.add(batchId);
         }
@@ -189,6 +190,7 @@ public class TpcHMessageProcessor {
             log.info("[LocalWorker] TPC-H query result: {}", writer.writeValueAsString(result));
             onTestCompleted.run();
         }
+        return queryId;
     }
 
     private String getChunkId(TpcHIntermediateResult result) {
