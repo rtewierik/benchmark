@@ -50,6 +50,7 @@ export class ServiceStack extends Stack {
       alias: `${props.appName}-sqs-encryption`,
       enableKeyRotation: true,
       enabled: true,
+      removalPolicy: RemovalPolicy.DESTROY
     })
   }
 
