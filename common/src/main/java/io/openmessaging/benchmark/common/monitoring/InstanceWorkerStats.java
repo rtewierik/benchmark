@@ -33,7 +33,9 @@ public class InstanceWorkerStats implements WorkerStats {
     protected final OpStatsLogger endToEndLatencyStats;
 
     protected final LongAdder messagesSent = new LongAdder();
+    protected final LongAdder messageSendErrors = new LongAdder();
     protected final LongAdder bytesSent = new LongAdder();
+    protected final Counter messageSendErrorCounter;
     protected final Counter messagesSentCounter;
     protected final Counter bytesSentCounter;
 
@@ -43,6 +45,7 @@ public class InstanceWorkerStats implements WorkerStats {
     protected final Counter bytesReceivedCounter;
 
     protected final LongAdder totalMessagesSent = new LongAdder();
+    protected final LongAdder totalMessageSendErrors = new LongAdder();
     protected final LongAdder totalMessagesReceived = new LongAdder();
 
     protected static final long highestTrackableValue = TimeUnit.SECONDS.toMicros(60);
@@ -59,6 +62,7 @@ public class InstanceWorkerStats implements WorkerStats {
 
         StatsLogger producerStatsLogger = statsLogger.scope("producer");
         this.messagesSentCounter = producerStatsLogger.getCounter("messages_sent");
+        this.messageSendErrorCounter = producerStatsLogger.getCounter("message_send_errors");
         this.bytesSentCounter = producerStatsLogger.getCounter("bytes_sent");
         this.publishDelayLatencyStats = producerStatsLogger.getOpStatsLogger("producer_delay_latency");
         this.publishLatencyStats = producerStatsLogger.getOpStatsLogger("produce_latency");
@@ -104,5 +108,11 @@ public class InstanceWorkerStats implements WorkerStats {
         publishDelayLatencyRecorder.recordValue(sendDelayMicros);
         cumulativePublishDelayLatencyRecorder.recordValue(sendDelayMicros);
         publishDelayLatencyStats.registerSuccessfulEvent(sendDelayMicros, TimeUnit.MICROSECONDS);
+    }
+
+    public void recordProducerFailure() {
+        messageSendErrors.increment();
+        messageSendErrorCounter.inc();
+        totalMessageSendErrors.increment();
     }
 }

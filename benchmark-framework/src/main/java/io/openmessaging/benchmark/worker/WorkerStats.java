@@ -19,21 +19,13 @@ import io.openmessaging.benchmark.worker.commands.CountersStats;
 import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
 import io.openmessaging.benchmark.worker.commands.PeriodStats;
 import java.io.IOException;
-import java.util.concurrent.atomic.LongAdder;
 
-import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.StatsLogger;
 
 public class WorkerStats extends InstanceWorkerStats {
 
-    private final LongAdder messageSendErrors = new LongAdder();
-    private final Counter messageSendErrorCounter;
-    private final LongAdder totalMessageSendErrors = new LongAdder();
-
     WorkerStats(StatsLogger statsLogger) {
         super(statsLogger);
-        StatsLogger producerStatsLogger = statsLogger.scope("producer");
-        this.messageSendErrorCounter = producerStatsLogger.getCounter("message_send_errors");
     }
 
     public StatsLogger getStatsLogger() {
@@ -100,11 +92,5 @@ public class WorkerStats extends InstanceWorkerStats {
         bytesReceived.reset();
         totalMessagesSent.reset();
         totalMessagesReceived.reset();
-    }
-
-    public void recordProducerFailure() {
-        messageSendErrors.increment();
-        messageSendErrorCounter.inc();
-        totalMessageSendErrors.increment();
     }
 }

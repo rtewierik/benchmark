@@ -16,4 +16,5 @@ package io.openmessaging.benchmark.common.monitoring;
 public interface WorkerStats {
     void recordMessageReceived(long payloadLength, long endToEndLatencyMicros);
     void recordProducerSuccess(long payloadLength, long intendedSendTimeNs, long sendTimeNs, long nowNs);
+    void recordProducerFailure();
 }
