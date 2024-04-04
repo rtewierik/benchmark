@@ -216,7 +216,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 producer.sendAsync(Optional.of("key"), new byte[10]).thenRun(stats::recordMessageSent));
     }
 
-
     private void startLoadForTpcHProducers(ProducerWorkAssignment producerWorkAssignment) {
         updateMessageProducer(producerWorkAssignment.publishRate);
         executor.submit(
