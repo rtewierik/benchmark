@@ -53,32 +53,29 @@ public class MessageProducerImpl implements MessageProducer {
         final long sendTime = nanoClock.get();
         producer
                 .sendAsync(key, payload)
-                .thenRun(() -> success(payload.length, intendedSendTime, sendTime, experimentId, messageId, isTpcH))
-                .exceptionally((t) -> failure(t, experimentId, messageId, isTpcH));
+                .thenRun(() -> recordResult(payload.length, intendedSendTime, sendTime, experimentId, messageId, isTpcH, null))
+                .exceptionally((t) -> recordResult(payload.length, intendedSendTime, sendTime, experimentId, messageId, isTpcH, t));
     }
 
-    private void success(
+    private Void recordResult(
         long payloadLength,
         long intendedSendTime,
         long sendTime,
         String experimentId,
         String messageId,
-        boolean isTpcH
+        boolean isTpcH,
+        Throwable t
     ) {
         long nowNs = nanoClock.get();
+        boolean isError = t != null;
         if (stats != null) {
-            stats.recordProducerSuccess(
-                    payloadLength, intendedSendTime, sendTime, nowNs, experimentId, messageId, isTpcH);
+            stats.recordMessageProduced(
+                    payloadLength, intendedSendTime, sendTime, nowNs, experimentId, messageId, isTpcH, isError);
         }
-    }
-
-    private Void failure(Throwable t, String experimentId, String messageId, boolean isTpcH) {
-        if (stats != null) {
-            stats.recordProducerFailure(experimentId, messageId, isTpcH);
+        if (isError) {
+            log.warn("Write error on message", t);
         }
-        log.warn("Write error on message", t);
         return null;
     }
-
     private static final Logger log = LoggerFactory.getLogger(MessageProducerImpl.class);
 }

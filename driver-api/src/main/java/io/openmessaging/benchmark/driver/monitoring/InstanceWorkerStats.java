@@ -93,42 +93,39 @@ public class InstanceWorkerStats implements WorkerStats {
         }
     }
 
-    public void recordProducerSuccess(
+    public void recordMessageProduced(
             long payloadLength,
             long intendedSendTimeNs,
             long sendTimeNs,
             long nowNs,
             String experimentId,
             String messageId,
-            boolean isTpcH
-        ) {
-        messagesSent.increment();
-        totalMessagesSent.increment();
-        messagesSentCounter.inc();
-        bytesSent.add(payloadLength);
-        bytesSentCounter.add(payloadLength);
-
-        final long latencyMicros =
-                Math.min(highestTrackableValue, TimeUnit.NANOSECONDS.toMicros(nowNs - sendTimeNs));
-        publishLatencyRecorder.recordValue(latencyMicros);
-        cumulativePublishLatencyRecorder.recordValue(latencyMicros);
-        publishLatencyStats.registerSuccessfulEvent(latencyMicros, TimeUnit.MICROSECONDS);
-
-        final long sendDelayMicros =
-                Math.min(
-                        highestTrackableValue, TimeUnit.NANOSECONDS.toMicros(sendTimeNs - intendedSendTimeNs));
-        publishDelayLatencyRecorder.recordValue(sendDelayMicros);
-        cumulativePublishDelayLatencyRecorder.recordValue(sendDelayMicros);
-        publishDelayLatencyStats.registerSuccessfulEvent(sendDelayMicros, TimeUnit.MICROSECONDS);
-    }
-
-    public void recordProducerFailure(
-            String experimentId,
-            String messageId,
-            boolean isTpcH
+            boolean isTpcH,
+            boolean isError
     ) {
-        messageSendErrors.increment();
-        messageSendErrorCounter.inc();
-        totalMessageSendErrors.increment();
+        if (!isError) {
+            messagesSent.increment();
+            totalMessagesSent.increment();
+            messagesSentCounter.inc();
+            bytesSent.add(payloadLength);
+            bytesSentCounter.add(payloadLength);
+
+            final long latencyMicros =
+                    Math.min(highestTrackableValue, TimeUnit.NANOSECONDS.toMicros(nowNs - sendTimeNs));
+            publishLatencyRecorder.recordValue(latencyMicros);
+            cumulativePublishLatencyRecorder.recordValue(latencyMicros);
+            publishLatencyStats.registerSuccessfulEvent(latencyMicros, TimeUnit.MICROSECONDS);
+
+            final long sendDelayMicros =
+                    Math.min(
+                            highestTrackableValue, TimeUnit.NANOSECONDS.toMicros(sendTimeNs - intendedSendTimeNs));
+            publishDelayLatencyRecorder.recordValue(sendDelayMicros);
+            cumulativePublishDelayLatencyRecorder.recordValue(sendDelayMicros);
+            publishDelayLatencyStats.registerSuccessfulEvent(sendDelayMicros, TimeUnit.MICROSECONDS);
+        } else {
+            messageSendErrors.increment();
+            messageSendErrorCounter.inc();
+            totalMessageSendErrors.increment();
+        }
     }
 }

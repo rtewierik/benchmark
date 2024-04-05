@@ -33,20 +33,16 @@ public class CentralWorkerStats implements WorkerStats {
     }
 
     @Override
-    public void recordProducerSuccess(
+    public void recordMessageProduced(
             long payloadLength,
             long intendedSendTimeNs,
             long sendTimeNs,
             long nowNs,
             String experimentId,
             String messageId,
-            boolean isTpcH
+            boolean isTpcH,
+            boolean isError
     ) {
-        // TO DO: Send event to SQS.
-    }
-
-    @Override
-    public void recordProducerFailure(String experimentId, String messageId, boolean isTpcH) {
         // TO DO: Send event to SQS.
     }
 }
