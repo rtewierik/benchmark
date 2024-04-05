@@ -93,7 +93,6 @@ public class InstanceWorkerStats implements WorkerStats {
         }
     }
 
-    // TO DO: Make this a completable future that sends the relevant data to AWS.
     public void recordProducerSuccess(
             long payloadLength,
             long intendedSendTimeNs,

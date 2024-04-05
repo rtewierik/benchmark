@@ -15,3 +15,6 @@ num_instances = {
   "pulsar"     = 3
   "zookeeper"  = 3
 }
+
+enable_cloud_monitoring = true
+monitoring_sqs_uri = ""

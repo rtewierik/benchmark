@@ -10,3 +10,6 @@ instance_types = {
 num_instances = {
   "client"    = 3
 }
+
+enable_cloud_monitoring = true
+monitoring_sqs_uri = ""
