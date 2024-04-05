@@ -40,26 +40,41 @@ public class MessageProducerImpl implements MessageProducer {
         this.stats = stats;
     }
 
-    public void sendMessage(BenchmarkProducer producer, Optional<String> key, byte[] payload) {
+    public void sendMessage(
+        BenchmarkProducer producer,
+        Optional<String> key,
+        byte[] payload,
+        String experimentId,
+        String messageId,
+        boolean isTpcH
+    ) {
         final long intendedSendTime = rateLimiter.acquire();
         uninterruptibleSleepNs(intendedSendTime);
         final long sendTime = nanoClock.get();
         producer
                 .sendAsync(key, payload)
-                .thenRun(() -> success(payload.length, intendedSendTime, sendTime))
-                .exceptionally(this::failure);
+                .thenRun(() -> success(payload.length, intendedSendTime, sendTime, experimentId, messageId, isTpcH))
+                .exceptionally((t) -> failure(t, experimentId, messageId, isTpcH));
     }
 
-    private void success(long payloadLength, long intendedSendTime, long sendTime) {
+    private void success(
+        long payloadLength,
+        long intendedSendTime,
+        long sendTime,
+        String experimentId,
+        String messageId,
+        boolean isTpcH
+    ) {
         long nowNs = nanoClock.get();
         if (stats != null) {
-            stats.recordProducerSuccess(payloadLength, intendedSendTime, sendTime, nowNs);
+            stats.recordProducerSuccess(
+                    payloadLength, intendedSendTime, sendTime, nowNs, experimentId, messageId, isTpcH);
         }
     }
 
-    private Void failure(Throwable t) {
+    private Void failure(Throwable t, String experimentId, String messageId, boolean isTpcH) {
         if (stats != null) {
-            stats.recordProducerFailure();
+            stats.recordProducerFailure(experimentId, messageId, isTpcH);
         }
         log.warn("Write error on message", t);
         return null;

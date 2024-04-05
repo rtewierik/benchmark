@@ -18,6 +18,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.common.utils.RandomGenerator;
+import io.openmessaging.benchmark.driver.EnvironmentConfiguration;
 import io.openmessaging.benchmark.utils.PaddingDecimalFormat;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.utils.payload.FilePayloadReader;

@@ -73,7 +73,13 @@ public class InstanceWorkerStats implements WorkerStats {
         this.endToEndLatencyStats = consumerStatsLogger.getOpStatsLogger("e2e_latency");
     }
 
-    public void recordMessageReceived(long payloadLength, long endToEndLatencyMicros) {
+    public void recordMessageReceived(
+        long payloadLength,
+        long endToEndLatencyMicros,
+        String experimentId,
+        String messageId,
+        boolean isTpcH
+    ) {
         messagesReceived.increment();
         totalMessagesReceived.increment();
         messagesReceivedCounter.inc();
@@ -89,7 +95,14 @@ public class InstanceWorkerStats implements WorkerStats {
 
     // TO DO: Make this a completable future that sends the relevant data to AWS.
     public void recordProducerSuccess(
-            long payloadLength, long intendedSendTimeNs, long sendTimeNs, long nowNs) {
+            long payloadLength,
+            long intendedSendTimeNs,
+            long sendTimeNs,
+            long nowNs,
+            String experimentId,
+            String messageId,
+            boolean isTpcH
+        ) {
         messagesSent.increment();
         totalMessagesSent.increment();
         messagesSentCounter.inc();
@@ -110,7 +123,11 @@ public class InstanceWorkerStats implements WorkerStats {
         publishDelayLatencyStats.registerSuccessfulEvent(sendDelayMicros, TimeUnit.MICROSECONDS);
     }
 
-    public void recordProducerFailure() {
+    public void recordProducerFailure(
+            String experimentId,
+            String messageId,
+            boolean isTpcH
+    ) {
         messageSendErrors.increment();
         messageSendErrorCounter.inc();
         totalMessageSendErrors.increment();

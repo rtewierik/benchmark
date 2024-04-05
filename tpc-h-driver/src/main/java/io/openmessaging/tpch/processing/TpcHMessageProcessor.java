@@ -122,7 +122,13 @@ public class TpcHMessageProcessor {
             String key = keyDistributor.next();
             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
             this.messageProducer.sendMessage(
-                    producer, optionalKey, messageWriter.writeValueAsBytes(message));
+                    producer,
+                    optionalKey,
+                    messageWriter.writeValueAsBytes(message),
+                    assignment.queryId,
+                    message.messageId,
+                    true
+            );
         } catch (Throwable t) {
             t.printStackTrace();
         }
@@ -158,7 +164,12 @@ public class TpcHMessageProcessor {
             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
             log.debug("Sending reduced result: {}", reducedResult);
             this.messageProducer.sendMessage(
-                    producer, optionalKey, messageWriter.writeValueAsBytes(message));
+                    producer,
+                    optionalKey,
+                    messageWriter.writeValueAsBytes(message),
+                    queryId,
+                    message.messageId,
+                    true);
         }
         return queryId;
     }

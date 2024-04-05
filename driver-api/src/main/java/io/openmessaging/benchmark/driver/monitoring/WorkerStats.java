@@ -14,7 +14,17 @@
 package io.openmessaging.benchmark.driver.monitoring;
 
 public interface WorkerStats {
-    void recordMessageReceived(long payloadLength, long endToEndLatencyMicros);
-    void recordProducerSuccess(long payloadLength, long intendedSendTimeNs, long sendTimeNs, long nowNs);
-    void recordProducerFailure();
+    void recordMessageReceived(
+            long payloadLength, long endToEndLatencyMicros, String experimentId, String messageId, boolean isTpcH);
+    void recordProducerSuccess(
+            long payloadLength,
+            long intendedSendTimeNs,
+            long sendTimeNs,
+            long nowNs,
+            String experimentId,
+            String messageId,
+            boolean isTpcH
+    );
+    // TO DO: Add time-related metrics here and perhaps merge into recordMessageProduced.
+    void recordProducerFailure(String experimentId, String messageId, boolean isTpcH);
 }

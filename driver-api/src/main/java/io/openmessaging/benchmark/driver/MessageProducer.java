@@ -17,5 +17,12 @@ package io.openmessaging.benchmark.driver;
 import java.util.Optional;
 
 public interface MessageProducer {
-    void sendMessage(BenchmarkProducer producer, Optional<String> key, byte[] payload);
+    void sendMessage(
+        BenchmarkProducer producer,
+        Optional<String> key,
+        byte[] payload,
+        String experimentId,
+        String messageId,
+        boolean isTpcH
+    );
 }
