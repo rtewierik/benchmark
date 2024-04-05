@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import io.openmessaging.benchmark.EnvironmentConfiguration;
+import io.openmessaging.benchmark.driver.EnvironmentConfiguration;
 import io.openmessaging.benchmark.common.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.ListPartition;
 import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
@@ -233,7 +233,7 @@ public class DistributedWorkersEnsemble implements Worker {
         Map<Worker, ConsumerAssignment> topicsPerConsumerMap = Maps.newHashMap();
         int i = 0;
         for (List<TopicSubscription> reduceSubscriptions : reduceSubscriptionsPerConsumer) {
-            ConsumerAssignment individualAssignment = new ConsumerAssignment();
+            ConsumerAssignment individualAssignment = new ConsumerAssignment(assignment);
             individualAssignment.topicsSubscriptions.add(mapSubscription);
             individualAssignment.topicsSubscriptions.addAll(reduceSubscriptions);
             topicsPerConsumerMap.put(workers.get(i++), individualAssignment);
@@ -257,7 +257,7 @@ public class DistributedWorkersEnsemble implements Worker {
         Map<Worker, ConsumerAssignment> topicsPerWorkerMap = Maps.newHashMap();
         int i = 0;
         for (List<TopicSubscription> tsl : subscriptionsPerConsumer) {
-            ConsumerAssignment individualAssignment = new ConsumerAssignment();
+            ConsumerAssignment individualAssignment = new ConsumerAssignment(overallConsumerAssignment);
             individualAssignment.topicsSubscriptions = tsl;
             topicsPerWorkerMap.put(consumerWorkers.get(i++), individualAssignment);
         }

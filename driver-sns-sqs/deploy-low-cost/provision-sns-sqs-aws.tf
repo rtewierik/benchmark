@@ -89,10 +89,15 @@ resource "aws_spot_instance_request" "client" {
     echo "export SNS_URIS=${var.sns_uris}" >> /etc/profile.d/myenvvars.sh
     echo "export REGION=eu-west-1" >> /etc/profile.d/myenvvars.sh
     echo "export PRODUCE_WITH_ALL_WORKERS=true" >> /etc/profile.d/myenvvars.sh
+    echo "export SKIP_READINESS_CHECK=true" >> /etc/profile.d/myenvvars.sh
+    echo "export IS_CLOUD_MONITORING_ENABLED=${var.enable_cloud_monitoring}" >> /etc/profile.d/myenvvars.sh
+    echo "export MONITORING_SQS_URI=${var.monitoring_sqs_uri}" >> /etc/profile.d/myenvvars.sh
     echo "SNS_URIS=${var.sns_uris}" >> /etc/environment
     echo "REGION=eu-west-1" >> /etc/environment
     echo "PRODUCE_WITH_ALL_WORKERS=true" >> /etc/environment
     echo "SKIP_READINESS_CHECK=true" >> /etc/environment
+    echo "IS_CLOUD_MONITORING_ENABLED=${var.enable_cloud_monitoring}" >> /etc/environment
+    echo "MONITORING_SQS_URI=${var.monitoring_sqs_uri}" >> /etc/environment
     EOF
 
   tags = {

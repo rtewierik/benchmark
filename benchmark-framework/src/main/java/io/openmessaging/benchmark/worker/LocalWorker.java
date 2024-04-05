@@ -32,6 +32,7 @@ import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ConsumerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
+import io.openmessaging.benchmark.driver.MessageProducerImpl;
 import io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkConfiguration;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
@@ -88,6 +89,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final WorkerStats stats;
     private boolean testCompleted = false;
     private boolean consumersArePaused = false;
+    private String experimentId = null;
+    private boolean isTpcH = false;
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
 
     public LocalWorker() {
@@ -174,6 +177,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
     public void createConsumers(ConsumerAssignment assignment) throws IOException {
         Timer timer = new Timer();
         AtomicInteger consumerIndex = new AtomicInteger();
+        this.experimentId = assignment.experimentId;
+        this.isTpcH = assignment.isTpcH;
         // This subscription should only be done on the orchestrator host.
         if (assignment.isTpcH && assignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
             assignment.topicsSubscriptions.remove(TpcHConstants.REDUCE_DST_INDEX);
@@ -211,7 +216,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
             producer ->
                 producer.sendAsync(Optional.of("key"), new byte[10]).thenRun(stats::recordMessageSent));
     }
-
 
     private void startLoadForTpcHProducers(ProducerWorkAssignment producerWorkAssignment) {
         updateMessageProducer(producerWorkAssignment.publishRate);
@@ -251,7 +255,10 @@ public class LocalWorker implements Worker, ConsumerCallback {
                             messageProducer.sendMessage(
                                 producer,
                                 optionalKey,
-                                messageWriter.writeValueAsBytes(message)
+                                messageWriter.writeValueAsBytes(message),
+                                this.experimentId,
+                                message.messageId,
+                                true
                             );
                         }
                     } catch (Throwable t) {
@@ -299,7 +306,10 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                             messageProducer.sendMessage(
                                                     p,
                                                     Optional.ofNullable(keyDistributor.next()),
-                                                    payloads.get(r.nextInt(payloadCount))));
+                                                    payloads.get(r.nextInt(payloadCount)),
+                                                    this.experimentId,
+                                                    null,
+                                                    false));
                         }
                     } catch (Throwable t) {
                         log.error("Got error", t);
@@ -338,36 +348,39 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public void messageReceived(byte[] data, long publishTimestamp) throws IOException {
-        internalMessageReceived(data.length, publishTimestamp);
-        if (data.length != 10) {
+        if (this.isTpcH && data.length != 10) {
             TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
-            handleTpcHMessage(message);
+            String queryId = handleTpcHMessage(message);
+            internalMessageReceived(data.length, publishTimestamp, queryId, message.messageId);
+        } else {
+            internalMessageReceived(data.length, publishTimestamp, this.experimentId, null);
         }
-        // TO DO: Add separate call to stats to record message processed.
     }
 
     @Override
     public void messageReceived(ByteBuffer data, long publishTimestamp) throws IOException {
-        internalMessageReceived(data.remaining(), publishTimestamp);
-        if (data.remaining() != 10) {
+        int length = data.remaining();
+        if (this.isTpcH && length != 10) {
             TpcHMessage message = mapper.readValue(data.array(), TpcHMessage.class);
-            handleTpcHMessage(message);
+            String queryId = handleTpcHMessage(message);
+            internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
+        } else {
+            internalMessageReceived(length, publishTimestamp, this.experimentId, null);
         }
-        // TO DO: Add separate call to stats to record message processed.
     }
 
-    private void handleTpcHMessage(TpcHMessage message) throws IOException {
-        tpcHMessageProcessor.processTpcHMessage(message);
+    private String handleTpcHMessage(TpcHMessage message) throws IOException {
+        return tpcHMessageProcessor.processTpcHMessage(message);
     }
 
     public boolean getTestCompleted() {
         return this.testCompleted;
     }
 
-    public void internalMessageReceived(int size, long publishTimestamp) {
+    public void internalMessageReceived(int size, long publishTimestamp, String experimentId, String messageId) {
         long now = System.currentTimeMillis();
         long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
-        stats.recordMessageReceived(size, endToEndLatencyMicros);
+        stats.recordMessageReceived(size, endToEndLatencyMicros, experimentId, messageId, this.isTpcH);
 
         while (consumersArePaused) {
             try {

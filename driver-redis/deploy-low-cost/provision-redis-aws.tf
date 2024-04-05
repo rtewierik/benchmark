@@ -31,6 +31,14 @@ variable "num_instances" {
   type = map(string)
 }
 
+variable monitoring_sqs_uri {
+  type = string
+}
+
+variable enable_cloud_monitoring {
+  type = bool
+}
+
 # Create a VPC to launch our instances into
 resource "aws_vpc" "benchmark_vpc" {
   cidr_block = "10.0.0.0/16"
@@ -131,6 +139,14 @@ resource "aws_spot_instance_request" "client" {
   count                  = var.num_instances["client"]
 
   iam_instance_profile = aws_iam_instance_profile.redis_ec2_instance_profile.name
+
+  user_data = <<-EOF
+    #!/bin/bash
+    echo "export IS_CLOUD_MONITORING_ENABLED=${var.enable_cloud_monitoring}" >> /etc/profile.d/myenvvars.sh
+    echo "export MONITORING_SQS_URI=${var.monitoring_sqs_uri}" >> /etc/profile.d/myenvvars.sh
+    echo "IS_CLOUD_MONITORING_ENABLED=${var.enable_cloud_monitoring}" >> /etc/environment
+    echo "MONITORING_SQS_URI=${var.monitoring_sqs_uri}" >> /etc/environment
+    EOF
 
   tags = {
     Name = "redis_client_${count.index}"

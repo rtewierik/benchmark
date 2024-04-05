@@ -14,3 +14,6 @@ num_instances = {
   "client"     = 4
   "prometheus" = 1
 }
+
+enable_cloud_monitoring = true
+monitoring_sqs_uri = ""

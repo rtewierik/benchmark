@@ -11,15 +11,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.benchmark.worker;
+package io.openmessaging.benchmark.driver;
 
 import static io.openmessaging.benchmark.common.utils.UniformRateLimiter.uninterruptibleSleepNs;
 
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
-import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import io.openmessaging.benchmark.driver.MessageProducer;
+
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import io.openmessaging.benchmark.driver.monitoring.WorkerStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +30,7 @@ public class MessageProducerImpl implements MessageProducer {
     private UniformRateLimiter rateLimiter;
     private Supplier<Long> nanoClock;
 
-    MessageProducerImpl(UniformRateLimiter rateLimiter, WorkerStats stats) {
+    public MessageProducerImpl(UniformRateLimiter rateLimiter, WorkerStats stats) {
         this(System::nanoTime, rateLimiter, stats);
     }
 
@@ -39,26 +40,41 @@ public class MessageProducerImpl implements MessageProducer {
         this.stats = stats;
     }
 
-    public void sendMessage(BenchmarkProducer producer, Optional<String> key, byte[] payload) {
+    public void sendMessage(
+        BenchmarkProducer producer,
+        Optional<String> key,
+        byte[] payload,
+        String experimentId,
+        String messageId,
+        boolean isTpcH
+    ) {
         final long intendedSendTime = rateLimiter.acquire();
         uninterruptibleSleepNs(intendedSendTime);
         final long sendTime = nanoClock.get();
         producer
                 .sendAsync(key, payload)
-                .thenRun(() -> success(payload.length, intendedSendTime, sendTime))
-                .exceptionally(this::failure);
+                .thenRun(() -> success(payload.length, intendedSendTime, sendTime, experimentId, messageId, isTpcH))
+                .exceptionally((t) -> failure(t, experimentId, messageId, isTpcH));
     }
 
-    private void success(long payloadLength, long intendedSendTime, long sendTime) {
+    private void success(
+        long payloadLength,
+        long intendedSendTime,
+        long sendTime,
+        String experimentId,
+        String messageId,
+        boolean isTpcH
+    ) {
         long nowNs = nanoClock.get();
         if (stats != null) {
-            stats.recordProducerSuccess(payloadLength, intendedSendTime, sendTime, nowNs);
+            stats.recordProducerSuccess(
+                    payloadLength, intendedSendTime, sendTime, nowNs, experimentId, messageId, isTpcH);
         }
     }
 
-    private Void failure(Throwable t) {
+    private Void failure(Throwable t, String experimentId, String messageId, boolean isTpcH) {
         if (stats != null) {
-            stats.recordProducerFailure();
+            stats.recordProducerFailure(experimentId, messageId, isTpcH);
         }
         log.warn("Write error on message", t);
         return null;

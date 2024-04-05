@@ -14,67 +14,18 @@
 package io.openmessaging.benchmark.worker;
 
 
+import io.openmessaging.benchmark.driver.monitoring.InstanceWorkerStats;
 import io.openmessaging.benchmark.worker.commands.CountersStats;
 import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
 import io.openmessaging.benchmark.worker.commands.PeriodStats;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.LongAdder;
-import org.HdrHistogram.Recorder;
-import org.apache.bookkeeper.stats.Counter;
-import org.apache.bookkeeper.stats.OpStatsLogger;
+
 import org.apache.bookkeeper.stats.StatsLogger;
 
-public class WorkerStats {
-
-    private final StatsLogger statsLogger;
-
-    private final OpStatsLogger publishDelayLatencyStats;
-
-    private final Recorder endToEndLatencyRecorder = new Recorder(TimeUnit.HOURS.toMicros(12), 5);
-    private final Recorder endToEndCumulativeLatencyRecorder =
-            new Recorder(TimeUnit.HOURS.toMicros(12), 5);
-    private final OpStatsLogger endToEndLatencyStats;
-
-    private final LongAdder messagesSent = new LongAdder();
-    private final LongAdder messageSendErrors = new LongAdder();
-    private final LongAdder bytesSent = new LongAdder();
-    private final Counter messageSendErrorCounter;
-    private final Counter messagesSentCounter;
-    private final Counter bytesSentCounter;
-
-    private final LongAdder messagesReceived = new LongAdder();
-    private final LongAdder bytesReceived = new LongAdder();
-    private final Counter messagesReceivedCounter;
-    private final Counter bytesReceivedCounter;
-
-    private final LongAdder totalMessagesSent = new LongAdder();
-    private final LongAdder totalMessageSendErrors = new LongAdder();
-    private final LongAdder totalMessagesReceived = new LongAdder();
-
-    private static final long highestTrackableValue = TimeUnit.SECONDS.toMicros(60);
-    private final Recorder publishLatencyRecorder = new Recorder(highestTrackableValue, 5);
-    private final Recorder cumulativePublishLatencyRecorder = new Recorder(highestTrackableValue, 5);
-    private final OpStatsLogger publishLatencyStats;
-
-    private final Recorder publishDelayLatencyRecorder = new Recorder(highestTrackableValue, 5);
-    private final Recorder cumulativePublishDelayLatencyRecorder =
-            new Recorder(highestTrackableValue, 5);
+public class WorkerStats extends InstanceWorkerStats {
 
     WorkerStats(StatsLogger statsLogger) {
-        this.statsLogger = statsLogger;
-
-        StatsLogger producerStatsLogger = statsLogger.scope("producer");
-        this.messagesSentCounter = producerStatsLogger.getCounter("messages_sent");
-        this.messageSendErrorCounter = producerStatsLogger.getCounter("message_send_errors");
-        this.bytesSentCounter = producerStatsLogger.getCounter("bytes_sent");
-        this.publishDelayLatencyStats = producerStatsLogger.getOpStatsLogger("producer_delay_latency");
-        this.publishLatencyStats = producerStatsLogger.getOpStatsLogger("produce_latency");
-
-        StatsLogger consumerStatsLogger = statsLogger.scope("consumer");
-        this.messagesReceivedCounter = consumerStatsLogger.getCounter("messages_recv");
-        this.bytesReceivedCounter = consumerStatsLogger.getCounter("bytes_recv");
-        this.endToEndLatencyStats = consumerStatsLogger.getOpStatsLogger("e2e_latency");
+        super(statsLogger);
     }
 
     public StatsLogger getStatsLogger() {
@@ -83,20 +34,6 @@ public class WorkerStats {
 
     public void recordMessageSent() {
         totalMessagesSent.increment();
-    }
-
-    public void recordMessageReceived(long payloadLength, long endToEndLatencyMicros) {
-        messagesReceived.increment();
-        totalMessagesReceived.increment();
-        messagesReceivedCounter.inc();
-        bytesReceived.add(payloadLength);
-        bytesReceivedCounter.add(payloadLength);
-
-        if (endToEndLatencyMicros > 0) {
-            endToEndCumulativeLatencyRecorder.recordValue(endToEndLatencyMicros);
-            endToEndLatencyRecorder.recordValue(endToEndLatencyMicros);
-            endToEndLatencyStats.registerSuccessfulEvent(endToEndLatencyMicros, TimeUnit.MICROSECONDS);
-        }
     }
 
     public PeriodStats toPeriodStats() {
@@ -148,40 +85,12 @@ public class WorkerStats {
         resetLatencies();
 
         messagesSent.reset();
+        messagesSent.reset();
         messageSendErrors.reset();
         bytesSent.reset();
         messagesReceived.reset();
         bytesReceived.reset();
         totalMessagesSent.reset();
         totalMessagesReceived.reset();
-    }
-
-    public void recordProducerFailure() {
-        messageSendErrors.increment();
-        messageSendErrorCounter.inc();
-        totalMessageSendErrors.increment();
-    }
-
-    // TO DO: Make this a completable future that sends the relevant data to AWS.
-    public void recordProducerSuccess(
-            long payloadLength, long intendedSendTimeNs, long sendTimeNs, long nowNs) {
-        messagesSent.increment();
-        totalMessagesSent.increment();
-        messagesSentCounter.inc();
-        bytesSent.add(payloadLength);
-        bytesSentCounter.add(payloadLength);
-
-        final long latencyMicros =
-                Math.min(highestTrackableValue, TimeUnit.NANOSECONDS.toMicros(nowNs - sendTimeNs));
-        publishLatencyRecorder.recordValue(latencyMicros);
-        cumulativePublishLatencyRecorder.recordValue(latencyMicros);
-        publishLatencyStats.registerSuccessfulEvent(latencyMicros, TimeUnit.MICROSECONDS);
-
-        final long sendDelayMicros =
-                Math.min(
-                        highestTrackableValue, TimeUnit.NANOSECONDS.toMicros(sendTimeNs - intendedSendTimeNs));
-        publishDelayLatencyRecorder.recordValue(sendDelayMicros);
-        cumulativePublishDelayLatencyRecorder.recordValue(sendDelayMicros);
-        publishDelayLatencyStats.registerSuccessfulEvent(sendDelayMicros, TimeUnit.MICROSECONDS);
     }
 }

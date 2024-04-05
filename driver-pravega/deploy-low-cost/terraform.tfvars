@@ -17,3 +17,6 @@ num_instances = {
   "client"       = 2
   "metrics"      = 1
 }
+
+enable_cloud_monitoring = true
+monitoring_sqs_uri = ""

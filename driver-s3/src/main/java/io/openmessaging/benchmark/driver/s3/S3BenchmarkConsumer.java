@@ -24,6 +24,8 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.openmessaging.benchmark.common.client.AmazonS3Client;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
+import io.openmessaging.benchmark.driver.MessageProducerImpl;
+import io.openmessaging.benchmark.driver.monitoring.CentralWorkerStats;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import java.io.IOException;
@@ -44,7 +46,7 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                     S3BenchmarkConfiguration.s3Uris.stream()
                             .map(S3BenchmarkS3Producer::new)
                             .collect(Collectors.toList()),
-                    new S3BenchmarkMessageProducer(new UniformRateLimiter(1.0)),
+                    new MessageProducerImpl(new UniformRateLimiter(1.0), new CentralWorkerStats()),
                     () -> {},
                     log);
     private static final AmazonS3Client s3Client = new AmazonS3Client();

@@ -19,11 +19,19 @@ import java.util.List;
 
 public class ConsumerAssignment {
     public List<TopicSubscription> topicsSubscriptions = new ArrayList<>();
+    public String experimentId = null;
     public boolean isTpcH = false;
 
-    public ConsumerAssignment() {}
+    public ConsumerAssignment(String experimentId) {
+        this.experimentId = experimentId;
+    }
 
-    public ConsumerAssignment(boolean isTpcH) {
+    public ConsumerAssignment(String experimentId, boolean isTpcH) {
         this.isTpcH = isTpcH;
+        this.experimentId = experimentId;
+    }
+
+    public ConsumerAssignment(ConsumerAssignment assignment) {
+        this(assignment.experimentId, assignment.isTpcH);
     }
 }

@@ -18,6 +18,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.common.utils.RandomGenerator;
+import io.openmessaging.benchmark.driver.EnvironmentConfiguration;
 import io.openmessaging.benchmark.utils.PaddingDecimalFormat;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.utils.payload.FilePayloadReader;
@@ -312,7 +313,7 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     private void createConsumers(List<String> topics) throws IOException {
-        ConsumerAssignment consumerAssignment = new ConsumerAssignment();
+        ConsumerAssignment consumerAssignment = new ConsumerAssignment(workload.name);
 
         for (String topic : topics) {
             for (int i = 0; i < workload.subscriptionsPerTopic; i++) {
@@ -336,8 +337,8 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     private ConsumerAssignment createTpcHConsumers(List<String> topics) throws IOException {
-        ConsumerAssignment consumerAssignment = new ConsumerAssignment(true);
-        ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment(true);
+        ConsumerAssignment consumerAssignment = new ConsumerAssignment(this.arguments.queryId, true);
+        ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment(this.arguments.queryId, true);
 
         consumerAssignment.topicsSubscriptions.add(
                 new TopicSubscription(

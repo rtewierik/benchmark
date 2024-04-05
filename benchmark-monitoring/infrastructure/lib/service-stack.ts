@@ -12,6 +12,7 @@ import {
 } from 'aws-cdk-lib/aws-sqs'
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources'
 import {
+  IRole,
   ManagedPolicy,
   PolicyStatement,
   Role,
@@ -25,6 +26,16 @@ import { IKey, Key } from 'aws-cdk-lib/aws-kms'
 import { ApiGatewayToSqs } from '@aws-solutions-constructs/aws-apigateway-sqs'
 import { AttributeType, BillingMode, Table, TableEncryption } from 'aws-cdk-lib/aws-dynamodb'
 
+const IAM_ROLE_NAMES = [
+  "kafka-iam-role",
+  "pravega-iam-role",
+  "pulsar-iam-role",
+  "rabbitmq-iam-role",
+  "redis-iam-role",
+  "s3-iam-role",
+  "sns-sqs-iam-role",
+]
+
 interface DataIngestionLayer {
   sqsQueue: IQueue
   ingestionDeadLetterQueue: IQueue
@@ -34,13 +45,18 @@ export class ServiceStack extends Stack {
   constructor(scope: App, id: string, props: BenchmarkMonitoringStackProps) {
     super(scope, id, props)
 
+    const iamRoles = this.getIamRoles()
     const kmsKey = this.createBenchmarkMonitoringKmsKey(props)
-    const { sqsQueue, ingestionDeadLetterQueue } = this.createBenchmarkMonitoringDataIngestionLayer(kmsKey, props)
+    const { sqsQueue, ingestionDeadLetterQueue } = this.createBenchmarkMonitoringDataIngestionLayer(iamRoles, kmsKey, props)
     const deadLetterQueue = this.createBenchmarkMonitoringLambdaDeadLetterQueue(props)
     const lambda = this.createBenchmarkMonitoringLambda(sqsQueue, kmsKey, deadLetterQueue, props)
     this.createBenchmarkMonitoringDynamoDb(lambda, kmsKey, props)
     addMonitoring(this, sqsQueue, lambda, deadLetterQueue, ingestionDeadLetterQueue, props)
     addAlerting(this, lambda, deadLetterQueue, ingestionDeadLetterQueue, props)
+  }
+
+  private getIamRoles() {
+    return IAM_ROLE_NAMES.map((roleName, index) => Role.fromRoleName(this, `BenchmarkMonitoringRole${index}`, roleName))
   }
 
   private createBenchmarkMonitoringKmsKey(props: BenchmarkMonitoringStackProps): Key {
@@ -50,10 +66,11 @@ export class ServiceStack extends Stack {
       alias: `${props.appName}-sqs-encryption`,
       enableKeyRotation: true,
       enabled: true,
+      removalPolicy: RemovalPolicy.DESTROY
     })
   }
 
-  private createBenchmarkMonitoringDataIngestionLayer(kmsKey: Key, props: BenchmarkMonitoringStackProps): DataIngestionLayer {
+  private createBenchmarkMonitoringDataIngestionLayer(iamRoles: IRole[], kmsKey: Key, props: BenchmarkMonitoringStackProps): DataIngestionLayer {
     const { sqsQueue, deadLetterQueue, apiGatewayRole } = new ApiGatewayToSqs(this, 'BenchmarkMonitoringDataIngestion', {
       queueProps: {
         queueName: props.appName,
@@ -67,6 +84,7 @@ export class ServiceStack extends Stack {
       allowCreateOperation: true,
       encryptionKey: kmsKey
     })
+    iamRoles.forEach(role => sqsQueue.grantSendMessages(role));
     if (!deadLetterQueue) {
       throw new Error('The ApiGatewayToSqs dependency did not yield a dead letter queue!')
     }

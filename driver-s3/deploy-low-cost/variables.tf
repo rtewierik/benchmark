@@ -44,3 +44,11 @@ variable s3_uris {
 variable is_tpc_h {
   type = bool
 }
+
+variable monitoring_sqs_uri {
+  type = string
+}
+
+variable enable_cloud_monitoring {
+  type = bool
+}
