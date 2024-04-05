@@ -353,7 +353,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
             String queryId = handleTpcHMessage(message);
             internalMessageReceived(data.length, publishTimestamp, queryId, message.messageId);
         } else {
-            internalMessageReceived(data.length, publishTimestamp, null, null);
+            internalMessageReceived(data.length, publishTimestamp, this.experimentId, null);
         }
     }
 
@@ -365,7 +365,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
             String queryId = handleTpcHMessage(message);
             internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
         } else {
-            internalMessageReceived(length, publishTimestamp, null, null);
+            internalMessageReceived(length, publishTimestamp, this.experimentId, null);
         }
     }
 
