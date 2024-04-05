@@ -11,15 +11,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.benchmark.worker;
+package io.openmessaging.benchmark.driver;
 
 import static io.openmessaging.benchmark.common.utils.UniformRateLimiter.uninterruptibleSleepNs;
 
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
-import io.openmessaging.benchmark.driver.BenchmarkProducer;
-import io.openmessaging.benchmark.driver.MessageProducer;
+
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import io.openmessaging.benchmark.driver.monitoring.WorkerStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +30,7 @@ public class MessageProducerImpl implements MessageProducer {
     private UniformRateLimiter rateLimiter;
     private Supplier<Long> nanoClock;
 
-    MessageProducerImpl(UniformRateLimiter rateLimiter, WorkerStats stats) {
+    public MessageProducerImpl(UniformRateLimiter rateLimiter, WorkerStats stats) {
         this(System::nanoTime, rateLimiter, stats);
     }
 

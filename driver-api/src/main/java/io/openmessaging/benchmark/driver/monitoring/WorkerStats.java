@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.benchmark.common.monitoring;
+package io.openmessaging.benchmark.driver.monitoring;
 
 public interface WorkerStats {
     void recordMessageReceived(long payloadLength, long endToEndLatencyMicros);
