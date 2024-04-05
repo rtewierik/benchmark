@@ -17,6 +17,7 @@ import static io.openmessaging.benchmark.common.utils.UniformRateLimiter.uninter
 
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -51,10 +52,23 @@ public class MessageProducerImpl implements MessageProducer {
         final long intendedSendTime = rateLimiter.acquire();
         uninterruptibleSleepNs(intendedSendTime);
         final long sendTime = nanoClock.get();
+        long length = payload.length;
         producer
                 .sendAsync(key, payload)
-                .thenRun(() -> recordResult(payload.length, intendedSendTime, sendTime, experimentId, messageId, isTpcH, null))
-                .exceptionally((t) -> recordResult(payload.length, intendedSendTime, sendTime, experimentId, messageId, isTpcH, t));
+                .thenRun(() -> {
+                    try {
+                        recordResult(length, intendedSendTime, sendTime, experimentId, messageId, isTpcH, null);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .exceptionally((t) -> {
+                    try {
+                        return recordResult(length, intendedSendTime, sendTime, experimentId, messageId, isTpcH, t);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
     private Void recordResult(
@@ -65,7 +79,7 @@ public class MessageProducerImpl implements MessageProducer {
         String messageId,
         boolean isTpcH,
         Throwable t
-    ) {
+    ) throws IOException {
         long nowNs = nanoClock.get();
         boolean isError = t != null;
         if (stats != null) {
