@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.benchmark.driver;
+package io.openmessaging.benchmark.common.producer;
 
 import static io.openmessaging.benchmark.common.utils.UniformRateLimiter.uninterruptibleSleepNs;
 
@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import io.openmessaging.benchmark.driver.monitoring.WorkerStats;
+import io.openmessaging.benchmark.common.monitoring.WorkerStats;
+import io.openmessaging.benchmark.driver.BenchmarkProducer;
+import io.openmessaging.benchmark.driver.MessageProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
