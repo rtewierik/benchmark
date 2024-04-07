@@ -11,17 +11,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.benchmark.driver.monitoring;
+package io.openmessaging.benchmark.common.monitoring;
 
-import org.apache.bookkeeper.stats.StatsLogger;
+public class MonitoredProducedMessage {
+    public long payloadLength;
+    public long intendedSendTimeNs;
+    public long sendTimeNs;
+    public long nowNs;
+    public String experimentId;
+    public String messageId;
+    public boolean isTpcH;
+    public boolean isError;
 
-import java.io.IOException;
-
-public interface WorkerStats {
-    void recordMessageReceived(
-            long payloadLength, long endToEndLatencyMicros, String experimentId, String messageId, boolean isTpcH)
-            throws IOException;
-    void recordMessageProduced(
+    public MonitoredProducedMessage(
             long payloadLength,
             long intendedSendTimeNs,
             long sendTimeNs,
@@ -30,12 +32,14 @@ public interface WorkerStats {
             String messageId,
             boolean isTpcH,
             boolean isError
-    ) throws IOException;
-    StatsLogger getStatsLogger();
-    void recordMessageSent();
-    PeriodStats toPeriodStats();
-    CumulativeLatencies toCumulativeLatencies();
-    CountersStats toCountersStats() throws IOException;
-    void resetLatencies();
-    void reset();
+    ) {
+        this.payloadLength = payloadLength;
+        this.intendedSendTimeNs = intendedSendTimeNs;
+        this.sendTimeNs = sendTimeNs;
+        this.nowNs = nowNs;
+        this.experimentId = experimentId;
+        this.messageId = messageId;
+        this.isTpcH = isTpcH;
+        this.isError = isError;
+    }
 }

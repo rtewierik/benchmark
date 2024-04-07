@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import io.openmessaging.benchmark.driver.monitoring.WorkerStats;
+import io.openmessaging.benchmark.common.monitoring.WorkerStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

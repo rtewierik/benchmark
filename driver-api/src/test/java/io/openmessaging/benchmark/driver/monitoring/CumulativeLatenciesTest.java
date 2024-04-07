@@ -15,6 +15,7 @@ package io.openmessaging.benchmark.driver.monitoring;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.openmessaging.benchmark.common.monitoring.CumulativeLatencies;
 import org.junit.jupiter.api.Test;
 
 class CumulativeLatenciesTest {

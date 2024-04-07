@@ -29,7 +29,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.MessageProducerImpl;
-import io.openmessaging.benchmark.driver.monitoring.CentralWorkerStats;
+import io.openmessaging.benchmark.common.monitoring.CentralWorkerStats;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import java.io.IOException;
