@@ -63,7 +63,7 @@ resource "aws_route" "internet_access" {
 resource "aws_subnet" "benchmark_subnet" {
   vpc_id                  = "${aws_vpc.benchmark_vpc.id}"
   cidr_block              = "10.0.0.0/24"
-  availability_zone       = "us-east-2a"
+  availability_zone       = "eu-west-1a"
   map_public_ip_on_launch = true
 }
 
@@ -134,7 +134,7 @@ resource "aws_spot_instance_request" "zookeeper" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  availability_zone      = "us-east-2a"
+  availability_zone      = "eu-west-1a"
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["zookeeper"]}"
@@ -150,7 +150,7 @@ resource "aws_spot_instance_request" "controller" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  availability_zone      = "us-east-2a"
+  availability_zone      = "eu-west-1a"
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["controller"]}"
@@ -166,7 +166,7 @@ resource "aws_spot_instance_request" "bookkeeper" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  availability_zone      = "us-east-2a"
+  availability_zone      = "eu-west-1a"
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["bookkeeper"]}"
@@ -196,7 +196,7 @@ resource "aws_spot_instance_request" "client" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  availability_zone      = "us-east-2a"
+  availability_zone      = "eu-west-1a"
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["client"]}"
@@ -222,7 +222,7 @@ resource "aws_spot_instance_request" "metrics" {
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  availability_zone      = "us-east-2a"
+  availability_zone      = "eu-west-1a"
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["metrics"]}"
@@ -235,7 +235,7 @@ resource "aws_spot_instance_request" "metrics" {
 resource "aws_ebs_volume" "ebs_bookkeeper" {
   count             = "${var.num_instances["bookkeeper"]}"
 
-  availability_zone = "us-east-2a"
+  availability_zone = "eu-west-1a"
   size              = 30
   type              = "gp3"
 
