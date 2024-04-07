@@ -33,12 +33,13 @@ import io.openmessaging.benchmark.driver.ConsumerCallback;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ConsumerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
 import io.openmessaging.benchmark.driver.MessageProducerImpl;
+import io.openmessaging.benchmark.driver.monitoring.InstanceWorkerStats;
 import io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkConfiguration;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
-import io.openmessaging.benchmark.worker.commands.CountersStats;
-import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
-import io.openmessaging.benchmark.worker.commands.PeriodStats;
+import io.openmessaging.benchmark.driver.monitoring.CountersStats;
+import io.openmessaging.benchmark.driver.monitoring.CumulativeLatencies;
+import io.openmessaging.benchmark.driver.monitoring.PeriodStats;
 import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
 import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
 import io.openmessaging.benchmark.worker.commands.TopicsInfo;
@@ -86,7 +87,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final TpcHMessageProcessor tpcHMessageProcessor;
     private final ExecutorService executor =
             Executors.newCachedThreadPool(new DefaultThreadFactory("local-worker"));
-    private final WorkerStats stats;
+    private final InstanceWorkerStats stats;
     private boolean testCompleted = false;
     private boolean consumersArePaused = false;
     private String experimentId = null;
@@ -98,7 +99,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     public LocalWorker(StatsLogger statsLogger) {
-        this.stats = new WorkerStats(statsLogger);
+        this.stats = new InstanceWorkerStats(statsLogger);
         this.messageProducer = new MessageProducerImpl(new UniformRateLimiter(1.0), stats);
         this.tpcHMessageProcessor = new TpcHMessageProcessor(
             this.producers,

@@ -15,6 +15,7 @@ package io.openmessaging.benchmark.worker.commands;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.openmessaging.benchmark.driver.monitoring.CountersStats;
 import org.junit.jupiter.api.Test;
 
 class CountersStatsTest {

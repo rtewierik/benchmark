@@ -15,9 +15,9 @@ package io.openmessaging.benchmark.worker;
 
 
 import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
-import io.openmessaging.benchmark.worker.commands.CountersStats;
-import io.openmessaging.benchmark.worker.commands.CumulativeLatencies;
-import io.openmessaging.benchmark.worker.commands.PeriodStats;
+import io.openmessaging.benchmark.driver.monitoring.CountersStats;
+import io.openmessaging.benchmark.driver.monitoring.CumulativeLatencies;
+import io.openmessaging.benchmark.driver.monitoring.PeriodStats;
 import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
 import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
 import io.openmessaging.benchmark.worker.commands.TopicsInfo;

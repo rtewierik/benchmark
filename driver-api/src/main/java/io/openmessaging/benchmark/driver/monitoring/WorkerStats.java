@@ -13,6 +13,8 @@
  */
 package io.openmessaging.benchmark.driver.monitoring;
 
+import org.apache.bookkeeper.stats.StatsLogger;
+
 import java.io.IOException;
 
 public interface WorkerStats {
@@ -29,4 +31,11 @@ public interface WorkerStats {
             boolean isTpcH,
             boolean isError
     ) throws IOException;
+    StatsLogger getStatsLogger();
+    void recordMessageSent();
+    PeriodStats toPeriodStats();
+    CumulativeLatencies toCumulativeLatencies();
+    CountersStats toCountersStats() throws IOException;
+    void resetLatencies();
+    void reset();
 }

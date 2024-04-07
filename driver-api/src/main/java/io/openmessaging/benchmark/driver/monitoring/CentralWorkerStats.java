@@ -20,6 +20,8 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import io.openmessaging.benchmark.common.ObjectMappers;
 import io.openmessaging.benchmark.driver.EnvironmentConfiguration;
+import lombok.Getter;
+import org.apache.bookkeeper.stats.StatsLogger;
 
 import java.io.IOException;
 
@@ -30,6 +32,14 @@ public class CentralWorkerStats implements WorkerStats {
                     .withRegion(EnvironmentConfiguration.getRegion())
                     .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
                     .build();
+    private static final PeriodStats periodStats = new PeriodStats();
+    private static final CumulativeLatencies cumulativeLatencies = new CumulativeLatencies();
+    private static final CountersStats countersStats = new CountersStats();
+    protected final StatsLogger statsLogger;
+
+    public CentralWorkerStats(StatsLogger statsLogger) {
+        this.statsLogger = statsLogger;
+    }
 
     @Override
     public void recordMessageReceived(
@@ -72,6 +82,35 @@ public class CentralWorkerStats implements WorkerStats {
         SendMessageRequest request = new SendMessageRequest(EnvironmentConfiguration.getMonitoringSqsUri(), body);
         sqsClient.sendMessage(request);
     }
+
+    @Override
+    public StatsLogger getStatsLogger() {
+        return statsLogger;
+    }
+
+    @Override
+    public void recordMessageSent() {}
+
+    @Override
+    public PeriodStats toPeriodStats() {
+        return periodStats;
+    }
+
+    @Override
+    public CumulativeLatencies toCumulativeLatencies() {
+        return cumulativeLatencies;
+    }
+
+    @Override
+    public CountersStats toCountersStats() {
+        return countersStats;
+    }
+
+    @Override
+    public void resetLatencies() {}
+
+    @Override
+    public void reset() {}
 
     private static final ObjectWriter writer = ObjectMappers.writer;
 }
