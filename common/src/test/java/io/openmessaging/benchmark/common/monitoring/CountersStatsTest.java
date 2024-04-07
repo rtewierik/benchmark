@@ -11,11 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openmessaging.benchmark.driver.monitoring;
+package io.openmessaging.benchmark.common.monitoring;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.openmessaging.benchmark.common.monitoring.CountersStats;
 import org.junit.jupiter.api.Test;
 
 class CountersStatsTest {
