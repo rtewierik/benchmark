@@ -17,6 +17,7 @@ import static io.openmessaging.benchmark.common.utils.UniformRateLimiter.uninter
 
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -51,34 +52,44 @@ public class MessageProducerImpl implements MessageProducer {
         final long intendedSendTime = rateLimiter.acquire();
         uninterruptibleSleepNs(intendedSendTime);
         final long sendTime = nanoClock.get();
+        long length = payload.length;
         producer
                 .sendAsync(key, payload)
-                .thenRun(() -> success(payload.length, intendedSendTime, sendTime, experimentId, messageId, isTpcH))
-                .exceptionally((t) -> failure(t, experimentId, messageId, isTpcH));
+                .thenRun(() -> {
+                    try {
+                        recordResult(length, intendedSendTime, sendTime, experimentId, messageId, isTpcH, null);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .exceptionally((t) -> {
+                    try {
+                        return recordResult(length, intendedSendTime, sendTime, experimentId, messageId, isTpcH, t);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
-    private void success(
+    private Void recordResult(
         long payloadLength,
         long intendedSendTime,
         long sendTime,
         String experimentId,
         String messageId,
-        boolean isTpcH
-    ) {
+        boolean isTpcH,
+        Throwable t
+    ) throws IOException {
         long nowNs = nanoClock.get();
+        boolean isError = t != null;
         if (stats != null) {
-            stats.recordProducerSuccess(
-                    payloadLength, intendedSendTime, sendTime, nowNs, experimentId, messageId, isTpcH);
+            stats.recordMessageProduced(
+                    payloadLength, intendedSendTime, sendTime, nowNs, experimentId, messageId, isTpcH, isError);
         }
-    }
-
-    private Void failure(Throwable t, String experimentId, String messageId, boolean isTpcH) {
-        if (stats != null) {
-            stats.recordProducerFailure(experimentId, messageId, isTpcH);
+        if (isError) {
+            log.warn("Write error on message", t);
         }
-        log.warn("Write error on message", t);
         return null;
     }
-
     private static final Logger log = LoggerFactory.getLogger(MessageProducerImpl.class);
 }

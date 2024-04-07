@@ -13,20 +13,24 @@
  */
 package io.openmessaging.benchmark.driver.monitoring;
 
-import java.io.IOException;
+public class MonitoredReceivedMessage {
+    public long payloadLength;
+    public long endToEndLatencyMicros;
+    public String experimentId;
+    public String messageId;
+    public boolean isTpcH;
 
-public interface WorkerStats {
-    void recordMessageReceived(
-            long payloadLength, long endToEndLatencyMicros, String experimentId, String messageId, boolean isTpcH)
-            throws IOException;
-    void recordMessageProduced(
+    public MonitoredReceivedMessage(
             long payloadLength,
-            long intendedSendTimeNs,
-            long sendTimeNs,
-            long nowNs,
+            long endToEndLatencyMicros,
             String experimentId,
             String messageId,
-            boolean isTpcH,
-            boolean isError
-    ) throws IOException;
+            boolean isTpcH
+    ) {
+        this.payloadLength = payloadLength;
+        this.endToEndLatencyMicros = endToEndLatencyMicros;
+        this.experimentId = experimentId;
+        this.messageId = messageId;
+        this.isTpcH = isTpcH;
+    }
 }

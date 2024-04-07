@@ -16,37 +16,62 @@ package io.openmessaging.benchmark.driver.monitoring;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
+import com.amazonaws.services.sqs.model.SendMessageRequest;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import io.openmessaging.benchmark.common.ObjectMappers;
 import io.openmessaging.benchmark.driver.EnvironmentConfiguration;
+
+import java.io.IOException;
 
 public class CentralWorkerStats implements WorkerStats {
 
     private static final AmazonSQS sqsClient =
             AmazonSQSClientBuilder.standard()
-                    .withRegion(EnvironmentConfiguration.getMonitoringSqsUri())
+                    .withRegion(EnvironmentConfiguration.getRegion())
                     .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
                     .build();
 
     @Override
     public void recordMessageReceived(
-            long payloadLength, long endToEndLatencyMicros, String experimentId, String messageId, boolean isTpcH) {
-        // TO DO: Send event to SQS.
+            long payloadLength, long endToEndLatencyMicros, String experimentId, String messageId, boolean isTpcH)
+            throws IOException {
+        MonitoredReceivedMessage message = new MonitoredReceivedMessage(
+            payloadLength,
+            endToEndLatencyMicros,
+            experimentId,
+            messageId,
+            isTpcH
+        );
+        String body = writer.writeValueAsString(message);
+        SendMessageRequest request = new SendMessageRequest(EnvironmentConfiguration.getMonitoringSqsUri(), body);
+        sqsClient.sendMessage(request);
     }
 
     @Override
-    public void recordProducerSuccess(
+    public void recordMessageProduced(
             long payloadLength,
             long intendedSendTimeNs,
             long sendTimeNs,
             long nowNs,
             String experimentId,
             String messageId,
-            boolean isTpcH
-    ) {
-        // TO DO: Send event to SQS.
+            boolean isTpcH,
+            boolean isError
+    ) throws IOException {
+        MonitoredProducedMessage message = new MonitoredProducedMessage(
+                payloadLength,
+                intendedSendTimeNs,
+                sendTimeNs,
+                nowNs,
+                experimentId,
+                messageId,
+                isTpcH,
+                isError
+        );
+        String body = writer.writeValueAsString(message);
+        SendMessageRequest request = new SendMessageRequest(EnvironmentConfiguration.getMonitoringSqsUri(), body);
+        sqsClient.sendMessage(request);
     }
 
-    @Override
-    public void recordProducerFailure(String experimentId, String messageId, boolean isTpcH) {
-        // TO DO: Send event to SQS.
-    }
+    private static final ObjectWriter writer = ObjectMappers.writer;
 }
