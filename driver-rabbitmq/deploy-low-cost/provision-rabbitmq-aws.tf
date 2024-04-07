@@ -140,7 +140,7 @@ resource "aws_spot_instance_request" "rabbitmq" {
   key_name               = aws_key_pair.auth.id
   subnet_id              = aws_subnet.benchmark_subnet.id
   vpc_security_group_ids = [aws_security_group.benchmark_security_group.id]
-  availability_zone      = "us-west-2a"
+  availability_zone      = "eu-west-1a"
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = var.num_instances["rabbitmq"]
@@ -170,7 +170,7 @@ resource "aws_spot_instance_request" "client" {
   key_name               = aws_key_pair.auth.id
   subnet_id              = aws_subnet.benchmark_subnet.id
   vpc_security_group_ids = [aws_security_group.benchmark_security_group.id]
-  availability_zone      = "us-west-2a"
+  availability_zone      = "eu-west-1a"
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = var.num_instances["client"]
@@ -197,7 +197,7 @@ resource "aws_spot_instance_request" "prometheus" {
   subnet_id              = aws_subnet.benchmark_subnet.id
   vpc_security_group_ids = [
     aws_security_group.benchmark_security_group.id]
-  availability_zone      = "us-west-2a"
+  availability_zone      = "eu-west-1a"
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count = var.num_instances["prometheus"]
@@ -210,7 +210,7 @@ resource "aws_spot_instance_request" "prometheus" {
 resource "aws_ebs_volume" "ebs_rabbitmq" {
   count             = "${var.num_instances["rabbitmq"]}"
 
-  availability_zone = "us-west-2a"
+  availability_zone = "eu-west-1a"
   size              = 30
   type              = "gp3"
 

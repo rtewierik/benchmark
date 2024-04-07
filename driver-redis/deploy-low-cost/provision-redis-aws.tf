@@ -133,7 +133,7 @@ resource "aws_spot_instance_request" "client" {
   key_name               = aws_key_pair.auth.id
   subnet_id              = aws_subnet.benchmark_subnet.id
   vpc_security_group_ids = [aws_security_group.benchmark_security_group.id]
-  availability_zone      = "us-west-2a"
+  availability_zone      = "eu-west-1a"
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = var.num_instances["client"]
