@@ -99,11 +99,11 @@
     <Bug pattern="EI_EXPOSE_REP" />
   </Match>
   <Match>
-    <Class name="io.openmessaging.benchmark.worker.WorkerStats" />
+    <Class name="io.openmessaging.benchmark.worker.InstanceWorkerStats" />
     <Bug pattern="EI_EXPOSE_REP" />
   </Match>
   <Match>
-    <Class name="io.openmessaging.benchmark.worker.WorkerStats" />
+    <Class name="io.openmessaging.benchmark.worker.InstanceWorkerStats" />
     <Bug pattern="EI_EXPOSE_REP" />
   </Match>
   <Match>

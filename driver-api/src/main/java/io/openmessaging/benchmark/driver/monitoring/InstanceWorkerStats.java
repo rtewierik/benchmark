@@ -13,16 +13,19 @@
  */
 package io.openmessaging.benchmark.driver.monitoring;
 
+import lombok.Getter;
 import org.HdrHistogram.Recorder;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
 
 public class InstanceWorkerStats implements WorkerStats {
 
+    @Getter
     protected final StatsLogger statsLogger;
 
     protected final OpStatsLogger publishDelayLatencyStats;
@@ -127,5 +130,67 @@ public class InstanceWorkerStats implements WorkerStats {
             messageSendErrorCounter.inc();
             totalMessageSendErrors.increment();
         }
+    }
+
+    public void recordMessageSent() {
+        totalMessagesSent.increment();
+    }
+
+    public PeriodStats toPeriodStats() {
+        PeriodStats stats = new PeriodStats();
+
+        stats.messagesSent = messagesSent.sumThenReset();
+        stats.messageSendErrors = messageSendErrors.sumThenReset();
+        stats.bytesSent = bytesSent.sumThenReset();
+
+        stats.messagesReceived = messagesReceived.sumThenReset();
+        stats.bytesReceived = bytesReceived.sumThenReset();
+
+        stats.totalMessagesSent = totalMessagesSent.sum();
+        stats.totalMessageSendErrors = totalMessageSendErrors.sum();
+        stats.totalMessagesReceived = totalMessagesReceived.sum();
+
+        stats.publishLatency = publishLatencyRecorder.getIntervalHistogram();
+        stats.publishDelayLatency = publishDelayLatencyRecorder.getIntervalHistogram();
+        stats.endToEndLatency = endToEndLatencyRecorder.getIntervalHistogram();
+        return stats;
+    }
+
+    public CumulativeLatencies toCumulativeLatencies() {
+        CumulativeLatencies latencies = new CumulativeLatencies();
+        latencies.publishLatency = cumulativePublishLatencyRecorder.getIntervalHistogram();
+        latencies.publishDelayLatency = cumulativePublishDelayLatencyRecorder.getIntervalHistogram();
+        latencies.endToEndLatency = endToEndCumulativeLatencyRecorder.getIntervalHistogram();
+        return latencies;
+    }
+
+    public CountersStats toCountersStats() throws IOException {
+        CountersStats stats = new CountersStats();
+        stats.messagesSent = totalMessagesSent.sum();
+        stats.messageSendErrors = totalMessageSendErrors.sum();
+        stats.messagesReceived = totalMessagesReceived.sum();
+        return stats;
+    }
+
+    public void resetLatencies() {
+        publishLatencyRecorder.reset();
+        cumulativePublishLatencyRecorder.reset();
+        publishDelayLatencyRecorder.reset();
+        cumulativePublishDelayLatencyRecorder.reset();
+        endToEndLatencyRecorder.reset();
+        endToEndCumulativeLatencyRecorder.reset();
+    }
+
+    public void reset() {
+        resetLatencies();
+
+        messagesSent.reset();
+        messagesSent.reset();
+        messageSendErrors.reset();
+        bytesSent.reset();
+        messagesReceived.reset();
+        bytesReceived.reset();
+        totalMessagesSent.reset();
+        totalMessagesReceived.reset();
     }
 }
