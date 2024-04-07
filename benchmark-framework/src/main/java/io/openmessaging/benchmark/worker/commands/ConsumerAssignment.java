@@ -19,8 +19,14 @@ import java.util.List;
 
 public class ConsumerAssignment {
     public List<TopicSubscription> topicsSubscriptions = new ArrayList<>();
-    public String experimentId = null;
+    public String experimentId;
     public boolean isTpcH = false;
+
+    private ConsumerAssignment(List<TopicSubscription> topicsSubscriptions, String experimentId, boolean isTpcH) {
+        this.topicsSubscriptions = topicsSubscriptions;
+        this.isTpcH = isTpcH;
+        this.experimentId = experimentId;
+    }
 
     public ConsumerAssignment(String experimentId) {
         this.experimentId = experimentId;
@@ -32,6 +38,6 @@ public class ConsumerAssignment {
     }
 
     public ConsumerAssignment(ConsumerAssignment assignment) {
-        this(assignment.experimentId, assignment.isTpcH);
+        this(new ArrayList<>(), assignment.experimentId, assignment.isTpcH);
     }
 }

@@ -36,9 +36,12 @@ import io.openmessaging.benchmark.worker.commands.TopicsInfo;
 import io.openmessaging.tpch.TpcHConstants;
 import io.openmessaging.tpch.model.TpcHArguments;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -50,11 +53,14 @@ import org.slf4j.LoggerFactory;
 
 public class WorkloadGenerator implements AutoCloseable {
 
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+
     private final String driverName;
     private final Workload workload;
     private final TpcHArguments arguments;
     private final Worker worker;
     private final LocalWorker localWorker;
+    private final String experimentId;
 
     private final ExecutorService executor =
             Executors.newCachedThreadPool(new DefaultThreadFactory("messaging-benchmark"));
@@ -75,6 +81,7 @@ public class WorkloadGenerator implements AutoCloseable {
         this.arguments = arguments;
         this.worker = worker;
         this.localWorker = localWorker;
+        this.experimentId = String.format("%s-%s", workload.name, DATE_FORMAT.format(new Date()));
 
         if (workload.consumerBacklogSizeGB > 0 && workload.producerRate == 0) {
             throw new IllegalArgumentException(
@@ -313,7 +320,7 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     private void createConsumers(List<String> topics) throws IOException {
-        ConsumerAssignment consumerAssignment = new ConsumerAssignment(workload.name);
+        ConsumerAssignment consumerAssignment = new ConsumerAssignment(this.experimentId);
 
         for (String topic : topics) {
             for (int i = 0; i < workload.subscriptionsPerTopic; i++) {
