@@ -32,8 +32,11 @@ import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.ConsumerInfo;
 import io.openmessaging.benchmark.driver.BenchmarkDriver.TopicInfo;
+import io.openmessaging.benchmark.driver.EnvironmentConfiguration;
 import io.openmessaging.benchmark.driver.MessageProducerImpl;
+import io.openmessaging.benchmark.driver.monitoring.CentralWorkerStats;
 import io.openmessaging.benchmark.driver.monitoring.InstanceWorkerStats;
+import io.openmessaging.benchmark.driver.monitoring.WorkerStats;
 import io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkConfiguration;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
@@ -87,7 +90,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final TpcHMessageProcessor tpcHMessageProcessor;
     private final ExecutorService executor =
             Executors.newCachedThreadPool(new DefaultThreadFactory("local-worker"));
-    private final InstanceWorkerStats stats;
+    private final WorkerStats stats;
     private boolean testCompleted = false;
     private boolean consumersArePaused = false;
     private String experimentId = null;
@@ -99,7 +102,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     public LocalWorker(StatsLogger statsLogger) {
-        this.stats = new InstanceWorkerStats(statsLogger);
+        this.stats = EnvironmentConfiguration.isCloudMonitoringEnabled()
+            ? new CentralWorkerStats(statsLogger)
+            : new InstanceWorkerStats(statsLogger);
         this.messageProducer = new MessageProducerImpl(new UniformRateLimiter(1.0), stats);
         this.tpcHMessageProcessor = new TpcHMessageProcessor(
             this.producers,
@@ -378,7 +383,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
         return this.testCompleted;
     }
 
-    public void internalMessageReceived(int size, long publishTimestamp, String experimentId, String messageId) {
+    public void internalMessageReceived(int size, long publishTimestamp, String experimentId, String messageId)
+            throws IOException {
         long now = System.currentTimeMillis();
         long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
         stats.recordMessageReceived(size, endToEndLatencyMicros, experimentId, messageId, this.isTpcH);

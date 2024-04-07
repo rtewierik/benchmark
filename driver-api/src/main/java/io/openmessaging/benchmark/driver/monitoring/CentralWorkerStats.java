@@ -20,7 +20,7 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import io.openmessaging.benchmark.common.ObjectMappers;
 import io.openmessaging.benchmark.driver.EnvironmentConfiguration;
-import lombok.Getter;
+import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 
 import java.io.IOException;
@@ -36,6 +36,10 @@ public class CentralWorkerStats implements WorkerStats {
     private static final CumulativeLatencies cumulativeLatencies = new CumulativeLatencies();
     private static final CountersStats countersStats = new CountersStats();
     protected final StatsLogger statsLogger;
+
+    public CentralWorkerStats() {
+        this(NullStatsLogger.INSTANCE);
+    }
 
     public CentralWorkerStats(StatsLogger statsLogger) {
         this.statsLogger = statsLogger;
