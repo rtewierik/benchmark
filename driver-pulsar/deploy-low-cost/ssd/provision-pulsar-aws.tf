@@ -223,7 +223,7 @@ resource "aws_spot_instance_request" "client" {
 resource "aws_ebs_volume" "ebs_zookeeper" {
   count             = "${var.num_instances["zookeeper"]}"
 
-  availability_zone = "us-west-2a"
+  availability_zone = "eu-west-1a"
   size              = 30
   type              = "gp3"
 
@@ -235,7 +235,7 @@ resource "aws_ebs_volume" "ebs_zookeeper" {
 resource "aws_ebs_volume" "ebs_pulsar" {
   count             = "${var.num_instances["pulsar"]}"
 
-  availability_zone = "us-west-2a"
+  availability_zone = "eu-west-1a"
   size              = 40
   type              = "gp3"
 

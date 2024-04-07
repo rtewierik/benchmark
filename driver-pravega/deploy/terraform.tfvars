@@ -1,6 +1,6 @@
 public_key_path = "~/.ssh/pravega_aws.pub"
-region          = "us-east-2"
-ami             = "ami-0bb2449c2217cb9b0" // RHEL-7.9 us-east-2
+region          = "eu-west-1"
+ami             = "ami-06211bde2f9c725e5" // RHEL-7.9 eu-west-1
 
 instance_types = {
   "controller"   = "m5.large"

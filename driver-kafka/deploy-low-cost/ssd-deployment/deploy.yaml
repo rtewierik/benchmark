@@ -26,7 +26,7 @@
       amazon.aws.ec2_vol_info:
         access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
         secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
-        region: us-west-2
+        region: eu-west-1
         filters:
           "tag:Name": "kafka_ebs_{{groups['kafka'].index(inventory_hostname)}}"
       register: ec2_vol_info
@@ -93,7 +93,7 @@
       amazon.aws.ec2_vol_info:
         access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
         secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
-        region: us-west-2
+        region: eu-west-1
         filters:
           "tag:Name": "zookeeper_ebs_{{groups['zookeeper'].index(inventory_hostname)}}"
       register: ec2_vol_info

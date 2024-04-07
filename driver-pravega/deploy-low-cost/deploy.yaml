@@ -308,7 +308,7 @@
       amazon.aws.ec2_vol_info:
         access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
         secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
-        region: us-east-2
+        region: eu-west-1
         filters:
           "tag:Name": "bookkeeper_ebs_{{groups['bookkeeper'].index(inventory_hostname)}}"
       register: ec2_vol_info
