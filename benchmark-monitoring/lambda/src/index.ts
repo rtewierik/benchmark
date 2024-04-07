@@ -10,7 +10,13 @@ const REGION = 'eu-west-1'
 interface Event {
   messageId: string
   experimentId: string
-  // TO DO: Add more data here.
+  payloadLength: number
+  intendedSendTimeNs: number
+  sendTimeNs: number
+  nowNs: number
+  endToEndLatencyMicros: number
+  isTpcH: boolean
+  isError: boolean
 }
 
 const dynamoDbClient = new DynamoDBClient({ region: REGION })
