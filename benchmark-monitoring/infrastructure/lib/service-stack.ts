@@ -46,11 +46,10 @@ export class ServiceStack extends Stack {
     super(scope, id, props)
 
     const iamRoles = this.getIamRoles()
-    const kmsKey = this.createBenchmarkMonitoringKmsKey(props)
-    const { sqsQueue, ingestionDeadLetterQueue } = this.createBenchmarkMonitoringDataIngestionLayer(iamRoles, kmsKey, props)
+    const { sqsQueue, ingestionDeadLetterQueue } = this.createBenchmarkMonitoringDataIngestionLayer(iamRoles, props)
     const deadLetterQueue = this.createBenchmarkMonitoringLambdaDeadLetterQueue(props)
-    const lambda = this.createBenchmarkMonitoringLambda(sqsQueue, kmsKey, deadLetterQueue, props)
-    this.createBenchmarkMonitoringDynamoDb(lambda, kmsKey, props)
+    const lambda = this.createBenchmarkMonitoringLambda(sqsQueue, deadLetterQueue, props)
+    this.createBenchmarkMonitoringDynamoDb(lambda, props)
     addMonitoring(this, sqsQueue, lambda, deadLetterQueue, ingestionDeadLetterQueue, props)
     addAlerting(this, lambda, deadLetterQueue, ingestionDeadLetterQueue, props)
   }
@@ -59,18 +58,7 @@ export class ServiceStack extends Stack {
     return IAM_ROLE_NAMES.map((roleName, index) => Role.fromRoleName(this, `BenchmarkMonitoringRole${index}`, roleName))
   }
 
-  private createBenchmarkMonitoringKmsKey(props: BenchmarkMonitoringStackProps): Key {
-    return new Key(this, 'BenchmarkMonitoringKmsKey', {
-      description:
-        'The KMS key used to encrypt the SQS queue used in Benchmark Monitoring',
-      alias: `${props.appName}-sqs-encryption`,
-      enableKeyRotation: true,
-      enabled: true,
-      removalPolicy: RemovalPolicy.DESTROY
-    })
-  }
-
-  private createBenchmarkMonitoringDataIngestionLayer(iamRoles: IRole[], kmsKey: Key, props: BenchmarkMonitoringStackProps): DataIngestionLayer {
+  private createBenchmarkMonitoringDataIngestionLayer(iamRoles: IRole[], props: BenchmarkMonitoringStackProps): DataIngestionLayer {
     const { sqsQueue, deadLetterQueue, apiGatewayRole } = new ApiGatewayToSqs(this, 'BenchmarkMonitoringDataIngestion', {
       queueProps: {
         queueName: props.appName,
@@ -81,14 +69,12 @@ export class ServiceStack extends Stack {
       },
       deployDeadLetterQueue: true,
       maxReceiveCount: 10,
-      allowCreateOperation: true,
-      encryptionKey: kmsKey
+      allowCreateOperation: true
     })
     iamRoles.forEach(role => sqsQueue.grantSendMessages(role));
     if (!deadLetterQueue) {
       throw new Error('The ApiGatewayToSqs dependency did not yield a dead letter queue!')
     }
-    kmsKey.grantEncryptDecrypt(apiGatewayRole);
     return { sqsQueue, ingestionDeadLetterQueue: deadLetterQueue.queue }
   }
 
@@ -106,7 +92,7 @@ export class ServiceStack extends Stack {
     return sqsQueue
   }
 
-  private createBenchmarkMonitoringLambda(benchmarkMonitoringQueue: IQueue, benchmarkMonitoringKmsKey: IKey, deadLetterQueue: IQueue, props: BenchmarkMonitoringStackProps): LambdaFunction {
+  private createBenchmarkMonitoringLambda(benchmarkMonitoringQueue: IQueue, deadLetterQueue: IQueue, props: BenchmarkMonitoringStackProps): LambdaFunction {
     const iamRole = new Role(
       this,
       'BenchmarkMonitoringLambdaIamRole',
@@ -118,12 +104,6 @@ export class ServiceStack extends Stack {
       }
     )
 
-    iamRole.addToPolicy(
-      new PolicyStatement({
-        actions: ['kms:Decrypt', 'kms:GenerateDataKey'],
-        resources: [benchmarkMonitoringKmsKey.keyArn],
-      })
-    )
     iamRole.addToPolicy(
       new PolicyStatement({
         actions: ['SQS:ReceiveMessage', 'SQS:SendMessage'],
@@ -174,13 +154,12 @@ export class ServiceStack extends Stack {
     return lambda
   }
 
-  private createBenchmarkMonitoringDynamoDb(lambda: LambdaFunction, kmsKey: IKey, props: BenchmarkMonitoringStackProps) {
+  private createBenchmarkMonitoringDynamoDb(lambda: LambdaFunction, props: BenchmarkMonitoringStackProps) {
     const table = new Table(this, 'BenchmarkMonitoringDynamoDbTable', {
       tableName: props.appName,
       encryption: TableEncryption.CUSTOMER_MANAGED,
-      encryptionKey: kmsKey,
       partitionKey: {
-        name: 'experimentId',
+        name: 'messageId',
         type: AttributeType.STRING,
       },
       readCapacity: 1,

@@ -11,4 +11,6 @@ export interface S3ConsumerLambdaStackProps extends StackProps {
   numberOfConsumers: number
   bucketName: string
   isTpcH: boolean
+  isCloudMonitoringEnabled: boolean
+  monitoringSqsUri: string
 }

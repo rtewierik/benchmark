@@ -135,6 +135,8 @@ export class ServiceStack extends Stack {
         S3_URIS: s3Prefixes.map(prefix => `s3://${props.bucketName}/${prefix}`).join(','),
         IS_TPC_H: `${props.isTpcH}`,
         DEBUG: props.debug ? 'TRUE' : 'FALSE',
+        IS_CLOUD_MONITORING_ENABLED: props.isCloudMonitoringEnabled ? 'TRUE' : 'FALSE',
+        MONITORING_SQS_URI: props.monitoringSqsUri
       },
       retryAttempts: 2
     });
