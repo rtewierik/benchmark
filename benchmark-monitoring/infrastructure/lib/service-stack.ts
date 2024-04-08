@@ -75,7 +75,7 @@ export class ServiceStack extends Stack {
       queueProps: {
         queueName: props.appName,
         visibilityTimeout: Duration.seconds(props.eventsVisibilityTimeoutSeconds),
-        encryption: QueueEncryption.KMS,
+        encryption: QueueEncryption.KMS_MANAGED,
         dataKeyReuse: Duration.seconds(300),
         retentionPeriod: Duration.days(14),
       },

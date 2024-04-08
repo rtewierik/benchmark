@@ -344,8 +344,14 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     private ConsumerAssignment createTpcHConsumers(List<String> topics) throws IOException {
-        ConsumerAssignment consumerAssignment = new ConsumerAssignment(this.arguments.queryId, true);
-        ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment(this.arguments.queryId, true);
+        String experimentId = String.format(
+            "%s-%s-%s",
+            this.experimentId,
+            this.arguments.queryId,
+            DATE_FORMAT.format(new Date())
+        );
+        ConsumerAssignment consumerAssignment = new ConsumerAssignment(experimentId, true);
+        ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment(experimentId, true);
 
         consumerAssignment.topicsSubscriptions.add(
                 new TopicSubscription(
