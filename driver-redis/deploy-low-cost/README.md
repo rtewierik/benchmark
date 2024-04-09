@@ -12,6 +12,13 @@ sudo bin/benchmark \
   workloads/simple-workload.yaml
 ```
 
+```
+sudo bin/benchmark \
+  --drivers driver-redis/redis-default.yaml \
+  --tpc-h-file workloads/tpc-h-default.yaml \
+  workloads/simple-workload.yaml
+```
+
 ## Additional manual steps to fix deployment of Redis
 
 **NOTE:** The current Terraform project creates default security groups to which the 0.0.0.0/0 inbound rule needs to be added for the Redis cluster to be reachable. A fix should be implemented.

@@ -20,10 +20,12 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.common.ObjectMappers;
+import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.LongAdder;
 
 public class CentralWorkerStats implements WorkerStats {
 
@@ -32,10 +34,11 @@ public class CentralWorkerStats implements WorkerStats {
                     .withRegion(EnvironmentConfiguration.getRegion())
                     .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
                     .build();
-    private static final PeriodStats periodStats = new PeriodStats();
     private static final CumulativeLatencies cumulativeLatencies = new CumulativeLatencies();
-    private static final CountersStats countersStats = new CountersStats();
     protected final StatsLogger statsLogger;
+    protected final LongAdder messagesReceived = new LongAdder();
+    protected final Counter messagesReceivedCounter;
+    protected final LongAdder totalMessagesReceived = new LongAdder();
 
     public CentralWorkerStats() {
         this(NullStatsLogger.INSTANCE);
@@ -43,12 +46,17 @@ public class CentralWorkerStats implements WorkerStats {
 
     public CentralWorkerStats(StatsLogger statsLogger) {
         this.statsLogger = statsLogger;
+        StatsLogger consumerStatsLogger = statsLogger.scope("consumer");
+        this.messagesReceivedCounter = consumerStatsLogger.getCounter("messages_recv");
     }
 
     @Override
     public void recordMessageReceived(
             long payloadLength, long endToEndLatencyMicros, String experimentId, String messageId, boolean isTpcH)
             throws IOException {
+        messagesReceived.increment();
+        totalMessagesReceived.increment();
+        messagesReceivedCounter.inc();
         MonitoredReceivedMessage message = new MonitoredReceivedMessage(
             payloadLength,
             endToEndLatencyMicros,
@@ -97,7 +105,10 @@ public class CentralWorkerStats implements WorkerStats {
 
     @Override
     public PeriodStats toPeriodStats() {
-        return periodStats;
+        PeriodStats stats = new PeriodStats();
+        stats.messagesReceived = messagesReceived.sumThenReset();
+        stats.totalMessagesReceived = totalMessagesReceived.sum();
+        return stats;
     }
 
     @Override
@@ -107,14 +118,19 @@ public class CentralWorkerStats implements WorkerStats {
 
     @Override
     public CountersStats toCountersStats() {
-        return countersStats;
+        CountersStats stats = new CountersStats();
+        stats.messagesReceived = totalMessagesReceived.sum();
+        return stats;
     }
 
     @Override
     public void resetLatencies() {}
 
     @Override
-    public void reset() {}
+    public void reset() {
+        messagesReceived.reset();
+        totalMessagesReceived.reset();
+    }
 
     private static final ObjectWriter writer = ObjectMappers.writer;
 }
