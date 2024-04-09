@@ -86,13 +86,13 @@ resource "aws_spot_instance_request" "client" {
 
   user_data = <<-EOF
     #!/bin/bash
-    echo "export SNS_URIS=${var.is_tpc_h ? join(",", var.sns_uris) : var.sns_uris[count.index]}" >> /etc/profile.d/myenvvars.sh
+    echo "export SNS_URIS=${join(",", var.sns_uris)}" >> /etc/profile.d/myenvvars.sh
     echo "export PRODUCE_WITH_ALL_WORKERS=true" >> /etc/profile.d/myenvvars.sh
     echo "export SKIP_READINESS_CHECK=true" >> /etc/profile.d/myenvvars.sh
     echo "export IS_CLOUD_MONITORING_ENABLED=${var.enable_cloud_monitoring}" >> /etc/profile.d/myenvvars.sh
     echo "export MONITORING_SQS_URI=${var.monitoring_sqs_uri}" >> /etc/profile.d/myenvvars.sh
     echo "export REGION=${var.region}" >> /etc/profile.d/myenvvars.sh
-    echo "SNS_URIS=${var.is_tpc_h ? join(",", var.sns_uris) : var.sns_uris[count.index]}" >> /etc/environment
+    echo "SNS_URIS=${join(",", var.sns_uris)}" >> /etc/environment
     echo "PRODUCE_WITH_ALL_WORKERS=true" >> /etc/environment
     echo "SKIP_READINESS_CHECK=true" >> /etc/environment
     echo "IS_CLOUD_MONITORING_ENABLED=${var.enable_cloud_monitoring}" >> /etc/environment
