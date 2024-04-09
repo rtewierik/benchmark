@@ -4,7 +4,13 @@ az              = "eu-west-1a"
 ami             = "ami-0f0f1c02e5e4d9d9f" // RHEL-8
 
 is_tpc_h = false
-s3_uris = "s3://benchmarking-events/s3-consumer-lambda-s3-map-2ymi6,s3://benchmarking-events/s3-consumer-lambda-s3-result-kyoib,s3://benchmarking-events/s3-consumer-lambda-s3-reduce0-mk86h,s3://benchmarking-events/s3-consumer-lambda-s3-reduce1-u7imm,s3://benchmarking-events/s3-consumer-lambda-s3-reduce2-vgliv"
+s3_uris = [
+  "s3://benchmarking-events/s3-consumer-lambda-s3-map-2ymi6",
+  "s3://benchmarking-events/s3-consumer-lambda-s3-result-kyoib",
+  "s3://benchmarking-events/s3-consumer-lambda-s3-reduce0-mk86h",
+  "s3://benchmarking-events/s3-consumer-lambda-s3-reduce1-u7imm",
+  "s3://benchmarking-events/s3-consumer-lambda-s3-reduce2-vgliv"
+]
 
 instance_types = {
   "client"       = "t3.large"
