@@ -52,7 +52,7 @@ public class CentralWorkerStats implements WorkerStats {
         MonitoredReceivedMessage message = new MonitoredReceivedMessage(
             payloadLength,
             endToEndLatencyMicros,
-            experimentId,
+            experimentId != null ? experimentId : "UNAVAILABLE",
             messageId,
             isTpcH
         );
@@ -77,7 +77,7 @@ public class CentralWorkerStats implements WorkerStats {
                 intendedSendTimeNs,
                 sendTimeNs,
                 nowNs,
-                experimentId,
+                experimentId != null ? experimentId : "UNAVAILABLE",
                 messageId,
                 isTpcH,
                 isError

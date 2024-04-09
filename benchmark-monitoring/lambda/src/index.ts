@@ -37,7 +37,16 @@ const isValidEvent = (result: OperationResult<Event | undefined>): result is Ope
 
 const mapToDynamoDbEntry = (event: Event) =>
   Object.entries(event).reduce((acc, [key, value]) => {
-    acc[key] = { S: value }
+    const type = typeof value
+    if (type === 'string') {
+      acc[key] = { S: value }
+    } else if (type === 'number') {
+      acc[key] = { N: String(value) }
+    } else if (type === 'boolean') {
+      acc[key] = { BOOL: value }
+    } else {
+      throw new Error(`Invalid type \'${type}\' detected!`)
+    }
     return acc
   }, {} as Record<string, AttributeValue>)
 

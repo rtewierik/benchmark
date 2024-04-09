@@ -19,7 +19,10 @@ const stackProps: S3ConsumerLambdaStackProps = {
   numberOfConsumers: 3,
   alertingEnabled: true,
   bucketName: 'benchmarking-events',
-  isTpcH: true
+  isTpcH: true,
+  isCloudMonitoringEnabled: true,
+  monitoringSqsUri: 'https://sqs.eu-west-1.amazonaws.com/138945776678/benchmark-monitoring',
+  monitoringSqsArn: 'arn:aws:sqs:eu-west-1:138945776678:benchmark-monitoring'
 }
 
 new ServiceStack(app, 's3-consumer-lambda', stackProps)

@@ -26,6 +26,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import io.openmessaging.benchmark.common.EnvironmentConfiguration;
+import io.openmessaging.benchmark.common.monitoring.WorkerStats;
 import io.openmessaging.benchmark.common.producer.MessageProducerImpl;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
@@ -33,6 +35,7 @@ import io.openmessaging.benchmark.common.monitoring.CentralWorkerStats;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,12 +47,13 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final Logger log = LoggerFactory.getLogger(SnsSqsBenchmarkConsumer.class);
+    private static final WorkerStats stats = new CentralWorkerStats();
     private static final TpcHMessageProcessor messageProcessor =
             new TpcHMessageProcessor(
                     SnsSqsBenchmarkConfiguration.snsUris.stream()
                             .map(SnsSqsBenchmarkSnsProducer::new)
                             .collect(Collectors.toList()),
-                    new MessageProducerImpl(new UniformRateLimiter(1.0), new CentralWorkerStats()),
+                    new MessageProducerImpl(new UniformRateLimiter(1.0), stats),
                     () -> {},
                     log);
     private static final AmazonSQS sqsClient =
@@ -61,10 +65,15 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
 
     @Override
     public Void handleRequest(SQSEvent event, Context context) {
-        if (SnsSqsBenchmarkConfiguration.isTpcH) {
-            handleTpcHRequest(event);
-        } else {
-            handleThroughputRequest(event);
+        log.info(EnvironmentConfiguration.getMonitoringSqsUri());
+        try {
+            if (SnsSqsBenchmarkConfiguration.isTpcH) {
+                handleTpcHRequest(event);
+            } else {
+                handleThroughputRequest(event);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return null;
     }
@@ -75,6 +84,18 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
                 log.info("Received message: {}", writer.writeValueAsString(message));
                 String body = message.getBody();
                 TpcHMessage tpcHMessage = mapper.readValue(body, TpcHMessage.class);
+                String experimentId = messageProcessor.processTpcHMessage(tpcHMessage);
+                long now = System.currentTimeMillis();
+                String sentTimestampStr = message.getAttributes().get("SentTimestamp");
+                long publishTimestamp = Long.parseLong(sentTimestampStr);
+                long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
+                stats.recordMessageReceived(
+                    message.getBody().length(),
+                    endToEndLatencyMicros,
+                    experimentId,
+                    tpcHMessage.messageId,
+                    true
+                );
                 messageProcessor.processTpcHMessage(tpcHMessage);
                 this.deleteMessage(message.getReceiptHandle());
             } catch (IOException e) {
@@ -83,8 +104,19 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
         }
     }
 
-    private void handleThroughputRequest(SQSEvent event) {
+    private void handleThroughputRequest(SQSEvent event) throws IOException {
         for (SQSMessage message : event.getRecords()) {
+            long now = System.currentTimeMillis();
+            String sentTimestampStr = message.getAttributes().get("SentTimestamp");
+            long publishTimestamp = Long.parseLong(sentTimestampStr);
+            long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
+            stats.recordMessageReceived(
+                message.getBody().length(),
+                endToEndLatencyMicros,
+                "THROUGHPUT_SNS_SQS",
+                message.getMessageId(),
+                false
+            );
             this.deleteMessage(message.getReceiptHandle());
         }
     }

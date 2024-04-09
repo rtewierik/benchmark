@@ -21,7 +21,7 @@ sudo bin/benchmark \
 
 ### Locations to configure memory in case of changing instance size
 
-* `deploy.yaml`requires modification of the `Configure memory` task
+* `deploy.yaml` requires modification of the `Configure memory` task
 
 ## Running the Ansible playbook
 

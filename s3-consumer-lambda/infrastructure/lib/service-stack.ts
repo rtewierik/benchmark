@@ -44,6 +44,8 @@ export class ServiceStack extends Stack {
   constructor(scope: App, id: string, props: S3ConsumerLambdaStackProps) {
     super(scope, id, props)
     const bucket = Bucket.fromBucketName(this, 'S3ConsumerLambdaSourceBucket', props.bucketName)
+    const chunksBucket = Bucket.fromBucketName(this, 'S3ConsumerChunksBucket', 'tpc-h-chunks')
+    const monitoringSqsQueue = Queue.fromQueueArn(this, 'S3ConsumerMonitoringSqsQueue', props.monitoringSqsArn)
     if (props.isTpcH) {
       const mapPrefix = this.getS3Prefix(props, MAP_ID)
       const resultPrefix = this.getS3Prefix(props, RESULT_ID)
@@ -54,31 +56,33 @@ export class ServiceStack extends Stack {
       }
       const aggregateConfig = { ...AGGREGATE_CONFIG, s3Prefixes }
       const mapConfiguration = { s3Prefixes, ...props }
-      this.createDataIngestionLayer(props, MAP_ID, bucket, mapConfiguration, mapPrefix)
+      this.createDataIngestionLayer(props, MAP_ID, bucket, chunksBucket, monitoringSqsQueue, mapConfiguration, mapPrefix)
       for (var i = 0; i < props.numberOfConsumers; i++) {
         const prefix = s3Prefixes[2 + i]
         const reducePrefixId = `${REDUCE_ID}${i}`
-        this.createDataIngestionLayer(props, reducePrefixId, bucket, aggregateConfig, prefix)
+        this.createDataIngestionLayer(props, reducePrefixId, bucket, chunksBucket, monitoringSqsQueue, aggregateConfig, prefix)
       }
-      this.createDataIngestionLayer(props, RESULT_ID, bucket, aggregateConfig, resultPrefix)
+      this.createDataIngestionLayer(props, RESULT_ID, bucket, chunksBucket, monitoringSqsQueue, aggregateConfig, resultPrefix)
     } else {
-      // TO DO: Consider using `props.numberOfConsumers` here to create more than one SNS/SQS pair. Might not be necessary since infrastructure should be isolated.
-      const prefix = this.getS3Prefix(props, DEFAULT_ID)
-      this.createDataIngestionLayer(props, DEFAULT_ID, bucket, AGGREGATE_CONFIG, prefix)
+      for (var i = 0; i < props.numberOfConsumers; i++) {
+        const prefix = this.getS3Prefix(props, DEFAULT_ID)
+        const consumerPrefixId = `${DEFAULT_ID}${i}`
+        this.createDataIngestionLayer(props, consumerPrefixId, bucket, chunksBucket, monitoringSqsQueue, AGGREGATE_CONFIG, prefix)
+      }
     }
   }
 
   private getS3Prefix(props: S3ConsumerLambdaStackProps, id: string) {
     return `${props.appName}-s3-${id.toLowerCase()}-${this.getRandomString()}`
   }
-  
+
   private getRandomString() {
     return Math.random().toString(36).substr(2, 5);
   }
 
-  private createDataIngestionLayer(props: S3ConsumerLambdaStackProps, id: string, bucket: IBucket, lambdaConfiguration: LambdaConfiguration, s3Prefix: string) {
+  private createDataIngestionLayer(props: S3ConsumerLambdaStackProps, id: string, bucket: IBucket, chunksBucket: IBucket, monitoringSqsQueue: IQueue, lambdaConfiguration: LambdaConfiguration, s3Prefix: string) {
     const lambdaDeadLetterQueue = this.createS3ConsumerLambdaDeadLetterQueue(props, id)
-    const lambda = this.createS3ConsumerLambda(bucket, lambdaDeadLetterQueue, props, id, lambdaConfiguration, s3Prefix)
+    const lambda = this.createS3ConsumerLambda(bucket, chunksBucket, monitoringSqsQueue, lambdaDeadLetterQueue, props, id, lambdaConfiguration, s3Prefix)
     addMonitoring(this, lambda, lambdaDeadLetterQueue, props, id)
     addAlerting(this, lambda, lambdaDeadLetterQueue, props, id)
   }
@@ -95,7 +99,7 @@ export class ServiceStack extends Stack {
       })
   }
 
-  private createS3ConsumerLambda(bucket: IBucket, deadLetterQueue: IQueue, props: S3ConsumerLambdaStackProps, id: string, lambdaConfiguration: LambdaConfiguration, s3Prefix: string): LambdaFunction {
+  private createS3ConsumerLambda(bucket: IBucket, chunksBucket: IBucket, monitoringSqsQueue: IQueue, deadLetterQueue: IQueue, props: S3ConsumerLambdaStackProps, id: string, lambdaConfiguration: LambdaConfiguration, s3Prefix: string): LambdaFunction {
     const { s3Prefixes, numberOfConsumers, functionTimeoutSeconds } = lambdaConfiguration
     const lowerCaseId = id.toLowerCase()
     const iamRole = new Role(
@@ -110,6 +114,8 @@ export class ServiceStack extends Stack {
     )
 
     bucket.grantReadWrite(iamRole)
+    chunksBucket.grantRead(iamRole)
+    monitoringSqsQueue.grantSendMessages(iamRole)
     iamRole.addToPolicy(
       new PolicyStatement({
         actions: ['SQS:SendMessage'],
@@ -133,6 +139,8 @@ export class ServiceStack extends Stack {
         S3_URIS: s3Prefixes.map(prefix => `s3://${props.bucketName}/${prefix}`).join(','),
         IS_TPC_H: `${props.isTpcH}`,
         DEBUG: props.debug ? 'TRUE' : 'FALSE',
+        IS_CLOUD_MONITORING_ENABLED: props.isCloudMonitoringEnabled ? 'TRUE' : 'FALSE',
+        MONITORING_SQS_URI: props.monitoringSqsUri
       },
       retryAttempts: 2
     });

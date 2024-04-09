@@ -18,7 +18,10 @@ const stackProps: SnsSqsConsumerLambdaStackProps = {
   functionTimeoutSeconds: 300,
   numberOfConsumers: 3,
   alertingEnabled: true,
-  isTpcH: true
+  isTpcH: false,
+  isCloudMonitoringEnabled: true,
+  monitoringSqsUri: 'https://sqs.eu-west-1.amazonaws.com/138945776678/benchmark-monitoring',
+  monitoringSqsArn: 'arn:aws:sqs:eu-west-1:138945776678:benchmark-monitoring'
 }
 
 new ServiceStack(app, 'sns-sqs-consumer-lambda', stackProps)

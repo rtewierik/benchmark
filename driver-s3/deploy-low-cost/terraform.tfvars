@@ -1,7 +1,7 @@
 public_key_path = "~/.ssh/s3_aws.pub"
 region          = "eu-west-1"
 az              = "eu-west-1a"
-ami             = "ami-0b5c3f4fa254e17d0" // RHEL-8
+ami             = "ami-0f0f1c02e5e4d9d9f" // RHEL-8
 
 is_tpc_h = false
 s3_uris = "s3://benchmarking-events/s3-consumer-lambda-s3-map-2ymi6,s3://benchmarking-events/s3-consumer-lambda-s3-result-kyoib,s3://benchmarking-events/s3-consumer-lambda-s3-reduce0-mk86h,s3://benchmarking-events/s3-consumer-lambda-s3-reduce1-u7imm,s3://benchmarking-events/s3-consumer-lambda-s3-reduce2-vgliv"
@@ -15,4 +15,4 @@ num_instances = {
 }
 
 enable_cloud_monitoring = true
-monitoring_sqs_uri = ""
+monitoring_sqs_uri = "https://sqs.eu-west-1.amazonaws.com/138945776678/benchmark-monitoring"
