@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.openmessaging.benchmark.common.client.AmazonS3Client;
+import io.openmessaging.benchmark.common.monitoring.WorkerStats;
 import io.openmessaging.benchmark.common.producer.MessageProducerImpl;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
@@ -30,6 +31,7 @@ import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,12 +43,13 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final Logger log = LoggerFactory.getLogger(S3BenchmarkConsumer.class);
+    private static final WorkerStats stats = new CentralWorkerStats();
     private static final TpcHMessageProcessor messageProcessor =
             new TpcHMessageProcessor(
                     S3BenchmarkConfiguration.s3Uris.stream()
                             .map(S3BenchmarkS3Producer::new)
                             .collect(Collectors.toList()),
-                    new MessageProducerImpl(new UniformRateLimiter(1.0), new CentralWorkerStats()),
+                    new MessageProducerImpl(new UniformRateLimiter(1.0), stats),
                     () -> {},
                     log);
     private static final AmazonS3Client s3Client = new AmazonS3Client();
@@ -68,8 +71,19 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                 String bucketName = record.getS3().getBucket().getName();
                 String key = record.getS3().getObject().getKey();
                 try (InputStream stream = s3Client.readFileFromS3(bucketName, key)) {
+                    int payloadLength = stream.available();
                     TpcHMessage tpcHMessage = mapper.readValue(stream, TpcHMessage.class);
-                    messageProcessor.processTpcHMessage(tpcHMessage);
+                    String experimentId = messageProcessor.processTpcHMessage(tpcHMessage);
+                    long now = System.currentTimeMillis();
+                    long publishTimestamp = record.getEventTime().getMillis();
+                    long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
+                    stats.recordMessageReceived(
+                        payloadLength,
+                        endToEndLatencyMicros,
+                        experimentId,
+                        tpcHMessage.messageId,
+                        true
+                    );
                     this.deleteMessage(record);
                 }
             } catch (IOException e) {
@@ -80,7 +94,27 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
 
     private void handleThroughputRequest(S3Event event) {
         for (S3Event.S3EventNotificationRecord record : event.getRecords()) {
-            this.deleteMessage(record);
+            try {
+                log.info("Received message: {}", writer.writeValueAsString(record.getS3()));
+                String bucketName = record.getS3().getBucket().getName();
+                String key = record.getS3().getObject().getKey();
+                try (InputStream stream = s3Client.readFileFromS3(bucketName, key)) {
+                    int payloadLength = stream.available();
+                    long now = System.currentTimeMillis();
+                    long publishTimestamp = record.getEventTime().getMillis();
+                    long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
+                    stats.recordMessageReceived(
+                        payloadLength,
+                        endToEndLatencyMicros,
+                        "THROUGHPUT_S3",
+                        String.format("%s-%s", record.getEventName(), record.getEventTime().getMillis()),
+                        false
+                    );
+                    this.deleteMessage(record);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
