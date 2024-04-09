@@ -12,4 +12,5 @@ export interface SnsSqsConsumerLambdaStackProps extends StackProps {
   isTpcH: boolean
   isCloudMonitoringEnabled: boolean
   monitoringSqsUri: string
+  monitoringSqsArn: string
 }

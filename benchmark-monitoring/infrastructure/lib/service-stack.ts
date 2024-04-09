@@ -59,7 +59,7 @@ export class ServiceStack extends Stack {
   }
 
   private createBenchmarkMonitoringDataIngestionLayer(iamRoles: IRole[], props: BenchmarkMonitoringStackProps): DataIngestionLayer {
-    const { sqsQueue, deadLetterQueue, apiGatewayRole } = new ApiGatewayToSqs(this, 'BenchmarkMonitoringDataIngestion', {
+    const { sqsQueue, deadLetterQueue } = new ApiGatewayToSqs(this, 'BenchmarkMonitoringDataIngestion', {
       queueProps: {
         queueName: props.appName,
         visibilityTimeout: Duration.seconds(props.eventsVisibilityTimeoutSeconds),
