@@ -66,7 +66,7 @@ export class ServiceStack extends Stack {
     } else {
       for (var i = 0; i < props.numberOfConsumers; i++) {
         const prefix = this.getS3Prefix(props, DEFAULT_ID)
-        const consumerPrefixId = `${REDUCE_ID}${i}`
+        const consumerPrefixId = `${DEFAULT_ID}${i}`
         this.createDataIngestionLayer(props, consumerPrefixId, bucket, chunksBucket, monitoringSqsQueue, AGGREGATE_CONFIG, prefix)
       }
     }

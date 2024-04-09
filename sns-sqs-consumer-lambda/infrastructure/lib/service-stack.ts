@@ -47,6 +47,7 @@ interface LambdaConfiguration {
 const MAP_ID = 'Map'
 const REDUCE_ID = 'Reduce'
 const RESULT_ID = 'Result'
+const DEFAULT_ID = 'Default'
 
 const AGGREGATE_CONFIG = {
   snsTopicNames: [],
@@ -81,7 +82,7 @@ export class ServiceStack extends Stack {
       this.createDataIngestionLayer(props, RESULT_ID, chunksBucket, monitoringSqsQueue, aggregateConfig)
     } else {
       for (var i = 0; i < props.numberOfConsumers; i++) {
-        const consumerTopicId = `${REDUCE_ID}${i}`
+        const consumerTopicId = `${DEFAULT_ID}${i}`
         this.createDataIngestionLayer(props, consumerTopicId, chunksBucket, monitoringSqsQueue, AGGREGATE_CONFIG)
       }
     }

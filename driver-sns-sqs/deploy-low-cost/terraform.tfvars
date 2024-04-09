@@ -4,7 +4,7 @@ az              = "eu-west-1a"
 ami             = "ami-0f0f1c02e5e4d9d9f" // RHEL-8
 
 is_tpc_h = false
-sns_uris = "arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-map,arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-result,arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce0,arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce1,arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce2"
+sns_uris = "arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce0,arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce1,arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce2"
 
 instance_types = {
   "client"       = "t3.large"
