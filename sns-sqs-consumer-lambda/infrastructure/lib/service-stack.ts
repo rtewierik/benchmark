@@ -47,7 +47,6 @@ interface LambdaConfiguration {
 const MAP_ID = 'Map'
 const REDUCE_ID = 'Reduce'
 const RESULT_ID = 'Result'
-const DEFAULT_ID = 'Default'
 
 const AGGREGATE_CONFIG = {
   snsTopicNames: [],
@@ -81,8 +80,10 @@ export class ServiceStack extends Stack {
       }
       this.createDataIngestionLayer(props, RESULT_ID, chunksBucket, monitoringSqsQueue, aggregateConfig)
     } else {
-      // TO DO: Consider using `props.numberOfConsumers` here to create more than one SNS/SQS pair. Might not be necessary since infrastructure should be isolated.
-      this.createDataIngestionLayer(props, DEFAULT_ID, chunksBucket, monitoringSqsQueue, AGGREGATE_CONFIG)
+      for (var i = 0; i < props.numberOfConsumers; i++) {
+        const consumerTopicId = `${REDUCE_ID}${i}`
+        this.createDataIngestionLayer(props, consumerTopicId, chunksBucket, monitoringSqsQueue, AGGREGATE_CONFIG)
+      }
     }
   }
 

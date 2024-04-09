@@ -64,16 +64,18 @@ export class ServiceStack extends Stack {
       }
       this.createDataIngestionLayer(props, RESULT_ID, bucket, chunksBucket, monitoringSqsQueue, aggregateConfig, resultPrefix)
     } else {
-      // TO DO: Consider using `props.numberOfConsumers` here to create more than one SNS/SQS pair. Might not be necessary since infrastructure should be isolated.
-      const prefix = this.getS3Prefix(props, DEFAULT_ID)
-      this.createDataIngestionLayer(props, DEFAULT_ID, bucket, chunksBucket, monitoringSqsQueue, AGGREGATE_CONFIG, prefix)
+      for (var i = 0; i < props.numberOfConsumers; i++) {
+        const prefix = this.getS3Prefix(props, DEFAULT_ID)
+        const consumerPrefixId = `${REDUCE_ID}${i}`
+        this.createDataIngestionLayer(props, consumerPrefixId, bucket, chunksBucket, monitoringSqsQueue, AGGREGATE_CONFIG, prefix)
+      }
     }
   }
 
   private getS3Prefix(props: S3ConsumerLambdaStackProps, id: string) {
     return `${props.appName}-s3-${id.toLowerCase()}-${this.getRandomString()}`
   }
-  
+
   private getRandomString() {
     return Math.random().toString(36).substr(2, 5);
   }
