@@ -120,6 +120,8 @@ public class TpcHMessageProcessor {
                             TpcHMessageType.IntermediateResult, messageWriter.writeValueAsString(result));
             String key = keyDistributor.next();
             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
+            String serializedMessage = messageWriter.writeValueAsString(message);
+            log.info("Sending consumer assignment: {}", serializedMessage);
             this.messageProducer.sendMessage(
                     producer,
                     optionalKey,
@@ -161,7 +163,7 @@ public class TpcHMessageProcessor {
             TpcHMessage message = new TpcHMessage(TpcHMessageType.ReducedResult, reducedResult);
             String key = keyDistributor.next();
             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
-            log.debug("Sending reduced result: {}", reducedResult);
+            log.info("Sending reduced result: {}", reducedResult);
             this.messageProducer.sendMessage(
                     producer,
                     optionalKey,
@@ -190,7 +192,7 @@ public class TpcHMessageProcessor {
             existingReducedResult = this.collectedReducedResults.get(reducedResult.queryId);
             existingReducedResult.aggregateReducedResult(reducedResult);
         }
-        log.debug(
+        log.info(
                 "Detected reduced result: {}\n\n{}",
                 writer.writeValueAsString(reducedResult),
                 writer.writeValueAsString(existingReducedResult));
