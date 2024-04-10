@@ -1,3 +1,18 @@
+## Benchmarking commands to execute
+
+```
+sudo bin/benchmark \
+  --drivers driver-rabbitmq/rabbitmq-classic.yaml \
+  workloads/max-rate-10-topics-1-partition-1kb.yaml
+```
+
+```
+sudo bin/benchmark \
+  --drivers driver-rabbitmq/rabbitmq-classic.yaml \
+  --tpc-h-file workloads/tpc-h-default.yaml \
+  workloads/max-rate-10-topics-1-partition-1kb.yaml
+```
+
 ### Locations to configure memory in case of changing instance size
 
 * `deploy.yaml`requires modification of the `Configure memory` tasks.
