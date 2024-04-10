@@ -219,7 +219,7 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
                     // attempts will pick a random accessible address from the provided list.
                     List<Address> addresses =
                             Stream.concat(Stream.of(p), config.amqpUris.stream().filter(s -> !s.equals(p)))
-                                    .map(s -> newURI(s))
+                                    .map(RabbitMqBenchmarkDriver::newURI)
                                     .map(u -> new Address(u.getHost(), u.getPort()))
                                     .collect(toList());
                     try {

@@ -3,14 +3,14 @@
 ```
 sudo bin/benchmark \
   --drivers driver-rabbitmq/rabbitmq-classic.yaml \
-  workloads/max-rate-10-topics-1-partition-1kb.yaml
+  workloads/max-rate-6-topics-1-partition-1kb.yaml
 ```
 
 ```
 sudo bin/benchmark \
   --drivers driver-rabbitmq/rabbitmq-classic.yaml \
-  --tpc-h-file workloads/tpc-h-default.yaml \
-  workloads/max-rate-10-topics-1-partition-1kb.yaml
+  --tpc-h-file workloads/tpc-h-default-4-reducers.yaml \
+  workloads/max-rate-6-topics-1-partition-1kb.yaml
 ```
 
 ### Locations to configure memory in case of changing instance size
