@@ -18,6 +18,8 @@ import org.HdrHistogram.Recorder;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -74,6 +76,7 @@ public class InstanceWorkerStats implements WorkerStats {
         this.messagesReceivedCounter = consumerStatsLogger.getCounter("messages_recv");
         this.bytesReceivedCounter = consumerStatsLogger.getCounter("bytes_recv");
         this.endToEndLatencyStats = consumerStatsLogger.getOpStatsLogger("e2e_latency");
+        log.info("Instance worker stats initialized.");
     }
 
     public void recordMessageReceived(
@@ -193,4 +196,6 @@ public class InstanceWorkerStats implements WorkerStats {
         totalMessagesSent.reset();
         totalMessagesReceived.reset();
     }
+
+    private static final Logger log = LoggerFactory.getLogger(InstanceWorkerStats.class);
 }

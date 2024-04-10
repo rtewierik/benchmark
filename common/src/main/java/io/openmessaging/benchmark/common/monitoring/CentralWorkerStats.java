@@ -23,6 +23,8 @@ import io.openmessaging.benchmark.common.ObjectMappers;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.LongAdder;
@@ -48,6 +50,7 @@ public class CentralWorkerStats implements WorkerStats {
         this.statsLogger = statsLogger;
         StatsLogger consumerStatsLogger = statsLogger.scope("consumer");
         this.messagesReceivedCounter = consumerStatsLogger.getCounter("messages_recv");
+        log.info("Central worker stats initialized");
     }
 
     @Override
@@ -133,4 +136,5 @@ public class CentralWorkerStats implements WorkerStats {
     }
 
     private static final ObjectWriter writer = ObjectMappers.writer;
+    private static final Logger log = LoggerFactory.getLogger(CentralWorkerStats.class);
 }

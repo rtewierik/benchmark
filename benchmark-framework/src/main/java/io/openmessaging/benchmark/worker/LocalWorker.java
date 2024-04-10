@@ -189,7 +189,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         if (assignment.isTpcH && assignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
             assignment.topicsSubscriptions.remove(TpcHConstants.REDUCE_DST_INDEX);
         }
-        log.debug("Creating consumers: {}", writer.writeValueAsString(assignment));
+        log.info("Creating consumers: {}", writer.writeValueAsString(assignment));
         consumers.addAll(
                 benchmarkDriver
                         .createConsumers(
