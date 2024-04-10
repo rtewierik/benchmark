@@ -122,7 +122,8 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
     }
 
     @Override
-    public CompletableFuture<List<BenchmarkProducer>> createProducers(List<ProducerInfo> producers) {
+    public CompletableFuture<List<BenchmarkProducer>> createProducers(List<ProducerInfo> producers)
+            throws IOException {
         return new ResourceCreator<ProducerInfo, BenchmarkProducer>(
                         "producer",
                         config.producerCreationBatchSize,
@@ -143,7 +144,8 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
     }
 
     @Override
-    public CompletableFuture<List<BenchmarkConsumer>> createConsumers(List<ConsumerInfo> consumers) {
+    public CompletableFuture<List<BenchmarkConsumer>> createConsumers(List<ConsumerInfo> consumers)
+            throws IOException {
         return new ResourceCreator<ConsumerInfo, BenchmarkConsumer>(
                         "consumer",
                         config.consumerCreationBatchSize,

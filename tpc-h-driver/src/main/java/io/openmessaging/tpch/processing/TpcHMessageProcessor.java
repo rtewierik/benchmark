@@ -87,21 +87,29 @@ public class TpcHMessageProcessor {
         } else {
             processedMessages.add(messageId);
         }
-        switch (message.type) {
-            case ConsumerAssignment:
-                TpcHConsumerAssignment assignment =
-                        mapper.readValue(message.message, TpcHConsumerAssignment.class);
-                return processConsumerAssignment(assignment);
-            case IntermediateResult:
-                TpcHIntermediateResult intermediateResult =
-                        mapper.readValue(message.message, TpcHIntermediateResult.class);
-                return processIntermediateResult(intermediateResult);
-            case ReducedResult:
-                TpcHIntermediateResult reducedResult =
-                        mapper.readValue(message.message, TpcHIntermediateResult.class);
-                return processReducedResult(reducedResult);
-            default:
-                throw new IllegalArgumentException("Invalid message type detected!");
+        try {
+            switch (message.type) {
+                case ConsumerAssignment:
+                    TpcHConsumerAssignment assignment =
+                            mapper.readValue(message.message, TpcHConsumerAssignment.class);
+                    return processConsumerAssignment(assignment);
+                case IntermediateResult:
+                    TpcHIntermediateResult intermediateResult =
+                            mapper.readValue(message.message, TpcHIntermediateResult.class);
+                    return processIntermediateResult(intermediateResult);
+                case ReducedResult:
+                    TpcHIntermediateResult reducedResult =
+                            mapper.readValue(message.message, TpcHIntermediateResult.class);
+                    return processReducedResult(reducedResult);
+                default:
+                    throw new IllegalArgumentException("Invalid message type detected!");
+            }
+        } catch (Throwable t) {
+            String messageStr = t.getMessage();
+            String stackTrace = writer.writeValueAsString(t.getStackTrace());
+            int size = this.producers.size();
+            log.error("Error occurred while processing TPC-H message: {} {} {}", size, messageStr, stackTrace);
+            throw new RuntimeException(t);
         }
     }
 

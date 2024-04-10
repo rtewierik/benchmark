@@ -16,6 +16,7 @@ package io.openmessaging.benchmark.driver;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.stream.Collectors.toMap;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.Value;
@@ -42,11 +46,13 @@ public class ResourceCreator<R, C> {
     private final Function<List<R>, Map<R, CompletableFuture<C>>> invokeBatchFn;
     private final Function<CompletableFuture<C>, CreationResult<C>> complete;
 
-    public CompletableFuture<List<C>> create(List<R> resources) {
-        return CompletableFuture.completedFuture(createBlocking(resources));
+    public CompletableFuture<List<C>> create(List<R> resources) throws IOException {
+        List<C> result = createBlocking(resources);
+        log.info("Created {}/{} resources using ResourceCreator", result.size(), resources.size());
+        return CompletableFuture.completedFuture(result);
     }
 
-    private List<C> createBlocking(List<R> resources) {
+    private List<C> createBlocking(List<R> resources) throws IOException {
         BlockingQueue<R> queue = new ArrayBlockingQueue<>(resources.size(), true, resources);
         List<R> batch = new ArrayList<>();
         List<C> created = new ArrayList<>();
@@ -77,6 +83,10 @@ public class ResourceCreator<R, C> {
                     batch.clear();
                 }
             }
+        } catch (Throwable t) {
+            String message = t.getMessage();
+            String stackTrace = writer.writeValueAsString(t.getStackTrace());
+            log.error("Error occurred while creating producer using ResourceCreator: {} {}", message, stackTrace);
         } finally {
             loggingFuture.cancel(true);
         }
@@ -96,4 +106,6 @@ public class ResourceCreator<R, C> {
         C created;
         boolean success;
     }
+
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
 }
