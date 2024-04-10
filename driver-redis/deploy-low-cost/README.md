@@ -9,7 +9,7 @@ sudo bin/benchmark \
 ```
 sudo bin/benchmark \
   --drivers driver-redis/redis-default.yaml \
-  workloads/simple-workload.yaml
+  workloads/simple-workload-short.yaml
 ```
 
 ```

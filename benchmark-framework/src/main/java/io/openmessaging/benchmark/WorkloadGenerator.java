@@ -167,7 +167,8 @@ public class WorkloadGenerator implements AutoCloseable {
             // Producer rate is 0 and we need to discover the sustainable rate
             targetPublishRate = 10000;
 
-            executor.execute(
+            if (!EnvironmentConfiguration.isCloudMonitoringEnabled()) {
+                executor.execute(
                     () -> {
                         // Run background controller to adjust rate
                         try {
@@ -176,6 +177,7 @@ public class WorkloadGenerator implements AutoCloseable {
                             log.warn("Failure in finding max sustainable rate", e);
                         }
                     });
+            }
         }
 
         final PayloadReader payloadReader = new FilePayloadReader(workload.messageSize);
@@ -524,7 +526,7 @@ public class WorkloadGenerator implements AutoCloseable {
                         rateFormat.format(errorRate),
                         rateFormat.format(consumeRate),
                         throughputFormat.format(consumeThroughput),
-                        dec.format(currentBacklog / 1000.0), //
+                        dec.format(currentBacklog / 1000.0),
                         dec.format(microsToMillis(stats.publishLatency.getMean())),
                         dec.format(microsToMillis(stats.publishLatency.getValueAtPercentile(50))),
                         dec.format(microsToMillis(stats.publishLatency.getValueAtPercentile(99))),

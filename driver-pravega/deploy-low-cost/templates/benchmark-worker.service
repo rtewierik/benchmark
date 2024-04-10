@@ -4,6 +4,7 @@ After=network.target
 
 [Service]
 ExecStart=/opt/benchmark/bin/benchmark-worker
+EnvironmentFile=/etc/environment
 WorkingDirectory=/opt/benchmark
 RestartSec=15s
 Restart=on-failure

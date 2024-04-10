@@ -68,6 +68,7 @@ public class CentralWorkerStats implements WorkerStats {
             isTpcH
         );
         String body = writer.writeValueAsString(message);
+        log.info("Sending received message to cloud: {}", body);
         SendMessageRequest request = new SendMessageRequest(EnvironmentConfiguration.getMonitoringSqsUri(), body);
         sqsClient.sendMessage(request);
     }
@@ -94,6 +95,7 @@ public class CentralWorkerStats implements WorkerStats {
                 isError
         );
         String body = writer.writeValueAsString(message);
+        log.info("Sending produced message to cloud: {}", body);
         SendMessageRequest request = new SendMessageRequest(EnvironmentConfiguration.getMonitoringSqsUri(), body);
         sqsClient.sendMessage(request);
     }
