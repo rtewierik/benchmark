@@ -16,6 +16,8 @@ package io.openmessaging.benchmark;
 import static io.openmessaging.benchmark.common.random.RandomUtils.RANDOM;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.common.utils.RandomGenerator;
 import io.openmessaging.benchmark.common.EnvironmentConfiguration;
@@ -256,7 +258,7 @@ public class WorkloadGenerator implements AutoCloseable {
                     "Waiting for topics to be ready -- Sent: {}, Received: {}",
                     stats.messagesSent,
                     stats.messagesReceived);
-            if (stats.messagesReceived < expectedMessages) {
+            if (stats.messagesReceived < expectedMessages && (this.arguments == null || stats.messagesReceived < 1)) {
                 try {
                     Thread.sleep(2_000);
                 } catch (InterruptedException e) {
@@ -371,6 +373,7 @@ public class WorkloadGenerator implements AutoCloseable {
                     new TopicSubscription(topics.get(sourceIndex), generateSubscriptionName(sourceIndex)));
         }
 
+        log.info("Creating the following consumers: {}", writer.writeValueAsString(consumerAssignment));
         Timer timer = new Timer();
         worker.createConsumers(consumerAssignment);
         log.info(
@@ -685,4 +688,5 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     private static final Logger log = LoggerFactory.getLogger(WorkloadGenerator.class);
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
 }

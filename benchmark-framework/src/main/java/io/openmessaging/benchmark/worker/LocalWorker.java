@@ -349,7 +349,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public CountersStats getCountersStats() throws IOException {
-        return stats.toCountersStats();
+        CountersStats cs = stats.toCountersStats();
+        log.info("Returning counters stats: {}", writer.writeValueAsString(cs));
+        return cs;
     }
 
     @Override
@@ -385,6 +387,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     public void internalMessageReceived(int size, long publishTimestamp, String experimentId, String messageId)
             throws IOException {
+        log.info("Message received: {} {} {} {} {}", size, publishTimestamp, experimentId, messageId, this.stats);
         long now = System.currentTimeMillis();
         long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
         stats.recordMessageReceived(size, endToEndLatencyMicros, experimentId, messageId, this.isTpcH);
