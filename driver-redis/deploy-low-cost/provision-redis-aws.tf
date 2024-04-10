@@ -60,6 +60,23 @@ resource "aws_route" "internet_access" {
   gateway_id             = aws_internet_gateway.default.id
 }
 
+resource "aws_security_group" "redis_security_group" {
+  name   = "terraform-redis-${random_id.hash.hex}"
+  vpc_id = aws_vpc.benchmark_vpc.id
+
+  # All ports open within the VPC
+  ingress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
+  tags = {
+    Name = "Benchmark-Security-Group-Redis-${random_id.hash.hex}"
+  }
+}
+
 # Create a subnet to launch our instances into
 resource "aws_subnet" "benchmark_subnet" {
   vpc_id                  = aws_vpc.benchmark_vpc.id
@@ -69,7 +86,7 @@ resource "aws_subnet" "benchmark_subnet" {
 }
 
 resource "aws_security_group" "benchmark_security_group" {
-  name   = "terraform-redis-${random_id.hash.hex}"
+  name   = "terraform-redis-benchmark-${random_id.hash.hex}"
   vpc_id = aws_vpc.benchmark_vpc.id
 
   # SSH access from anywhere
@@ -97,7 +114,7 @@ resource "aws_security_group" "benchmark_security_group" {
   }
 
   tags = {
-    Name = "Benchmark-Security-Group-Redis-${random_id.hash.hex}"
+    Name = "Benchmark-Security-Group-Redis-Benchmark-${random_id.hash.hex}"
   }
 }
 
@@ -120,6 +137,7 @@ resource "aws_elasticache_cluster" "redis" {
   parameter_group_name = "default.redis7"
   port                 = 6379
   subnet_group_name    = aws_elasticache_subnet_group.redis_subnet_group.name
+  security_group_ids   = [aws_security_group.redis_security_group.id]
 }
 
 resource "aws_elasticache_subnet_group" "redis_subnet_group" {

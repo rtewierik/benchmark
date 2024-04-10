@@ -38,7 +38,7 @@ variable "num_instances" {
 }
 
 variable sns_uris {
-  type = string
+  type = list(string)
 }
 
 variable is_tpc_h {

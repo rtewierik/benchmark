@@ -13,14 +13,18 @@
  */
 package io.openmessaging.benchmark.common.monitoring;
 
-import org.apache.bookkeeper.stats.StatsLogger;
 
 import java.io.IOException;
 
 public interface WorkerStats {
     void recordMessageReceived(
-            long payloadLength, long endToEndLatencyMicros, String experimentId, String messageId, boolean isTpcH)
+            long payloadLength,
+            long endToEndLatencyMicros,
+            String experimentId,
+            String messageId,
+            boolean isTpcH)
             throws IOException;
+
     void recordMessageProduced(
             long payloadLength,
             long intendedSendTimeNs,
@@ -29,13 +33,18 @@ public interface WorkerStats {
             String experimentId,
             String messageId,
             boolean isTpcH,
-            boolean isError
-    ) throws IOException;
-    StatsLogger getStatsLogger();
+            boolean isError)
+            throws IOException;
+
     void recordMessageSent();
+
     PeriodStats toPeriodStats();
+
     CumulativeLatencies toCumulativeLatencies();
+
     CountersStats toCountersStats() throws IOException;
+
     void resetLatencies();
+
     void reset();
 }

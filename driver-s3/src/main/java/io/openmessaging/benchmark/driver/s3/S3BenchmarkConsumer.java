@@ -22,11 +22,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.openmessaging.benchmark.common.client.AmazonS3Client;
+import io.openmessaging.benchmark.common.monitoring.CentralWorkerStats;
 import io.openmessaging.benchmark.common.monitoring.WorkerStats;
 import io.openmessaging.benchmark.common.producer.MessageProducerImpl;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
-import io.openmessaging.benchmark.common.monitoring.CentralWorkerStats;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import java.io.IOException;
@@ -78,12 +78,7 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                     long publishTimestamp = record.getEventTime().getMillis();
                     long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
                     stats.recordMessageReceived(
-                        payloadLength,
-                        endToEndLatencyMicros,
-                        experimentId,
-                        tpcHMessage.messageId,
-                        true
-                    );
+                            payloadLength, endToEndLatencyMicros, experimentId, tpcHMessage.messageId, true);
                     this.deleteMessage(record);
                 }
             } catch (IOException e) {
@@ -104,12 +99,11 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                     long publishTimestamp = record.getEventTime().getMillis();
                     long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
                     stats.recordMessageReceived(
-                        payloadLength,
-                        endToEndLatencyMicros,
-                        "THROUGHPUT_S3",
-                        String.format("%s-%s", record.getEventName(), record.getEventTime().getMillis()),
-                        false
-                    );
+                            payloadLength,
+                            endToEndLatencyMicros,
+                            "THROUGHPUT_S3",
+                            String.format("%s-%s", record.getEventName(), record.getEventTime().getMillis()),
+                            false);
                     this.deleteMessage(record);
                 }
             } catch (IOException e) {

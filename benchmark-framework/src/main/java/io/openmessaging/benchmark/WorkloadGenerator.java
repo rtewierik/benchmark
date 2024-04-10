@@ -16,9 +16,14 @@ package io.openmessaging.benchmark;
 import static io.openmessaging.benchmark.common.random.RandomUtils.RANDOM;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import io.netty.util.concurrent.DefaultThreadFactory;
-import io.openmessaging.benchmark.common.utils.RandomGenerator;
 import io.openmessaging.benchmark.common.EnvironmentConfiguration;
+import io.openmessaging.benchmark.common.monitoring.CountersStats;
+import io.openmessaging.benchmark.common.monitoring.CumulativeLatencies;
+import io.openmessaging.benchmark.common.monitoring.PeriodStats;
+import io.openmessaging.benchmark.common.utils.RandomGenerator;
 import io.openmessaging.benchmark.utils.PaddingDecimalFormat;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.utils.payload.FilePayloadReader;
@@ -26,9 +31,6 @@ import io.openmessaging.benchmark.utils.payload.PayloadReader;
 import io.openmessaging.benchmark.worker.LocalWorker;
 import io.openmessaging.benchmark.worker.Worker;
 import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
-import io.openmessaging.benchmark.common.monitoring.CountersStats;
-import io.openmessaging.benchmark.common.monitoring.CumulativeLatencies;
-import io.openmessaging.benchmark.common.monitoring.PeriodStats;
 import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
 import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
 import io.openmessaging.benchmark.worker.commands.TopicSubscription;
@@ -53,7 +55,8 @@ import org.slf4j.LoggerFactory;
 
 public class WorkloadGenerator implements AutoCloseable {
 
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+    private static final ThreadLocal<DateFormat> DATE_FORMAT =
+            ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss"));
 
     private final String driverName;
     private final Workload workload;
@@ -81,7 +84,7 @@ public class WorkloadGenerator implements AutoCloseable {
         this.arguments = arguments;
         this.worker = worker;
         this.localWorker = localWorker;
-        this.experimentId = String.format("%s-%s", workload.name, DATE_FORMAT.format(new Date()));
+        this.experimentId = String.format("%s-%s", workload.name, DATE_FORMAT.get().format(new Date()));
 
         if (workload.consumerBacklogSizeGB > 0 && workload.producerRate == 0) {
             throw new IllegalArgumentException(
@@ -165,15 +168,17 @@ public class WorkloadGenerator implements AutoCloseable {
             // Producer rate is 0 and we need to discover the sustainable rate
             targetPublishRate = 10000;
 
-            executor.execute(
-                    () -> {
-                        // Run background controller to adjust rate
-                        try {
-                            findMaximumSustainableRate(targetPublishRate);
-                        } catch (IOException e) {
-                            log.warn("Failure in finding max sustainable rate", e);
-                        }
-                    });
+            if (!EnvironmentConfiguration.isCloudMonitoringEnabled()) {
+                executor.execute(
+                        () -> {
+                            // Run background controller to adjust rate
+                            try {
+                                findMaximumSustainableRate(targetPublishRate);
+                            } catch (IOException e) {
+                                log.warn("Failure in finding max sustainable rate", e);
+                            }
+                        });
+            }
         }
 
         final PayloadReader payloadReader = new FilePayloadReader(workload.messageSize);
@@ -344,12 +349,10 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     private ConsumerAssignment createTpcHConsumers(List<String> topics) throws IOException {
-        String experimentId = String.format(
-            "%s-%s-%s",
-            this.experimentId,
-            this.arguments.queryId,
-            DATE_FORMAT.format(new Date())
-        );
+        String experimentId =
+                String.format(
+                        "%s-%s-%s",
+                        this.experimentId, this.arguments.queryId, DATE_FORMAT.get().format(new Date()));
         ConsumerAssignment consumerAssignment = new ConsumerAssignment(experimentId, true);
         ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment(experimentId, true);
 
@@ -371,6 +374,7 @@ public class WorkloadGenerator implements AutoCloseable {
                     new TopicSubscription(topics.get(sourceIndex), generateSubscriptionName(sourceIndex)));
         }
 
+        log.info("Creating the following consumers: {}", writer.writeValueAsString(consumerAssignment));
         Timer timer = new Timer();
         worker.createConsumers(consumerAssignment);
         log.info(
@@ -521,7 +525,7 @@ public class WorkloadGenerator implements AutoCloseable {
                         rateFormat.format(errorRate),
                         rateFormat.format(consumeRate),
                         throughputFormat.format(consumeThroughput),
-                        dec.format(currentBacklog / 1000.0), //
+                        dec.format(currentBacklog / 1000.0),
                         dec.format(microsToMillis(stats.publishLatency.getMean())),
                         dec.format(microsToMillis(stats.publishLatency.getValueAtPercentile(50))),
                         dec.format(microsToMillis(stats.publishLatency.getValueAtPercentile(99))),
@@ -538,10 +542,14 @@ public class WorkloadGenerator implements AutoCloseable {
                 result.consumeRate.add(consumeRate);
                 result.backlog.add(currentBacklog);
                 result.publishLatencyAvg.add(microsToMillis(stats.publishLatency.getMean()));
-                result.publishLatency50pct.add(microsToMillis(stats.publishLatency.getValueAtPercentile(50)));
-                result.publishLatency75pct.add(microsToMillis(stats.publishLatency.getValueAtPercentile(75)));
-                result.publishLatency95pct.add(microsToMillis(stats.publishLatency.getValueAtPercentile(95)));
-                result.publishLatency99pct.add(microsToMillis(stats.publishLatency.getValueAtPercentile(99)));
+                result.publishLatency50pct.add(
+                        microsToMillis(stats.publishLatency.getValueAtPercentile(50)));
+                result.publishLatency75pct.add(
+                        microsToMillis(stats.publishLatency.getValueAtPercentile(75)));
+                result.publishLatency95pct.add(
+                        microsToMillis(stats.publishLatency.getValueAtPercentile(95)));
+                result.publishLatency99pct.add(
+                        microsToMillis(stats.publishLatency.getValueAtPercentile(99)));
                 result.publishLatency999pct.add(
                         microsToMillis(stats.publishLatency.getValueAtPercentile(99.9)));
                 result.publishLatency9999pct.add(
@@ -554,7 +562,8 @@ public class WorkloadGenerator implements AutoCloseable {
                 result.publishDelayLatency95pct.add(stats.publishDelayLatency.getValueAtPercentile(95));
                 result.publishDelayLatency99pct.add(stats.publishDelayLatency.getValueAtPercentile(99));
                 result.publishDelayLatency999pct.add(stats.publishDelayLatency.getValueAtPercentile(99.9));
-                result.publishDelayLatency9999pct.add(stats.publishDelayLatency.getValueAtPercentile(99.99));
+                result.publishDelayLatency9999pct.add(
+                        stats.publishDelayLatency.getValueAtPercentile(99.99));
                 result.publishDelayLatencyMax.add(stats.publishDelayLatency.getMaxValue());
 
                 result.endToEndLatencyAvg.add(microsToMillis(stats.endToEndLatency.getMean()));
@@ -594,10 +603,14 @@ public class WorkloadGenerator implements AutoCloseable {
                             throughputFormat.format(agg.publishDelayLatency.getMaxValue()));
 
                     result.aggregatedPublishLatencyAvg = agg.publishLatency.getMean() / 1000.0;
-                    result.aggregatedPublishLatency50pct = agg.publishLatency.getValueAtPercentile(50) / 1000.0;
-                    result.aggregatedPublishLatency75pct = agg.publishLatency.getValueAtPercentile(75) / 1000.0;
-                    result.aggregatedPublishLatency95pct = agg.publishLatency.getValueAtPercentile(95) / 1000.0;
-                    result.aggregatedPublishLatency99pct = agg.publishLatency.getValueAtPercentile(99) / 1000.0;
+                    result.aggregatedPublishLatency50pct =
+                            agg.publishLatency.getValueAtPercentile(50) / 1000.0;
+                    result.aggregatedPublishLatency75pct =
+                            agg.publishLatency.getValueAtPercentile(75) / 1000.0;
+                    result.aggregatedPublishLatency95pct =
+                            agg.publishLatency.getValueAtPercentile(95) / 1000.0;
+                    result.aggregatedPublishLatency99pct =
+                            agg.publishLatency.getValueAtPercentile(99) / 1000.0;
                     result.aggregatedPublishLatency999pct =
                             agg.publishLatency.getValueAtPercentile(99.9) / 1000.0;
                     result.aggregatedPublishLatency9999pct =
@@ -685,4 +698,5 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     private static final Logger log = LoggerFactory.getLogger(WorkloadGenerator.class);
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
 }

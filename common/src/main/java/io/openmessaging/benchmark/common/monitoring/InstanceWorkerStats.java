@@ -13,20 +13,18 @@
  */
 package io.openmessaging.benchmark.common.monitoring;
 
-import lombok.Getter;
-import org.HdrHistogram.Recorder;
-import org.apache.bookkeeper.stats.Counter;
-import org.apache.bookkeeper.stats.OpStatsLogger;
-import org.apache.bookkeeper.stats.StatsLogger;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
+import org.HdrHistogram.Recorder;
+import org.apache.bookkeeper.stats.Counter;
+import org.apache.bookkeeper.stats.OpStatsLogger;
+import org.apache.bookkeeper.stats.StatsLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class InstanceWorkerStats implements WorkerStats {
-
-    @Getter
-    protected final StatsLogger statsLogger;
 
     protected final OpStatsLogger publishDelayLatencyStats;
 
@@ -53,7 +51,8 @@ public class InstanceWorkerStats implements WorkerStats {
 
     protected static final long highestTrackableValue = TimeUnit.SECONDS.toMicros(60);
     protected final Recorder publishLatencyRecorder = new Recorder(highestTrackableValue, 5);
-    protected final Recorder cumulativePublishLatencyRecorder = new Recorder(highestTrackableValue, 5);
+    protected final Recorder cumulativePublishLatencyRecorder =
+            new Recorder(highestTrackableValue, 5);
     protected final OpStatsLogger publishLatencyStats;
 
     protected final Recorder publishDelayLatencyRecorder = new Recorder(highestTrackableValue, 5);
@@ -61,8 +60,6 @@ public class InstanceWorkerStats implements WorkerStats {
             new Recorder(highestTrackableValue, 5);
 
     public InstanceWorkerStats(StatsLogger statsLogger) {
-        this.statsLogger = statsLogger;
-
         StatsLogger producerStatsLogger = statsLogger.scope("producer");
         this.messagesSentCounter = producerStatsLogger.getCounter("messages_sent");
         this.messageSendErrorCounter = producerStatsLogger.getCounter("message_send_errors");
@@ -74,15 +71,15 @@ public class InstanceWorkerStats implements WorkerStats {
         this.messagesReceivedCounter = consumerStatsLogger.getCounter("messages_recv");
         this.bytesReceivedCounter = consumerStatsLogger.getCounter("bytes_recv");
         this.endToEndLatencyStats = consumerStatsLogger.getOpStatsLogger("e2e_latency");
+        log.info("Instance worker stats initialized.");
     }
 
     public void recordMessageReceived(
-        long payloadLength,
-        long endToEndLatencyMicros,
-        String experimentId,
-        String messageId,
-        boolean isTpcH
-    ) {
+            long payloadLength,
+            long endToEndLatencyMicros,
+            String experimentId,
+            String messageId,
+            boolean isTpcH) {
         messagesReceived.increment();
         totalMessagesReceived.increment();
         messagesReceivedCounter.inc();
@@ -104,8 +101,7 @@ public class InstanceWorkerStats implements WorkerStats {
             String experimentId,
             String messageId,
             boolean isTpcH,
-            boolean isError
-    ) {
+            boolean isError) {
         if (!isError) {
             messagesSent.increment();
             totalMessagesSent.increment();
@@ -121,7 +117,8 @@ public class InstanceWorkerStats implements WorkerStats {
 
             final long sendDelayMicros =
                     Math.min(
-                            highestTrackableValue, TimeUnit.NANOSECONDS.toMicros(sendTimeNs - intendedSendTimeNs));
+                            highestTrackableValue,
+                            TimeUnit.NANOSECONDS.toMicros(sendTimeNs - intendedSendTimeNs));
             publishDelayLatencyRecorder.recordValue(sendDelayMicros);
             cumulativePublishDelayLatencyRecorder.recordValue(sendDelayMicros);
             publishDelayLatencyStats.registerSuccessfulEvent(sendDelayMicros, TimeUnit.MICROSECONDS);
@@ -193,4 +190,6 @@ public class InstanceWorkerStats implements WorkerStats {
         totalMessagesSent.reset();
         totalMessagesReceived.reset();
     }
+
+    private static final Logger log = LoggerFactory.getLogger(InstanceWorkerStats.class);
 }

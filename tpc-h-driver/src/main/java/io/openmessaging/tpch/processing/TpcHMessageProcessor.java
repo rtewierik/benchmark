@@ -36,7 +36,6 @@ import io.openmessaging.tpch.model.TpcHQueryResult;
 import io.openmessaging.tpch.model.TpcHRow;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -70,7 +69,7 @@ public class TpcHMessageProcessor {
             MessageProducer messageProducer,
             Runnable onTestCompleted,
             Logger log) {
-        this.producers = new ArrayList<>(producers);
+        this.producers = producers;
         this.messageProducer = messageProducer;
         this.onTestCompleted = onTestCompleted;
         this.log = log == null ? LoggerFactory.getLogger(TpcHMessageProcessor.class) : log;
@@ -121,14 +120,15 @@ public class TpcHMessageProcessor {
                             TpcHMessageType.IntermediateResult, messageWriter.writeValueAsString(result));
             String key = keyDistributor.next();
             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
+            String serializedMessage = messageWriter.writeValueAsString(message);
+            log.info("Sending consumer assignment: {}", serializedMessage);
             this.messageProducer.sendMessage(
                     producer,
                     optionalKey,
                     messageWriter.writeValueAsBytes(message),
                     assignment.queryId,
                     message.messageId,
-                    true
-            );
+                    true);
         } catch (Throwable t) {
             t.printStackTrace();
         }
@@ -162,7 +162,7 @@ public class TpcHMessageProcessor {
             TpcHMessage message = new TpcHMessage(TpcHMessageType.ReducedResult, reducedResult);
             String key = keyDistributor.next();
             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
-            log.debug("Sending reduced result: {}", reducedResult);
+            log.info("Sending reduced result: {}", reducedResult);
             this.messageProducer.sendMessage(
                     producer,
                     optionalKey,
@@ -191,7 +191,7 @@ public class TpcHMessageProcessor {
             existingReducedResult = this.collectedReducedResults.get(reducedResult.queryId);
             existingReducedResult.aggregateReducedResult(reducedResult);
         }
-        log.debug(
+        log.info(
                 "Detected reduced result: {}\n\n{}",
                 writer.writeValueAsString(reducedResult),
                 writer.writeValueAsString(existingReducedResult));

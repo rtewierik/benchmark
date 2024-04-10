@@ -20,6 +20,9 @@ import com.google.common.io.Files;
 import io.javalin.Context;
 import io.javalin.Javalin;
 import io.openmessaging.benchmark.common.ObjectMappers;
+import io.openmessaging.benchmark.common.monitoring.CountersStats;
+import io.openmessaging.benchmark.common.monitoring.CumulativeLatencies;
+import io.openmessaging.benchmark.common.monitoring.PeriodStats;
 import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
 import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
 import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
@@ -85,8 +88,9 @@ public class WorkerHandler {
     }
 
     private void handleCreateProducers(Context ctx) throws Exception {
-        ProducerAssignment topics = mapper.readValue(ctx.body(), ProducerAssignment.class);
-        log.info("Received create producers request for topics: {}", topics);
+        String body = ctx.body();
+        ProducerAssignment topics = mapper.readValue(body, ProducerAssignment.class);
+        log.info("Received create producers request for topics: {}", body);
         localWorker.createProducers(topics);
     }
 
@@ -141,15 +145,24 @@ public class WorkerHandler {
     }
 
     private void handlePeriodStats(Context ctx) throws Exception {
-        ctx.result(writer.writeValueAsString(localWorker.getPeriodStats()));
+        PeriodStats stats = localWorker.getPeriodStats();
+        String serializedStats = writer.writeValueAsString(stats);
+        log.info("Sending period stats: {}", serializedStats);
+        ctx.result(serializedStats);
     }
 
     private void handleCumulativeLatencies(Context ctx) throws Exception {
-        ctx.result(writer.writeValueAsString(localWorker.getCumulativeLatencies()));
+        CumulativeLatencies stats = localWorker.getCumulativeLatencies();
+        String serializedStats = writer.writeValueAsString(stats);
+        log.info("Sending cumulative latencies: {}", serializedStats);
+        ctx.result(serializedStats);
     }
 
     private void handleCountersStats(Context ctx) throws Exception {
-        ctx.result(writer.writeValueAsString(localWorker.getCountersStats()));
+        CountersStats stats = localWorker.getCountersStats();
+        String serializedStats = writer.writeValueAsString(stats);
+        log.info("Sending counters stats: {}", serializedStats);
+        ctx.result(serializedStats);
     }
 
     private void handleResetStats(Context ctx) throws Exception {

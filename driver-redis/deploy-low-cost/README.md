@@ -9,6 +9,13 @@ sudo bin/benchmark \
 ```
 sudo bin/benchmark \
   --drivers driver-redis/redis-default.yaml \
+  workloads/simple-workload-short.yaml
+```
+
+```
+sudo bin/benchmark \
+  --drivers driver-redis/redis-default.yaml \
+  --tpc-h-file workloads/tpc-h-default.yaml \
   workloads/simple-workload.yaml
 ```
 

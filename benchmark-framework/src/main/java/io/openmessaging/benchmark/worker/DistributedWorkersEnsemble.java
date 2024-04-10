@@ -23,12 +23,12 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import io.openmessaging.benchmark.common.EnvironmentConfiguration;
-import io.openmessaging.benchmark.common.utils.RandomGenerator;
-import io.openmessaging.benchmark.utils.ListPartition;
-import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
 import io.openmessaging.benchmark.common.monitoring.CountersStats;
 import io.openmessaging.benchmark.common.monitoring.CumulativeLatencies;
 import io.openmessaging.benchmark.common.monitoring.PeriodStats;
+import io.openmessaging.benchmark.common.utils.RandomGenerator;
+import io.openmessaging.benchmark.utils.ListPartition;
+import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
 import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
 import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
 import io.openmessaging.benchmark.worker.commands.TopicSubscription;
@@ -228,6 +228,7 @@ public class DistributedWorkersEnsemble implements Worker {
                 new ArrayList<>(
                         subscriptions.subList(TpcHConstants.REDUCE_SRC_START_INDEX, subscriptions.size()));
         TopicSubscription mapSubscription = subscriptions.get(TpcHConstants.MAP_CMD_INDEX);
+        TopicSubscription resultSubscription = subscriptions.get(TpcHConstants.REDUCE_DST_INDEX);
         List<List<TopicSubscription>> reduceSubscriptionsPerConsumer =
                 ListPartition.partitionList(distributableConsumerSubscriptions, workers.size());
         Map<Worker, ConsumerAssignment> topicsPerConsumerMap = Maps.newHashMap();
@@ -235,10 +236,11 @@ public class DistributedWorkersEnsemble implements Worker {
         for (List<TopicSubscription> reduceSubscriptions : reduceSubscriptionsPerConsumer) {
             ConsumerAssignment individualAssignment = new ConsumerAssignment(assignment);
             individualAssignment.topicsSubscriptions.add(mapSubscription);
+            individualAssignment.topicsSubscriptions.add(resultSubscription);
             individualAssignment.topicsSubscriptions.addAll(reduceSubscriptions);
             topicsPerConsumerMap.put(workers.get(i++), individualAssignment);
         }
-        log.debug("Topics per consumer map: {}", writer.writeValueAsString(topicsPerConsumerMap));
+        log.info("Topics per consumer map: {}", writer.writeValueAsString(topicsPerConsumerMap));
         topicsPerConsumerMap.entrySet().parallelStream()
                 .forEach(
                         e -> {

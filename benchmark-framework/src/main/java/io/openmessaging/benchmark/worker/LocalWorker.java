@@ -90,6 +90,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final TpcHMessageProcessor tpcHMessageProcessor;
     private final ExecutorService executor =
             Executors.newCachedThreadPool(new DefaultThreadFactory("local-worker"));
+    private final StatsLogger statsLogger;
     private final WorkerStats stats;
     private boolean testCompleted = false;
     private boolean consumersArePaused = false;
@@ -102,6 +103,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     public LocalWorker(StatsLogger statsLogger) {
+        this.statsLogger = statsLogger;
         this.stats = EnvironmentConfiguration.isCloudMonitoringEnabled()
             ? new CentralWorkerStats(statsLogger)
             : new InstanceWorkerStats(statsLogger);
@@ -133,7 +135,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         try {
             benchmarkDriver =
                     (BenchmarkDriver) Class.forName(driverConfiguration.driverClass).newInstance();
-            benchmarkDriver.initialize(driverConfigFile, stats.getStatsLogger());
+            benchmarkDriver.initialize(driverConfigFile, this.statsLogger);
         } catch (InstantiationException
                 | IllegalAccessException
                 | ClassNotFoundException
@@ -165,7 +167,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     @Override
-    public void createProducers(ProducerAssignment producerAssignment) {
+    public void createProducers(ProducerAssignment producerAssignment) throws IOException {
         Timer timer = new Timer();
         AtomicInteger producerIndex = new AtomicInteger();
         producers.addAll(
@@ -176,7 +178,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                         .collect(toList()))
                         .join());
 
-        log.info("Created {} producers in {} ms", producers.size(), timer.elapsedMillis());
+        String assignment = writer.writeValueAsString(producerAssignment);
+        log.info("Created {} producers in {} ms from {}", producers.size(), timer.elapsedMillis(), assignment);
     }
 
     @Override
@@ -189,7 +192,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         if (assignment.isTpcH && assignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
             assignment.topicsSubscriptions.remove(TpcHConstants.REDUCE_DST_INDEX);
         }
-        log.debug("Creating consumers: {}", writer.writeValueAsString(assignment));
+        log.info("Creating consumers: {}", writer.writeValueAsString(assignment));
         consumers.addAll(
                 benchmarkDriver
                         .createConsumers(
@@ -349,7 +352,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public CountersStats getCountersStats() throws IOException {
-        return stats.toCountersStats();
+        CountersStats cs = stats.toCountersStats();
+        log.info("Returning counters stats: {}", writer.writeValueAsString(cs));
+        return cs;
     }
 
     @Override
@@ -385,6 +390,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     public void internalMessageReceived(int size, long publishTimestamp, String experimentId, String messageId)
             throws IOException {
+        log.info("Message received: {} {} {} {} {}", size, publishTimestamp, experimentId, messageId, this.stats);
         long now = System.currentTimeMillis();
         long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
         stats.recordMessageReceived(size, endToEndLatencyMicros, experimentId, messageId, this.isTpcH);
