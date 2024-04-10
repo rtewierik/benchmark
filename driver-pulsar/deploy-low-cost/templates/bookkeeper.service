@@ -4,6 +4,7 @@ After=network.target
 
 [Service]
 ExecStart=/opt/pulsar/bin/pulsar bookie
+EnvironmentFile=/etc/environment
 WorkingDirectory=/opt/pulsar
 RestartSec=1s
 Restart=on-failure

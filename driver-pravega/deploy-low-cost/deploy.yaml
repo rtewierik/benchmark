@@ -94,7 +94,7 @@
     - name: Change locale to en_US.utf-8
       shell: |
         echo 'LANG=en_US.utf-8
-              LC_ALL=en_US.utf-8' > /etc/environment
+              LC_ALL=en_US.utf-8' >> /etc/environment
 
 - name: Metrics installation
   hosts: ["metrics"]

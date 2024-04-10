@@ -221,7 +221,7 @@
     - name: Change locale to en_US.utf-8
       shell: |
         echo 'LANG=en_US.utf-8
-              LC_ALL=en_US.utf-8' > /etc/environment
+              LC_ALL=en_US.utf-8' >> /etc/environment
 
 #- name: Protocol Handlers installation
 #  hosts: pulsar
@@ -382,7 +382,7 @@
     - file: path=/opt/benchmark state=absent
     - name: Copy benchmark code
       unarchive:
-        src: ../../../package/target/openmessaging-benchmark-0.0.1-SNAPSHOT-bin.tar.gz
+        src: ../../package/target/openmessaging-benchmark-0.0.1-SNAPSHOT-bin.tar.gz
         dest: /opt
     - shell: mv /opt/openmessaging-benchmark-0.0.1-SNAPSHOT /opt/benchmark
 
@@ -452,7 +452,7 @@
     - systemd:
         state: restarted
         daemon_reload: yes
-#         name: "benchmark-worker"
+        name: "benchmark-worker"
 
 # - name: Prometheus installation
 #   hosts: prometheus

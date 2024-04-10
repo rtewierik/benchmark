@@ -1,3 +1,18 @@
+## Benchmarking commands to execute
+
+```
+sudo bin/benchmark \
+  --drivers driver-pulsar/pulsar.yaml \
+  workloads/simple-workload-short.yaml
+```
+
+```
+sudo bin/benchmark \
+  --drivers driver-pulsar/pulsar.yaml \
+  --tpc-h-file workloads/tpc-h-default.yaml \
+  workloads/simple-workload.yaml
+```
+
 ### Locations to configure memory in case of changing instance size
 
 * `bkenv.sh` requires modification of allocated environment variables (`pulsar_env.sh` also applies memory configuration, but only as defaults)
