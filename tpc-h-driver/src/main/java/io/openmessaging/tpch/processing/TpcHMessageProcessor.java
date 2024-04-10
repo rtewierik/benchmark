@@ -36,7 +36,6 @@ import io.openmessaging.tpch.model.TpcHQueryResult;
 import io.openmessaging.tpch.model.TpcHRow;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -70,7 +69,7 @@ public class TpcHMessageProcessor {
             MessageProducer messageProducer,
             Runnable onTestCompleted,
             Logger log) {
-        this.producers = new ArrayList<>(producers);
+        this.producers = producers;
         this.messageProducer = messageProducer;
         this.onTestCompleted = onTestCompleted;
         this.log = log == null ? LoggerFactory.getLogger(TpcHMessageProcessor.class) : log;

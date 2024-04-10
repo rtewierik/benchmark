@@ -165,7 +165,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     @Override
-    public void createProducers(ProducerAssignment producerAssignment) {
+    public void createProducers(ProducerAssignment producerAssignment) throws IOException {
         Timer timer = new Timer();
         AtomicInteger producerIndex = new AtomicInteger();
         producers.addAll(
@@ -176,7 +176,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                         .collect(toList()))
                         .join());
 
-        log.info("Created {} producers in {} ms", producers.size(), timer.elapsedMillis());
+        String assignment = writer.writeValueAsString(producerAssignment);
+        log.info("Created {} producers in {} ms from {}", producers.size(), timer.elapsedMillis(), assignment);
     }
 
     @Override
