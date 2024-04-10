@@ -155,7 +155,7 @@
     - name: Change locale to en_US.utf-8
       shell: |
         echo 'LANG=en_US.utf-8
-              LC_ALL=en_US.utf-8' > /etc/environment
+              LC_ALL=en_US.utf-8' >> /etc/environment
 
 - name: Setup ZooKeeper
   hosts: zookeeper
@@ -221,7 +221,7 @@
       tags: [client-code]
     - name: Copy benchmark code
       unarchive:
-        src: ../../../package/target/openmessaging-benchmark-0.0.1-SNAPSHOT-bin.tar.gz
+        src: ../../package/target/openmessaging-benchmark-0.0.1-SNAPSHOT-bin.tar.gz
         dest: /opt
       tags: [client-code]
     - shell: mv /opt/openmessaging-benchmark-0.0.1-SNAPSHOT /opt/benchmark

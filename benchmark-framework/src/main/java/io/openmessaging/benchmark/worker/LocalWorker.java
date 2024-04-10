@@ -50,6 +50,7 @@ import io.openmessaging.benchmark.worker.commands.TopicsInfo;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -372,9 +373,16 @@ public class LocalWorker implements Worker, ConsumerCallback {
     public void messageReceived(ByteBuffer data, long publishTimestamp) throws IOException {
         int length = data.remaining();
         if (this.isTpcH && length != 10) {
-            TpcHMessage message = mapper.readValue(data.array(), TpcHMessage.class);
-            String queryId = handleTpcHMessage(message);
-            internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
+            byte[] byteArray = new byte[length];
+            data.get(byteArray);
+            try {
+                TpcHMessage message = mapper.readValue(byteArray, TpcHMessage.class);
+                String queryId = handleTpcHMessage(message);
+                internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
+            } catch (Throwable t) {
+                String message = new String(byteArray, StandardCharsets.UTF_8);
+                log.error("Error occurred while parsing message to TPC-H message: {}", message);
+            }
         } else {
             internalMessageReceived(length, publishTimestamp, this.experimentId, null);
         }
