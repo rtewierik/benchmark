@@ -15,7 +15,6 @@ package io.openmessaging.benchmark.worker.commands;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,10 +24,9 @@ public class ConsumerAssignment {
     public boolean isTpcH = false;
 
     private ConsumerAssignment(
-        @JsonProperty("topicsSubscriptions") List<TopicSubscription> topicsSubscriptions,
-        @JsonProperty("experimentId") String experimentId,
-        @JsonProperty("isTpcH") boolean isTpcH
-    ) {
+            @JsonProperty("topicsSubscriptions") List<TopicSubscription> topicsSubscriptions,
+            @JsonProperty("experimentId") String experimentId,
+            @JsonProperty("isTpcH") boolean isTpcH) {
         this.topicsSubscriptions = topicsSubscriptions;
         this.isTpcH = isTpcH;
         this.experimentId = experimentId;

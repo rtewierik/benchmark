@@ -14,10 +14,10 @@
 package io.openmessaging.benchmark.worker;
 
 
-import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
 import io.openmessaging.benchmark.common.monitoring.CountersStats;
 import io.openmessaging.benchmark.common.monitoring.CumulativeLatencies;
 import io.openmessaging.benchmark.common.monitoring.PeriodStats;
+import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
 import io.openmessaging.benchmark.worker.commands.ProducerAssignment;
 import io.openmessaging.benchmark.worker.commands.ProducerWorkAssignment;
 import io.openmessaging.benchmark.worker.commands.TopicsInfo;

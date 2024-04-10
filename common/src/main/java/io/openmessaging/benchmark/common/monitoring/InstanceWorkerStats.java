@@ -13,6 +13,10 @@
  */
 package io.openmessaging.benchmark.common.monitoring;
 
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.LongAdder;
 import lombok.Getter;
 import org.HdrHistogram.Recorder;
 import org.apache.bookkeeper.stats.Counter;
@@ -21,14 +25,9 @@ import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.LongAdder;
-
 public class InstanceWorkerStats implements WorkerStats {
 
-    @Getter
-    protected final StatsLogger statsLogger;
+    @Getter protected final StatsLogger statsLogger;
 
     protected final OpStatsLogger publishDelayLatencyStats;
 
@@ -55,7 +54,8 @@ public class InstanceWorkerStats implements WorkerStats {
 
     protected static final long highestTrackableValue = TimeUnit.SECONDS.toMicros(60);
     protected final Recorder publishLatencyRecorder = new Recorder(highestTrackableValue, 5);
-    protected final Recorder cumulativePublishLatencyRecorder = new Recorder(highestTrackableValue, 5);
+    protected final Recorder cumulativePublishLatencyRecorder =
+            new Recorder(highestTrackableValue, 5);
     protected final OpStatsLogger publishLatencyStats;
 
     protected final Recorder publishDelayLatencyRecorder = new Recorder(highestTrackableValue, 5);
@@ -80,12 +80,11 @@ public class InstanceWorkerStats implements WorkerStats {
     }
 
     public void recordMessageReceived(
-        long payloadLength,
-        long endToEndLatencyMicros,
-        String experimentId,
-        String messageId,
-        boolean isTpcH
-    ) {
+            long payloadLength,
+            long endToEndLatencyMicros,
+            String experimentId,
+            String messageId,
+            boolean isTpcH) {
         messagesReceived.increment();
         totalMessagesReceived.increment();
         messagesReceivedCounter.inc();
@@ -107,8 +106,7 @@ public class InstanceWorkerStats implements WorkerStats {
             String experimentId,
             String messageId,
             boolean isTpcH,
-            boolean isError
-    ) {
+            boolean isError) {
         if (!isError) {
             messagesSent.increment();
             totalMessagesSent.increment();
@@ -124,7 +122,8 @@ public class InstanceWorkerStats implements WorkerStats {
 
             final long sendDelayMicros =
                     Math.min(
-                            highestTrackableValue, TimeUnit.NANOSECONDS.toMicros(sendTimeNs - intendedSendTimeNs));
+                            highestTrackableValue,
+                            TimeUnit.NANOSECONDS.toMicros(sendTimeNs - intendedSendTimeNs));
             publishDelayLatencyRecorder.recordValue(sendDelayMicros);
             cumulativePublishDelayLatencyRecorder.recordValue(sendDelayMicros);
             publishDelayLatencyStats.registerSuccessfulEvent(sendDelayMicros, TimeUnit.MICROSECONDS);

@@ -13,6 +13,7 @@
  */
 package io.openmessaging.benchmark.common.monitoring;
 
+
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
@@ -20,14 +21,13 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.common.ObjectMappers;
+import java.io.IOException;
+import java.util.concurrent.atomic.LongAdder;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.concurrent.atomic.LongAdder;
 
 public class CentralWorkerStats implements WorkerStats {
 
@@ -55,21 +55,26 @@ public class CentralWorkerStats implements WorkerStats {
 
     @Override
     public void recordMessageReceived(
-            long payloadLength, long endToEndLatencyMicros, String experimentId, String messageId, boolean isTpcH)
+            long payloadLength,
+            long endToEndLatencyMicros,
+            String experimentId,
+            String messageId,
+            boolean isTpcH)
             throws IOException {
         messagesReceived.increment();
         totalMessagesReceived.increment();
         messagesReceivedCounter.inc();
-        MonitoredReceivedMessage message = new MonitoredReceivedMessage(
-            payloadLength,
-            endToEndLatencyMicros,
-            experimentId != null ? experimentId : "UNAVAILABLE",
-            messageId,
-            isTpcH
-        );
+        MonitoredReceivedMessage message =
+                new MonitoredReceivedMessage(
+                        payloadLength,
+                        endToEndLatencyMicros,
+                        experimentId != null ? experimentId : "UNAVAILABLE",
+                        messageId,
+                        isTpcH);
         String body = writer.writeValueAsString(message);
         log.info("Sending received message to cloud: {}", body);
-        SendMessageRequest request = new SendMessageRequest(EnvironmentConfiguration.getMonitoringSqsUri(), body);
+        SendMessageRequest request =
+                new SendMessageRequest(EnvironmentConfiguration.getMonitoringSqsUri(), body);
         sqsClient.sendMessage(request);
     }
 
@@ -82,21 +87,22 @@ public class CentralWorkerStats implements WorkerStats {
             String experimentId,
             String messageId,
             boolean isTpcH,
-            boolean isError
-    ) throws IOException {
-        MonitoredProducedMessage message = new MonitoredProducedMessage(
-                payloadLength,
-                intendedSendTimeNs,
-                sendTimeNs,
-                nowNs,
-                experimentId != null ? experimentId : "UNAVAILABLE",
-                messageId,
-                isTpcH,
-                isError
-        );
+            boolean isError)
+            throws IOException {
+        MonitoredProducedMessage message =
+                new MonitoredProducedMessage(
+                        payloadLength,
+                        intendedSendTimeNs,
+                        sendTimeNs,
+                        nowNs,
+                        experimentId != null ? experimentId : "UNAVAILABLE",
+                        messageId,
+                        isTpcH,
+                        isError);
         String body = writer.writeValueAsString(message);
         log.info("Sending produced message to cloud: {}", body);
-        SendMessageRequest request = new SendMessageRequest(EnvironmentConfiguration.getMonitoringSqsUri(), body);
+        SendMessageRequest request =
+                new SendMessageRequest(EnvironmentConfiguration.getMonitoringSqsUri(), body);
         sqsClient.sendMessage(request);
     }
 

@@ -128,8 +128,7 @@ public class TpcHMessageProcessor {
                     messageWriter.writeValueAsBytes(message),
                     assignment.queryId,
                     message.messageId,
-                    true
-            );
+                    true);
         } catch (Throwable t) {
             t.printStackTrace();
         }

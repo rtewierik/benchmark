@@ -31,8 +31,7 @@ public class MonitoredProducedMessage {
             String experimentId,
             String messageId,
             boolean isTpcH,
-            boolean isError
-    ) {
+            boolean isError) {
         this.payloadLength = payloadLength;
         this.intendedSendTimeNs = intendedSendTimeNs;
         this.sendTimeNs = sendTimeNs;

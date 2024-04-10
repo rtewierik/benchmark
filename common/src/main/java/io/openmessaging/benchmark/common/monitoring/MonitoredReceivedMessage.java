@@ -25,8 +25,7 @@ public class MonitoredReceivedMessage {
             long endToEndLatencyMicros,
             String experimentId,
             String messageId,
-            boolean isTpcH
-    ) {
+            boolean isTpcH) {
         this.payloadLength = payloadLength;
         this.endToEndLatencyMicros = endToEndLatencyMicros;
         this.experimentId = experimentId;

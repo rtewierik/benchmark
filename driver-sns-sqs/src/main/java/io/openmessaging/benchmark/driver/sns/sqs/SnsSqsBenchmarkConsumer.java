@@ -27,11 +27,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.openmessaging.benchmark.common.EnvironmentConfiguration;
+import io.openmessaging.benchmark.common.monitoring.CentralWorkerStats;
 import io.openmessaging.benchmark.common.monitoring.WorkerStats;
 import io.openmessaging.benchmark.common.producer.MessageProducerImpl;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
-import io.openmessaging.benchmark.common.monitoring.CentralWorkerStats;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import java.io.IOException;
@@ -90,12 +90,11 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
                 long publishTimestamp = Long.parseLong(sentTimestampStr);
                 long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
                 stats.recordMessageReceived(
-                    message.getBody().length(),
-                    endToEndLatencyMicros,
-                    experimentId,
-                    tpcHMessage.messageId,
-                    true
-                );
+                        message.getBody().length(),
+                        endToEndLatencyMicros,
+                        experimentId,
+                        tpcHMessage.messageId,
+                        true);
                 messageProcessor.processTpcHMessage(tpcHMessage);
                 this.deleteMessage(message.getReceiptHandle());
             } catch (IOException e) {
@@ -111,12 +110,11 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
             long publishTimestamp = Long.parseLong(sentTimestampStr);
             long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
             stats.recordMessageReceived(
-                message.getBody().length(),
-                endToEndLatencyMicros,
-                "THROUGHPUT_SNS_SQS",
-                message.getMessageId(),
-                false
-            );
+                    message.getBody().length(),
+                    endToEndLatencyMicros,
+                    "THROUGHPUT_SNS_SQS",
+                    message.getMessageId(),
+                    false);
             this.deleteMessage(message.getReceiptHandle());
         }
     }
