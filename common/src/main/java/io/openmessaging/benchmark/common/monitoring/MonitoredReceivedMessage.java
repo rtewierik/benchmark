@@ -14,11 +14,11 @@
 package io.openmessaging.benchmark.common.monitoring;
 
 public class MonitoredReceivedMessage {
-    public long payloadLength;
-    public long endToEndLatencyMicros;
-    public String experimentId;
-    public String messageId;
-    public boolean isTpcH;
+    public final long payloadLength;
+    public final long endToEndLatencyMicros;
+    public final String experimentId;
+    public final String messageId;
+    public final boolean isTpcH;
 
     public MonitoredReceivedMessage(
             long payloadLength,

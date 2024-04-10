@@ -27,8 +27,6 @@ import org.slf4j.LoggerFactory;
 
 public class InstanceWorkerStats implements WorkerStats {
 
-    @Getter protected final StatsLogger statsLogger;
-
     protected final OpStatsLogger publishDelayLatencyStats;
 
     protected final Recorder endToEndLatencyRecorder = new Recorder(TimeUnit.HOURS.toMicros(12), 5);

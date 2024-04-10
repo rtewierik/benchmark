@@ -90,6 +90,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final TpcHMessageProcessor tpcHMessageProcessor;
     private final ExecutorService executor =
             Executors.newCachedThreadPool(new DefaultThreadFactory("local-worker"));
+    private final StatsLogger statsLogger;
     private final WorkerStats stats;
     private boolean testCompleted = false;
     private boolean consumersArePaused = false;
@@ -102,6 +103,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     public LocalWorker(StatsLogger statsLogger) {
+        this.statsLogger = statsLogger;
         this.stats = EnvironmentConfiguration.isCloudMonitoringEnabled()
             ? new CentralWorkerStats(statsLogger)
             : new InstanceWorkerStats(statsLogger);
@@ -133,7 +135,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         try {
             benchmarkDriver =
                     (BenchmarkDriver) Class.forName(driverConfiguration.driverClass).newInstance();
-            benchmarkDriver.initialize(driverConfigFile, stats.getStatsLogger());
+            benchmarkDriver.initialize(driverConfigFile, this.statsLogger);
         } catch (InstantiationException
                 | IllegalAccessException
                 | ClassNotFoundException

@@ -15,7 +15,6 @@ package io.openmessaging.benchmark.common.monitoring;
 
 
 import java.io.IOException;
-import org.apache.bookkeeper.stats.StatsLogger;
 
 public interface WorkerStats {
     void recordMessageReceived(
@@ -36,8 +35,6 @@ public interface WorkerStats {
             boolean isTpcH,
             boolean isError)
             throws IOException;
-
-    StatsLogger getStatsLogger();
 
     void recordMessageSent();
 

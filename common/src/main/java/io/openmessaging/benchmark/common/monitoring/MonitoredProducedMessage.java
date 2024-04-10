@@ -14,14 +14,14 @@
 package io.openmessaging.benchmark.common.monitoring;
 
 public class MonitoredProducedMessage {
-    public long payloadLength;
-    public long intendedSendTimeNs;
-    public long sendTimeNs;
-    public long nowNs;
-    public String experimentId;
-    public String messageId;
-    public boolean isTpcH;
-    public boolean isError;
+    public final long payloadLength;
+    public final long intendedSendTimeNs;
+    public final long sendTimeNs;
+    public final long nowNs;
+    public final String experimentId;
+    public final String messageId;
+    public final boolean isTpcH;
+    public final boolean isError;
 
     public MonitoredProducedMessage(
             long payloadLength,

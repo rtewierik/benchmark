@@ -107,11 +107,6 @@ public class CentralWorkerStats implements WorkerStats {
     }
 
     @Override
-    public StatsLogger getStatsLogger() {
-        return statsLogger;
-    }
-
-    @Override
     public void recordMessageSent() {}
 
     @Override
