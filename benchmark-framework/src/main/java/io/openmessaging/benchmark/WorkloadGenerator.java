@@ -55,7 +55,8 @@ import org.slf4j.LoggerFactory;
 
 public class WorkloadGenerator implements AutoCloseable {
 
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+    private static final ThreadLocal<DateFormat> DATE_FORMAT =
+            ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss"));
 
     private final String driverName;
     private final Workload workload;

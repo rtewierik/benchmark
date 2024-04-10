@@ -17,7 +17,6 @@ package io.openmessaging.benchmark.common.monitoring;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
-import lombok.Getter;
 import org.HdrHistogram.Recorder;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
@@ -61,8 +60,6 @@ public class InstanceWorkerStats implements WorkerStats {
             new Recorder(highestTrackableValue, 5);
 
     public InstanceWorkerStats(StatsLogger statsLogger) {
-        this.statsLogger = statsLogger;
-
         StatsLogger producerStatsLogger = statsLogger.scope("producer");
         this.messagesSentCounter = producerStatsLogger.getCounter("messages_sent");
         this.messageSendErrorCounter = producerStatsLogger.getCounter("message_send_errors");

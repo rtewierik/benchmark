@@ -37,7 +37,6 @@ public class CentralWorkerStats implements WorkerStats {
                     .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
                     .build();
     private static final CumulativeLatencies cumulativeLatencies = new CumulativeLatencies();
-    protected final StatsLogger statsLogger;
     protected final LongAdder messagesReceived = new LongAdder();
     protected final Counter messagesReceivedCounter;
     protected final LongAdder totalMessagesReceived = new LongAdder();
@@ -47,7 +46,6 @@ public class CentralWorkerStats implements WorkerStats {
     }
 
     public CentralWorkerStats(StatsLogger statsLogger) {
-        this.statsLogger = statsLogger;
         StatsLogger consumerStatsLogger = statsLogger.scope("consumer");
         this.messagesReceivedCounter = consumerStatsLogger.getCounter("messages_recv");
         log.info("Central worker stats initialized");
