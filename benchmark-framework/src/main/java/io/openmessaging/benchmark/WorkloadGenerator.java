@@ -261,8 +261,7 @@ public class WorkloadGenerator implements AutoCloseable {
                     "Waiting for topics to be ready -- Sent: {}, Received: {}",
                     stats.messagesSent,
                     stats.messagesReceived);
-            if (stats.messagesReceived < expectedMessages
-                    && (this.arguments == null || stats.messagesReceived < 1)) {
+            if (stats.messagesReceived < expectedMessages) {
                 try {
                     Thread.sleep(2_000);
                 } catch (InterruptedException e) {
