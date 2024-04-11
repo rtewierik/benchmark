@@ -262,7 +262,7 @@ public class WorkloadGenerator implements AutoCloseable {
                     stats.messagesSent,
                     stats.messagesReceived,
                     expectedMessages);
-            if (stats.messagesReceived < expectedMessages && stats.messagesReceived < expectedMessages) {
+            if (stats.messagesReceived < expectedMessages) {
                 try {
                     Thread.sleep(2_000);
                 } catch (InterruptedException e) {

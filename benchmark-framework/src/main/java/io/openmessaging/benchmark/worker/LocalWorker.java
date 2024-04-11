@@ -82,7 +82,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         For TPC-H queries, the producers list is allocated with the producer for Map messages and producers for all the
         assigned reducers.
      */
-    private final List<BenchmarkProducer> producers = new ArrayList<>();
+    private volatile List<BenchmarkProducer> producers = new ArrayList<>();
     /*
         For TPC-H queries, the consumers list is allocated with the consumers for all the assigned reducers.
      */
@@ -189,8 +189,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
         AtomicInteger consumerIndex = new AtomicInteger();
         this.experimentId = assignment.experimentId;
         this.isTpcH = assignment.isTpcH;
-        // This subscription should only be done on the orchestrator host.
-        if (assignment.isTpcH && assignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
+        log.info("Raw consumers: {}", writer.writeValueAsString(assignment));
+        if (this.isTpcH && assignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
             assignment.topicsSubscriptions.remove(TpcHConstants.REDUCE_DST_INDEX);
         }
         log.info("Creating consumers: {}", writer.writeValueAsString(assignment));
