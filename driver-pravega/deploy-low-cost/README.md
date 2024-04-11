@@ -1,3 +1,24 @@
+## Benchmarking commands to execute
+
+```
+sudo bin/benchmark \
+  --drivers driver-pravega/pravega-exactly-once.yaml \
+  workloads/max-rate-10-topics-1-partition-1kb.yaml
+```
+
+```
+sudo bin/benchmark \
+  --drivers driver-pravega/pravega-exactly-once.yaml \
+  workloads/simple-workload-short.yaml
+```
+
+```
+sudo bin/benchmark \
+  --drivers driver-pravega/pravega-exactly-once.yaml \
+  --tpc-h-file workloads/tpc-h-default.yaml \
+  workloads/simple-workload.yaml
+```
+
 ### Locations to configure memory in case of changing instance size
 
 * `bkenv.sh` requires modification of allocated environment variables (`common.sh` also applies memory configuration, but only as defaults)

@@ -2,13 +2,13 @@
 
 ```
 sudo bin/benchmark \
-  --drivers driver-pulsar/pulsar.yaml \
+  --drivers driver-pulsar/pulsar-effectively-once.yaml \
   workloads/simple-workload-short.yaml
 ```
 
 ```
 sudo bin/benchmark \
-  --drivers driver-pulsar/pulsar.yaml \
+  --drivers driver-pulsar/pulsar-effectively-once.yaml \
   --tpc-h-file workloads/tpc-h-default.yaml \
   workloads/simple-workload.yaml
 ```
