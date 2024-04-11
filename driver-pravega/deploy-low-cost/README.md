@@ -2,20 +2,14 @@
 
 ```
 sudo bin/benchmark \
-  --drivers driver-pravega/pravega-exactly-once.yaml \
-  workloads/max-rate-10-topics-1-partition-1kb.yaml
-```
-
-```
-sudo bin/benchmark \
-  --drivers driver-pravega/pravega-exactly-once.yaml \
+  --drivers driver-pravega/pravega.yaml \
   workloads/simple-workload-short.yaml
 ```
 
 ```
 sudo bin/benchmark \
-  --drivers driver-pravega/pravega-exactly-once.yaml \
-  --tpc-h-file workloads/tpc-h-default.yaml \
+  --drivers driver-pravega/pravega.yaml \
+  --tpc-h-file workloads/tpc-h-default-2-reducers.yaml \
   workloads/simple-workload.yaml
 ```
 
@@ -25,4 +19,3 @@ sudo bin/benchmark \
 * `config.properties` requires modification of `pravegaservice.cache.size.max`. Note that this memory is always fully allocated even if not used, and the Pravega Segment Store is running on the Bookkeeper EC2 instance along with another service. **The sum of allocated memory for both services should be less than the total memory available for the EC2 instance type**.
 * `pravega-segmentstore.service` requires modification of `Environment`
 * `deploy.yaml`requires modification of the `Configure memory` task
-
