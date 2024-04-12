@@ -2,15 +2,15 @@
 
 ```
 sudo bin/benchmark \
-  --drivers driver-rabbitmq/rabbitmq-classic.yaml \
-  workloads/max-rate-6-topics-1-partition-1kb.yaml
+  --drivers driver-rabbitmq/rabbitmq-quorum.yaml \
+  workloads/simple-workload-1-partition.yaml
 ```
 
 ```
 sudo bin/benchmark \
-  --drivers driver-rabbitmq/rabbitmq-classic.yaml \
+  --drivers driver-rabbitmq/rabbitmq-quorum.yaml \
   --tpc-h-file workloads/tpc-h-default-4-reducers.yaml \
-  workloads/max-rate-6-topics-1-partition-1kb.yaml
+  workloads/simple-workload-1-partition.yaml
 ```
 
 ### Locations to configure memory in case of changing instance size

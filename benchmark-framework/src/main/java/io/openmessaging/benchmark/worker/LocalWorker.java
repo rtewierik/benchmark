@@ -82,7 +82,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         For TPC-H queries, the producers list is allocated with the producer for Map messages and producers for all the
         assigned reducers.
      */
-    private volatile List<BenchmarkProducer> producers = new ArrayList<>();
+    private final List<BenchmarkProducer> producers = new ArrayList<>();
     /*
         For TPC-H queries, the consumers list is allocated with the consumers for all the assigned reducers.
      */
@@ -110,7 +110,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
             : new InstanceWorkerStats(statsLogger);
         this.messageProducer = new MessageProducerImpl(new UniformRateLimiter(1.0), stats);
         this.tpcHMessageProcessor = new TpcHMessageProcessor(
-            this.producers,
+            this,
             this.messageProducer,
             () -> testCompleted = true,
             log
@@ -356,6 +356,11 @@ public class LocalWorker implements Worker, ConsumerCallback {
         CountersStats cs = stats.toCountersStats();
         log.info("Returning counters stats: {}", writer.writeValueAsString(cs));
         return cs;
+    }
+
+    @Override
+    public List<BenchmarkProducer> getProducers() {
+        return this.producers;
     }
 
     @Override

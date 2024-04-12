@@ -112,6 +112,8 @@ public class WorkloadGenerator implements AutoCloseable {
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
 
         ConsumerAssignment internalConsumerAssignment = createTpcHConsumers(topics);
+        log.info(
+                "Internal consumer assignment: {}", writer.writeValueAsString(internalConsumerAssignment));
         this.localWorker.createConsumers(internalConsumerAssignment);
         log.info(
                 "Created {} internal consumers in {} ms",

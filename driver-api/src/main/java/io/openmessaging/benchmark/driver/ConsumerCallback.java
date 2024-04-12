@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /** Callback that the driver implementation calls when a message is received. */
-public interface ConsumerCallback {
+public interface ConsumerCallback extends ProducerProvider {
     /**
      * Driver should invoke this method (or the ByteBuffer variant) once for each message received.
      *

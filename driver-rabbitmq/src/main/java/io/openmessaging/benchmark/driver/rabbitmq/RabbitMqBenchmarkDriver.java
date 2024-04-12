@@ -18,6 +18,7 @@ import static java.util.stream.Collectors.toMap;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.rabbitmq.client.Address;
 import com.rabbitmq.client.AlreadyClosedException;
@@ -30,6 +31,7 @@ import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.Pair;
 import io.openmessaging.benchmark.driver.ResourceCreator;
 import io.openmessaging.benchmark.driver.ResourceCreator.CreationResult;
 import java.io.File;
@@ -124,19 +126,31 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
     @Override
     public CompletableFuture<List<BenchmarkProducer>> createProducers(List<ProducerInfo> producers)
             throws IOException {
+        log.info("Creating producers: {} {}", producers.size(), writer.writeValueAsString(producers));
         return new ResourceCreator<ProducerInfo, BenchmarkProducer>(
                         "producer",
                         config.producerCreationBatchSize,
                         config.producerCreationDelay,
-                        ps -> ps.stream().collect(toMap(p -> p, p -> createProducer(p.getTopic()))),
+                        ps ->
+                                ps.stream()
+                                        .collect(
+                                                toMap(
+                                                        p -> p,
+                                                        p ->
+                                                                createProducer(p.getValue().getTopic())
+                                                                        .thenApply(r -> new Pair<>(p.getKey(), r)))),
                         fc -> {
                             try {
-                                return new CreationResult<>(fc.get(), true);
+                                CreationResult<Pair<Integer, BenchmarkProducer>> result =
+                                        new CreationResult<>(fc.get(), true);
+                                log.info("Successfully created producer through resource creator");
+                                return result;
                             } catch (InterruptedException e) {
+                                log.info(e.getMessage());
                                 Thread.currentThread().interrupt();
                                 throw new RuntimeException(e);
                             } catch (ExecutionException e) {
-                                log.debug(e.getMessage());
+                                log.info(e.getMessage());
                                 return new CreationResult<>(null, false);
                             }
                         })
@@ -157,17 +171,22 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
                                                         c -> c,
                                                         c ->
                                                                 createConsumer(
-                                                                        c.getTopic(),
-                                                                        c.getSubscriptionName(),
-                                                                        c.getConsumerCallback()))),
+                                                                                c.getValue().getTopic(),
+                                                                                c.getValue().getSubscriptionName(),
+                                                                                c.getValue().getConsumerCallback())
+                                                                        .thenApply(r -> new Pair<>(c.getKey(), r)))),
                         fc -> {
                             try {
-                                return new CreationResult<>(fc.get(), true);
+                                CreationResult<Pair<Integer, BenchmarkConsumer>> result =
+                                        new CreationResult<>(fc.get(), true);
+                                log.info("Successfully created producer through resource creator");
+                                return result;
                             } catch (InterruptedException e) {
+                                log.info(e.getMessage());
                                 Thread.currentThread().interrupt();
                                 throw new RuntimeException(e);
                             } catch (ExecutionException e) {
-                                log.debug(e.getMessage());
+                                log.info(e.getMessage());
                                 return new CreationResult<>(null, false);
                             }
                         })
@@ -240,6 +259,7 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
                 });
     }
 
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final ObjectMapper mapper =
             new ObjectMapper(new YAMLFactory())
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
