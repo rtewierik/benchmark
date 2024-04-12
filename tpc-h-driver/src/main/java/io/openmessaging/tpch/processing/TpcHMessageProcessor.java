@@ -24,7 +24,6 @@ import io.openmessaging.benchmark.common.key.distribution.KeyDistributor;
 import io.openmessaging.benchmark.common.key.distribution.KeyDistributorType;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.MessageProducer;
-import io.openmessaging.benchmark.driver.ProducerProvider;
 import io.openmessaging.tpch.TpcHConstants;
 import io.openmessaging.tpch.algorithm.TpcHAlgorithm;
 import io.openmessaging.tpch.algorithm.TpcHDataParser;
@@ -54,7 +53,7 @@ public class TpcHMessageProcessor {
     private final Set<String> processedMessages = new ConcurrentSkipListSet<>();
     private final Set<String> processedIntermediateResults = new ConcurrentSkipListSet<>();
     private final Set<String> processedReducedResults = new ConcurrentSkipListSet<>();
-    private final ProducerProvider producerProvider;
+    private final List<BenchmarkProducer> producers;
     private volatile MessageProducer messageProducer;
     private final Runnable onTestCompleted;
     private final Logger log;
@@ -66,11 +65,11 @@ public class TpcHMessageProcessor {
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     public TpcHMessageProcessor(
-            ProducerProvider producerProvider,
+            List<BenchmarkProducer> producers,
             MessageProducer messageProducer,
             Runnable onTestCompleted,
             Logger log) {
-        this.producerProvider = producerProvider;
+        this.producers = producers;
         this.messageProducer = messageProducer;
         this.onTestCompleted = onTestCompleted;
         this.log = log == null ? LoggerFactory.getLogger(TpcHMessageProcessor.class) : log;
@@ -84,7 +83,7 @@ public class TpcHMessageProcessor {
         String messageId = message.messageId;
         log.info(
                 "Processing TPC-H message: {} {}",
-                this.producerProvider.getProducers().size(),
+                this.producers.size(),
                 writer.writeValueAsString(message));
         if (processedMessages.contains(messageId)) {
             return null;
@@ -111,7 +110,7 @@ public class TpcHMessageProcessor {
         } catch (Throwable t) {
             String messageStr = t.getMessage();
             String stackTrace = writer.writeValueAsString(t.getStackTrace());
-            int size = this.producerProvider.getProducers().size();
+            int size = this.producers.size();
             log.error(
                     "Error occurred while processing TPC-H message: {} {} {}", size, messageStr, stackTrace);
             throw new RuntimeException(t);
@@ -126,7 +125,7 @@ public class TpcHMessageProcessor {
             TpcHIntermediateResult result =
                     TpcHAlgorithm.applyQueryToChunk(chunkData, assignment.query, assignment);
             int producerIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.producerIndex;
-            BenchmarkProducer producer = this.producerProvider.getProducers().get(producerIndex);
+            BenchmarkProducer producer = this.producers.get(producerIndex);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
             TpcHMessage message =
                     new TpcHMessage(
@@ -169,8 +168,7 @@ public class TpcHMessageProcessor {
         }
         if (existingIntermediateResult.numberOfAggregatedResults.intValue()
                 == intermediateResult.numberOfMapResults.intValue()) {
-            BenchmarkProducer producer =
-                    this.producerProvider.getProducers().get(TpcHConstants.REDUCE_DST_INDEX);
+            BenchmarkProducer producer = this.producers.get(TpcHConstants.REDUCE_DST_INDEX);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
             String reducedResult = messageWriter.writeValueAsString(existingIntermediateResult);
             TpcHMessage message = new TpcHMessage(TpcHMessageType.ReducedResult, reducedResult);

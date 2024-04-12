@@ -27,7 +27,6 @@ import io.openmessaging.benchmark.common.monitoring.WorkerStats;
 import io.openmessaging.benchmark.common.producer.MessageProducerImpl;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
-import io.openmessaging.benchmark.driver.DefaultProducerProvider;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import java.io.IOException;
@@ -47,10 +46,9 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
     private static final WorkerStats stats = new CentralWorkerStats();
     private static final TpcHMessageProcessor messageProcessor =
             new TpcHMessageProcessor(
-                    new DefaultProducerProvider(
-                            S3BenchmarkConfiguration.s3Uris.stream()
-                                    .map(S3BenchmarkS3Producer::new)
-                                    .collect(Collectors.toList())),
+                    S3BenchmarkConfiguration.s3Uris.stream()
+                            .map(S3BenchmarkS3Producer::new)
+                            .collect(Collectors.toList()),
                     new MessageProducerImpl(new UniformRateLimiter(1.0), stats),
                     () -> {},
                     log);

@@ -110,7 +110,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
             : new InstanceWorkerStats(statsLogger);
         this.messageProducer = new MessageProducerImpl(new UniformRateLimiter(1.0), stats);
         this.tpcHMessageProcessor = new TpcHMessageProcessor(
-            this,
+            this.producers,
             this.messageProducer,
             () -> testCompleted = true,
             log
@@ -356,11 +356,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
         CountersStats cs = stats.toCountersStats();
         log.info("Returning counters stats: {}", writer.writeValueAsString(cs));
         return cs;
-    }
-
-    @Override
-    public List<BenchmarkProducer> getProducers() {
-        return this.producers;
     }
 
     @Override
