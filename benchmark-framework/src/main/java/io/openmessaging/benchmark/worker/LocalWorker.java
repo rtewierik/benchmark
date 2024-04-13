@@ -189,8 +189,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
         AtomicInteger consumerIndex = new AtomicInteger();
         this.experimentId = assignment.experimentId;
         this.isTpcH = assignment.isTpcH;
-        // This subscription should only be done on the orchestrator host.
-        if (assignment.isTpcH && assignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
+        log.info("Raw consumers: {}", writer.writeValueAsString(assignment));
+        if (this.isTpcH && assignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
             assignment.topicsSubscriptions.remove(TpcHConstants.REDUCE_DST_INDEX);
         }
         log.info("Creating consumers: {}", writer.writeValueAsString(assignment));

@@ -38,7 +38,7 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
     private final String exchange;
     private final ConfirmListener listener;
     /** To record msg and it's future structure. */
-    volatile SortedSet<Long> ackSet = Collections.synchronizedSortedSet(new TreeSet<>());
+    final SortedSet<Long> ackSet = Collections.synchronizedSortedSet(new TreeSet<>());
 
     private final ConcurrentHashMap<Long, CompletableFuture<Void>> futureConcurrentHashMap =
             new ConcurrentHashMap<>();

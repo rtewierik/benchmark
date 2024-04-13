@@ -17,12 +17,32 @@
   connection: ssh
   become: true
   tasks:
-    - shell: rm -fr /opt/openmessaging-benchmark-0.0.1-SNAPSHOT
-    - shell: rm -f /opt/benchmark/lib/io.openmessaging.*
-    - unarchive:
+    - name: Benchmark - Clean folder
+      file: path=/opt/benchmark state=absent
+      tags: [client-code]
+    - name: Benchmark - Copy and unpack
+      unarchive:
         src: ../../package/target/openmessaging-benchmark-0.0.1-SNAPSHOT-bin.tar.gz
         dest: /opt
-    - shell: cp -f /opt/openmessaging-benchmark-0.0.1-SNAPSHOT/lib/io.openmessaging.* /opt/benchmark/lib/
+      tags: [client-code]
+    - name: Benchmark - Install binary
+      shell: mv /opt/openmessaging-benchmark-0.0.1-SNAPSHOT /opt/benchmark
+      tags: [client-code]
+    - name: Benchmark - Configure worker
+      template:
+        src: "templates/workers.yaml"
+        dest: "/opt/benchmark/workers.yaml"
+      tags: [client-code]
+    - name: Benchmark - Configure classic driver
+      template:
+        src: "templates/rabbitmq-classic.yaml"
+        dest: "/opt/benchmark/driver-rabbitmq/rabbitmq-classic.yaml"
+      tags: [client-code]
+    - name: Benchmark - Configure quorum driver
+      template:
+        src: "templates/rabbitmq-quorum.yaml"
+        dest: "/opt/benchmark/driver-rabbitmq/rabbitmq-quorum.yaml"
+      tags: [client-code]
     - name: Benchmark - Start service
       systemd:
         state: restarted

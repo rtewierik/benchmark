@@ -82,7 +82,8 @@ public interface BenchmarkDriver extends AutoCloseable {
      * @param producers
      * @return a producers future
      */
-    default CompletableFuture<List<BenchmarkProducer>> createProducers(List<ProducerInfo> producers) {
+    default CompletableFuture<List<BenchmarkProducer>> createProducers(List<ProducerInfo> producers)
+            throws IOException {
         List<CompletableFuture<BenchmarkProducer>> futures =
                 producers.stream().map(ci -> createProducer(ci.getTopic())).collect(toList());
         return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
@@ -109,7 +110,8 @@ public interface BenchmarkDriver extends AutoCloseable {
      * @param consumers
      * @return a consumers future
      */
-    default CompletableFuture<List<BenchmarkConsumer>> createConsumers(List<ConsumerInfo> consumers) {
+    default CompletableFuture<List<BenchmarkConsumer>> createConsumers(List<ConsumerInfo> consumers)
+            throws IOException {
         List<CompletableFuture<BenchmarkConsumer>> futures =
                 consumers.stream()
                         .map(

@@ -118,6 +118,21 @@ $ sudo /opt/benchmark/bin/benchmark \
   workloads/1-topic-16-partitions-1kb.yaml
 ```
 
+## Benchmarking commands to execute
+
+```
+sudo bin/benchmark \
+  --drivers driver-kafka/kafka-throughput.yaml \
+  workloads/simple-workload-short.yaml
+```
+
+```
+sudo bin/benchmark \
+  --drivers driver-kafka/kafka-throughput.yaml \
+  --tpc-h-file workloads/tpc-h-default.yaml \
+  workloads/simple-workload.yaml
+```
+
 ## Specify client hosts
 
 By default, benchmarks will be run from the set of hosts created by Terraform. You can also specify a comma-separated list of client hosts using the `--workers` flag (or `-w` for short):

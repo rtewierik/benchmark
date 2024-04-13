@@ -16,7 +16,11 @@ package io.openmessaging.benchmark.driver;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.stream.Collectors.toMap;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -27,6 +31,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.Value;
@@ -39,17 +44,27 @@ public class ResourceCreator<R, C> {
     private final String name;
     private final int maxBatchSize;
     private final long interBatchDelayMs;
-    private final Function<List<R>, Map<R, CompletableFuture<C>>> invokeBatchFn;
-    private final Function<CompletableFuture<C>, CreationResult<C>> complete;
+    private final Function<
+                    List<Pair<Integer, R>>, Map<Pair<Integer, R>, CompletableFuture<Pair<Integer, C>>>>
+            invokeBatchFn;
+    private final Function<CompletableFuture<Pair<Integer, C>>, CreationResult<Pair<Integer, C>>>
+            complete;
 
-    public CompletableFuture<List<C>> create(List<R> resources) {
-        return CompletableFuture.completedFuture(createBlocking(resources));
+    public CompletableFuture<List<C>> create(List<R> resources) throws IOException {
+        List<C> result = createBlocking(resources);
+        log.info("Created {}/{} resources using ResourceCreator", result.size(), resources.size());
+        return CompletableFuture.completedFuture(result);
     }
 
-    private List<C> createBlocking(List<R> resources) {
-        BlockingQueue<R> queue = new ArrayBlockingQueue<>(resources.size(), true, resources);
-        List<R> batch = new ArrayList<>();
-        List<C> created = new ArrayList<>();
+    private List<C> createBlocking(List<R> resources) throws IOException {
+        List<Pair<Integer, R>> indexedResources = new ArrayList<>();
+        for (int i = 0; i < resources.size(); i++) {
+            indexedResources.add(new Pair<>(i, resources.get(i)));
+        }
+        BlockingQueue<Pair<Integer, R>> queue =
+                new ArrayBlockingQueue<>(indexedResources.size(), true, indexedResources);
+        List<Pair<Integer, R>> batch = new ArrayList<>();
+        List<Pair<Integer, C>> created = new ArrayList<>();
         AtomicInteger succeeded = new AtomicInteger();
 
         ScheduledFuture<?> loggingFuture =
@@ -77,14 +92,23 @@ public class ResourceCreator<R, C> {
                     batch.clear();
                 }
             }
+        } catch (Throwable t) {
+            String message = t.getMessage();
+            String stackTrace = writer.writeValueAsString(t.getStackTrace());
+            log.error(
+                    "Error occurred while creating producer using ResourceCreator: {} {}",
+                    message,
+                    stackTrace);
         } finally {
             loggingFuture.cancel(true);
         }
-        return created;
+        created.sort(Comparator.comparing(Pair::getKey));
+        return created.stream().map(Pair::getValue).collect(Collectors.toList());
     }
 
     @SneakyThrows
-    private Map<R, CreationResult<C>> executeBatch(List<R> batch) {
+    private Map<Pair<Integer, R>, CreationResult<Pair<Integer, C>>> executeBatch(
+            List<Pair<Integer, R>> batch) {
         log.debug("Executing batch, size: {}", batch.size());
         Thread.sleep(interBatchDelayMs);
         return invokeBatchFn.apply(batch).entrySet().stream()
@@ -96,4 +120,6 @@ public class ResourceCreator<R, C> {
         C created;
         boolean success;
     }
+
+    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
 }
