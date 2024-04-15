@@ -52,3 +52,7 @@ variable monitoring_sqs_uri {
 variable enable_cloud_monitoring {
   type = bool
 }
+
+variable is_debug {
+  type = bool
+}

@@ -17,3 +17,5 @@ num_instances = {
 
 enable_cloud_monitoring = true
 monitoring_sqs_uri = "https://sqs.eu-west-1.amazonaws.com/138945776678/benchmark-monitoring"
+
+is_debug = false

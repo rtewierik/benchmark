@@ -91,12 +91,14 @@ resource "aws_spot_instance_request" "client" {
     echo "export IS_CLOUD_MONITORING_ENABLED=${var.enable_cloud_monitoring}" >> /etc/profile.d/myenvvars.sh
     echo "export MONITORING_SQS_URI=${var.monitoring_sqs_uri}" >> /etc/profile.d/myenvvars.sh
     echo "export REGION=${var.region}" >> /etc/profile.d/myenvvars.sh
+    echo "export DEBUG=${var.is_debug}" >> /etc/profile.d/myenvvars.sh
     echo "S3_URIS=${join(",", var.s3_uris)}" >> /etc/environment
     echo "PRODUCE_WITH_ALL_WORKERS=true" >> /etc/environment
     echo "SKIP_READINESS_CHECK=true" >> /etc/environment
     echo "IS_CLOUD_MONITORING_ENABLED=${var.enable_cloud_monitoring}" >> /etc/environment
     echo "MONITORING_SQS_URI=${var.monitoring_sqs_uri}" >> /etc/environment
     echo "REGION=${var.region}" >> /etc/environment
+    echo "DEBUG=${var.is_debug}" >> /etc/environment
     EOF
 
   tags = {
