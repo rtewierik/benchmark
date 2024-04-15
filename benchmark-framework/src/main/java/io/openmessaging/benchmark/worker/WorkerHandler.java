@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.io.Files;
 import io.javalin.Context;
 import io.javalin.Javalin;
+import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.common.ObjectMappers;
 import io.openmessaging.benchmark.common.monitoring.CountersStats;
 import io.openmessaging.benchmark.common.monitoring.CumulativeLatencies;
@@ -90,7 +91,9 @@ public class WorkerHandler {
     private void handleCreateProducers(Context ctx) throws Exception {
         String body = ctx.body();
         ProducerAssignment topics = mapper.readValue(body, ProducerAssignment.class);
-        log.info("Received create producers request for topics: {}", body);
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Received create producers request for topics: {}", body);
+        }
         localWorker.createProducers(topics);
     }
 
@@ -101,10 +104,12 @@ public class WorkerHandler {
     private void handleCreateConsumers(Context ctx) throws Exception {
         ConsumerAssignment consumerAssignment = mapper.readValue(ctx.body(), ConsumerAssignment.class);
 
-        log.info("ConsumerAssignment payload: {}", ctx.body());
-        log.info(
-                "Received create consumers request for topics: {}",
-                writer.writeValueAsString(consumerAssignment.topicsSubscriptions));
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("ConsumerAssignment payload: {}", ctx.body());
+            log.info(
+                    "Received create consumers request for topics: {}",
+                    writer.writeValueAsString(consumerAssignment.topicsSubscriptions));
+        }
         localWorker.createConsumers(consumerAssignment);
     }
 
@@ -140,33 +145,43 @@ public class WorkerHandler {
     }
 
     private void handleStopAll(Context ctx) throws Exception {
-        log.info("Stop All");
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Stop all command received.");
+        }
         localWorker.stopAll();
     }
 
     private void handlePeriodStats(Context ctx) throws Exception {
         PeriodStats stats = localWorker.getPeriodStats();
         String serializedStats = writer.writeValueAsString(stats);
-        log.info("Sending period stats: {}", serializedStats);
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Sending period stats: {}", serializedStats);
+        }
         ctx.result(serializedStats);
     }
 
     private void handleCumulativeLatencies(Context ctx) throws Exception {
         CumulativeLatencies stats = localWorker.getCumulativeLatencies();
         String serializedStats = writer.writeValueAsString(stats);
-        log.info("Sending cumulative latencies: {}", serializedStats);
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Sending cumulative latencies: {}", serializedStats);
+        }
         ctx.result(serializedStats);
     }
 
     private void handleCountersStats(Context ctx) throws Exception {
         CountersStats stats = localWorker.getCountersStats();
         String serializedStats = writer.writeValueAsString(stats);
-        log.info("Sending counters stats: {}", serializedStats);
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Sending counters stats: {}", serializedStats);
+        }
         ctx.result(serializedStats);
     }
 
     private void handleResetStats(Context ctx) throws Exception {
-        log.info("Reset stats");
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Reset stats command received.");
+        }
         localWorker.resetStats();
     }
 

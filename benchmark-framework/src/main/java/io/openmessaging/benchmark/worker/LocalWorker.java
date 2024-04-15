@@ -126,12 +126,15 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 mapper.readValue(driverConfigFile, DriverConfiguration.class);
 
         log.info("Driver: {}", writer.writeValueAsString(driverConfiguration));
-        log.info(
-            "Configuration: {} {} {}",
-            SnsSqsBenchmarkConfiguration.snsUris,
-            SnsSqsBenchmarkConfiguration.region,
-            SnsSqsBenchmarkConfiguration.isTpcH
-        );
+
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info(
+                    "Configuration: {} {} {}",
+                    SnsSqsBenchmarkConfiguration.snsUris,
+                    SnsSqsBenchmarkConfiguration.region,
+                    SnsSqsBenchmarkConfiguration.isTpcH
+            );
+        }
 
         try {
             benchmarkDriver =
@@ -189,11 +192,15 @@ public class LocalWorker implements Worker, ConsumerCallback {
         AtomicInteger consumerIndex = new AtomicInteger();
         this.experimentId = assignment.experimentId;
         this.isTpcH = assignment.isTpcH;
-        log.info("Raw consumers: {}", writer.writeValueAsString(assignment));
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Raw consumers: {}", writer.writeValueAsString(assignment));
+        }
         if (this.isTpcH && assignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
             assignment.topicsSubscriptions.remove(TpcHConstants.REDUCE_DST_INDEX);
         }
-        log.info("Creating consumers: {}", writer.writeValueAsString(assignment));
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Creating consumers: {}", writer.writeValueAsString(assignment));
+        }
         consumers.addAll(
                 benchmarkDriver
                         .createConsumers(
@@ -242,7 +249,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     Integer start = assignment.offset * batchSize;
                     Integer numberOfMapResults = assignment.numberOfMapResults;
                     String batchId = String.format(
-                            "%s-batch-%d-%s", assignment.queryId, assignment.offset, assignment.batchSize);
+                        "%s-batch-%d-%s", assignment.queryId, assignment.offset, assignment.batchSize);
                     try {
                         while (currentAssignment.get() < numberOfMapResults) {
                             Integer chunkIndex = start + currentAssignment.incrementAndGet();
@@ -353,9 +360,11 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public CountersStats getCountersStats() throws IOException {
-        CountersStats cs = stats.toCountersStats();
-        log.info("Returning counters stats: {}", writer.writeValueAsString(cs));
-        return cs;
+        CountersStats countersStats = stats.toCountersStats();
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Returning counters stats: {}", writer.writeValueAsString(countersStats));
+        }
+        return countersStats;
     }
 
     @Override
@@ -398,7 +407,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     public void internalMessageReceived(int size, long publishTimestamp, String experimentId, String messageId)
             throws IOException {
-        log.info("Message received: {} {} {} {} {}", size, publishTimestamp, experimentId, messageId, this.stats);
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Message received: {} {} {} {} {}", size, publishTimestamp, experimentId, messageId, this.stats);
+        }
         long now = System.currentTimeMillis();
         long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
         stats.recordMessageReceived(size, endToEndLatencyMicros, experimentId, messageId, this.isTpcH);
@@ -415,13 +426,17 @@ public class LocalWorker implements Worker, ConsumerCallback {
     @Override
     public void pauseConsumers() throws IOException {
         consumersArePaused = true;
-        log.info("Pausing consumers");
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Pausing consumers");
+        }
     }
 
     @Override
     public void resumeConsumers() throws IOException {
         consumersArePaused = false;
-        log.info("Resuming consumers");
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Resuming consumers");
+        }
     }
 
     @Override
@@ -438,19 +453,25 @@ public class LocalWorker implements Worker, ConsumerCallback {
         try {
             Thread.sleep(100);
 
-            log.info("Attempting to shut down producers...");
+            if (EnvironmentConfiguration.isDebug()) {
+                log.info("Attempting to shut down producers...");
+            }
             for (BenchmarkProducer producer : producers) {
                 producer.close();
             }
             producers.clear();
 
-            log.info("Attempting to shut down consumers...");
+            if (EnvironmentConfiguration.isDebug()) {
+                log.info("Attempting to shut down consumers...");
+            }
             for (BenchmarkConsumer consumer : consumers) {
                 consumer.close();
             }
             consumers.clear();
 
-            log.info("Attempting to shut down benchmark driver...");
+            if (EnvironmentConfiguration.isDebug()) {
+                log.info("Attempting to shut down benchmark driver...");
+            }
             if (benchmarkDriver != null) {
                 benchmarkDriver.close();
                 benchmarkDriver = null;

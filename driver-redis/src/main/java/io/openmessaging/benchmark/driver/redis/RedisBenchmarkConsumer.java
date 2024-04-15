@@ -15,6 +15,7 @@ package io.openmessaging.benchmark.driver.redis;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
 import java.util.Collections;
@@ -86,11 +87,17 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
     @Override
     public void close() throws Exception {
         closing = true;
-        log.info("[RedisBenchmarkConsumer] Attempting to shut down consumer task...");
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Attempting to shut down consumer task...");
+        }
         consumerTask.cancel(true);
-        log.info("[RedisBenchmarkConsumer] Attempting to shut down executor...");
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Attempting to shut down executor...");
+        }
         executor.shutdown();
-        log.info("[RedisBenchmarkConsumer] Attempting to shut down pool...");
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Attempting to shut down pool...");
+        }
         pool.close();
     }
 

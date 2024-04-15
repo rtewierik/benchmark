@@ -28,6 +28,7 @@ import io.openmessaging.benchmark.utils.PaddingDecimalFormat;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.utils.payload.FilePayloadReader;
 import io.openmessaging.benchmark.utils.payload.PayloadReader;
+import io.openmessaging.benchmark.worker.BenchmarkWorkers;
 import io.openmessaging.benchmark.worker.LocalWorker;
 import io.openmessaging.benchmark.worker.Worker;
 import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
@@ -74,16 +75,12 @@ public class WorkloadGenerator implements AutoCloseable {
     private volatile double targetPublishRate;
 
     public WorkloadGenerator(
-            String driverName,
-            Workload workload,
-            TpcHArguments arguments,
-            Worker worker,
-            LocalWorker localWorker) {
+            String driverName, Workload workload, TpcHArguments arguments, BenchmarkWorkers workers) {
         this.driverName = driverName;
         this.workload = workload;
         this.arguments = arguments;
-        this.worker = worker;
-        this.localWorker = localWorker;
+        this.worker = workers.worker;
+        this.localWorker = workers.localWorker;
         this.experimentId = String.format("%s-%s", workload.name, DATE_FORMAT.get().format(new Date()));
 
         if (workload.consumerBacklogSizeGB > 0 && workload.producerRate == 0) {
@@ -112,13 +109,18 @@ public class WorkloadGenerator implements AutoCloseable {
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
 
         ConsumerAssignment internalConsumerAssignment = createTpcHConsumers(topics);
-        log.info(
-                "Internal consumer assignment: {}", writer.writeValueAsString(internalConsumerAssignment));
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info(
+                    "Internal consumer assignment: {}",
+                    writer.writeValueAsString(internalConsumerAssignment));
+        }
         this.localWorker.createConsumers(internalConsumerAssignment);
-        log.info(
-                "Created {} internal consumers in {} ms",
-                internalConsumerAssignment.topicsSubscriptions.size(),
-                timer.elapsedMillis());
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info(
+                    "Created {} internal consumers in {} ms",
+                    internalConsumerAssignment.topicsSubscriptions.size(),
+                    timer.elapsedMillis());
+        }
         createTpcHProducers(topics);
 
         ensureTopicsAreReady();
@@ -244,7 +246,7 @@ public class WorkloadGenerator implements AutoCloseable {
         if (EnvironmentConfiguration.isProduceWithAllWorkers()) {
             return;
         }
-        log.info("Waiting for consumers to be ready");
+        log.info("Waiting for consumers to be ready...");
         // This is work around the fact that there's no way to have a consumer ready in Kafka without
         // first publishing
         // some message on the topic, which will then trigger the partitions assignment to the consumers
@@ -278,7 +280,7 @@ public class WorkloadGenerator implements AutoCloseable {
         if (System.currentTimeMillis() >= end) {
             throw new RuntimeException("Timed out waiting for consumers to be ready");
         } else {
-            log.info("All consumers are ready");
+            log.info("All consumers are ready!");
         }
     }
 
@@ -377,7 +379,10 @@ public class WorkloadGenerator implements AutoCloseable {
                     new TopicSubscription(topics.get(sourceIndex), generateSubscriptionName(sourceIndex)));
         }
 
-        log.info("Creating the following consumers: {}", writer.writeValueAsString(consumerAssignment));
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info(
+                    "Creating the following consumers: {}", writer.writeValueAsString(consumerAssignment));
+        }
         Timer timer = new Timer();
         worker.createConsumers(consumerAssignment);
         log.info(
@@ -416,7 +421,7 @@ public class WorkloadGenerator implements AutoCloseable {
 
     private void buildAndDrainBacklog(int testDurationMinutes) throws IOException {
         Timer timer = new Timer();
-        log.info("Stopping all consumers to build backlog");
+        log.info("Stopping all consumers to build backlog...");
         worker.pauseConsumers();
 
         this.needToWaitForBacklogDraining = true;

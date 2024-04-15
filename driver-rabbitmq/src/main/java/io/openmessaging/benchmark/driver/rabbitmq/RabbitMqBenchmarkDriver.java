@@ -27,6 +27,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import io.netty.handler.codec.http.QueryStringDecoder;
+import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
@@ -126,7 +127,9 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
     @Override
     public CompletableFuture<List<BenchmarkProducer>> createProducers(List<ProducerInfo> producers)
             throws IOException {
-        log.info("Creating producers: {} {}", producers.size(), writer.writeValueAsString(producers));
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Creating producers: {} {}", producers.size(), writer.writeValueAsString(producers));
+        }
         return new ResourceCreator<ProducerInfo, BenchmarkProducer>(
                         "producer",
                         config.producerCreationBatchSize,
