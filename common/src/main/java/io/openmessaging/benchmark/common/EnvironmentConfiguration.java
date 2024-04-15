@@ -23,6 +23,7 @@ public class EnvironmentConfiguration {
     @Getter private static final String monitoringSqsUri;
     @Getter private static final boolean isCloudMonitoringEnabled;
     @Getter private static final String region;
+    @Getter private static final boolean isDebug;
 
     static {
         produceWithAllWorkers = Boolean.parseBoolean(System.getenv("PRODUCE_WITH_ALL_WORKERS"));
@@ -30,5 +31,6 @@ public class EnvironmentConfiguration {
         monitoringSqsUri = System.getenv("MONITORING_SQS_URI");
         isCloudMonitoringEnabled = Boolean.parseBoolean(System.getenv("IS_CLOUD_MONITORING_ENABLED"));
         region = System.getenv("REGION");
+        isDebug = Boolean.parseBoolean(System.getenv("DEBUG"));
     }
 }

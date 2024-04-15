@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.common.ObjectMappers;
 import io.openmessaging.benchmark.common.client.AmazonS3Client;
 import io.openmessaging.benchmark.common.key.distribution.KeyDistributor;
@@ -81,10 +82,12 @@ public class TpcHMessageProcessor {
 
     public String processTpcHMessage(TpcHMessage message) throws IOException {
         String messageId = message.messageId;
-        log.info(
-                "Processing TPC-H message: {} {}",
-                this.producers.size(),
-                writer.writeValueAsString(message));
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info(
+                    "Processing TPC-H message: {} {}",
+                    this.producers.size(),
+                    writer.writeValueAsString(message));
+        }
         if (processedMessages.contains(messageId)) {
             return null;
         } else {
@@ -119,7 +122,9 @@ public class TpcHMessageProcessor {
 
     private String processConsumerAssignment(TpcHConsumerAssignment assignment) {
         String s3Uri = assignment.sourceDataS3Uri;
-        log.info("[INFO] Applying map to chunk \"{}\"...", s3Uri);
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Applying map to chunk \"{}\"...", s3Uri);
+        }
         try (InputStream stream = s3Client.readFileFromS3(s3Uri)) {
             List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
             TpcHIntermediateResult result =
@@ -133,7 +138,9 @@ public class TpcHMessageProcessor {
             String key = keyDistributor.next();
             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
             String serializedMessage = messageWriter.writeValueAsString(message);
-            log.info("Sending consumer assignment: {}", serializedMessage);
+            if (EnvironmentConfiguration.isDebug()) {
+                log.info("Sending consumer assignment: {}", serializedMessage);
+            }
             this.messageProducer.sendMessage(
                     producer,
                     optionalKey,
@@ -153,7 +160,7 @@ public class TpcHMessageProcessor {
         String chunkId = this.getChunkId(intermediateResult);
         String batchId = intermediateResult.batchId;
         if (processedIntermediateResults.contains(chunkId)) {
-            log.info("Ignored intermediate result with chunk ID {} due to duplicity!", chunkId);
+            log.warn("Ignored intermediate result with chunk ID {} due to duplicity!", chunkId);
             return queryId;
         } else {
             processedIntermediateResults.add(chunkId);
@@ -174,7 +181,9 @@ public class TpcHMessageProcessor {
             TpcHMessage message = new TpcHMessage(TpcHMessageType.ReducedResult, reducedResult);
             String key = keyDistributor.next();
             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
-            log.info("Sending reduced result: {}", reducedResult);
+            if (EnvironmentConfiguration.isDebug()) {
+                log.info("Sending reduced result: {}", reducedResult);
+            }
             this.messageProducer.sendMessage(
                     producer,
                     optionalKey,
@@ -190,7 +199,7 @@ public class TpcHMessageProcessor {
         String queryId = reducedResult.queryId;
         String batchId = reducedResult.batchId;
         if (processedReducedResults.contains(batchId)) {
-            log.info("Ignored reduced result with batch ID {} due to duplicity!", batchId);
+            log.warn("Ignored reduced result with batch ID {} due to duplicity!", batchId);
             return queryId;
         } else {
             processedReducedResults.add(batchId);
@@ -203,14 +212,16 @@ public class TpcHMessageProcessor {
             existingReducedResult = this.collectedReducedResults.get(reducedResult.queryId);
             existingReducedResult.aggregateReducedResult(reducedResult);
         }
-        log.info(
-                "Detected reduced result: {}\n\n{}",
-                writer.writeValueAsString(reducedResult),
-                writer.writeValueAsString(existingReducedResult));
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info(
+                    "Detected reduced result: {}\n\n{}",
+                    writer.writeValueAsString(reducedResult),
+                    writer.writeValueAsString(existingReducedResult));
+        }
         if (existingReducedResult.numberOfAggregatedResults.intValue()
                 == reducedResult.numberOfChunks.intValue()) {
             TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
-            log.info("[LocalWorker] TPC-H query result: {}", writer.writeValueAsString(result));
+            log.info("[RESULT] TPC-H query result: {}", writer.writeValueAsString(result));
             onTestCompleted.run();
         }
         return queryId;

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.collect.Sets;
 import com.google.common.io.BaseEncoding;
+import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
@@ -248,7 +249,9 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public void close() throws Exception {
-        log.info("Shutting down Pulsar benchmark driver");
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Shutting down Pulsar benchmark driver...");
+        }
 
         if (client != null) {
             client.close();
@@ -258,7 +261,9 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
             adminClient.close();
         }
 
-        log.info("Pulsar benchmark driver successfully shut down");
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Pulsar benchmark driver successfully shut down!");
+        }
     }
 
     private static final ObjectMapper mapper =

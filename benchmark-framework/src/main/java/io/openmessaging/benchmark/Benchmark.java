@@ -22,12 +22,15 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import io.openmessaging.benchmark.common.EnvironmentConfiguration;
+import io.openmessaging.benchmark.worker.BenchmarkWorkers;
 import io.openmessaging.benchmark.worker.DistributedWorkersEnsemble;
 import io.openmessaging.benchmark.worker.HttpWorkerClient;
 import io.openmessaging.benchmark.worker.LocalWorker;
 import io.openmessaging.benchmark.worker.Worker;
 import io.openmessaging.tpch.model.TpcHArguments;
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -89,9 +92,6 @@ public class Benchmark {
     }
 
     public static void main(String[] args) throws Exception {
-        // benchmark(new String[] { "--drivers", "workloads/redis-default.yaml", "--tpc-h-file",
-        // "workloads/tpc-h-default.yaml", "workloads/simple-workload.yaml" });
-        // testTpcHAlgorithmLocally();
         benchmark(args);
     }
 
@@ -127,7 +127,7 @@ public class Benchmark {
         if (arguments.workers == null && arguments.workersFile == null) {
             File defaultFile = new File("workers.yaml");
             if (defaultFile.exists()) {
-                log.info("Using default worker file workers.yaml");
+                log.info("Using default worker file workers.yaml!");
                 arguments.workersFile = defaultFile;
             }
         }
@@ -150,25 +150,9 @@ public class Benchmark {
 
         log.info("Workloads: {}", writer.writeValueAsString(workloads));
 
-        TpcHArguments tpcHArguments;
-        if (arguments.tpcHFile != null) {
-            tpcHArguments = mapper.readValue(arguments.tpcHFile, TpcHArguments.class);
-        } else {
-            tpcHArguments = null;
-        }
-        log.info("TPC-H arguments: {}", writer.writeValueAsString(tpcHArguments));
+        TpcHArguments tpcHArguments = getTpcHArguments(arguments);
 
-        Worker worker;
-        LocalWorker localWorker = new LocalWorker();
-
-        if (arguments.workers != null && !arguments.workers.isEmpty()) {
-            List<Worker> workers =
-                    arguments.workers.stream().map(HttpWorkerClient::new).collect(toList());
-            worker = new DistributedWorkersEnsemble(workers, arguments.extraConsumers);
-        } else {
-            // Use local worker implementation
-            worker = localWorker;
-        }
+        BenchmarkWorkers workers = getWorkers(arguments);
 
         workloads.forEach(
                 (workloadName, workload) -> {
@@ -185,24 +169,19 @@ public class Benchmark {
                                             driverConfiguration.name);
 
                                     // Stop any left over workload
-                                    worker.stopAll();
-                                    if (worker != localWorker) {
-                                        localWorker.stopAll();
-                                    }
+                                    workers.stopAll();
 
-                                    worker.initializeDriver(new File(driverConfig));
-                                    if (worker != localWorker) {
-                                        localWorker.initializeDriver(new File(driverConfig));
-                                    }
+                                    workers.initializeDriver(driverConfig);
 
                                     String driverName = driverConfiguration.name;
                                     WorkloadGenerator generator =
-                                            new WorkloadGenerator(
-                                                    driverName, workload, tpcHArguments, worker, localWorker);
+                                            new WorkloadGenerator(driverName, workload, tpcHArguments, workers);
 
                                     TestResult result = generator.run();
 
-                                    log.info("Preparing to write test results...");
+                                    if (EnvironmentConfiguration.isDebug()) {
+                                        log.info("Preparing to write test results...");
+                                    }
 
                                     boolean useOutput = (arguments.output != null) && (arguments.output.length() > 0);
 
@@ -215,12 +194,16 @@ public class Benchmark {
                                                             driverConfiguration.name,
                                                             dateFormat.format(new Date()));
 
-                                    log.info("Writing test result into {}", fileName);
+                                    if (EnvironmentConfiguration.isDebug()) {
+                                        log.info("Writing test result into {}", fileName);
+                                    }
                                     writer.writeValue(new File(fileName), result);
 
                                     generator.close();
 
-                                    log.info("Finished test and closed generator.");
+                                    if (EnvironmentConfiguration.isDebug()) {
+                                        log.info("Finished test and closed generator.");
+                                    }
                                 } catch (Exception e) {
                                     log.error(
                                             "Failed to run the workload '{}' for driver '{}'",
@@ -228,21 +211,44 @@ public class Benchmark {
                                             driverConfig,
                                             e);
                                 } finally {
-                                    worker.stopAll();
-                                    if (worker != localWorker) {
-                                        localWorker.stopAll();
-                                    }
+                                    workers.stopAll();
                                 }
                             });
                 });
 
-        log.info("Doing final clean-up...");
-        worker.close();
-        if (worker != localWorker) {
-            localWorker.close();
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Doing final clean-up...");
         }
-        log.info("Final clean-up finished.");
+        workers.close();
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Final clean-up finished.");
+        }
         System.exit(0);
+    }
+
+    private static TpcHArguments getTpcHArguments(Arguments arguments) throws IOException {
+        TpcHArguments tpcHArguments;
+        if (arguments.tpcHFile != null) {
+            tpcHArguments = mapper.readValue(arguments.tpcHFile, TpcHArguments.class);
+        } else {
+            tpcHArguments = null;
+        }
+        log.info("TPC-H arguments: {}", writer.writeValueAsString(tpcHArguments));
+        return tpcHArguments;
+    }
+
+    private static BenchmarkWorkers getWorkers(Arguments arguments) {
+        Worker worker;
+        LocalWorker localWorker = new LocalWorker();
+        if (arguments.workers != null && !arguments.workers.isEmpty()) {
+            List<Worker> workers =
+                    arguments.workers.stream().map(HttpWorkerClient::new).collect(toList());
+            worker = new DistributedWorkersEnsemble(workers, arguments.extraConsumers);
+        } else {
+            // Use local worker implementation
+            worker = localWorker;
+        }
+        return new BenchmarkWorkers(worker, localWorker);
     }
 
     private static final ObjectMapper mapper =
