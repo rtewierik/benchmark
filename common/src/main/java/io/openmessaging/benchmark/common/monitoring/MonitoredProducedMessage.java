@@ -13,7 +13,10 @@
  */
 package io.openmessaging.benchmark.common.monitoring;
 
+import java.util.UUID;
+
 public class MonitoredProducedMessage {
+    public final String transactionId;
     public final long payloadLength;
     public final long intendedSendTimeNs;
     public final long sendTimeNs;
@@ -32,6 +35,7 @@ public class MonitoredProducedMessage {
             String messageId,
             boolean isTpcH,
             boolean isError) {
+        this.transactionId = UUID.randomUUID().toString();
         this.payloadLength = payloadLength;
         this.intendedSendTimeNs = intendedSendTimeNs;
         this.sendTimeNs = sendTimeNs;

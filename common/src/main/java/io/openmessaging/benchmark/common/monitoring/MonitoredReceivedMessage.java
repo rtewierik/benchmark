@@ -13,7 +13,10 @@
  */
 package io.openmessaging.benchmark.common.monitoring;
 
+import java.util.UUID;
+
 public class MonitoredReceivedMessage {
+    public final String transactionId;
     public final long payloadLength;
     public final long endToEndLatencyMicros;
     public final String experimentId;
@@ -26,6 +29,7 @@ public class MonitoredReceivedMessage {
             String experimentId,
             String messageId,
             boolean isTpcH) {
+        this.transactionId = UUID.randomUUID().toString();
         this.payloadLength = payloadLength;
         this.endToEndLatencyMicros = endToEndLatencyMicros;
         this.experimentId = experimentId;
