@@ -134,6 +134,7 @@ export class ServiceStack extends Stack {
         memorySize: 512,
         tracing: Tracing.ACTIVE,
         role: iamRole,
+        reservedConcurrentExecutions: props.reservedConcurrentExecutions,
         environment: {
           REGION: this.region,
           DEBUG: props.debug ? 'TRUE' : 'FALSE',
