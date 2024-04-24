@@ -22,7 +22,6 @@ import { BenchmarkMonitoringStackProps } from './stack-configuration'
 
 import { addMonitoring } from '../modules/monitoring'
 import { addAlerting } from '../modules/alerting'
-import { IKey, Key } from 'aws-cdk-lib/aws-kms'
 import { ApiGatewayToSqs } from '@aws-solutions-constructs/aws-apigateway-sqs'
 import { AttributeType, BillingMode, Table, TableEncryption } from 'aws-cdk-lib/aws-dynamodb'
 
@@ -134,6 +133,7 @@ export class ServiceStack extends Stack {
         memorySize: 512,
         tracing: Tracing.ACTIVE,
         role: iamRole,
+        reservedConcurrentExecutions: props.reservedConcurrentExecutions,
         environment: {
           REGION: this.region,
           DEBUG: props.debug ? 'TRUE' : 'FALSE',
@@ -157,13 +157,14 @@ export class ServiceStack extends Stack {
   private createBenchmarkMonitoringDynamoDb(lambda: LambdaFunction, props: BenchmarkMonitoringStackProps) {
     const table = new Table(this, 'BenchmarkMonitoringDynamoDbTable', {
       tableName: props.appName,
+      pointInTimeRecovery: true,
       encryption: TableEncryption.CUSTOMER_MANAGED,
       partitionKey: {
-        name: 'messageId',
+        name: 'transactionId',
         type: AttributeType.STRING,
       },
-      readCapacity: 1,
-      writeCapacity: 1,
+      readCapacity: props.readCapacity,
+      writeCapacity: props.writeCapacity,
       billingMode: BillingMode.PROVISIONED,
       removalPolicy: RemovalPolicy.DESTROY,
     })

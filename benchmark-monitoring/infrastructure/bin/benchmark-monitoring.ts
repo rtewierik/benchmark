@@ -11,6 +11,7 @@ const stackProps: BenchmarkMonitoringStackProps = {
     region: 'eu-west-1'
   },
   appName: 'benchmark-monitoring',
+  reservedConcurrentExecutions: 1,
   maxBatchingWindow: Duration.minutes(1),
   batchSize: 100,
   debug: true,

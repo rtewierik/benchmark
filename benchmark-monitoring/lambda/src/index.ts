@@ -8,6 +8,7 @@ const DYNAMO_DB_TABLE_NAME = 'benchmark-monitoring'
 const REGION = 'eu-west-1'
 
 interface Event {
+  transactionId: string
   messageId: string
   experimentId: string
   payloadLength: number
