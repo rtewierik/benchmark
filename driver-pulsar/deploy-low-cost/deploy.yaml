@@ -28,7 +28,7 @@
         prometheus_version: "{{ prometheus_version | default('2.31.1') }}"
     - set_fact:
         pulsar_binary:
-          src: "https://downloads.apache.org/pulsar/pulsar-{{ pulsar_version }}/apache-pulsar-{{ pulsar_version }}-bin.tar.gz"
+          src: "https://archive.apache.org/dist/pulsar/pulsar-{{ pulsar_version }}/apache-pulsar-{{ pulsar_version }}-bin.tar.gz"
           remote: yes
       when: pulsar_binary is not defined
     - set_fact:
