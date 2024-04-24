@@ -3,7 +3,13 @@
 ```
 sudo bin/benchmark \
   --drivers driver-pulsar/pulsar-effectively-once.yaml \
-  workloads/simple-workload-short.yaml
+  workloads/simple-workload-short-1-partition.yaml
+```
+
+```
+sudo bin/benchmark \
+  --drivers driver-pulsar/pulsar-experiment.yaml \
+  workloads/simple-workload-short-1-partition.yaml
 ```
 
 ```
@@ -11,6 +17,13 @@ sudo bin/benchmark \
   --drivers driver-pulsar/pulsar-effectively-once.yaml \
   --tpc-h-file workloads/tpc-h-default.yaml \
   workloads/simple-workload.yaml
+```
+
+```
+sudo bin/benchmark \
+  --drivers driver-pulsar/pulsar-experiment.yaml \
+  --tpc-h-file workloads/tpc-h-default.yaml \
+  workloads/simple-workload-1-partition.yaml
 ```
 
 ### Locations to configure memory in case of changing instance size

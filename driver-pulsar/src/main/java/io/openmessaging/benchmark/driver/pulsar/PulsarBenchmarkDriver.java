@@ -33,7 +33,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -43,6 +45,7 @@ import org.apache.pulsar.client.admin.PulsarAdminBuilder;
 import org.apache.pulsar.client.admin.PulsarAdminException;
 import org.apache.pulsar.client.admin.PulsarAdminException.ConflictException;
 import org.apache.pulsar.client.api.ClientBuilder;
+import org.apache.pulsar.client.api.CompressionType;
 import org.apache.pulsar.client.api.Consumer;
 import org.apache.pulsar.client.api.ProducerBuilder;
 import org.apache.pulsar.client.api.PulsarClient;
@@ -65,10 +68,13 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
 
     private String namespace;
     private ProducerBuilder<byte[]> producerBuilder;
+    private final Map<String, String> defaultProperties = new HashMap<>();
+    private final Map<String, String> compressionDisabledProperties = new HashMap<>();
 
     @Override
     public void initialize(File configurationFile, StatsLogger statsLogger) throws IOException {
         this.config = readConfig(configurationFile);
+        compressionDisabledProperties.put("compressionType", CompressionType.NONE.toString());
         log.info("Pulsar driver configuration: {}", writer.writeValueAsString(config));
 
         ClientBuilder clientBuilder =
@@ -188,14 +194,17 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
     public CompletableFuture<TopicInfo> createTopic(TopicInfo info) {
         String topic = info.getTopic();
         int partitions = info.getPartitions();
+        Map<String, String> properties = this.getProperties();
         if (partitions == 1) {
-            // No-op
-            return CompletableFuture.completedFuture(null);
+            return adminClient
+                    .topics()
+                    .createNonPartitionedTopicAsync(topic, properties)
+                    .thenApply(unused -> info);
         }
 
         return adminClient
                 .topics()
-                .createPartitionedTopicAsync(topic, partitions)
+                .createPartitionedTopicAsync(topic, partitions, properties)
                 .thenApply(unused -> info);
     }
 
@@ -264,6 +273,13 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Pulsar benchmark driver successfully shut down!");
         }
+    }
+
+    private Map<String, String> getProperties() {
+        if (this.config.producer.compressionEnabled) {
+            return this.compressionDisabledProperties;
+        }
+        return defaultProperties;
     }
 
     private static final ObjectMapper mapper =

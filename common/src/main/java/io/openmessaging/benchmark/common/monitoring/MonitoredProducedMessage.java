@@ -13,6 +13,7 @@
  */
 package io.openmessaging.benchmark.common.monitoring;
 
+
 import java.util.UUID;
 
 public class MonitoredProducedMessage {

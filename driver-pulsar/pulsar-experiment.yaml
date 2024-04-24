@@ -43,6 +43,7 @@ producer:
   batchingMaxBytes: 131072
   blockIfQueueFull: true
   pendingQueueSize: 0
+  compressionEnabled: false
 
 consumer:
   receiverQueueSize: 10000
