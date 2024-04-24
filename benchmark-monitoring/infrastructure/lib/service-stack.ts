@@ -157,6 +157,7 @@ export class ServiceStack extends Stack {
   private createBenchmarkMonitoringDynamoDb(lambda: LambdaFunction, props: BenchmarkMonitoringStackProps) {
     const table = new Table(this, 'BenchmarkMonitoringDynamoDbTable', {
       tableName: props.appName,
+      pointInTimeRecovery: true,
       encryption: TableEncryption.CUSTOMER_MANAGED,
       partitionKey: {
         name: 'transactionId',
