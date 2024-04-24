@@ -57,6 +57,11 @@
         src: "templates/redis.yaml"
         dest: "/opt/benchmark/driver-redis/redis-default.yaml"
       tags: [client-code]
+    - name: Benchmark - Configure experiment driver
+      template:
+        src: "templates/redis-experiment.yaml"
+        dest: "/opt/benchmark/driver-redis/redis-experiment.yaml"
+      tags: [client-code]
     - name: Benchmark - Configure worker JVM memory
       lineinfile:
         dest: /opt/benchmark/bin/benchmark-worker
