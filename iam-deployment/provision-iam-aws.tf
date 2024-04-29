@@ -61,6 +61,11 @@ resource "aws_iam_role" "kafka_iam_role" {
             "logs:PutLogEvents"
           ],
           Resource = "*"
+        },
+        {
+          Effect = "Allow",
+          Action = "ssm:GetParameter",
+          Resource = "*"
         }
       ]
     })
@@ -121,6 +126,11 @@ resource "aws_iam_role" "pravega_iam_role" {
             "cloudwatch:GetMetricStatistics",
             "logs:PutLogEvents"
           ],
+          Resource = "*"
+        },
+        {
+          Effect = "Allow",
+          Action = "ssm:GetParameter",
           Resource = "*"
         }
       ]
@@ -183,6 +193,11 @@ resource "aws_iam_role" "pulsar_iam_role" {
             "logs:PutLogEvents"
           ],
           Resource = "*"
+        },
+        {
+          Effect = "Allow",
+          Action = "ssm:GetParameter",
+          Resource = "*"
         }
       ]
     })
@@ -244,6 +259,11 @@ resource "aws_iam_role" "rabbitmq_iam_role" {
             "logs:PutLogEvents"
           ],
           Resource = "*"
+        },
+        {
+          Effect = "Allow",
+          Action = "ssm:GetParameter",
+          Resource = "*"
         }
       ]
     })
@@ -296,6 +316,11 @@ resource "aws_iam_role" "redis_iam_role" {
             "cloudwatch:GetMetricStatistics",
             "logs:PutLogEvents"
           ],
+          Resource = "*"
+        },
+        {
+          Effect = "Allow",
+          Action = "ssm:GetParameter",
           Resource = "*"
         }
       ]
@@ -354,6 +379,11 @@ resource "aws_iam_role" "sns_sqs_iam_role" {
             "cloudwatch:GetMetricStatistics",
             "logs:PutLogEvents"
           ],
+          Resource = "*"
+        },
+        {
+          Effect = "Allow",
+          Action = "ssm:GetParameter",
           Resource = "*"
         }
       ]
@@ -421,6 +451,11 @@ resource "aws_iam_role" "s3_iam_role" {
             "cloudwatch:GetMetricStatistics",
             "logs:PutLogEvents"
           ],
+          Resource = "*"
+        },
+        {
+          Effect = "Allow",
+          Action = "ssm:GetParameter",
           Resource = "*"
         }
       ]
