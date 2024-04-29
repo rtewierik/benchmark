@@ -4,7 +4,7 @@ provider "aws" {
   default_tags {
     tags = {
       Application = var.app_name
-      Owner       = "Ruben te Wierik"
+      Owner       = "Ruben_te_Wierik"
       Contact     = "rtewierik@uoc.edu"
     }
   }

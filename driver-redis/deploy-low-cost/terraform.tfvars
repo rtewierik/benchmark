@@ -4,11 +4,11 @@ az              = "eu-west-1a"
 ami             = "ami-0f0f1c02e5e4d9d9f" // RHEL-8
 
 instance_types = {
-  "client" = "t3.large"
+  "client" = "t3.micro"
 }
 
 num_instances = {
-  "client" = 3
+  "client" = 2
 }
 
 enable_cloud_monitoring = false
