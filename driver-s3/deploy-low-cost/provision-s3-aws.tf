@@ -1,3 +1,8 @@
+variable "app_name" {
+  type    = string
+  default = "s3-benchmark-ruben-te-wierik"
+}
+
 # Create a VPC to launch our instances into
 resource "aws_vpc" "benchmark_vpc" {
   cidr_block = "10.0.0.0/16"

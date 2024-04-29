@@ -1,3 +1,8 @@
+variable "app_name" {
+  type    = string
+  default = "rabbitmq-benchmark-ruben-te-wierik"
+}
+
 variable "public_key_path" {
   description = <<DESCRIPTION
 Path to the SSH public key to be used for authentication.
