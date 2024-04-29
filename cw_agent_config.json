@@ -3,6 +3,11 @@
     "metrics_collection_interval": 10
   },
   "metrics": {
+    "append_dimensions": {
+      "InstanceId": "${aws:InstanceId}",
+      "InstanceType": "${aws:InstanceType}"
+    },
+    "aggregation_dimensions": [["InstanceId"]],
     "metrics_collected": {
       "disk": {
         "resources": ["/", "/tmp"],
@@ -12,7 +17,6 @@
       "mem": {
         "measurement": ["mem_available_percent"]
       }
-    },
-    "aggregation_dimensions": [["InstanceId", "InstanceType"], ["InstanceId"]]
+    }
   }
 }
