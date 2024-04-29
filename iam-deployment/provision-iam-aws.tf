@@ -1,3 +1,10 @@
+locals {
+  role_policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM",
+    "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+  ]
+}
+
 variable "tpc_h_s3_bucket_arn" {
   type = string
 }
@@ -60,6 +67,13 @@ resource "aws_iam_role" "kafka_iam_role" {
   }
 }
 
+resource "aws_iam_role_policy_attachment" "kafka_managed_policy_attachment" {
+  count = length(local.role_policy_arns)
+
+  role       = aws_iam_role.kafka_iam_role.name
+  policy_arn = element(local.role_policy_arns, count.index)
+}
+
 resource "aws_iam_role" "pravega_iam_role" {
   name = "pravega-iam-role"
 
@@ -112,6 +126,13 @@ resource "aws_iam_role" "pravega_iam_role" {
       ]
     })
   }
+}
+
+resource "aws_iam_role_policy_attachment" "pravea_managed_policy_attachment" {
+  count = length(local.role_policy_arns)
+
+  role       = aws_iam_role.pravega_iam_role.name
+  policy_arn = element(local.role_policy_arns, count.index)
 }
 
 resource "aws_iam_role" "pulsar_iam_role" {
@@ -168,6 +189,13 @@ resource "aws_iam_role" "pulsar_iam_role" {
   }
 }
 
+resource "aws_iam_role_policy_attachment" "pulsar_managed_policy_attachment" {
+  count = length(local.role_policy_arns)
+
+  role       = aws_iam_role.pulsar_iam_role.name
+  policy_arn = element(local.role_policy_arns, count.index)
+}
+
 resource "aws_iam_role" "rabbitmq_iam_role" {
   name = "rabbitmq-iam-role"
 
@@ -222,6 +250,13 @@ resource "aws_iam_role" "rabbitmq_iam_role" {
   }
 }
 
+resource "aws_iam_role_policy_attachment" "rabbitmq_managed_policy_attachment" {
+  count = length(local.role_policy_arns)
+
+  role       = aws_iam_role.rabbitmq_iam_role.name
+  policy_arn = element(local.role_policy_arns, count.index)
+}
+
 resource "aws_iam_role" "redis_iam_role" {
   name = "redis-iam-role"
 
@@ -266,6 +301,13 @@ resource "aws_iam_role" "redis_iam_role" {
       ]
     })
   }
+}
+
+resource "aws_iam_role_policy_attachment" "redis_managed_policy_attachment" {
+  count = length(local.role_policy_arns)
+
+  role       = aws_iam_role.redis_iam_role.name
+  policy_arn = element(local.role_policy_arns, count.index)
 }
 
 resource "aws_iam_role" "sns_sqs_iam_role" {
@@ -317,6 +359,13 @@ resource "aws_iam_role" "sns_sqs_iam_role" {
       ]
     })
   }
+}
+
+resource "aws_iam_role_policy_attachment" "sns_sqs_managed_policy_attachment" {
+  count = length(local.role_policy_arns)
+
+  role       = aws_iam_role.sns_sqs_iam_role.name
+  policy_arn = element(local.role_policy_arns, count.index)
 }
 
 
@@ -377,4 +426,11 @@ resource "aws_iam_role" "s3_iam_role" {
       ]
     })
   }
+}
+
+resource "aws_iam_role_policy_attachment" "s3_managed_policy_attachment" {
+  count = length(local.role_policy_arns)
+
+  role       = aws_iam_role.s3_iam_role.name
+  policy_arn = element(local.role_policy_arns, count.index)
 }
