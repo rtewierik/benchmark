@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE IF NOT EXISTS cpu_test (
+CREATE EXTERNAL TABLE IF NOT EXISTS {{ table_name }} (
   instanceId STRING,
   tags array<struct<Key: STRING, Value: STRING>>,
   values array<double>
@@ -7,23 +7,16 @@ ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
 WITH SERDEPROPERTIES (
   'serialization.format' = '1'
 )
-LOCATION 's3://rtw-monitoring-exports/ec2-metrics/cpu';
+LOCATION {{ s3_uri }};
 
-SELECT 
-    instanceId, 
-    tags, 
-    value, 
-    ROW_NUMBER() OVER (PARTITION BY instanceId ORDER BY value_index) AS value_index
-FROM cpu_test
-CROSS JOIN UNNEST("values") WITH ORDINALITY AS t(value, value_index);
-
+-- Simple query that does not flatten tags.
 WITH dataset AS (
   SELECT 
     instanceId, 
     tags, 
     value, 
     ROW_NUMBER() OVER (PARTITION BY instanceId ORDER BY value_index) AS value_index
-  FROM cpu_test
+  FROM {{ table_name }}
   CROSS JOIN UNNEST("values") WITH ORDINALITY AS t(value, value_index)
 ),
 SELECT 
@@ -35,13 +28,14 @@ SELECT
 FROM dataset
 CROSS JOIN UNNEST(tags) AS t(tag);
 
+-- Query that flattens tags for simplified filtering/grouping.
 WITH dataset AS (
   SELECT 
     instanceId, 
     tags, 
     value, 
     ROW_NUMBER() OVER (PARTITION BY instanceId ORDER BY value_index) AS value_index
-  FROM cpu_test
+  FROM {{ table_name }}
   CROSS JOIN UNNEST("values") WITH ORDINALITY AS t(value, value_index)
 )
 SELECT 

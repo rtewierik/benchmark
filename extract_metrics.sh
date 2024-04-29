@@ -6,10 +6,6 @@ instance_info=$(aws ec2 describe-instances \
   --output json)
 echo $instance_info
 
-echo '[' > cpu_utilization.json
-echo '[' > memory_utilization.json
-echo '[' > disk_utilization.json
-
 cpu_util=()
 mem_util=()
 disk_util=()
@@ -81,12 +77,12 @@ for info in $(echo "${instance_info}" | jq -c '.[]'); do
           }
         ]' \
         --output json)
-      cpu_util+=",{\"instanceId\": \"$instance_id\", \"tags\":$tags, \"values\":$(echo "${output}" | jq -r '.MetricDataResults[0].Values')}"
-      mem_util+=",{\"instanceId\": \"$instance_id\", \"tags\":$tags, \"values\":$(echo "${output}" | jq -r '.MetricDataResults[1].Values')}"
-      disk_util+=",{\"instanceId\": \"$instance_id\", \"tags\":$tags, \"values\":$(echo "${output}" | jq -r '.MetricDataResults[2].Values')}"
+      cpu_util+="{\"instanceId\":\"$instance_id\",\"tags\":$tags,\"values\":$(echo "${output}" | jq -r '.MetricDataResults[0].Values')}\n"
+      mem_util+="{\"instanceId\":\"$instance_id\",\"tags\":$tags,\"values\":$(echo "${output}" | jq -r '.MetricDataResults[1].Values')}\n"
+      disk_util+="{\"instanceId\":\"$instance_id\",\"tags\":$tags,\"values\":$(echo "${output}" | jq -r '.MetricDataResults[2].Values')}\n"
     fi
   fi
 done
-echo "${cpu_util:1}]" >> cpu_utilization.json
-echo "${mem_util:1}]" >> memory_utilization.json
-echo "${disk_util:1}]" >> disk_utilization.json
+echo $cpu_util > cpu_utilization.json
+echo $mem_util > memory_utilization.json
+echo $disk_util > disk_utilization.json
