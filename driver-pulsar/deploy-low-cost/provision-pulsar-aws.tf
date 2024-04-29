@@ -28,15 +28,15 @@ variable "ami" {}
 variable "instance_types" {}
 variable "num_instances" {}
 
-variable monitoring_sqs_uri {
+variable "monitoring_sqs_uri" {
   type = string
 }
 
-variable enable_cloud_monitoring {
+variable "enable_cloud_monitoring" {
   type = bool
 }
 
-variable is_debug {
+variable "is_debug" {
   type = bool
 }
 
@@ -135,12 +135,12 @@ resource "aws_iam_instance_profile" "pulsar_ec2_instance_profile" {
 }
 
 resource "aws_instance" "zookeeper" {
-  ami                     = var.ami
-  instance_type           = var.instance_types["zookeeper"]
-  key_name                = aws_key_pair.auth.id
-  subnet_id               = aws_subnet.benchmark_subnet.id
-  vpc_security_group_ids  = [aws_security_group.benchmark_security_group.id]
-  count                   = var.num_instances["zookeeper"]
+  ami                    = var.ami
+  instance_type          = var.instance_types["zookeeper"]
+  key_name               = aws_key_pair.auth.id
+  subnet_id              = aws_subnet.benchmark_subnet.id
+  vpc_security_group_ids = [aws_security_group.benchmark_security_group.id]
+  count                  = var.num_instances["zookeeper"]
 
   monitoring = true
 
@@ -188,12 +188,12 @@ resource "aws_instance" "zookeeper" {
 }
 
 resource "aws_instance" "pulsar" {
-  ami                     = var.ami
-  instance_type           = var.instance_types["pulsar"]
-  key_name                = aws_key_pair.auth.id
-  subnet_id               = aws_subnet.benchmark_subnet.id
-  vpc_security_group_ids  = [aws_security_group.benchmark_security_group.id]
-  count                   = var.num_instances["pulsar"]
+  ami                    = var.ami
+  instance_type          = var.instance_types["pulsar"]
+  key_name               = aws_key_pair.auth.id
+  subnet_id              = aws_subnet.benchmark_subnet.id
+  vpc_security_group_ids = [aws_security_group.benchmark_security_group.id]
+  count                  = var.num_instances["pulsar"]
 
   monitoring = true
 
@@ -221,7 +221,7 @@ resource "aws_instance" "pulsar" {
       "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
     ]
   }
-  
+
   user_data = <<-EOF
               #!/bin/bash
               # Attach the EBS volume
@@ -235,18 +235,18 @@ resource "aws_instance" "pulsar" {
               EOF
 
   tags = {
-    Name = "pulsar-${count.index}"
+    Name      = "pulsar-${count.index}"
     Benchmark = "Pulsar"
   }
 }
 
 resource "aws_instance" "client" {
-  ami                     = var.ami
-  instance_type           = var.instance_types["client"]
-  key_name                = aws_key_pair.auth.id
-  subnet_id               = aws_subnet.benchmark_subnet.id
-  vpc_security_group_ids  = [aws_security_group.benchmark_security_group.id]
-  count                   = var.num_instances["client"]
+  ami                    = var.ami
+  instance_type          = var.instance_types["client"]
+  key_name               = aws_key_pair.auth.id
+  subnet_id              = aws_subnet.benchmark_subnet.id
+  vpc_security_group_ids = [aws_security_group.benchmark_security_group.id]
+  count                  = var.num_instances["client"]
 
   monitoring = true
 
@@ -287,7 +287,7 @@ resource "aws_instance" "client" {
     EOF
 
   tags = {
-    Name = "pulsar-client-${count.index}"
+    Name      = "pulsar-client-${count.index}"
     Benchmark = "Pulsar"
   }
 }
@@ -334,26 +334,26 @@ resource "aws_instance" "client" {
 # }
 
 resource "aws_ebs_volume" "ebs_zookeeper" {
-  count             = "${var.num_instances["zookeeper"]}"
+  count = var.num_instances["zookeeper"]
 
   availability_zone = "eu-west-1a"
   size              = 30
   type              = "gp3"
 
   tags = {
-    Name            = "zookeeper_ebs_${count.index}"
+    Name = "zookeeper_ebs_${count.index}"
   }
 }
 
 resource "aws_ebs_volume" "ebs_pulsar" {
-  count             = "${var.num_instances["pulsar"]}"
+  count = var.num_instances["pulsar"]
 
   availability_zone = "eu-west-1a"
   size              = 40
   type              = "gp3"
 
   tags = {
-    Name            = "pulsar_ebs_${count.index}"
+    Name = "pulsar_ebs_${count.index}"
   }
 }
 

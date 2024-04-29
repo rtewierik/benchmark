@@ -11,12 +11,12 @@ instance_types = {
 }
 
 num_instances = {
-  "client"     = 3
-  "pulsar"     = 3
-  "zookeeper"  = 3
+  "client"    = 3
+  "pulsar"    = 3
+  "zookeeper" = 3
 }
 
 enable_cloud_monitoring = true
-monitoring_sqs_uri = "https://sqs.eu-west-1.amazonaws.com/138945776678/benchmark-monitoring"
+monitoring_sqs_uri      = "https://sqs.eu-west-1.amazonaws.com/138945776678/benchmark-monitoring"
 
 is_debug = false

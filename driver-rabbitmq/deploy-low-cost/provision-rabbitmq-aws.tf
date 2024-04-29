@@ -34,15 +34,15 @@ variable "region" {}
 variable "az" {}
 variable "ami" {}
 
-variable monitoring_sqs_uri {
+variable "monitoring_sqs_uri" {
   type = string
 }
 
-variable enable_cloud_monitoring {
+variable "enable_cloud_monitoring" {
   type = bool
 }
 
-variable is_debug {
+variable "is_debug" {
   type = bool
 }
 
@@ -185,7 +185,7 @@ resource "aws_instance" "rabbitmq" {
       "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
     ]
   }
-  
+
   user_data = <<-EOF
               #!/bin/bash
               # Attach the EBS volume
@@ -257,14 +257,14 @@ resource "aws_instance" "client" {
 }
 
 resource "aws_instance" "prometheus" {
-  ami                    = var.ami
-  instance_type          = var.instance_types["prometheus"]
-  key_name               = aws_key_pair.auth.id
-  subnet_id              = aws_subnet.benchmark_subnet.id
+  ami           = var.ami
+  instance_type = var.instance_types["prometheus"]
+  key_name      = aws_key_pair.auth.id
+  subnet_id     = aws_subnet.benchmark_subnet.id
   vpc_security_group_ids = [
-    aws_security_group.benchmark_security_group.id]
-  availability_zone      = "eu-west-1a"
-  count = var.num_instances["prometheus"]
+  aws_security_group.benchmark_security_group.id]
+  availability_zone = "eu-west-1a"
+  count             = var.num_instances["prometheus"]
 
   monitoring = true
 
@@ -299,14 +299,14 @@ resource "aws_instance" "prometheus" {
 }
 
 resource "aws_ebs_volume" "ebs_rabbitmq" {
-  count             = "${var.num_instances["rabbitmq"]}"
+  count = var.num_instances["rabbitmq"]
 
   availability_zone = "eu-west-1a"
   size              = 30
   type              = "gp3"
 
   tags = {
-    Name            = "rabbitmq_ebs_${count.index}"
+    Name = "rabbitmq_ebs_${count.index}"
   }
 }
 
