@@ -152,9 +152,12 @@ resource "aws_spot_instance_request" "rabbitmq" {
   monitoring = true
 
   iam_instance_profile = aws_iam_instance_profile.rabbitmq_ec2_instance_profile.name
-
+  
   user_data = <<-EOF
               #!/bin/bash
+              sudo yum install -y amazon-cloudwatch-agent
+              sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/etc/cwagentconfig.json
+              sudo systemctl start amazon-cloudwatch-agent
               # Attach the EBS volume
               sudo yum install -y unzip
               curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -187,6 +190,9 @@ resource "aws_spot_instance_request" "client" {
 
   user_data = <<-EOF
     #!/bin/bash
+    sudo yum install -y amazon-cloudwatch-agent
+    sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/etc/cwagentconfig.json
+    sudo systemctl start amazon-cloudwatch-agent
     echo "export IS_CLOUD_MONITORING_ENABLED=${var.enable_cloud_monitoring}" >> /etc/profile.d/myenvvars.sh
     echo "export MONITORING_SQS_URI=${var.monitoring_sqs_uri}" >> /etc/profile.d/myenvvars.sh
     echo "export REGION=${var.region}" >> /etc/profile.d/myenvvars.sh
@@ -215,6 +221,13 @@ resource "aws_spot_instance_request" "prometheus" {
   count = var.num_instances["prometheus"]
 
   monitoring = true
+  
+  user_data = <<-EOF
+              #!/bin/bash
+              sudo yum install -y amazon-cloudwatch-agent
+              sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/etc/cwagentconfig.json
+              sudo systemctl start amazon-cloudwatch-agent
+              EOF
 
   tags = {
     Name = "prometheus_${count.index}"

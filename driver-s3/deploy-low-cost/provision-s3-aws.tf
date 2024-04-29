@@ -85,9 +85,12 @@ resource "aws_spot_instance_request" "client" {
   monitoring = true
 
   iam_instance_profile = aws_iam_instance_profile.s3_ec2_instance_profile.name
-
+  
   user_data = <<-EOF
     #!/bin/bash
+    sudo yum install -y amazon-cloudwatch-agent
+    sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/etc/cwagentconfig.json
+    sudo systemctl start amazon-cloudwatch-agent
     echo "export S3_URIS=${join(",", var.s3_uris)}" >> /etc/profile.d/myenvvars.sh
     echo "export PRODUCE_WITH_ALL_WORKERS=true" >> /etc/profile.d/myenvvars.sh
     echo "export IS_CLOUD_MONITORING_ENABLED=${var.enable_cloud_monitoring}" >> /etc/profile.d/myenvvars.sh
