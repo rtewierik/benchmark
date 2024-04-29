@@ -118,7 +118,7 @@ resource "aws_instance" "client" {
       "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
     ]
   }
-  
+
   user_data = <<-EOF
     #!/bin/bash
     echo "export S3_URIS=${join(",", var.s3_uris)}" >> /etc/profile.d/myenvvars.sh

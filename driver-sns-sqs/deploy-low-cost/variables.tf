@@ -37,22 +37,22 @@ variable "num_instances" {
   type = map(string)
 }
 
-variable sns_uris {
+variable "sns_uris" {
   type = list(string)
 }
 
-variable is_tpc_h {
+variable "is_tpc_h" {
   type = bool
 }
 
-variable monitoring_sqs_uri {
+variable "monitoring_sqs_uri" {
   type = string
 }
 
-variable enable_cloud_monitoring {
+variable "enable_cloud_monitoring" {
   type = bool
 }
 
-variable is_debug {
+variable "is_debug" {
   type = bool
 }
