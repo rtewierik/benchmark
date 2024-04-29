@@ -28,15 +28,30 @@ import io.openmessaging.benchmark.worker.DistributedWorkersEnsemble;
 import io.openmessaging.benchmark.worker.HttpWorkerClient;
 import io.openmessaging.benchmark.worker.LocalWorker;
 import io.openmessaging.benchmark.worker.Worker;
+import io.openmessaging.tpch.algorithm.TpcHAlgorithm;
+import io.openmessaging.tpch.algorithm.TpcHDataParser;
+import io.openmessaging.tpch.algorithm.TpcHQueryIntermediateResultsReducer;
+import io.openmessaging.tpch.algorithm.TpcHQueryResultGenerator;
 import io.openmessaging.tpch.model.TpcHArguments;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import io.openmessaging.tpch.model.TpcHConsumerAssignment;
+import io.openmessaging.tpch.model.TpcHIntermediateResult;
+import io.openmessaging.tpch.model.TpcHQuery;
+import io.openmessaging.tpch.model.TpcHQueryResult;
+import io.openmessaging.tpch.model.TpcHRow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,7 +107,44 @@ public class Benchmark {
     }
 
     public static void main(String[] args) throws Exception {
-        benchmark(args);
+        testTpcHAlgorithmLocally();
+    }
+
+    private static void testTpcHAlgorithmLocally() {
+        TpcHQuery query = TpcHQuery.PricingSummaryReport;
+        List<String> chunkFiles =
+                Arrays.asList(
+                        "../tpc-h-chunks/ref/chunk_1.csv",
+                        "../tpc-h-chunks/ref/chunk_2.csv",
+                        "../tpc-h-chunks/ref/chunk_3.csv",
+                        "../tpc-h-chunks/ref/chunk_4.csv",
+                        "../tpc-h-chunks/ref/chunk_5.csv",
+                        "../tpc-h-chunks/ref/chunk_6.csv",
+                        "../tpc-h-chunks/ref/chunk_7.csv",
+                        "../tpc-h-chunks/ref/chunk_8.csv",
+                        "../tpc-h-chunks/ref/chunk_9.csv",
+                        "../tpc-h-chunks/ref/chunk_10.csv"
+                );
+        List<TpcHIntermediateResult> chunk = new ArrayList<>();
+        for (String chunkFile : chunkFiles) {
+            System.out.printf("[INFO] Applying map to chunk \"%s\"...%n", chunkFile);
+            try (InputStream stream = Files.newInputStream(Paths.get(chunkFile))) {
+                List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
+                TpcHConsumerAssignment assignment =
+                        new TpcHConsumerAssignment(query, "query-id", "batch-id", null, null, null, null, null);
+                TpcHIntermediateResult result =
+                        TpcHAlgorithm.applyQueryToChunk(chunkData, query, assignment);
+                chunk.add(result);
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        }
+        System.out.println("[INFO] Applying reducer to chunk...");
+        TpcHIntermediateResult intermediateResult =
+                TpcHQueryIntermediateResultsReducer.applyReduceToChunk(chunk, query);
+        System.out.println("[INFO] Generating result from reduced intermediate result...");
+        TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(intermediateResult, query);
+        System.out.println(result);
     }
 
     private static void benchmark(String[] args) throws Exception {
