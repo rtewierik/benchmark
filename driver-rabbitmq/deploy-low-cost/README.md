@@ -18,3 +18,6 @@ sudo bin/benchmark \
 * `deploy.yaml`requires modification of the `Configure memory` tasks.
 * The RabbitMQ installation does not reference any memory, so supposedly it uses as much memory as it needs. This should be investigated further to ensure no issues occur during future benchmarking.
 
+## Extracting metrics from EC2 instances after running the benchmarks
+
+Run the command `sh ../../extract_metrics.sh rabbitmq-benchmark-ruben-te-wierik`.
