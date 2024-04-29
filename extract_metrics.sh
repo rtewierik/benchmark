@@ -27,7 +27,7 @@ for info in $(echo "${instance_info}" | jq -c '.[]'); do
       --end-time "$(date -u)" \
       --metric-data-queries '[
         {
-          "Id": "aaaa",
+          "Id": "cpu_utilization",
           "MetricStat": {
             "Metric": {
               "Namespace": "AWS/EC2",
@@ -79,17 +79,11 @@ for info in $(echo "${instance_info}" | jq -c '.[]'); do
         }
       ]' \
       --output json)
-    cpu_util_item=$(echo "${output}" | jq -r '.MetricDataResults[0].Values')
-    mem_util_item=$(echo "${output}" | jq -r '.MetricDataResults[1].Values')
-    disk_util_item=$(echo "${output}" | jq -r '.MetricDataResults[2].Values')
-    cpu_util+=",${cpu_util_item}"
-    mem_util+=",${mem_util_item}"
-    disk_util+=",${disk_util_item}"
+    cpu_util+=",{\"instanceId\": \"$instance_id\", \"values\":$(echo "${output}" | jq -r '.MetricDataResults[0].Values')}"
+    mem_util+=",{\"instanceId\": \"$instance_id\", \"values\":$(echo "${output}" | jq -r '.MetricDataResults[1].Values')}"
+    disk_util+=",{\"instanceId\": \"$instance_id\", \"values\":$(echo "${output}" | jq -r '.MetricDataResults[2].Values')}"
   fi
 done
-echo "CPU Utilization"
-echo "${cpu_util:1}"
-echo "Memory Utilization"
-echo "${mem_util:1}"
-echo "Disk Utilization"
-echo "${disk_util:1}"
+echo "${cpu_util:1}]" >> cpu_utilization.json
+echo "${mem_util:1}]" >> memory_utilization.json
+echo "${disk_util:1}]" >> disk_utilization.json
