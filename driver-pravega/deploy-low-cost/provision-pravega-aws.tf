@@ -144,6 +144,8 @@ resource "aws_spot_instance_request" "zookeeper" {
   count                  = "${var.num_instances["zookeeper"]}"
 
   monitoring = true
+
+  iam_instance_profile = aws_iam_instance_profile.pravega_ec2_instance_profile.name
   
   user_data = <<-EOF
               #!/bin/bash
@@ -169,6 +171,8 @@ resource "aws_spot_instance_request" "controller" {
   count                  = "${var.num_instances["controller"]}"
 
   monitoring = true
+
+  iam_instance_profile = aws_iam_instance_profile.pravega_ec2_instance_profile.name
   
   user_data = <<-EOF
               #!/bin/bash
@@ -264,6 +268,8 @@ resource "aws_spot_instance_request" "metrics" {
   count                  = "${var.num_instances["metrics"]}"
 
   monitoring = true
+
+  iam_instance_profile = aws_iam_instance_profile.pravega_ec2_instance_profile.name
   
   user_data = <<-EOF
               #!/bin/bash

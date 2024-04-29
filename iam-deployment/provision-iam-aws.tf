@@ -45,6 +45,15 @@ resource "aws_iam_role" "kafka_iam_role" {
           Action   = "s3:ListBucket",
           Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
+        },
+        {
+          Effect   = "Allow",
+          Action   = [
+            "cloudwatch:PutMetricData",
+            "cloudwatch:GetMetricStatistics",
+            "logs:PutLogEvents"
+          ],
+          Resource = "*"
         }
       ]
     })
@@ -90,6 +99,15 @@ resource "aws_iam_role" "pravega_iam_role" {
           Action   = "s3:ListBucket",
           Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
+        },
+        {
+          Effect   = "Allow",
+          Action   = [
+            "cloudwatch:PutMetricData",
+            "cloudwatch:GetMetricStatistics",
+            "logs:PutLogEvents"
+          ],
+          Resource = "*"
         }
       ]
     })
@@ -135,6 +153,15 @@ resource "aws_iam_role" "pulsar_iam_role" {
           Action   = "s3:ListBucket",
           Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
+        },
+        {
+          Effect   = "Allow",
+          Action   = [
+            "cloudwatch:PutMetricData",
+            "cloudwatch:GetMetricStatistics",
+            "logs:PutLogEvents"
+          ],
+          Resource = "*"
         }
       ]
     })
@@ -180,6 +207,15 @@ resource "aws_iam_role" "rabbitmq_iam_role" {
           Action   = "s3:ListBucket",
           Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
+        },
+        {
+          Effect   = "Allow",
+          Action   = [
+            "cloudwatch:PutMetricData",
+            "cloudwatch:GetMetricStatistics",
+            "logs:PutLogEvents"
+          ],
+          Resource = "*"
         }
       ]
     })
@@ -217,6 +253,15 @@ resource "aws_iam_role" "redis_iam_role" {
           Action   = "s3:ListBucket",
           Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
+        },
+        {
+          Effect   = "Allow",
+          Action   = [
+            "cloudwatch:PutMetricData",
+            "cloudwatch:GetMetricStatistics",
+            "logs:PutLogEvents"
+          ],
+          Resource = "*"
         }
       ]
     })
@@ -259,6 +304,15 @@ resource "aws_iam_role" "sns_sqs_iam_role" {
           Action   = "s3:ListBucket",
           Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
+        },
+        {
+          Effect   = "Allow",
+          Action   = [
+            "cloudwatch:PutMetricData",
+            "cloudwatch:GetMetricStatistics",
+            "logs:PutLogEvents"
+          ],
+          Resource = "*"
         }
       ]
     })
@@ -310,6 +364,15 @@ resource "aws_iam_role" "s3_iam_role" {
           Action   = "s3:ListBucket",
           Effect   = "Allow",
           Resource = var.tpc_h_s3_bucket_arn
+        },
+        {
+          Effect   = "Allow",
+          Action   = [
+            "cloudwatch:PutMetricData",
+            "cloudwatch:GetMetricStatistics",
+            "logs:PutLogEvents"
+          ],
+          Resource = "*"
         }
       ]
     })

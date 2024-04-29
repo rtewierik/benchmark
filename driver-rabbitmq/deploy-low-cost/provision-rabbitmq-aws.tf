@@ -221,6 +221,8 @@ resource "aws_spot_instance_request" "prometheus" {
   count = var.num_instances["prometheus"]
 
   monitoring = true
+
+  iam_instance_profile = aws_iam_instance_profile.rabbitmq_ec2_instance_profile.name
   
   user_data = <<-EOF
               #!/bin/bash
