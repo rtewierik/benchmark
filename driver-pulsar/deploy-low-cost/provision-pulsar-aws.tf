@@ -132,6 +132,8 @@ resource "aws_spot_instance_request" "zookeeper" {
   wait_for_fulfillment    = true
   count                   = var.num_instances["zookeeper"]
 
+  monitoring = true
+
   iam_instance_profile = aws_iam_instance_profile.pulsar_ec2_instance_profile.name
 
   user_data = <<-EOF
@@ -162,6 +164,8 @@ resource "aws_spot_instance_request" "pulsar" {
   wait_for_fulfillment    = true
   count                   = var.num_instances["pulsar"]
 
+  monitoring = true
+
   iam_instance_profile = aws_iam_instance_profile.pulsar_ec2_instance_profile.name
 
   user_data = <<-EOF
@@ -191,6 +195,8 @@ resource "aws_spot_instance_request" "client" {
   spot_type               = "one-time"
   wait_for_fulfillment    = true
   count                   = var.num_instances["client"]
+
+  monitoring = true
 
   iam_instance_profile = aws_iam_instance_profile.pulsar_ec2_instance_profile.name
 

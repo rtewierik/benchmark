@@ -149,6 +149,8 @@ resource "aws_spot_instance_request" "rabbitmq" {
   wait_for_fulfillment   = true
   count                  = var.num_instances["rabbitmq"]
 
+  monitoring = true
+
   iam_instance_profile = aws_iam_instance_profile.rabbitmq_ec2_instance_profile.name
 
   user_data = <<-EOF
@@ -178,6 +180,8 @@ resource "aws_spot_instance_request" "client" {
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = var.num_instances["client"]
+
+  monitoring = true
 
   iam_instance_profile = aws_iam_instance_profile.rabbitmq_ec2_instance_profile.name
 
@@ -209,6 +213,8 @@ resource "aws_spot_instance_request" "prometheus" {
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count = var.num_instances["prometheus"]
+
+  monitoring = true
 
   tags = {
     Name = "prometheus_${count.index}"

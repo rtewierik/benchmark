@@ -82,6 +82,8 @@ resource "aws_spot_instance_request" "client" {
   wait_for_fulfillment   = true
   count                  = var.num_instances["client"]
 
+  monitoring = true
+
   iam_instance_profile = aws_iam_instance_profile.sns_sqs_ec2_instance_profile.name
 
   user_data = <<-EOF

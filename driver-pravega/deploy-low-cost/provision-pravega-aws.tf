@@ -143,6 +143,8 @@ resource "aws_spot_instance_request" "zookeeper" {
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["zookeeper"]}"
 
+  monitoring = true
+
   tags = {
     Name = "zk-${count.index}"
   }
@@ -159,6 +161,8 @@ resource "aws_spot_instance_request" "controller" {
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["controller"]}"
 
+  monitoring = true
+
   tags = {
     Name = "controller-${count.index}"
   }
@@ -174,6 +178,8 @@ resource "aws_spot_instance_request" "bookkeeper" {
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["bookkeeper"]}"
+
+  monitoring = true
 
   iam_instance_profile = aws_iam_instance_profile.pravega_ec2_instance_profile.name
 
@@ -205,6 +211,8 @@ resource "aws_spot_instance_request" "client" {
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["client"]}"
 
+  monitoring = true
+
   iam_instance_profile = aws_iam_instance_profile.pravega_ec2_instance_profile.name
 
   user_data = <<-EOF
@@ -234,6 +242,8 @@ resource "aws_spot_instance_request" "metrics" {
   spot_type              = "one-time"
   wait_for_fulfillment   = true
   count                  = "${var.num_instances["metrics"]}"
+
+  monitoring = true
 
   tags = {
     Name = "metrics-${count.index}"
