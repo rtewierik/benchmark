@@ -180,3 +180,7 @@ $ terraform destroy -force
 ```
 
 Make sure to let the process run to completion (it could take several minutes). Once the tear down is complete, all AWS resources that you created for the Kafka benchmarking suite will have been removed.
+
+## Extracting metrics from EC2 instances after running the benchmarks
+
+Run the command `sh ../../extract_metrics.sh kafka-benchmark-ruben-te-wierik`.

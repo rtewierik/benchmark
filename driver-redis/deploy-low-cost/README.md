@@ -28,3 +28,6 @@ sudo bin/benchmark \
 * `deploy.yaml`requires modification of the `Configure memory` task
 * The rest of the infrastructure is all provided by AWS. The instance size and number of nodes in the Redis cluster should be verified to ensure benchmark success.
 
+## Extracting metrics from EC2 instances after running the benchmarks
+
+Run the command `sh ../../extract_metrics.sh redis-benchmark-ruben-te-wierik`.

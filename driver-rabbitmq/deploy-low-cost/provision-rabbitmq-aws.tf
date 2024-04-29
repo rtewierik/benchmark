@@ -1,3 +1,8 @@
+variable "app_name" {
+  type    = string
+  default = "rabbitmq-benchmark-ruben-te-wierik"
+}
+
 variable "public_key_path" {
   description = <<DESCRIPTION
 Path to the SSH public key to be used for authentication.
@@ -132,25 +137,55 @@ resource "aws_key_pair" "auth" {
   public_key = file(var.public_key_path)
 }
 
+resource "aws_ssm_parameter" "cw_agent" {
+  description = "Cloudwatch agent config to configure custom metrics."
+  name        = "/cloudwatch-agent/config"
+  type        = "String"
+  value       = file("../../cw_agent_config.json")
+}
+
 resource "aws_iam_instance_profile" "rabbitmq_ec2_instance_profile" {
   name = "rabbitmq_ec2_instance_profile"
 
   role = "rabbitmq-iam-role"
 }
 
-resource "aws_spot_instance_request" "rabbitmq" {
+resource "aws_instance" "rabbitmq" {
   ami                    = var.ami
   instance_type          = var.instance_types["rabbitmq"]
   key_name               = aws_key_pair.auth.id
   subnet_id              = aws_subnet.benchmark_subnet.id
   vpc_security_group_ids = [aws_security_group.benchmark_security_group.id]
   availability_zone      = "eu-west-1a"
-  spot_type              = "one-time"
-  wait_for_fulfillment   = true
   count                  = var.num_instances["rabbitmq"]
+
+  monitoring = true
 
   iam_instance_profile = aws_iam_instance_profile.rabbitmq_ec2_instance_profile.name
 
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "terminate"
+      spot_instance_type             = "one-time"
+    }
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file(replace(var.public_key_path, ".pub", ""))
+    host        = self.public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "curl https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -O",
+      "sudo rpm -U ./amazon-cloudwatch-agent.rpm",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
+    ]
+  }
+  
   user_data = <<-EOF
               #!/bin/bash
               # Attach the EBS volume
@@ -168,18 +203,41 @@ resource "aws_spot_instance_request" "rabbitmq" {
   }
 }
 
-resource "aws_spot_instance_request" "client" {
+resource "aws_instance" "client" {
   ami                    = var.ami
   instance_type          = var.instance_types["client"]
   key_name               = aws_key_pair.auth.id
   subnet_id              = aws_subnet.benchmark_subnet.id
   vpc_security_group_ids = [aws_security_group.benchmark_security_group.id]
   availability_zone      = "eu-west-1a"
-  spot_type              = "one-time"
-  wait_for_fulfillment   = true
   count                  = var.num_instances["client"]
 
+  monitoring = true
+
   iam_instance_profile = aws_iam_instance_profile.rabbitmq_ec2_instance_profile.name
+
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "terminate"
+      spot_instance_type             = "one-time"
+    }
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file(replace(var.public_key_path, ".pub", ""))
+    host        = self.public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "curl https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -O",
+      "sudo rpm -U ./amazon-cloudwatch-agent.rpm",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
+    ]
+  }
 
   user_data = <<-EOF
     #!/bin/bash
@@ -198,7 +256,7 @@ resource "aws_spot_instance_request" "client" {
   }
 }
 
-resource "aws_spot_instance_request" "prometheus" {
+resource "aws_instance" "prometheus" {
   ami                    = var.ami
   instance_type          = var.instance_types["prometheus"]
   key_name               = aws_key_pair.auth.id
@@ -206,9 +264,34 @@ resource "aws_spot_instance_request" "prometheus" {
   vpc_security_group_ids = [
     aws_security_group.benchmark_security_group.id]
   availability_zone      = "eu-west-1a"
-  spot_type              = "one-time"
-  wait_for_fulfillment   = true
   count = var.num_instances["prometheus"]
+
+  monitoring = true
+
+  iam_instance_profile = aws_iam_instance_profile.rabbitmq_ec2_instance_profile.name
+
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "terminate"
+      spot_instance_type             = "one-time"
+    }
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file(replace(var.public_key_path, ".pub", ""))
+    host        = self.public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "curl https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -O",
+      "sudo rpm -U ./amazon-cloudwatch-agent.rpm",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
+    ]
+  }
 
   tags = {
     Name = "prometheus_${count.index}"
@@ -228,9 +311,9 @@ resource "aws_ebs_volume" "ebs_rabbitmq" {
 }
 
 output "prometheus_host" {
-  value = aws_spot_instance_request.prometheus.0.public_ip
+  value = aws_instance.prometheus.0.public_ip
 }
 
 output "client_ssh_host" {
-  value = aws_spot_instance_request.client[0].public_ip
+  value = aws_instance.client[0].public_ip
 }

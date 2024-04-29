@@ -20,3 +20,6 @@ sudo bin/benchmark \
 * `pravega-segmentstore.service` requires modification of `Environment`
 * `deploy.yaml`requires modification of the `Configure memory` task
 
+## Extracting metrics from EC2 instances after running the benchmarks
+
+Run the command `sh ../../extract_metrics.sh pravega-benchmark-ruben-te-wierik`.
