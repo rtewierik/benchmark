@@ -137,6 +137,13 @@ resource "aws_key_pair" "auth" {
   public_key = file(var.public_key_path)
 }
 
+resource "aws_ssm_parameter" "cw_agent" {
+  description = "Cloudwatch agent config to configure custom metrics."
+  name        = "/cloudwatch-agent/config"
+  type        = "String"
+  value       = file("../../cw_agent_config.json")
+}
+
 resource "aws_iam_instance_profile" "rabbitmq_ec2_instance_profile" {
   name = "rabbitmq_ec2_instance_profile"
 
@@ -152,23 +159,35 @@ resource "aws_instance" "rabbitmq" {
   availability_zone      = "eu-west-1a"
   count                  = var.num_instances["rabbitmq"]
 
+  monitoring = true
+
+  iam_instance_profile = aws_iam_instance_profile.rabbitmq_ec2_instance_profile.name
+
   instance_market_options {
     market_type = "spot"
     spot_options {
-      instance_interruption_behavior = "stop"
+      instance_interruption_behavior = "terminate"
       spot_instance_type             = "one-time"
     }
   }
 
-  monitoring = true
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file(replace(var.public_key_path, ".pub", ""))
+    host        = self.public_ip
+  }
 
-  iam_instance_profile = aws_iam_instance_profile.rabbitmq_ec2_instance_profile.name
+  provisioner "remote-exec" {
+    inline = [
+      "curl https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -O",
+      "sudo rpm -U ./amazon-cloudwatch-agent.rpm",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
+    ]
+  }
   
   user_data = <<-EOF
               #!/bin/bash
-              sudo yum install -y amazon-cloudwatch-agent
-              sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/etc/cwagentconfig.json
-              sudo systemctl start amazon-cloudwatch-agent
               # Attach the EBS volume
               sudo yum install -y unzip
               curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -193,23 +212,35 @@ resource "aws_instance" "client" {
   availability_zone      = "eu-west-1a"
   count                  = var.num_instances["client"]
 
-  instance_market_options {
-    market_type = "spot"
-    spot_options {
-      instance_interruption_behavior = "stop"
-      spot_instance_type             = "one-time"
-    }
-  }
-
   monitoring = true
 
   iam_instance_profile = aws_iam_instance_profile.rabbitmq_ec2_instance_profile.name
 
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "terminate"
+      spot_instance_type             = "one-time"
+    }
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file(replace(var.public_key_path, ".pub", ""))
+    host        = self.public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "curl https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -O",
+      "sudo rpm -U ./amazon-cloudwatch-agent.rpm",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
+    ]
+  }
+
   user_data = <<-EOF
     #!/bin/bash
-    sudo yum install -y amazon-cloudwatch-agent
-    sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/etc/cwagentconfig.json
-    sudo systemctl start amazon-cloudwatch-agent
     echo "export IS_CLOUD_MONITORING_ENABLED=${var.enable_cloud_monitoring}" >> /etc/profile.d/myenvvars.sh
     echo "export MONITORING_SQS_URI=${var.monitoring_sqs_uri}" >> /etc/profile.d/myenvvars.sh
     echo "export REGION=${var.region}" >> /etc/profile.d/myenvvars.sh
@@ -235,24 +266,32 @@ resource "aws_instance" "prometheus" {
   availability_zone      = "eu-west-1a"
   count = var.num_instances["prometheus"]
 
+  monitoring = true
+
+  iam_instance_profile = aws_iam_instance_profile.rabbitmq_ec2_instance_profile.name
+
   instance_market_options {
     market_type = "spot"
     spot_options {
-      instance_interruption_behavior = "stop"
+      instance_interruption_behavior = "terminate"
       spot_instance_type             = "one-time"
     }
   }
 
-  monitoring = true
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file(replace(var.public_key_path, ".pub", ""))
+    host        = self.public_ip
+  }
 
-  iam_instance_profile = aws_iam_instance_profile.rabbitmq_ec2_instance_profile.name
-  
-  user_data = <<-EOF
-              #!/bin/bash
-              sudo yum install -y amazon-cloudwatch-agent
-              sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/etc/cwagentconfig.json
-              sudo systemctl start amazon-cloudwatch-agent
-              EOF
+  provisioner "remote-exec" {
+    inline = [
+      "curl https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -O",
+      "sudo rpm -U ./amazon-cloudwatch-agent.rpm",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
+    ]
+  }
 
   tags = {
     Name = "prometheus_${count.index}"

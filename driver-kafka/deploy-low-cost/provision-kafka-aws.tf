@@ -36,15 +36,15 @@ variable "num_instances" {
   type = map(string)
 }
 
-variable monitoring_sqs_uri {
+variable "monitoring_sqs_uri" {
   type = string
 }
 
-variable enable_cloud_monitoring {
+variable "enable_cloud_monitoring" {
   type = bool
 }
 
-variable is_debug {
+variable "is_debug" {
   type = bool
 }
 
@@ -59,27 +59,27 @@ resource "aws_vpc" "benchmark_vpc" {
 
 # Create an internet gateway to give our subnet access to the outside world
 resource "aws_internet_gateway" "kafka" {
-  vpc_id = "${aws_vpc.benchmark_vpc.id}"
+  vpc_id = aws_vpc.benchmark_vpc.id
 }
 
 # Grant the VPC internet access on its main route table
 resource "aws_route" "internet_access" {
-  route_table_id         = "${aws_vpc.benchmark_vpc.main_route_table_id}"
+  route_table_id         = aws_vpc.benchmark_vpc.main_route_table_id
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = "${aws_internet_gateway.kafka.id}"
+  gateway_id             = aws_internet_gateway.kafka.id
 }
 
 # Create a subnet to launch our instances into
 resource "aws_subnet" "benchmark_subnet" {
-  vpc_id                  = "${aws_vpc.benchmark_vpc.id}"
+  vpc_id                  = aws_vpc.benchmark_vpc.id
   cidr_block              = "10.0.0.0/24"
   map_public_ip_on_launch = true
-  availability_zone       = "${var.az}"
+  availability_zone       = var.az
 }
 
 resource "aws_security_group" "benchmark_security_group" {
   name   = "terraform-kafka-${random_id.hash.hex}"
-  vpc_id = "${aws_vpc.benchmark_vpc.id}"
+  vpc_id = aws_vpc.benchmark_vpc.id
 
   # SSH access from anywhere
   ingress {
@@ -112,7 +112,14 @@ resource "aws_security_group" "benchmark_security_group" {
 
 resource "aws_key_pair" "auth" {
   key_name   = "${var.key_name}-${random_id.hash.hex}"
-  public_key = "${file(var.public_key_path)}"
+  public_key = file(var.public_key_path)
+}
+
+resource "aws_ssm_parameter" "cw_agent" {
+  description = "Cloudwatch agent config to configure custom metrics."
+  name        = "/cloudwatch-agent/config"
+  type        = "String"
+  value       = file("../../cw_agent_config.json")
 }
 
 resource "aws_iam_instance_profile" "kafka_ec2_instance_profile" {
@@ -122,30 +129,42 @@ resource "aws_iam_instance_profile" "kafka_ec2_instance_profile" {
 }
 
 resource "aws_instance" "zookeeper" {
-  ami                    = "${var.ami}"
-  instance_type          = "${var.instance_types["zookeeper"]}"
-  key_name               = "${aws_key_pair.auth.id}"
-  subnet_id              = "${aws_subnet.benchmark_subnet.id}"
+  ami                    = var.ami
+  instance_type          = var.instance_types["zookeeper"]
+  key_name               = aws_key_pair.auth.id
+  subnet_id              = aws_subnet.benchmark_subnet.id
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  count                  = "${var.num_instances["zookeeper"]}"
-
-  instance_market_options {
-    market_type = "spot"
-    spot_options {
-      instance_interruption_behavior = "stop"
-      spot_instance_type             = "one-time"
-    }
-  }
+  count                  = var.num_instances["zookeeper"]
 
   monitoring = true
 
   iam_instance_profile = aws_iam_instance_profile.kafka_ec2_instance_profile.name
 
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "terminate"
+      spot_instance_type             = "one-time"
+    }
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file(replace(var.public_key_path, ".pub", ""))
+    host        = self.public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "curl https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -O",
+      "sudo rpm -U ./amazon-cloudwatch-agent.rpm",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
+    ]
+  }
+
   user_data = <<-EOF
               #!/bin/bash
-              sudo yum install -y amazon-cloudwatch-agent
-              sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/etc/cwagentconfig.json
-              sudo systemctl start amazon-cloudwatch-agent
               # Attach the EBS volume
               sudo yum install -y unzip
               curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -163,30 +182,42 @@ resource "aws_instance" "zookeeper" {
 }
 
 resource "aws_instance" "kafka" {
-  ami                    = "${var.ami}"
-  instance_type          = "${var.instance_types["kafka"]}"
-  key_name               = "${aws_key_pair.auth.id}"
-  subnet_id              = "${aws_subnet.benchmark_subnet.id}"
+  ami                    = var.ami
+  instance_type          = var.instance_types["kafka"]
+  key_name               = aws_key_pair.auth.id
+  subnet_id              = aws_subnet.benchmark_subnet.id
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  count                  = "${var.num_instances["kafka"]}"
-
-  instance_market_options {
-    market_type = "spot"
-    spot_options {
-      instance_interruption_behavior = "stop"
-      spot_instance_type             = "one-time"
-    }
-  }
+  count                  = var.num_instances["kafka"]
 
   monitoring = true
 
   iam_instance_profile = aws_iam_instance_profile.kafka_ec2_instance_profile.name
 
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "terminate"
+      spot_instance_type             = "one-time"
+    }
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file(replace(var.public_key_path, ".pub", ""))
+    host        = self.public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "curl https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -O",
+      "sudo rpm -U ./amazon-cloudwatch-agent.rpm",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
+    ]
+  }
+
   user_data = <<-EOF
               #!/bin/bash
-              sudo yum install -y amazon-cloudwatch-agent
-              sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/etc/cwagentconfig.json
-              sudo systemctl start amazon-cloudwatch-agent
               # Attach the EBS volume
               sudo yum install -y unzip
               curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -204,30 +235,42 @@ resource "aws_instance" "kafka" {
 }
 
 resource "aws_instance" "client" {
-  ami                    = "${var.ami}"
-  instance_type          = "${var.instance_types["client"]}"
-  key_name               = "${aws_key_pair.auth.id}"
-  subnet_id              = "${aws_subnet.benchmark_subnet.id}"
+  ami                    = var.ami
+  instance_type          = var.instance_types["client"]
+  key_name               = aws_key_pair.auth.id
+  subnet_id              = aws_subnet.benchmark_subnet.id
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  count                  = "${var.num_instances["client"]}"
-
-  instance_market_options {
-    market_type = "spot"
-    spot_options {
-      instance_interruption_behavior = "stop"
-      spot_instance_type             = "one-time"
-    }
-  }
+  count                  = var.num_instances["client"]
 
   monitoring = true
 
   iam_instance_profile = aws_iam_instance_profile.kafka_ec2_instance_profile.name
 
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "terminate"
+      spot_instance_type             = "one-time"
+    }
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file(replace(var.public_key_path, ".pub", ""))
+    host        = self.public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "curl https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -O",
+      "sudo rpm -U ./amazon-cloudwatch-agent.rpm",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
+    ]
+  }
+
   user_data = <<-EOF
     #!/bin/bash
-    sudo yum install -y amazon-cloudwatch-agent
-    sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/etc/cwagentconfig.json
-    sudo systemctl start amazon-cloudwatch-agent
     echo "export IS_CLOUD_MONITORING_ENABLED=${var.enable_cloud_monitoring}" >> /etc/profile.d/myenvvars.sh
     echo "export MONITORING_SQS_URI=${var.monitoring_sqs_uri}" >> /etc/profile.d/myenvvars.sh
     echo "export REGION=${var.region}" >> /etc/profile.d/myenvvars.sh
@@ -245,33 +288,33 @@ resource "aws_instance" "client" {
 }
 
 resource "aws_ebs_volume" "ebs_zookeeper" {
-  count             = "${var.num_instances["zookeeper"]}"
+  count = var.num_instances["zookeeper"]
 
   availability_zone = "eu-west-1a"
   size              = 30
   type              = "gp3"
 
   tags = {
-    Name            = "zookeeper_ebs_${count.index}"
+    Name = "zookeeper_ebs_${count.index}"
   }
 }
 
 resource "aws_ebs_volume" "ebs_kafka" {
-  count             = "${var.num_instances["kafka"]}"
+  count = var.num_instances["kafka"]
 
   availability_zone = "eu-west-1a"
   size              = 40
   type              = "gp3"
 
   tags = {
-    Name            = "kafka_ebs_${count.index}"
+    Name = "kafka_ebs_${count.index}"
   }
 }
 
 output "kafka_ssh_host" {
-  value = "${aws_instance.kafka.0.public_ip}"
+  value = aws_instance.kafka.0.public_ip
 }
 
 output "client_ssh_host" {
-  value = "${aws_instance.client.0.public_ip}"
+  value = aws_instance.client.0.public_ip
 }

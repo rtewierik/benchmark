@@ -70,6 +70,13 @@ resource "aws_key_pair" "auth" {
   public_key = file(var.public_key_path)
 }
 
+resource "aws_ssm_parameter" "cw_agent" {
+  description = "Cloudwatch agent config to configure custom metrics."
+  name        = "/cloudwatch-agent/config"
+  type        = "String"
+  value       = file("../../cw_agent_config.json")
+}
+
 resource "aws_iam_instance_profile" "sns_sqs_ec2_instance_profile" {
   name = "sns_sqs_ec2_instance_profile"
 
@@ -85,23 +92,35 @@ resource "aws_instance" "client" {
   availability_zone      = var.az
   count                  = var.num_instances["client"]
 
+  monitoring = true
+
+  iam_instance_profile = aws_iam_instance_profile.sns_sqs_ec2_instance_profile.name
+
   instance_market_options {
     market_type = "spot"
     spot_options {
-      instance_interruption_behavior = "stop"
+      instance_interruption_behavior = "terminate"
       spot_instance_type             = "one-time"
     }
   }
 
-  monitoring = true
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file(replace(var.public_key_path, ".pub", ""))
+    host        = self.public_ip
+  }
 
-  iam_instance_profile = aws_iam_instance_profile.sns_sqs_ec2_instance_profile.name
+  provisioner "remote-exec" {
+    inline = [
+      "curl https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -O",
+      "sudo rpm -U ./amazon-cloudwatch-agent.rpm",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
+    ]
+  }
   
   user_data = <<-EOF
     #!/bin/bash
-    sudo yum install -y amazon-cloudwatch-agent
-    sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/etc/cwagentconfig.json
-    sudo systemctl start amazon-cloudwatch-agent
     echo "export SNS_URIS=${join(",", var.sns_uris)}" >> /etc/profile.d/myenvvars.sh
     echo "export PRODUCE_WITH_ALL_WORKERS=true" >> /etc/profile.d/myenvvars.sh
     echo "export SKIP_READINESS_CHECK=true" >> /etc/profile.d/myenvvars.sh

@@ -34,3 +34,5 @@ core/*.json
 
 # s3-consumer-lambda
 !s3-consumer-lambda/**/*.json
+
+!cw_agent_config.json

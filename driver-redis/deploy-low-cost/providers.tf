@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "${var.region}"
+  region              = var.region
   allowed_account_ids = ["533267013102", "138945776678"]
   default_tags {
     tags = {
