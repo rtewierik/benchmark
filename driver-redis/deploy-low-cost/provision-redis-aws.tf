@@ -154,16 +154,22 @@ resource "aws_elasticache_subnet_group" "redis_subnet_group" {
   subnet_ids = [aws_subnet.benchmark_subnet.id]
 }
 
-resource "aws_spot_instance_request" "client" {
+resource "aws_instance" "client" {
   ami                    = var.ami
   instance_type          = var.instance_types["client"]
   key_name               = aws_key_pair.auth.id
   subnet_id              = aws_subnet.benchmark_subnet.id
   vpc_security_group_ids = [aws_security_group.benchmark_security_group.id]
   availability_zone      = "eu-west-1a"
-  spot_type              = "one-time"
-  wait_for_fulfillment   = true
   count                  = var.num_instances["client"]
+
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "stop"
+      spot_instance_type             = "one-time"
+    }
+  }
 
   monitoring = true
 
@@ -200,5 +206,5 @@ resource "local_file" "tf_ansible_vars_file" {
 }
 
 output "client_ssh_host" {
-  value = aws_spot_instance_request.client[0].public_ip
+  value = aws_instance.client[0].public_ip
 }

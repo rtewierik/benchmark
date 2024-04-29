@@ -127,15 +127,21 @@ resource "aws_iam_instance_profile" "pulsar_ec2_instance_profile" {
   role = "pulsar-iam-role"
 }
 
-resource "aws_spot_instance_request" "zookeeper" {
+resource "aws_instance" "zookeeper" {
   ami                     = var.ami
   instance_type           = var.instance_types["zookeeper"]
   key_name                = aws_key_pair.auth.id
   subnet_id               = aws_subnet.benchmark_subnet.id
   vpc_security_group_ids  = [aws_security_group.benchmark_security_group.id]
-  spot_type               = "one-time"
-  wait_for_fulfillment    = true
   count                   = var.num_instances["zookeeper"]
+
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "stop"
+      spot_instance_type             = "one-time"
+    }
+  }
 
   monitoring = true
 
@@ -162,15 +168,21 @@ resource "aws_spot_instance_request" "zookeeper" {
   }
 }
 
-resource "aws_spot_instance_request" "pulsar" {
+resource "aws_instance" "pulsar" {
   ami                     = var.ami
   instance_type           = var.instance_types["pulsar"]
   key_name                = aws_key_pair.auth.id
   subnet_id               = aws_subnet.benchmark_subnet.id
   vpc_security_group_ids  = [aws_security_group.benchmark_security_group.id]
-  spot_type               = "one-time"
-  wait_for_fulfillment    = true
   count                   = var.num_instances["pulsar"]
+
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "stop"
+      spot_instance_type             = "one-time"
+    }
+  }
 
   monitoring = true
 
@@ -197,15 +209,21 @@ resource "aws_spot_instance_request" "pulsar" {
   }
 }
 
-resource "aws_spot_instance_request" "client" {
+resource "aws_instance" "client" {
   ami                     = var.ami
   instance_type           = var.instance_types["client"]
   key_name                = aws_key_pair.auth.id
   subnet_id               = aws_subnet.benchmark_subnet.id
   vpc_security_group_ids  = [aws_security_group.benchmark_security_group.id]
-  spot_type               = "one-time"
-  wait_for_fulfillment    = true
   count                   = var.num_instances["client"]
+
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "stop"
+      spot_instance_type             = "one-time"
+    }
+  }
 
   monitoring = true
 
@@ -231,15 +249,21 @@ resource "aws_spot_instance_request" "client" {
   }
 }
 
-# resource "aws_spot_instance_request" "prometheus" {
+# resource "aws_instance" "prometheus" {
 #   ami                     = var.ami
 #   instance_type           = var.instance_types["prometheus"]
 #   key_name                = aws_key_pair.auth.id
 #   subnet_id               = aws_subnet.benchmark_subnet.id
 #   vpc_security_group_ids  = [aws_security_group.benchmark_security_group.id]
-#   spot_type               = "one-time"
-#   wait_for_fulfillment    = true
 #   count = var.num_instances["prometheus"]
+
+#   instance_market_options {
+#     market_type = "spot"
+#     spot_options {
+#       instance_interruption_behavior = "stop"
+#       spot_instance_type             = "one-time"
+#     }
+#   }
 
 #   tags = {
 #     Name = "prometheus-${count.index}"
@@ -273,36 +297,36 @@ resource "aws_ebs_volume" "ebs_pulsar" {
 
 output "zookeeper" {
   value = {
-    for instance in aws_spot_instance_request.zookeeper :
+    for instance in aws_instance.zookeeper :
     instance.public_ip => instance.private_ip
   }
 }
 
 output "pulsar" {
   value = {
-    for instance in aws_spot_instance_request.pulsar :
+    for instance in aws_instance.pulsar :
     instance.public_ip => instance.private_ip
   }
 }
 
 output "client" {
   value = {
-    for instance in aws_spot_instance_request.client :
+    for instance in aws_instance.client :
     instance.public_ip => instance.private_ip
   }
 }
 
 # output "prometheus" {
 #   value = {
-#     for instance in aws_spot_instance_request.prometheus :
+#     for instance in aws_instance.prometheus :
 #     instance.public_ip => instance.private_ip
 #   }
 # }
 
 output "client_ssh_host" {
-  value = aws_spot_instance_request.client.0.public_ip
+  value = aws_instance.client.0.public_ip
 }
 
 # output "prometheus_host" {
-#   value = aws_spot_instance_request.prometheus.0.public_ip
+#   value = aws_instance.prometheus.0.public_ip
 # }

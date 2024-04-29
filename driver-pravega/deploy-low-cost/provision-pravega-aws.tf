@@ -137,16 +137,22 @@ resource "aws_iam_instance_profile" "pravega_ec2_instance_profile" {
   role = "pravega-iam-role"
 }
 
-resource "aws_spot_instance_request" "zookeeper" {
+resource "aws_instance" "zookeeper" {
   ami                    = "${var.ami}"
   instance_type          = "${var.instance_types["zookeeper"]}"
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
   availability_zone      = "eu-west-1a"
-  spot_type              = "one-time"
-  wait_for_fulfillment   = true
   count                  = "${var.num_instances["zookeeper"]}"
+
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "stop"
+      spot_instance_type             = "one-time"
+    }
+  }
 
   monitoring = true
 
@@ -164,16 +170,22 @@ resource "aws_spot_instance_request" "zookeeper" {
   }
 }
 
-resource "aws_spot_instance_request" "controller" {
+resource "aws_instance" "controller" {
   ami                    = "${var.ami}"
   instance_type          = "${var.instance_types["controller"]}"
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
   availability_zone      = "eu-west-1a"
-  spot_type              = "one-time"
-  wait_for_fulfillment   = true
   count                  = "${var.num_instances["controller"]}"
+
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "stop"
+      spot_instance_type             = "one-time"
+    }
+  }
 
   monitoring = true
 
@@ -191,16 +203,22 @@ resource "aws_spot_instance_request" "controller" {
   }
 }
 
-resource "aws_spot_instance_request" "bookkeeper" {
+resource "aws_instance" "bookkeeper" {
   ami                    = "${var.ami}"
   instance_type          = "${var.instance_types["bookkeeper"]}"
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
   availability_zone      = "eu-west-1a"
-  spot_type              = "one-time"
-  wait_for_fulfillment   = true
   count                  = "${var.num_instances["bookkeeper"]}"
+
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "stop"
+      spot_instance_type             = "one-time"
+    }
+  }
 
   monitoring = true
 
@@ -226,16 +244,22 @@ resource "aws_spot_instance_request" "bookkeeper" {
   }
 }
 
-resource "aws_spot_instance_request" "client" {
+resource "aws_instance" "client" {
   ami                    = "${var.ami}"
   instance_type          = "${var.instance_types["client"]}"
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
   availability_zone      = "eu-west-1a"
-  spot_type              = "one-time"
-  wait_for_fulfillment   = true
   count                  = "${var.num_instances["client"]}"
+
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "stop"
+      spot_instance_type             = "one-time"
+    }
+  }
 
   monitoring = true
 
@@ -261,16 +285,22 @@ resource "aws_spot_instance_request" "client" {
   }
 }
 
-resource "aws_spot_instance_request" "metrics" {
+resource "aws_instance" "metrics" {
   ami                    = "${var.ami}"
   instance_type          = "${var.instance_types["metrics"]}"
   key_name               = "${aws_key_pair.auth.id}"
   subnet_id              = "${aws_subnet.benchmark_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
   availability_zone      = "eu-west-1a"
-  spot_type              = "one-time"
-  wait_for_fulfillment   = true
   count                  = "${var.num_instances["metrics"]}"
+
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "stop"
+      spot_instance_type             = "one-time"
+    }
+  }
 
   monitoring = true
 
@@ -316,21 +346,21 @@ resource "aws_efs_mount_target" "tier2" {
 }
 
 output "client_ssh_host" {
-  value = "${aws_spot_instance_request.client.0.public_ip}"
+  value = "${aws_instance.client.0.public_ip}"
 }
 
 output "metrics_host" {
-  value = "${aws_spot_instance_request.metrics.0.public_ip}"
+  value = "${aws_instance.metrics.0.public_ip}"
 }
 
 output "controller_0_ssh_host" {
-  value = "${aws_spot_instance_request.controller.0.public_ip}"
+  value = "${aws_instance.controller.0.public_ip}"
 }
 
 output "bookkeeper_0_ssh_host" {
-  value = "${aws_spot_instance_request.bookkeeper.0.public_ip}"
+  value = "${aws_instance.bookkeeper.0.public_ip}"
 }
 
 output "zookeeper_0_ssh_host" {
-  value = "${aws_spot_instance_request.zookeeper.0.public_ip}"
+  value = "${aws_instance.zookeeper.0.public_ip}"
 }
