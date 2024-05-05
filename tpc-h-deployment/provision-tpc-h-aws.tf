@@ -2,10 +2,6 @@ variable "tpc_h_s3_bucket" {
   type = string
 }
 
-variable "iam_roles_account_number" {
-  type = string
-}
-
 variable "iam_roles" {
   type = list(string)
 }
