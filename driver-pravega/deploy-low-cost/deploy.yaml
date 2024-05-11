@@ -212,7 +212,7 @@
         path: "{{ item.path }}"
         state: unmounted
       with_items:
-        - { path: "/mnt/zookeeper/data", src: "/dev/nvme1n1" }
+        - { path: "/opt/zookeeper/data/zookeeper", src: "/dev/nvme1n1" }
     - name: Format disks
       filesystem:
         fstype: xfs
@@ -228,7 +228,7 @@
         opts: defaults,noatime,nodiscard
         state: mounted
       with_items:
-        - { path: "/mnt/zookeeper/data", src: "/dev/nvme1n1" }
+        - { path: "/opt/zookeeper/data/zookeeper", src: "/dev/nvme1n1" }
 
 - name: ZooKeeper setup
   hosts: zookeeper
