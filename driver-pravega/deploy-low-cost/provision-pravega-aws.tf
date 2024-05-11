@@ -262,18 +262,6 @@ resource "aws_instance" "bookkeeper" {
     ]
   }
 
-  user_data = <<-EOF
-              #!/bin/bash
-              # Attach the EBS volume
-              sudo yum install -y unzip
-              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-              unzip awscliv2.zip
-              sudo ./aws/install
-              aws configure set region "${var.region}"
-              aws configure set output "json"
-              aws ec2 attach-volume --volume-id ${aws_ebs_volume.ebs_bookkeeper[count.index].id} --instance-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) --device /dev/sdh
-              EOF
-
   tags = {
     Name = "bookkeeper-${count.index}"
   }
@@ -370,18 +358,6 @@ resource "aws_instance" "metrics" {
 
   tags = {
     Name = "metrics-${count.index}"
-  }
-}
-
-resource "aws_ebs_volume" "ebs_bookkeeper" {
-  count = var.num_instances["bookkeeper"]
-
-  availability_zone = "eu-west-1a"
-  size              = 30
-  type              = "gp3"
-
-  tags = {
-    Name = "bookkeeper_ebs_${count.index}"
   }
 }
 

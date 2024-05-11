@@ -197,6 +197,39 @@
         state: restarted
         enabled: yes
 
+- name: Format and mount disks for Zookeeper hosts
+  hosts: zookeeper
+  tags: ["zookeeper"]
+  connection: ssh
+  become: true
+  tasks:
+    - systemd:
+        name: "zookeeper"
+        state: stopped
+      ignore_errors: yes
+    - name: Unmount disks
+      mount:
+        path: "{{ item.path }}"
+        state: unmounted
+      with_items:
+        - { path: "/mnt/zookeeper/data", src: "/dev/nvme1n1" }
+    - name: Format disks
+      filesystem:
+        fstype: xfs
+        dev: '{{ item }}'
+        force: yes
+      with_items:
+        - '/dev/nvme1n1'
+    - name: Mount disks
+      mount:
+        path: "{{ item.path }}"
+        src: "{{ item.src }}"
+        fstype: xfs
+        opts: defaults,noatime,nodiscard
+        state: mounted
+      with_items:
+        - { path: "/mnt/zookeeper/data", src: "/dev/nvme1n1" }
+
 - name: ZooKeeper setup
   hosts: zookeeper
   tags: ["zookeeper"]
@@ -213,8 +246,8 @@
         extra_opts: ["--strip-components=1"]
     - set_fact:
         zid: "{{ groups['zookeeper'].index(inventory_hostname) }}"
-        max_heap_memory: "512m"
-        max_direct_memory: "512m"
+        max_heap_memory: "30g"
+        max_direct_memory: "30g"
     - file:
         path: "/opt/zookeeper/{{ item }}"
         state: directory
@@ -301,33 +334,19 @@
         name: "bookkeeper"
         state: stopped
       ignore_errors: yes
-    - name: Get EC2 volume details
-      delegate_to: localhost
-      vars:
-        ansible_python_interpreter: /usr/local/bin/python3.12
-      amazon.aws.ec2_vol_info:
-        access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
-        secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
-        region: eu-west-1
-        filters:
-          "tag:Name": "bookkeeper_ebs_{{groups['bookkeeper'].index(inventory_hostname)}}"
-      register: ec2_vol_info
-    - name: Store volume serial number
-      ansible.builtin.set_fact:
-        ebs_volume_id: "{{ ec2_vol_info.volumes[0].id | replace('-', '') }}"
-    - name: List Linux block devices
-      ansible.builtin.shell:
-        cmd: "lsblk -p -o NAME,SERIAL | grep {{ ebs_volume_id }} | cut -d' ' -f1"
-      register: lsblk
-    - name: Store EBS volume device name
-      ansible.builtin.set_fact:
-        ebs_volume_device_name: "{{ lsblk.stdout }}"
-    - name: Format EC2 volume
-      debugger: on_failed
-      community.general.filesystem:
+    - name: Unmount disks
+      mount:
+        path: "{{ item.path }}"
+        state: unmounted
+      with_items:
+        - { path: "/mnt/journal", src: "/dev/nvme1n1" }
+    - name: Format disks
+      filesystem:
         fstype: xfs
-        dev: "{{ ebs_volume_device_name }}"
-        force: no
+        dev: '{{ item }}'
+        force: yes
+      with_items:
+        - '/dev/nvme1n1'
     - name: Mount disks
       mount:
         path: "{{ item.path }}"
@@ -336,7 +355,54 @@
         opts: defaults,noatime,nodiscard
         state: mounted
       with_items:
-        - { path: "/mnt/journal", src: '{{ ebs_volume_device_name }}' }
+        - { path: "/mnt/journal", src: "/dev/nvme1n1" }
+
+# - name: Format and mount disks for BookKeeper hosts
+#   hosts: bookkeeper
+#   tags: ["bookkeeper"]
+#   connection: ssh
+#   become: true
+#   tasks:
+#     - systemd:
+#         name: "bookkeeper"
+#         state: stopped
+#       ignore_errors: yes
+#     - name: Get EC2 volume details
+#       delegate_to: localhost
+#       vars:
+#         ansible_python_interpreter: /usr/local/bin/python3.12
+#       amazon.aws.ec2_vol_info:
+#         access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
+#         secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
+#         region: eu-west-1
+#         filters:
+#           "tag:Name": "bookkeeper_ebs_{{groups['bookkeeper'].index(inventory_hostname)}}"
+#       register: ec2_vol_info
+#     - name: Store volume serial number
+#       ansible.builtin.set_fact:
+#         ebs_volume_id: "{{ ec2_vol_info.volumes[0].id | replace('-', '') }}"
+#     - name: List Linux block devices
+#       ansible.builtin.shell:
+#         cmd: "lsblk -p -o NAME,SERIAL | grep {{ ebs_volume_id }} | cut -d' ' -f1"
+#       register: lsblk
+#     - name: Store EBS volume device name
+#       ansible.builtin.set_fact:
+#         ebs_volume_device_name: "{{ lsblk.stdout }}"
+#     - name: Format EC2 volume
+#       debugger: on_failed
+#       community.general.filesystem:
+#         fstype: xfs
+#         dev: "{{ ebs_volume_device_name }}"
+#         force: no
+#     - name: Mount disks
+#       mount:
+#         path: "{{ item.path }}"
+#         src: "{{ item.src }}"
+#         fstype: xfs
+#         opts: defaults,noatime,nodiscard
+#         state: mounted
+#       with_items:
+#         - { path: "/mnt/journal", src: '{{ ebs_volume_device_name }}' }
 
 - name: BookKeeper setup
   hosts: bookkeeper
