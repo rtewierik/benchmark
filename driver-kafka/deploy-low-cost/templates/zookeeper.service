@@ -3,7 +3,7 @@ Description=ZooKeeper
 After=network.target
 
 [Service]
-Environment='KAFKA_HEAP_OPTS=-Xms4g -Xmx4g'
+Environment='KAFKA_HEAP_OPTS=-Xms30g -Xmx30g'
 ExecStart=/opt/kafka/bin/zookeeper-server-start.sh config/zookeeper.properties
 WorkingDirectory=/opt/kafka
 RestartSec=1s
