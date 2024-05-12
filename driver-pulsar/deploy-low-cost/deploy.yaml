@@ -26,6 +26,7 @@
         pulsar_version: "{{ pulsar_version | default('2.11.0') }}"
         node_exporter_version: "{{ node_exporter_version | default('1.2.2') }}"
         prometheus_version: "{{ prometheus_version | default('2.31.1') }}"
+        disk_dev: "{{ disk_dev | default(['/dev/nvme1n1', '/dev/nvme2n1']) }}"
     - set_fact:
         pulsar_binary:
           src: "https://archive.apache.org/dist/pulsar/pulsar-{{ pulsar_version }}/apache-pulsar-{{ pulsar_version }}-bin.tar.gz"
