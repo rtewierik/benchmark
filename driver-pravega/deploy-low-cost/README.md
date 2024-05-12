@@ -9,6 +9,12 @@ sudo bin/benchmark \
 ```
 sudo bin/benchmark \
   --drivers driver-pravega/pravega.yaml \
+  workloads/throughput-10kb-500.yaml
+```
+
+```
+sudo bin/benchmark \
+  --drivers driver-pravega/pravega.yaml \
   --tpc-h-file workloads/tpc-h-default-2-reducers.yaml \
   workloads/simple-workload.yaml
 ```

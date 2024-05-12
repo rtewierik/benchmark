@@ -65,7 +65,9 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
 
     @Override
     public Void handleRequest(SQSEvent event, Context context) {
-        log.info(EnvironmentConfiguration.getMonitoringSqsUri());
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info(EnvironmentConfiguration.getMonitoringSqsUri());
+        }
         try {
             if (SnsSqsBenchmarkConfiguration.isTpcH) {
                 handleTpcHRequest(event);
@@ -81,7 +83,9 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
     private void handleTpcHRequest(SQSEvent event) {
         for (SQSMessage message : event.getRecords()) {
             try {
-                log.info("Received message: {}", writer.writeValueAsString(message));
+                if (EnvironmentConfiguration.isDebug()) {
+                    log.info("Received message: {}", writer.writeValueAsString(message));
+                }
                 String body = message.getBody();
                 TpcHMessage tpcHMessage = mapper.readValue(body, TpcHMessage.class);
                 String experimentId = messageProcessor.processTpcHMessage(tpcHMessage);

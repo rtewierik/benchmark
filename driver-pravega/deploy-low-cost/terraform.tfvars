@@ -3,10 +3,10 @@ region          = "eu-west-1"
 ami             = "ami-06211bde2f9c725e5" // RHEL-7.9 eu-west-1
 
 instance_types = {
-  "controller" = "m5.large"
-  "bookkeeper" = "t3.xlarge"
-  "zookeeper"  = "t2.small"
-  "client"     = "t3.large"
+  "controller" = "m5.2xlarge"
+  "bookkeeper" = "i3en.xlarge"
+  "zookeeper"  = "i3en.xlarge"
+  "client"     = "m5n.2xlarge"
   "metrics"    = "t2.large"
 }
 
@@ -14,7 +14,7 @@ num_instances = {
   "controller" = 1
   "bookkeeper" = 3
   "zookeeper"  = 3
-  "client"     = 2
+  "client"     = 3
   "metrics"    = 1
 }
 
