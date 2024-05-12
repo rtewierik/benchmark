@@ -129,6 +129,12 @@ sudo bin/benchmark \
 ```
 sudo bin/benchmark \
   --drivers driver-kafka/kafka-throughput.yaml \
+  workloads/throughput-10kb-500.yaml
+```
+
+```
+sudo bin/benchmark \
+  --drivers driver-kafka/kafka-throughput.yaml \
   --tpc-h-file workloads/tpc-h-default.yaml \
   workloads/simple-workload.yaml
 ```
