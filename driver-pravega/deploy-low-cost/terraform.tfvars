@@ -11,9 +11,9 @@ instance_types = {
 
 num_instances = {
   "controller" = 1
-  "bookkeeper" = 2
-  "zookeeper"  = 2
-  "client"     = 2
+  "bookkeeper" = 3
+  "zookeeper"  = 3
+  "client"     = 3
 }
 
 enable_cloud_monitoring = false

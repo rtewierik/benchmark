@@ -321,19 +321,19 @@ resource "aws_instance" "client" {
 }
 
 # Change the EFS provisioned TP here
-# resource "aws_efs_file_system" "tier2" {
-#   throughput_mode                 = "provisioned"
-#   provisioned_throughput_in_mibps = 50
-#   tags = {
-#     Name = "pravega-tier2"
-#   }
-# }
+resource "aws_efs_file_system" "tier2" {
+  throughput_mode                 = "elastic"
+  availability_zone_name          = "eu-west-1a"
+  tags = {
+    Name = "pravega-tier2"
+  }
+}
 
-# resource "aws_efs_mount_target" "tier2" {
-#   file_system_id  = aws_efs_file_system.tier2.id
-#   subnet_id       = aws_subnet.benchmark_subnet.id
-#   security_groups = ["${aws_security_group.benchmark_security_group.id}"]
-# }
+resource "aws_efs_mount_target" "tier2" {
+  file_system_id  = aws_efs_file_system.tier2.id
+  subnet_id       = aws_subnet.benchmark_subnet.id
+  security_groups = ["${aws_security_group.benchmark_security_group.id}"]
+}
 
 output "client_ssh_host" {
   value = aws_instance.client.0.public_ip

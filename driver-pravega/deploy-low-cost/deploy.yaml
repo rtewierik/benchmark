@@ -236,7 +236,7 @@
         state: unmounted
       with_items:
         - { path: "/mnt/journal", src: "/dev/nvme1n1" }
-        - { path: "/mnt/bookkeeper", src: "/dev/nvme2n1" }
+        - { path: "/mnt/storage", src: "/dev/nvme2n1" }
     - name: Format disks
       filesystem:
         fstype: xfs
@@ -254,7 +254,7 @@
         state: mounted
       with_items:
         - { path: "/mnt/journal", src: "/dev/nvme1n1" }
-        - { path: "/mnt/bookkeeper", src: "/dev/nvme2n1" }
+        - { path: "/mnt/storage", src: "/dev/nvme2n1" }
 
 # - name: Format and mount disks for BookKeeper hosts
 #   hosts: bookkeeper
@@ -352,13 +352,13 @@
   connection: ssh
   become: true
   tasks:
-    # - name: Mount EFS volume for Pravega tier 2 storage
-    #   mount:
-    #     path: "/mnt/tier2"
-    #     src: "{{ groups['tier2'][0] }}:/"
-    #     fstype: nfs4
-    #     opts: nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport
-    #     state: mounted
+    - name: Mount EFS volume for Pravega tier 2 storage
+      mount:
+        path: "/mnt/tier2"
+        src: "{{ groups['tier2'][0] }}:/"
+        fstype: nfs4
+        opts: nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport
+        state: mounted
     - template:
         src: "templates/pravega-segmentstore.service"
         dest: "/etc/systemd/system/pravega-segmentstore.service"
