@@ -9,6 +9,12 @@ sudo bin/benchmark \
 ```
 sudo bin/benchmark \
   --drivers driver-rabbitmq/rabbitmq-quorum.yaml \
+  workloads/throughput-10kb-500.yaml
+```
+
+```
+sudo bin/benchmark \
+  --drivers driver-rabbitmq/rabbitmq-quorum.yaml \
   --tpc-h-file workloads/tpc-h-default-4-reducers.yaml \
   workloads/simple-workload-1-partition.yaml
 ```
