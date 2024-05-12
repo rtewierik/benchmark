@@ -292,47 +292,6 @@ resource "aws_instance" "client" {
   }
 }
 
-# resource "aws_instance" "prometheus" {
-#   ami                     = var.ami
-#   instance_type           = var.instance_types["prometheus"]
-#   key_name                = aws_key_pair.auth.id
-#   subnet_id               = aws_subnet.benchmark_subnet.id
-#   vpc_security_group_ids  = [aws_security_group.benchmark_security_group.id]
-#   count = var.num_instances["prometheus"]
-
-#   monitoring = true
-
-#   iam_instance_profile = aws_iam_instance_profile.pulsar_ec2_instance_profile.name
-
-#   instance_market_options {
-#     market_type = "spot"
-#     spot_options {
-#       instance_interruption_behavior = "terminate"
-#       spot_instance_type             = "one-time"
-#     }
-#   }
-
-#   connection {
-#     type        = "ssh"
-#     user        = "ec2-user"
-#     private_key = file(replace(var.public_key_path, ".pub", ""))
-#     host        = self.public_ip
-#   }
-
-#   provisioner "remote-exec" {
-#     inline = [
-#       "curl https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -O",
-#       "sudo rpm -U ./amazon-cloudwatch-agent.rpm",
-#       "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
-#     ]
-#   }
-
-#   tags = {
-#     Name = "prometheus-${count.index}"
-#     Benchmark = "Pulsar"
-#   }
-# }
-
 resource "aws_ebs_volume" "ebs_zookeeper" {
   count = var.num_instances["zookeeper"]
 
@@ -378,17 +337,6 @@ output "client" {
   }
 }
 
-# output "prometheus" {
-#   value = {
-#     for instance in aws_instance.prometheus :
-#     instance.public_ip => instance.private_ip
-#   }
-# }
-
 output "client_ssh_host" {
   value = aws_instance.client.0.public_ip
 }
-
-# output "prometheus_host" {
-#   value = aws_instance.prometheus.0.public_ip
-# }

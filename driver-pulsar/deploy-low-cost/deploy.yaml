@@ -26,6 +26,7 @@
         pulsar_version: "{{ pulsar_version | default('2.11.0') }}"
         node_exporter_version: "{{ node_exporter_version | default('1.2.2') }}"
         prometheus_version: "{{ prometheus_version | default('2.31.1') }}"
+        disk_dev: "{{ disk_dev | default(['/dev/nvme1n1', '/dev/nvme2n1']) }}"
     - set_fact:
         pulsar_binary:
           src: "https://archive.apache.org/dist/pulsar/pulsar-{{ pulsar_version }}/apache-pulsar-{{ pulsar_version }}-bin.tar.gz"
@@ -47,32 +48,13 @@
   connection: ssh
   become: true
   tasks:
-    - name: Get EC2 volume details
-      delegate_to: localhost
-      vars:
-        ansible_python_interpreter: /usr/local/bin/python3.12
-      amazon.aws.ec2_vol_info:
-        access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
-        secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
-        region: eu-west-1
-        filters:
-          "tag:Name": "zookeeper_ebs_{{groups['zookeeper'].index(inventory_hostname)}}"
-      register: ec2_vol_info
-    - name: Store volume serial number
-      ansible.builtin.set_fact:
-        ebs_volume_id: "{{ ec2_vol_info.volumes[0].id | replace('-', '') }}"
-    - name: List Linux block devices
-      ansible.builtin.shell:
-        cmd: "lsblk -p -o NAME,SERIAL | grep {{ ebs_volume_id }} | cut -d' ' -f1"
-      register: lsblk
-    - name: Store EBS volume device name
-      ansible.builtin.set_fact:
-        ebs_volume_device_name: "{{ lsblk.stdout }}"
-    - name: Format EC2 volume
-      community.general.filesystem:
+    - name: Format disks
+      filesystem:
         fstype: xfs
-        dev: "{{ ebs_volume_device_name }}"
-        force: no
+        dev: '{{ item }}'
+      with_items:
+        - "{{ disk_dev[0] }}"
+        - "{{ disk_dev[1] }}"
     - name: Mount disks
       mount:
         path: "{{ item.path }}"
@@ -81,40 +63,21 @@
         opts: defaults,noatime,nodiscard
         state: mounted
       with_items:
-        - { path: "/mnt/zookeeper/data", src: '{{ ebs_volume_device_name }}' }
+        - { path: "/mnt/zookeeper/logs", src: "{{ disk_dev[0] }}" }
+        - { path: "/mnt/zookeeper/data", src: "{{ disk_dev[1] }}" }
 
 - name: Format and mount disks for Pulsar/BookKeeper hosts
   hosts: pulsar
   connection: ssh
   become: true
   tasks:
-    - name: Get EC2 volume details
-      delegate_to: localhost
-      vars:
-        ansible_python_interpreter: /usr/local/bin/python3.12
-      amazon.aws.ec2_vol_info:
-        access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
-        secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
-        region: eu-west-1
-        filters:
-          "tag:Name": "pulsar_ebs_{{groups['pulsar'].index(inventory_hostname)}}"
-      register: ec2_vol_info
-    - name: Store volume serial number
-      ansible.builtin.set_fact:
-        ebs_volume_id: "{{ ec2_vol_info.volumes[0].id | replace('-', '') }}"
-    - name: List Linux block devices
-      ansible.builtin.shell:
-        cmd: "lsblk -p -o NAME,SERIAL | grep {{ ebs_volume_id }} | cut -d' ' -f1"
-      register: lsblk
-    - name: Store EBS volume device name
-      ansible.builtin.set_fact:
-        ebs_volume_device_name: "{{ lsblk.stdout }}"
-    - name: Format EC2 volume
-      debugger: on_failed
-      community.general.filesystem:
-        fstype: xfs
-        dev: "{{ ebs_volume_device_name }}"
-        force: no
+    - name: Format disks
+      filesystem:
+         fstype: xfs
+         dev: '{{ item }}'
+      with_items:
+        - "{{ disk_dev[0] }}"
+        - "{{ disk_dev[1] }}"
     - name: Mount disks
       mount:
         path: "{{ item.path }}"
@@ -123,65 +86,8 @@
         opts: defaults,noatime,nodiscard
         state: mounted
       with_items:
-        - { path: "/mnt/journal", src: '{{ ebs_volume_device_name }}' }
-
-- name: Install Node exporter on Brokers to collect system metrics
-  hosts: pulsar
-  become: true
-  tasks:
-    - name: Add user node_exporter
-      user:
-        name: node_exporter
-        shell: /bin/false
-        system: true
-        create_home: no
-    - name: Download and extract
-      unarchive:
-        src: "{{ node_exporter_binary.src }}"
-        dest: /tmp
-        remote_src: "{{ node_exporter_binary.remote }}"
-
-    - name: Copy bin node_exporter to /usr/local/bin
-      copy:
-        src: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter"
-        remote_src: yes
-        dest: /usr/local/bin/
-        owner: node_exporter
-        group: node_exporter
-        mode: u+x,g+x,o+x
-
-    - name: Create service node_exporter.service
-      blockinfile:
-        path: /etc/systemd/system/node_exporter.service
-        block: |
-          [Unit]
-          Description=Prometheus Node Exporter
-          Wants=network-online.target
-          After=network-online.target
-          [Service]
-          User=node_exporter
-          Group=node_exporter
-          Type=simple
-          ExecStart=/usr/local/bin/node_exporter
-          [Install]
-          WantedBy=multi-user.target
-        create: true
-
-    - name: systemctl daemon_reload
-      systemd:
-        daemon_reload: yes
-
-    - name: Start and Enable node_exporter
-      service:
-        name: node_exporter
-        state: started
-        enabled: yes
-
-    - name: Check whether port 9100 is available
-      wait_for:
-        port: 9100
-        state: started
-        timeout: 5
+        - { path: "/mnt/journal", src: "{{ disk_dev[0] }}" }
+        - { path: "/mnt/storage", src: "{{ disk_dev[1] }}" }
 
 - name: Pulsar installation
   hosts: pulsar:client:zookeeper
@@ -222,30 +128,6 @@
       shell: |
         echo 'LANG=en_US.utf-8
               LC_ALL=en_US.utf-8' >> /etc/environment
-
-#- name: Protocol Handlers installation
-#  hosts: pulsar
-#  connection: ssh
-#  become: true
-#  tasks:
-#    - file: path=/opt/pulsar/protocols state=absent
-#    - file: path=/opt/pulsar/protocols state=directory
-#    - name: Upload local protocol handlers
-#      copy:
-#        src: "{{ item.local_path }}"
-#        dest: /opt/pulsar/protocols
-#      loop: "{{ protocol_handlers }}"
-#      when:
-#        - protocol_handlers is defined
-#        - item.local_path is defined
-#    - name: Download protocol handlers
-#      get_url:
-#        url: "{{ item.url }}"
-#        dest: /opt/pulsar/protocols
-#      loop: "{{ protocol_handlers }}"
-#      when:
-#        - protocol_handlers is defined
-#        - item.local_path is not defined
 
 - name: ZooKeeper setup
   hosts: zookeeper
@@ -325,32 +207,6 @@
     - template:
         src: "templates/pulsar.service"
         dest: "/etc/systemd/system/pulsar.service"
-#    - template:
-#        src: "templates/{{ item.conf }}"
-#        dest: "/opt/pulsar/conf/{{ item.conf }}"
-#      loop: "{{ protocol_handlers }}"
-#      when: protocol_handlers is defined
-#    - set_fact:
-#        protocols: "{{ protocols | default([]) + [ item.protocol ]}}"
-#      loop: "{{ protocol_handlers }}"
-#      when: protocol_handlers is defined
-#    - name: Enable protocol handlers
-#      lineinfile:
-#        path: /opt/pulsar/conf/broker.conf
-#        line: "messagingProtocols={{ protocols | join(',') }}"
-#      when: protocols is defined
-#    - name: Read configurations of all protocol handlers
-#      shell: |
-#        grep -v "^#" "{{ '/opt/pulsar/conf/' + item.conf }}"
-#      loop: "{{ protocol_handlers }}"
-#      when: protocol_handlers is defined
-#      register: conf_files
-#    - name: Update broker.conf for protocol handlers
-#      lineinfile:
-#        path: /opt/pulsar/conf/broker.conf
-#        line: "{{ item.stdout_lines | join('\n') }}"
-#      loop: "{{ conf_files.results }}"
-#      when: conf_files is defined
     - systemd:
         state: restarted
         daemon_reload: yes
@@ -439,12 +295,12 @@
       lineinfile:
          dest: /opt/benchmark/bin/benchmark-worker
          regexp: '^JVM_MEM='
-         line: 'JVM_MEM="-Xms3G -Xmx3G -XX:+UnlockExperimentalVMOptions -XX:+UseZGC"'
+         line: 'JVM_MEM="-Xms26G -Xmx26G -XX:+UnlockExperimentalVMOptions -XX:+UseZGC"'
     - name: Configure memory
       lineinfile:
          dest: /opt/benchmark/bin/benchmark
          regexp: '^JVM_MEM='
-         line: 'JVM_MEM="-Xmx3G"'
+         line: 'JVM_MEM="-Xmx4G"'
     - name: Install benchmark systemd service
       template:
         src: "templates/benchmark-worker.service"
@@ -453,71 +309,6 @@
         state: restarted
         daemon_reload: yes
         name: "benchmark-worker"
-
-# - name: Prometheus installation
-#   hosts: prometheus
-#   connection: ssh
-#   become: true
-#   tasks:
-#     - name: Add Extras Repo
-#       shell: yum-config-manager --enable rhui-REGION-rhel-server-extras
-#       when:
-#         - ansible_facts['distribution'] == 'RedHat'
-#         - ansible_facts['distribution_major_version'] | int <= 7
-#     - name: Docker repo
-#       yum_repository:
-#         name: docker
-#         description: repo for docker
-#         baseurl: "https://download.docker.com/linux/centos/{{ ansible_facts['distribution_major_version'] }}/x86_64/stable/"
-#         gpgcheck: no
-#       when: ansible_facts['distribution'] == 'RedHat'
-#     - name: Installing docker
-#       yum:
-#         state: latest
-#         pkg: ['docker-ce']
-#     - name: Start docker
-#       service:
-#         name: docker
-#         state: started
-#         enabled: yes
-#     - file: path=/opt/prometheus state=absent
-#     - file: path=/opt/prometheus state=directory
-#     - name: Download Prometheus Binary Package
-#       unarchive:
-#         src: "{{ prometheus_binary.src }}"
-#         remote_src: "{{ prometheus_binary.remote }}"
-#         dest: /opt/prometheus
-#         extra_opts: ["--strip-components=1"]
-
-# - name: Prometheus setup
-#   hosts: prometheus
-#   connection: ssh
-#   become: true
-#   tasks:
-#     - file: path=/opt/pulsar state=absent
-#     - file: path=/opt/pulsar state=directory
-#     - file:
-#         path: "/opt/prometheus/{{ item }}"
-#         state: directory
-#       with_items:
-#         - data
-#     - template:
-#         src: "templates/prometheus.service"
-#         dest: "/etc/systemd/system/prometheus.service"
-#     - template:
-#         src: "templates/pulsar-dashboard.service"
-#         dest: "/etc/systemd/system/pulsar-dashboard.service"
-#     - template:
-#         src: "templates/prometheus.yml"
-#         dest: "/opt/prometheus/prometheus.yml"
-#     - systemd:
-#         state: restarted
-#         daemon_reload: yes
-#         name: "prometheus"
-#     - systemd:
-#         state: restarted
-#         daemon_reload: yes
-#         name: "pulsar-dashboard"
 
 - name: List host addresses
   hosts: localhost
@@ -532,6 +323,3 @@
     - debug:
         msg: "Benchmark clients {{ item }}"
       with_items: "{{ groups['client'] }}"
-    - debug:
-        msg: "Prometheus servers {{ item }}"
-      with_items: "{{ groups['prometheus'] }}"
