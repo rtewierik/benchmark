@@ -12,13 +12,13 @@
 # limitations under the License.
 #
 
-name: throughput-10kb-500
+name: throughput-100b-500
 
 topics: 500
 partitionsPerTopic: 1
 keyDistributor: "NO_KEY"
-messageSize: 10000
-payloadFile: "payload/payload-10kb.data"
+messageSize: 100
+payloadFile: "payload/payload-100b.data"
 subscriptionsPerTopic: 1
 consumerPerSubscription: 1
 producersPerTopic: 1

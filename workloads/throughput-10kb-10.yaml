@@ -12,9 +12,9 @@
 # limitations under the License.
 #
 
-name: throughput-10kb-500
+name: throughput-10kb-10
 
-topics: 500
+topics: 10
 partitionsPerTopic: 1
 keyDistributor: "NO_KEY"
 messageSize: 10000
