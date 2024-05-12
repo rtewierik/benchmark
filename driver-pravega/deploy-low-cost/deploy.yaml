@@ -121,6 +121,39 @@
       with_items:
         - { path: "/opt/zookeeper/data/zookeeper", src: "/dev/nvme1n1" }
 
+- name: Format and mount disks for Zookeeper hosts
+  hosts: zookeeper
+  tags: ["zookeeper"]
+  connection: ssh
+  become: true
+  tasks:
+    - systemd:
+        name: "zookeeper"
+        state: stopped
+      ignore_errors: yes
+    - name: Unmount disks
+      mount:
+        path: "{{ item.path }}"
+        state: unmounted
+      with_items:
+        - { path: "/opt/zookeeper/data/zookeeper", src: "/dev/nvme1n1" }
+    - name: Format disks
+      filesystem:
+        fstype: xfs
+        dev: '{{ item }}'
+        force: yes
+      with_items:
+        - '/dev/nvme1n1'
+    - name: Mount disks
+      mount:
+        path: "{{ item.path }}"
+        src: "{{ item.src }}"
+        fstype: xfs
+        opts: defaults,noatime,nodiscard
+        state: mounted
+      with_items:
+        - { path: "/opt/zookeeper/data/zookeeper", src: "/dev/nvme1n1" }
+
 - name: ZooKeeper setup
   hosts: zookeeper
   tags: ["zookeeper"]
