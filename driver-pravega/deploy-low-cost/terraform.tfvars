@@ -12,13 +12,12 @@ instance_types = {
 
 num_instances = {
   "controller" = 1
-  "bookkeeper" = 3
-  "zookeeper"  = 3
-  "client"     = 3
-  "metrics"    = 1
+  "bookkeeper" = 2
+  "zookeeper"  = 2
+  "client"     = 2
 }
 
-enable_cloud_monitoring = true
+enable_cloud_monitoring = false
 monitoring_sqs_uri      = "https://sqs.eu-west-1.amazonaws.com/138945776678/benchmark-monitoring"
 
 is_debug = false

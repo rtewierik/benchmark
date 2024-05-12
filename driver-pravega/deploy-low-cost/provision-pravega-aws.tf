@@ -320,47 +320,6 @@ resource "aws_instance" "client" {
   }
 }
 
-resource "aws_instance" "metrics" {
-  ami                    = var.ami
-  instance_type          = var.instance_types["metrics"]
-  key_name               = aws_key_pair.auth.id
-  subnet_id              = aws_subnet.benchmark_subnet.id
-  vpc_security_group_ids = ["${aws_security_group.benchmark_security_group.id}"]
-  availability_zone      = "eu-west-1a"
-  count                  = var.num_instances["metrics"]
-
-  monitoring = true
-
-  iam_instance_profile = aws_iam_instance_profile.pravega_ec2_instance_profile.name
-
-  instance_market_options {
-    market_type = "spot"
-    spot_options {
-      instance_interruption_behavior = "terminate"
-      spot_instance_type             = "one-time"
-    }
-  }
-
-  connection {
-    type        = "ssh"
-    user        = "ec2-user"
-    private_key = file(replace(var.public_key_path, ".pub", ""))
-    host        = self.public_ip
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "curl https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -O",
-      "sudo rpm -U ./amazon-cloudwatch-agent.rpm",
-      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
-    ]
-  }
-
-  tags = {
-    Name = "metrics-${count.index}"
-  }
-}
-
 # Change the EFS provisioned TP here
 resource "aws_efs_file_system" "tier2" {
   throughput_mode                 = "provisioned"
@@ -378,10 +337,6 @@ resource "aws_efs_mount_target" "tier2" {
 
 output "client_ssh_host" {
   value = aws_instance.client.0.public_ip
-}
-
-output "metrics_host" {
-  value = aws_instance.metrics.0.public_ip
 }
 
 output "controller_0_ssh_host" {
