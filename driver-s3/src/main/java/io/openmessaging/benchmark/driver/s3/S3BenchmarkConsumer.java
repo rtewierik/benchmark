@@ -21,6 +21,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
+import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.common.client.AmazonS3Client;
 import io.openmessaging.benchmark.common.monitoring.CentralWorkerStats;
 import io.openmessaging.benchmark.common.monitoring.WorkerStats;
@@ -67,7 +69,9 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
     private void handleTpcHRequest(S3Event event) {
         for (S3Event.S3EventNotificationRecord record : event.getRecords()) {
             try {
-                log.info("Received message: {}", writer.writeValueAsString(record.getS3()));
+                if (EnvironmentConfiguration.isDebug()) {
+                    log.info("Received message: {}", writer.writeValueAsString(record.getS3()));
+                }
                 String bucketName = record.getS3().getBucket().getName();
                 String key = record.getS3().getObject().getKey();
                 try (InputStream stream = s3Client.readFileFromS3(bucketName, key)) {
@@ -90,7 +94,9 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
     private void handleThroughputRequest(S3Event event) {
         for (S3Event.S3EventNotificationRecord record : event.getRecords()) {
             try {
-                log.info("Received message: {}", writer.writeValueAsString(record.getS3()));
+                if (EnvironmentConfiguration.isDebug()) {
+                    log.info("Received message: {}", writer.writeValueAsString(record.getS3()));
+                }
                 String bucketName = record.getS3().getBucket().getName();
                 String key = record.getS3().getObject().getKey();
                 try (InputStream stream = s3Client.readFileFromS3(bucketName, key)) {
