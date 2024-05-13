@@ -15,6 +15,12 @@ sudo bin/benchmark \
 ```
 sudo bin/benchmark \
   --drivers driver-redis/redis-default.yaml \
+  workloads/throughput-10kb-500.yaml
+```
+
+```
+sudo bin/benchmark \
+  --drivers driver-redis/redis-default.yaml \
   --tpc-h-file workloads/tpc-h-default.yaml \
   workloads/simple-workload.yaml
 ```

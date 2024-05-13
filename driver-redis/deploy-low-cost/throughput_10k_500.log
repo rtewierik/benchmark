@@ -1,0 +1,108 @@
+01:25:31.940 [main] INFO log - Logging initialized @4358ms to org.eclipse.jetty.util.log.Slf4jLog
+01:25:32.020 [main] INFO Server - jetty-9.4.42.v20210604; built: 2021-06-04T17:33:38.939Z; git: 5cd5e6d2375eeab146813b0de9f19eda6ab6e6cb; jvm 11.0.23+9-LTS
+01:25:32.050 [main] INFO ContextHandler - Started o.e.j.s.ServletContextHandler@ea27e34{/,null,AVAILABLE}
+01:25:32.065 [main] INFO AbstractConnector - Started ServerConnector@1095f122{HTTP/1.1, (http/1.1)}{0.0.0.0:8081}
+01:25:32.065 [main] INFO Server - Started @4486ms
+01:25:32.067 [main] INFO PrometheusMetricsProvider - Started Prometheus stats endpoint at 0.0.0.0:8081
+01:25:32.104 [main] INFO BenchmarkWorker - Starting benchmark with config: {
+  "httpPort" : 8080,
+  "statsPort" : 8081
+}
+01:25:32.147 [main] INFO Javalin - 
+ _________________________________________
+|        _                  _ _           |
+|       | | __ ___   ____ _| (_)_ __      |
+|    _  | |/ _` \ \ / / _` | | | '_ \     |
+|   | |_| | (_| |\ V / (_| | | | | | |    |
+|    \___/ \__,_| \_/ \__,_|_|_|_| |_|    |
+|_________________________________________|
+|                                         |
+|    https://javalin.io/documentation     |
+|_________________________________________|
+01:25:32.149 [main] INFO Javalin - Starting Javalin ...
+01:25:32.155 [main] INFO Server - jetty-9.4.42.v20210604; built: 2021-06-04T17:33:38.939Z; git: 5cd5e6d2375eeab146813b0de9f19eda6ab6e6cb; jvm 11.0.23+9-LTS
+01:25:32.168 [main] INFO session - DefaultSessionIdManager workerName=node0
+01:25:32.168 [main] INFO session - No SessionScavenger set, using defaults
+01:25:32.169 [main] INFO session - node0 Scavenging every 600000ms
+01:25:32.171 [main] INFO ContextHandler - Started i.j.e.j.@3122b117{/,null,AVAILABLE}
+01:25:32.171 [main] INFO ContextHandler - Started o.e.j.s.ServletContextHandler@29a23c3d{/,null,AVAILABLE}
+01:25:32.172 [main] INFO AbstractConnector - Started ServerConnector@faa3fed{HTTP/1.1, (http/1.1)}{0.0.0.0:8080}
+01:25:32.173 [main] INFO Server - Started @4593ms
+01:25:32.173 [main] INFO EmbeddedServer - Jetty is listening on: [http://localhost:8080]
+01:25:32.173 [main] INFO Javalin - Javalin has started \o/
+01:25:32.242 [main] INFO InstanceWorkerStats - Instance worker stats initialized.
+01:25:59.488 [main] INFO Benchmark - Using default worker file workers.yaml!
+01:25:59.496 [main] INFO Benchmark - Reading workers list from workers.yaml
+01:25:59.544 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-redis/redis-default.yaml" ],
+  "workers" : [ "http://10.0.0.205:8080", "http://10.0.0.54:8080", "http://10.0.0.83:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFile" : null,
+  "workloads" : [ "workloads/throughput-10kb-500.yaml" ],
+  "output" : null
+}
+01:25:59.560 [main] INFO Benchmark - Workloads: {
+  "throughput-10kb-500" : {
+    "name" : "throughput-10kb-500",
+    "topics" : 500,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 10000,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-10kb.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 2,
+    "warmupDurationMinutes" : 1
+  }
+}
+01:25:59.561 [main] INFO Benchmark - TPC-H arguments: null
+01:25:59.597 [main] INFO InstanceWorkerStats - Instance worker stats initialized.
+01:26:00.127 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.205:8080]
+01:26:00.127 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.83:8080,http://10.0.0.54:8080
+01:26:00.131 [main] INFO Benchmark - --------------- WORKLOAD : throughput-10kb-500 --- DRIVER : Redis---------------
+01:26:00.720 [qtp235162442-24] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+01:26:00.726 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+01:26:00.781 [main] INFO WorkloadGenerator - Created 500 topics in 48.548448 ms
+01:26:01.393 [qtp235162442-29] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.0001.euw1.cache.amazonaws.com:6379 with user null
+01:26:01.864 [qtp235162442-29] INFO LocalWorker - Created 250 consumers in 483.970205 ms
+01:26:01.865 [main] INFO WorkloadGenerator - Created 500 consumers in 1063.797554 ms
+01:26:01.902 [main] INFO WorkloadGenerator - Created 500 producers in 35.433841 ms
+01:26:01.902 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+01:26:02.189 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 500, Received: 500, Expected: 500
+01:26:02.189 [main] INFO WorkloadGenerator - All consumers are ready!
+01:26:02.237 [main] INFO WorkloadGenerator - ----- Starting warm-up traffic (1m) ------
+01:26:12.582 [main] INFO WorkloadGenerator - Pub rate 10058.8 msg/s / 95.9 MB/s | Pub err     0.0 err/s | Cons rate 10104.1 msg/s / 95.9 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.6 - 99.9%:  0.7 - Max: 12.3 | Pub Delay Latency (us) avg: 69.6 - 50%: 60.0 - 99%: 76.0 - 99.9%: 4994.0 - Max: 6026.0
+01:26:22.817 [main] INFO WorkloadGenerator - Pub rate  9985.0 msg/s / 95.2 MB/s | Pub err     0.0 err/s | Cons rate  9986.4 msg/s / 95.2 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max: 11.0 | Pub Delay Latency (us) avg: 58.0 - 50%: 59.0 - 99%: 73.0 - 99.9%: 86.0 - Max: 601.0
+01:26:33.064 [main] INFO WorkloadGenerator - Pub rate  9994.6 msg/s / 95.3 MB/s | Pub err     0.0 err/s | Cons rate  9998.3 msg/s / 95.4 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max:  3.2 | Pub Delay Latency (us) avg: 58.7 - 50%: 59.0 - 99%: 72.0 - 99.9%: 96.0 - Max: 12788.0
+01:26:43.297 [main] INFO WorkloadGenerator - Pub rate 10004.2 msg/s / 95.4 MB/s | Pub err     0.0 err/s | Cons rate 10001.1 msg/s / 95.4 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max:  3.1 | Pub Delay Latency (us) avg: 58.3 - 50%: 59.0 - 99%: 71.0 - 99.9%: 89.0 - Max: 2855.0
+01:26:53.493 [main] INFO WorkloadGenerator - Pub rate  9997.8 msg/s / 95.3 MB/s | Pub err     0.0 err/s | Cons rate  9978.9 msg/s / 95.2 MB/s | Backlog:  0.2 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.5 - Max: 15.0 | Pub Delay Latency (us) avg: 57.8 - 50%: 59.0 - 99%: 71.0 - 99.9%: 82.0 - Max: 14548.0
+01:27:03.692 [main] INFO WorkloadGenerator - Pub rate  9999.7 msg/s / 95.4 MB/s | Pub err     0.0 err/s | Cons rate 10000.5 msg/s / 95.4 MB/s | Backlog:  0.2 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max:  1.2 | Pub Delay Latency (us) avg: 57.8 - 50%: 60.0 - 99%: 72.0 - 99.9%: 83.0 - Max: 468.0
+01:27:03.884 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 95%:  0.4 - 99%:  0.5 - 99.9%:  0.6 - 99.99%:  0.9 - Max: 15.0 | Pub Delay (us)  avg: 60.0 - 50%: 59.0 - 95%: 68.0 - 99%: 73.0 - 99.9%: 129.0 - 99.99%: 5648.0 - Max: 14548.0
+01:27:03.996 [main] INFO WorkloadGenerator - ----- Starting benchmark traffic (2m)------
+01:27:14.159 [main] INFO WorkloadGenerator - Pub rate 10481.9 msg/s / 100.0 MB/s | Pub err     0.0 err/s | Cons rate 10502.2 msg/s / 100.2 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max:  3.1 | Pub Delay Latency (us) avg: 57.8 - 50%: 59.0 - 99%: 70.0 - 99.9%: 91.0 - Max: 2375.0
+01:27:24.309 [main] INFO WorkloadGenerator - Pub rate  9999.2 msg/s / 95.4 MB/s | Pub err     0.0 err/s | Cons rate 10000.1 msg/s / 95.4 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max:  7.0 | Pub Delay Latency (us) avg: 57.2 - 50%: 59.0 - 99%: 70.0 - 99.9%: 82.0 - Max: 732.0
+01:27:34.510 [main] INFO WorkloadGenerator - Pub rate 10004.8 msg/s / 95.4 MB/s | Pub err     0.0 err/s | Cons rate 10011.3 msg/s / 95.5 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max:  7.6 | Pub Delay Latency (us) avg: 61.5 - 50%: 59.0 - 99%: 70.0 - 99.9%: 1369.0 - Max: 7185.0
+01:27:44.674 [main] INFO WorkloadGenerator - Pub rate  9995.7 msg/s / 95.3 MB/s | Pub err     0.0 err/s | Cons rate  9989.2 msg/s / 95.3 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.5 - Max:  0.7 | Pub Delay Latency (us) avg: 57.1 - 50%: 59.0 - 99%: 69.0 - 99.9%: 80.0 - Max: 204.0
+01:27:54.839 [main] INFO WorkloadGenerator - Pub rate 10000.0 msg/s / 95.4 MB/s | Pub err     0.0 err/s | Cons rate  9999.4 msg/s / 95.4 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max:  9.0 | Pub Delay Latency (us) avg: 60.1 - 50%: 59.0 - 99%: 70.0 - 99.9%: 634.0 - Max: 8822.0
+01:28:04.995 [main] INFO WorkloadGenerator - Pub rate  9998.8 msg/s / 95.4 MB/s | Pub err     0.0 err/s | Cons rate  9999.9 msg/s / 95.4 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max:  3.1 | Pub Delay Latency (us) avg: 57.8 - 50%: 59.0 - 99%: 69.0 - 99.9%: 91.0 - Max: 2362.0
+01:28:15.142 [main] INFO WorkloadGenerator - Pub rate 10000.7 msg/s / 95.4 MB/s | Pub err     0.0 err/s | Cons rate  9999.4 msg/s / 95.4 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max:  7.0 | Pub Delay Latency (us) avg: 57.9 - 50%: 59.0 - 99%: 69.0 - 99.9%: 104.0 - Max: 7925.0
+01:28:25.304 [main] INFO WorkloadGenerator - Pub rate  9999.6 msg/s / 95.4 MB/s | Pub err     0.0 err/s | Cons rate 10000.1 msg/s / 95.4 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max:  7.3 | Pub Delay Latency (us) avg: 57.2 - 50%: 59.0 - 99%: 69.0 - 99.9%: 81.0 - Max: 599.0
+01:28:35.457 [main] INFO WorkloadGenerator - Pub rate 10001.6 msg/s / 95.4 MB/s | Pub err     0.0 err/s | Cons rate 10000.8 msg/s / 95.4 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max:  3.4 | Pub Delay Latency (us) avg: 58.1 - 50%: 59.0 - 99%: 70.0 - 99.9%: 106.0 - Max: 10025.0
+01:28:45.619 [main] INFO WorkloadGenerator - Pub rate  9998.9 msg/s / 95.4 MB/s | Pub err     0.0 err/s | Cons rate  9999.8 msg/s / 95.4 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.5 - Max:  0.8 | Pub Delay Latency (us) avg: 57.1 - 50%: 59.0 - 99%: 69.0 - 99.9%: 79.0 - Max: 214.0
+01:28:55.773 [main] INFO WorkloadGenerator - Pub rate  9999.8 msg/s / 95.4 MB/s | Pub err     0.0 err/s | Cons rate  9999.6 msg/s / 95.4 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max: 15.3 | Pub Delay Latency (us) avg: 59.9 - 50%: 59.0 - 99%: 70.0 - 99.9%: 1296.0 - Max: 8076.0
+01:29:05.930 [main] INFO WorkloadGenerator - Pub rate  9999.8 msg/s / 95.4 MB/s | Pub err     0.0 err/s | Cons rate 10000.5 msg/s / 95.4 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.5 - Max:  0.8 | Pub Delay Latency (us) avg: 57.2 - 50%: 59.0 - 99%: 69.0 - 99.9%: 81.0 - Max: 381.0
+01:29:06.086 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 95%:  0.4 - 99%:  0.5 - 99.9%:  0.6 - 99.99%:  0.9 - Max: 15.3 | Pub Delay (us)  avg: 58.3 - 50%: 59.0 - 95%: 66.0 - 99%: 70.0 - 99.9%: 92.0 - 99.99%: 3279.0 - Max: 10025.0
+01:29:06.089 [main] INFO WorkloadGenerator - ----- Completed run. Stopping worker and yielding results ------
