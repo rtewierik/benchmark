@@ -1,8 +1,12 @@
-import { App } from 'aws-cdk-lib'
+import { App, Tags } from 'aws-cdk-lib'
 import { SnsSqsConsumerLambdaStackProps } from '../lib/stack-configuration'
 import { ServiceStack } from '../lib/service-stack'
 
 const app = new App()
+
+Tags.of(app).add('Application', 'sns-sqs-benchmark-ruben-te-wierik')
+Tags.of(app).add('Owner', 'Ruben_te_Wierik')
+Tags.of(app).add('Contact', 'rtewierik@uoc.edu')
 
 const stackProps: SnsSqsConsumerLambdaStackProps = {
   description: 'SNS-SQS driver',
