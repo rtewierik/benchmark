@@ -357,7 +357,10 @@ public class WorkloadGenerator implements AutoCloseable {
         String experimentId =
                 String.format(
                         "%s-%s-%s-%s",
-                        this.driverName, this.experimentId, this.arguments.queryId, DATE_FORMAT.get().format(new Date()));
+                        this.driverName,
+                        this.experimentId,
+                        this.arguments.queryId,
+                        DATE_FORMAT.get().format(new Date()));
         ConsumerAssignment consumerAssignment = new ConsumerAssignment(experimentId, true);
         ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment(experimentId, true);
 
@@ -570,7 +573,8 @@ public class WorkloadGenerator implements AutoCloseable {
                     result.publishDelayLatency75pct.add(stats.publishDelayLatency.getValueAtPercentile(75));
                     result.publishDelayLatency95pct.add(stats.publishDelayLatency.getValueAtPercentile(95));
                     result.publishDelayLatency99pct.add(stats.publishDelayLatency.getValueAtPercentile(99));
-                    result.publishDelayLatency999pct.add(stats.publishDelayLatency.getValueAtPercentile(99.9));
+                    result.publishDelayLatency999pct.add(
+                            stats.publishDelayLatency.getValueAtPercentile(99.9));
                     result.publishDelayLatency9999pct.add(
                             stats.publishDelayLatency.getValueAtPercentile(99.99));
                     result.publishDelayLatencyMax.add(stats.publishDelayLatency.getMaxValue());
@@ -686,7 +690,8 @@ public class WorkloadGenerator implements AutoCloseable {
 
                 oldTime = now;
             }
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
 
         return result;
     }
