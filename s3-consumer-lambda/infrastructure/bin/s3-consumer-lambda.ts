@@ -1,8 +1,12 @@
-import { App } from 'aws-cdk-lib'
+import { App, Tags } from 'aws-cdk-lib'
 import { S3ConsumerLambdaStackProps } from '../lib/stack-configuration'
 import { ServiceStack } from '../lib/service-stack'
 
 const app = new App()
+
+Tags.of(app).add('Application', 's3-benchmark-ruben-te-wierik')
+Tags.of(app).add('Owner', 'Ruben_te_Wierik')
+Tags.of(app).add('Contact', 'rtewierik@uoc.edu')
 
 const stackProps: S3ConsumerLambdaStackProps = {
   description: 'S3 driver',
