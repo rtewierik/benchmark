@@ -37,6 +37,9 @@ public class CentralWorkerStats implements WorkerStats {
                     .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
                     .build();
     private static final CumulativeLatencies cumulativeLatencies = new CumulativeLatencies();
+    protected final LongAdder messagesSent = new LongAdder();
+    protected final Counter messagesSentCounter;
+    protected final LongAdder totalMessagesSent = new LongAdder();
     protected final LongAdder messagesReceived = new LongAdder();
     protected final Counter messagesReceivedCounter;
     protected final LongAdder totalMessagesReceived = new LongAdder();
@@ -46,6 +49,8 @@ public class CentralWorkerStats implements WorkerStats {
     }
 
     public CentralWorkerStats(StatsLogger statsLogger) {
+        StatsLogger producerStatsLogger = statsLogger.scope("producer");
+        this.messagesSentCounter = producerStatsLogger.getCounter("messages_sent");
         StatsLogger consumerStatsLogger = statsLogger.scope("consumer");
         this.messagesReceivedCounter = consumerStatsLogger.getCounter("messages_recv");
         log.info("Central worker stats initialized");
@@ -87,6 +92,11 @@ public class CentralWorkerStats implements WorkerStats {
             boolean isTpcH,
             boolean isError)
             throws IOException {
+        if (!isError) {
+            messagesSent.increment();
+            totalMessagesSent.increment();
+            messagesSentCounter.inc();
+        }
         MonitoredProducedMessage message =
                 new MonitoredProducedMessage(
                         payloadLength,
@@ -105,11 +115,15 @@ public class CentralWorkerStats implements WorkerStats {
     }
 
     @Override
-    public void recordMessageSent() {}
+    public void recordMessageSent() {
+        totalMessagesSent.increment();
+    }
 
     @Override
     public PeriodStats toPeriodStats() {
         PeriodStats stats = new PeriodStats();
+        stats.messagesSent = messagesSent.sumThenReset();
+        stats.totalMessagesSent = totalMessagesSent.sum();
         stats.messagesReceived = messagesReceived.sumThenReset();
         stats.totalMessagesReceived = totalMessagesReceived.sum();
         return stats;
@@ -123,6 +137,7 @@ public class CentralWorkerStats implements WorkerStats {
     @Override
     public CountersStats toCountersStats() {
         CountersStats stats = new CountersStats();
+        stats.messagesSent = totalMessagesSent.sum();
         stats.messagesReceived = totalMessagesReceived.sum();
         return stats;
     }
@@ -132,7 +147,9 @@ public class CentralWorkerStats implements WorkerStats {
 
     @Override
     public void reset() {
+        messagesSent.reset();
         messagesReceived.reset();
+        totalMessagesSent.reset();
         totalMessagesReceived.reset();
     }
 
