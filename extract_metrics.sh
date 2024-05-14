@@ -52,7 +52,7 @@ for info in $(echo "${instance_info}" | jq -c '.[]'); do
                 ]
               },
               "Period": 10,
-              "Stat": "Maximum"
+              "Stat": "Average"
             }
           },
           {

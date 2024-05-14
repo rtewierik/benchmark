@@ -11,6 +11,9 @@ num_instances = {
   "client" = 3
 }
 
+node_type = "cache.r6g.2xlarge"
+num_cache_clusters = 3
+
 enable_cloud_monitoring = false
 monitoring_sqs_uri      = "https://sqs.eu-west-1.amazonaws.com/138945776678/benchmark-monitoring"
 

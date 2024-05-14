@@ -37,3 +37,7 @@ sudo bin/benchmark \
 ## Extracting metrics from EC2 instances after running the benchmarks
 
 Run the command `sh ../../extract_metrics.sh redis-benchmark-ruben-te-wierik`.
+
+## Extracting metrics from Redis cache nodes after running the benchmarks
+
+Run the command `sh ../../extract_redis_metrics.sh`.
