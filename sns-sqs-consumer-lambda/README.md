@@ -40,3 +40,6 @@ Run the following commands locally to deploy the AWS CDK project to AWS.
 * **Verify staged changes:** `npx aws-cdk diff sns-sqs-consumer-lambda`
 * **Deploy staged changes:** `npx aws-cdk deploy sns-sqs-consumer-lambda --require-approval never`
 
+## Extracting metrics from SNS topics and SQS queues after running the benchmarks
+
+Run the command `sh ../../extract_sns_sqs_metrics.sh`.
