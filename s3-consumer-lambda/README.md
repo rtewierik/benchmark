@@ -40,3 +40,6 @@ Run the following commands locally to deploy the AWS CDK project to AWS.
 * **Verify staged changes:** `npx aws-cdk diff s3-consumer-lambda`
 * **Deploy staged changes:** `npx aws-cdk deploy s3-consumer-lambda --require-approval never`
 
+## Extracting metrics from S3 buckets after running the benchmarks
+
+Run the command `sh ../../extract_s3_metrics.sh benchmarking-events`.

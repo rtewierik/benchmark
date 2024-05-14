@@ -154,7 +154,7 @@ export class ServiceStack extends Stack {
      );
 
     const layerArn = 'arn:aws:lambda:eu-west-1:580247275435:layer:LambdaInsightsExtension:52';
-    const layer = LayerVersion.fromLayerVersionArn(this, 'S3ConsumerLambdaFunctionLambdaInsightsLayerFromArn', layerArn);
+    const layer = LayerVersion.fromLayerVersionArn(this, `S3ConsumerLambdaFunctionLambdaInsightsLayerFromArn${id}`, layerArn);
 
     lambda.addLayers(layer);
 
