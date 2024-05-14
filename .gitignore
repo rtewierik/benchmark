@@ -40,3 +40,4 @@ core/*.json
 **/cpu_utilization.json
 **/memory_utilization.json
 **/disk_utilization.json
+**/redis_metrics.json
