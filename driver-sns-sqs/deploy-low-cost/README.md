@@ -44,3 +44,6 @@ The OpenMessaging benchmarking suite stores results in JSON files in the `/opt/b
 $ scp -i ~/.ssh/sns_sqs_aws ec2-user@$(terraform output client_ssh_host):/opt/benchmark/*.json .
 ```
 
+## Extracting metrics from EC2 instances after running the benchmarks
+
+Run the command `sh ../../extract_metrics.sh sns-sqs-benchmark-ruben-te-wierik`.

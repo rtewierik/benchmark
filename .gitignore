@@ -34,3 +34,12 @@ core/*.json
 
 # s3-consumer-lambda
 !s3-consumer-lambda/**/*.json
+
+# Extracting EC2 metrics
+!cw_agent_config.json
+**/cpu_utilization.json
+**/memory_utilization.json
+**/disk_utilization.json
+**/redis_metrics.json
+**/sns_metrics.json
+**/sqs_metrics.json

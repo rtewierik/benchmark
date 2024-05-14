@@ -15,6 +15,12 @@ sudo bin/benchmark \
 ```
 sudo bin/benchmark \
   --drivers driver-redis/redis-default.yaml \
+  workloads/throughput-10kb-500.yaml
+```
+
+```
+sudo bin/benchmark \
+  --drivers driver-redis/redis-default.yaml \
   --tpc-h-file workloads/tpc-h-default.yaml \
   workloads/simple-workload.yaml
 ```
@@ -28,3 +34,10 @@ sudo bin/benchmark \
 * `deploy.yaml`requires modification of the `Configure memory` task
 * The rest of the infrastructure is all provided by AWS. The instance size and number of nodes in the Redis cluster should be verified to ensure benchmark success.
 
+## Extracting metrics from EC2 instances after running the benchmarks
+
+Run the command `sh ../../extract_metrics.sh redis-benchmark-ruben-te-wierik`.
+
+## Extracting metrics from Redis cache nodes after running the benchmarks
+
+Run the command `sh ../../extract_redis_metrics.sh`.

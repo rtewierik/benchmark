@@ -4,6 +4,7 @@ import {
   Runtime,
   Code,
   Function as LambdaFunction,
+  LayerVersion,
 } from 'aws-cdk-lib/aws-lambda'
 import {
   IQueue,
@@ -148,6 +149,14 @@ export class ServiceStack extends Stack {
     iamRole.addManagedPolicy(
       ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole')
     )
+    iamRole.addManagedPolicy(
+      ManagedPolicy.fromAwsManagedPolicyName('CloudWatchLambdaInsightsExecutionRolePolicy')
+     );
+
+    const layerArn = 'arn:aws:lambda:eu-west-1:580247275435:layer:LambdaInsightsExtension:52';
+    const layer = LayerVersion.fromLayerVersionArn(this, 'S3ConsumerLambdaFunctionLambdaInsightsLayerFromArn', layerArn);
+
+    lambda.addLayers(layer);
 
     lambda.addEventSource(
       new S3EventSourceV2(bucket, {

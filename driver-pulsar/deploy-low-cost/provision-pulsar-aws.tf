@@ -1,3 +1,8 @@
+variable "app_name" {
+  type    = string
+  default = "pulsar-benchmark-ruben-te-wierik"
+}
+
 variable "public_key_path" {
   description = <<DESCRIPTION
 Path to the SSH public key to be used for authentication.
@@ -23,15 +28,15 @@ variable "ami" {}
 variable "instance_types" {}
 variable "num_instances" {}
 
-variable monitoring_sqs_uri {
+variable "monitoring_sqs_uri" {
   type = string
 }
 
-variable enable_cloud_monitoring {
+variable "enable_cloud_monitoring" {
   type = bool
 }
 
-variable is_debug {
+variable "is_debug" {
   type = bool
 }
 
@@ -116,35 +121,53 @@ resource "aws_key_pair" "auth" {
   public_key = file(var.public_key_path)
 }
 
+resource "aws_ssm_parameter" "cw_agent" {
+  description = "Cloudwatch agent config to configure custom metrics."
+  name        = "/cloudwatch-agent/config"
+  type        = "String"
+  value       = file("../../cw_agent_config.json")
+}
+
 resource "aws_iam_instance_profile" "pulsar_ec2_instance_profile" {
   name = "pulsar_ec2_instance_profile"
 
   role = "pulsar-iam-role"
 }
 
-resource "aws_spot_instance_request" "zookeeper" {
-  ami                     = var.ami
-  instance_type           = var.instance_types["zookeeper"]
-  key_name                = aws_key_pair.auth.id
-  subnet_id               = aws_subnet.benchmark_subnet.id
-  vpc_security_group_ids  = [aws_security_group.benchmark_security_group.id]
-  spot_type               = "one-time"
-  wait_for_fulfillment    = true
-  count                   = var.num_instances["zookeeper"]
+resource "aws_instance" "zookeeper" {
+  ami                    = var.ami
+  instance_type          = var.instance_types["zookeeper"]
+  key_name               = aws_key_pair.auth.id
+  subnet_id              = aws_subnet.benchmark_subnet.id
+  vpc_security_group_ids = [aws_security_group.benchmark_security_group.id]
+  count                  = var.num_instances["zookeeper"]
+
+  monitoring = true
 
   iam_instance_profile = aws_iam_instance_profile.pulsar_ec2_instance_profile.name
 
-  user_data = <<-EOF
-              #!/bin/bash
-              # Attach the EBS volume
-              sudo yum install -y unzip
-              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-              unzip awscliv2.zip
-              sudo ./aws/install
-              aws configure set region "${var.region}"
-              aws configure set output "json"
-              aws ec2 attach-volume --volume-id ${aws_ebs_volume.ebs_zookeeper[count.index].id} --instance-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) --device /dev/sdh
-              EOF
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "terminate"
+      spot_instance_type             = "one-time"
+    }
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file(replace(var.public_key_path, ".pub", ""))
+    host        = self.public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "curl https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -O",
+      "sudo rpm -U ./amazon-cloudwatch-agent.rpm",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
+    ]
+  }
 
   tags = {
     Name      = "zk-${count.index}"
@@ -152,47 +175,81 @@ resource "aws_spot_instance_request" "zookeeper" {
   }
 }
 
-resource "aws_spot_instance_request" "pulsar" {
-  ami                     = var.ami
-  instance_type           = var.instance_types["pulsar"]
-  key_name                = aws_key_pair.auth.id
-  subnet_id               = aws_subnet.benchmark_subnet.id
-  vpc_security_group_ids  = [aws_security_group.benchmark_security_group.id]
-  spot_type               = "one-time"
-  wait_for_fulfillment    = true
-  count                   = var.num_instances["pulsar"]
+resource "aws_instance" "pulsar" {
+  ami                    = var.ami
+  instance_type          = var.instance_types["pulsar"]
+  key_name               = aws_key_pair.auth.id
+  subnet_id              = aws_subnet.benchmark_subnet.id
+  vpc_security_group_ids = [aws_security_group.benchmark_security_group.id]
+  count                  = var.num_instances["pulsar"]
+
+  monitoring = true
 
   iam_instance_profile = aws_iam_instance_profile.pulsar_ec2_instance_profile.name
 
-  user_data = <<-EOF
-              #!/bin/bash
-              # Attach the EBS volume
-              sudo yum install -y unzip
-              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-              unzip awscliv2.zip
-              sudo ./aws/install
-              aws configure set region "${var.region}"
-              aws configure set output "json"
-              aws ec2 attach-volume --volume-id ${aws_ebs_volume.ebs_pulsar[count.index].id} --instance-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) --device /dev/sdh
-              EOF
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "terminate"
+      spot_instance_type             = "one-time"
+    }
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file(replace(var.public_key_path, ".pub", ""))
+    host        = self.public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "curl https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -O",
+      "sudo rpm -U ./amazon-cloudwatch-agent.rpm",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
+    ]
+  }
 
   tags = {
-    Name = "pulsar-${count.index}"
+    Name      = "pulsar-${count.index}"
     Benchmark = "Pulsar"
   }
 }
 
-resource "aws_spot_instance_request" "client" {
-  ami                     = var.ami
-  instance_type           = var.instance_types["client"]
-  key_name                = aws_key_pair.auth.id
-  subnet_id               = aws_subnet.benchmark_subnet.id
-  vpc_security_group_ids  = [aws_security_group.benchmark_security_group.id]
-  spot_type               = "one-time"
-  wait_for_fulfillment    = true
-  count                   = var.num_instances["client"]
+resource "aws_instance" "client" {
+  ami                    = var.ami
+  instance_type          = var.instance_types["client"]
+  key_name               = aws_key_pair.auth.id
+  subnet_id              = aws_subnet.benchmark_subnet.id
+  vpc_security_group_ids = [aws_security_group.benchmark_security_group.id]
+  count                  = var.num_instances["client"]
+
+  monitoring = true
 
   iam_instance_profile = aws_iam_instance_profile.pulsar_ec2_instance_profile.name
+
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      instance_interruption_behavior = "terminate"
+      spot_instance_type             = "one-time"
+    }
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file(replace(var.public_key_path, ".pub", ""))
+    host        = self.public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "curl https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm -O",
+      "sudo rpm -U ./amazon-cloudwatch-agent.rpm",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:${aws_ssm_parameter.cw_agent.name}",
+    ]
+  }
 
   user_data = <<-EOF
     #!/bin/bash
@@ -206,83 +263,32 @@ resource "aws_spot_instance_request" "client" {
     EOF
 
   tags = {
-    Name = "pulsar-client-${count.index}"
+    Name      = "pulsar-client-${count.index}"
     Benchmark = "Pulsar"
-  }
-}
-
-# resource "aws_spot_instance_request" "prometheus" {
-#   ami                     = var.ami
-#   instance_type           = var.instance_types["prometheus"]
-#   key_name                = aws_key_pair.auth.id
-#   subnet_id               = aws_subnet.benchmark_subnet.id
-#   vpc_security_group_ids  = [aws_security_group.benchmark_security_group.id]
-#   spot_type               = "one-time"
-#   wait_for_fulfillment    = true
-#   count = var.num_instances["prometheus"]
-
-#   tags = {
-#     Name = "prometheus-${count.index}"
-#     Benchmark = "Pulsar"
-#   }
-# }
-
-resource "aws_ebs_volume" "ebs_zookeeper" {
-  count             = "${var.num_instances["zookeeper"]}"
-
-  availability_zone = "eu-west-1a"
-  size              = 30
-  type              = "gp3"
-
-  tags = {
-    Name            = "zookeeper_ebs_${count.index}"
-  }
-}
-
-resource "aws_ebs_volume" "ebs_pulsar" {
-  count             = "${var.num_instances["pulsar"]}"
-
-  availability_zone = "eu-west-1a"
-  size              = 40
-  type              = "gp3"
-
-  tags = {
-    Name            = "pulsar_ebs_${count.index}"
   }
 }
 
 output "zookeeper" {
   value = {
-    for instance in aws_spot_instance_request.zookeeper :
+    for instance in aws_instance.zookeeper :
     instance.public_ip => instance.private_ip
   }
 }
 
 output "pulsar" {
   value = {
-    for instance in aws_spot_instance_request.pulsar :
+    for instance in aws_instance.pulsar :
     instance.public_ip => instance.private_ip
   }
 }
 
 output "client" {
   value = {
-    for instance in aws_spot_instance_request.client :
+    for instance in aws_instance.client :
     instance.public_ip => instance.private_ip
   }
 }
 
-# output "prometheus" {
-#   value = {
-#     for instance in aws_spot_instance_request.prometheus :
-#     instance.public_ip => instance.private_ip
-#   }
-# }
-
 output "client_ssh_host" {
-  value = aws_spot_instance_request.client.0.public_ip
+  value = aws_instance.client.0.public_ip
 }
-
-# output "prometheus_host" {
-#   value = aws_spot_instance_request.prometheus.0.public_ip
-# }

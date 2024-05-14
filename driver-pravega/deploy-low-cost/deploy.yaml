@@ -30,7 +30,6 @@
         controllerUrl: "tcp://{{ hostvars[groups['controller'][0]].private_ip }}:9090"
         private_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
         segmentStoreCount: "{{ groups['bookkeeper'] | length }}"
-        influxDBURI: "http://{{ hostvars[groups['metrics'][0]].private_ip }}:8086"
     - set_fact:
         # Change below to use a published release of Pravega or a local build.
         pravegaSrc: "https://github.com/pravega/pravega/releases/download/v{{ pravegaVersion }}/pravega-{{ pravegaVersion }}.tgz"
@@ -61,17 +60,10 @@
     - name: Delete files on hosts
       ansible.builtin.shell:
         cmd: "rm -rf /opt/pravega /opt/zookeeper /opt/bookkeeper /opt/benchmark /mnt/journal/*"
-    - name: Delete files on tier 2
-      ansible.builtin.shell:
-        cmd: "rm -rf /mnt/tier2/*"
-      when: groups['bookkeeper'][0] == inventory_hostname
-    - name: Unmount tier 2
-      shell: "umount /mnt/tier2"
-      ignore_errors: yes
 
 - name: Common installation
   hosts: ["!tier2"]
-  tags: ["controller", "segmentstore", "bookkeeper", "zookeeper", "client", "metrics"]
+  tags: ["controller", "segmentstore", "bookkeeper", "zookeeper", "client"]
   connection: ssh
   become: true
   tasks:
@@ -96,106 +88,71 @@
         echo 'LANG=en_US.utf-8
               LC_ALL=en_US.utf-8' >> /etc/environment
 
-- name: Metrics installation
-  hosts: ["metrics"]
-  tags: ["metrics"]
+- name: Format and mount disks for Zookeeper hosts
+  hosts: zookeeper
+  tags: ["zookeeper"]
   connection: ssh
   become: true
   tasks:
-    - name: Add Extras Repo
-      shell: yum-config-manager --enable rhui-REGION-rhel-server-extras
-      when:
-        - ansible_facts['distribution'] == 'RedHat'
-        - ansible_facts['distribution_major_version'] | int <= 7
-    - name: Docker repo
-      yum_repository:
-        name: docker
-        description: repo for docker
-        baseurl: "https://download.docker.com/linux/centos/{{ ansible_facts['distribution_major_version'] }}/x86_64/stable/"
-        gpgcheck: no
-      when: ansible_facts['distribution'] == 'RedHat'
-    - name: Create Docker repo dir
-      file:
-        path: "/etc/yum.repos.d/"
-        state: directory
-    - name: Add Docker Centos extras
-      copy:
-        dest: /etc/yum.repos.d/docker-ce.repo
-        content: |
-          [centos-extras]
-          name=Centos extras - $basearch
-          baseurl=http://mirror.centos.org/centos/7/extras/x86_64
-          enabled=1
-          gpgcheck=1
-          gpgkey=http://centos.org/keys/RPM-GPG-KEY-CentOS-7
-    - name: Installing docker
-      yum:
-        state: latest
-        pkg: ['slirp4netns', 'fuse-overlayfs', 'container-selinux', 'docker-ce']
-    - name: Start docker
-      service:
-        name: docker
-        state: started
-        enabled: yes
-
-- name: Prometheus installation
-  hosts: ["metrics"]
-  tags: ["prometheus"]
-  connection: ssh
-  become: true
-  tasks:
-    - file: path=/opt/prometheus state=absent
-    - file: path=/opt/prometheus state=directory
-    - name: Download Prometheus Binary Package
-      unarchive:
-        src: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheusVersion }}/prometheus-{{ prometheusVersion }}.linux-amd64.tar.gz"
-        remote_src: yes
-        dest: /opt/prometheus
-        extra_opts: ["--strip-components=1"]
-    - file:
-        path: "/opt/prometheus/data"
-        state: directory
-    - template:
-        src: "templates/prometheus.service"
-        dest: "/etc/systemd/system/prometheus.service"
-    - template:
-        src: "templates/prometheus.yml"
-        dest: "/opt/prometheus/prometheus.yml"
     - systemd:
-        name: "prometheus"
-        daemon_reload: yes
-        state: restarted
-        enabled: yes
+        name: "zookeeper"
+        state: stopped
+      ignore_errors: yes
+    - name: Unmount disks
+      mount:
+        path: "{{ item.path }}"
+        state: unmounted
+      with_items:
+        - { path: "/opt/zookeeper/data/zookeeper", src: "/dev/nvme1n1" }
+    - name: Format disks
+      filesystem:
+        fstype: xfs
+        dev: '{{ item }}'
+        force: yes
+      with_items:
+        - '/dev/nvme1n1'
+    - name: Mount disks
+      mount:
+        path: "{{ item.path }}"
+        src: "{{ item.src }}"
+        fstype: xfs
+        opts: defaults,noatime,nodiscard
+        state: mounted
+      with_items:
+        - { path: "/opt/zookeeper/data/zookeeper", src: "/dev/nvme1n1" }
 
-- name: InfluxDB installation
-  hosts: ["metrics"]
-  tags: ["influxdb"]
+- name: Format and mount disks for Zookeeper hosts
+  hosts: zookeeper
+  tags: ["zookeeper"]
   connection: ssh
   become: true
   tasks:
-    - template:
-        src: "templates/influxdb.service"
-        dest: "/etc/systemd/system/influxdb.service"
     - systemd:
-        name: "influxdb"
-        daemon_reload: yes
-        state: restarted
-        enabled: yes
-
-- name: Pravega Dashboard installation
-  hosts: ["metrics"]
-  tags: ["dashboard"]
-  connection: ssh
-  become: true
-  tasks:
-    - template:
-        src: "templates/pravega-dashboard.service"
-        dest: "/etc/systemd/system/pravega-dashboard.service"
-    - systemd:
-        name: "pravega-dashboard"
-        daemon_reload: yes
-        state: restarted
-        enabled: yes
+        name: "zookeeper"
+        state: stopped
+      ignore_errors: yes
+    - name: Unmount disks
+      mount:
+        path: "{{ item.path }}"
+        state: unmounted
+      with_items:
+        - { path: "/opt/zookeeper/data/zookeeper", src: "/dev/nvme1n1" }
+    - name: Format disks
+      filesystem:
+        fstype: xfs
+        dev: '{{ item }}'
+        force: yes
+      with_items:
+        - '/dev/nvme1n1'
+    - name: Mount disks
+      mount:
+        path: "{{ item.path }}"
+        src: "{{ item.src }}"
+        fstype: xfs
+        opts: defaults,noatime,nodiscard
+        state: mounted
+      with_items:
+        - { path: "/opt/zookeeper/data/zookeeper", src: "/dev/nvme1n1" }
 
 - name: ZooKeeper setup
   hosts: zookeeper
@@ -203,8 +160,6 @@
   connection: ssh
   become: true
   tasks:
-    - file: path=/opt/zookeeper state=absent
-    - file: path=/opt/zookeeper state=directory
     - name: Download ZooKeeper binary package
       unarchive:
         src: "http://archive.apache.org/dist/zookeeper/zookeeper-{{ zookeeperVersion }}/apache-zookeeper-{{ zookeeperVersion }}-bin.tar.gz"
@@ -213,8 +168,8 @@
         extra_opts: ["--strip-components=1"]
     - set_fact:
         zid: "{{ groups['zookeeper'].index(inventory_hostname) }}"
-        max_heap_memory: "512m"
-        max_direct_memory: "512m"
+        max_heap_memory: "15g"
+        max_direct_memory: "15g"
     - file:
         path: "/opt/zookeeper/{{ item }}"
         state: directory
@@ -301,33 +256,21 @@
         name: "bookkeeper"
         state: stopped
       ignore_errors: yes
-    - name: Get EC2 volume details
-      delegate_to: localhost
-      vars:
-        ansible_python_interpreter: /usr/local/bin/python3.12
-      amazon.aws.ec2_vol_info:
-        access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
-        secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
-        region: eu-west-1
-        filters:
-          "tag:Name": "bookkeeper_ebs_{{groups['bookkeeper'].index(inventory_hostname)}}"
-      register: ec2_vol_info
-    - name: Store volume serial number
-      ansible.builtin.set_fact:
-        ebs_volume_id: "{{ ec2_vol_info.volumes[0].id | replace('-', '') }}"
-    - name: List Linux block devices
-      ansible.builtin.shell:
-        cmd: "lsblk -p -o NAME,SERIAL | grep {{ ebs_volume_id }} | cut -d' ' -f1"
-      register: lsblk
-    - name: Store EBS volume device name
-      ansible.builtin.set_fact:
-        ebs_volume_device_name: "{{ lsblk.stdout }}"
-    - name: Format EC2 volume
-      debugger: on_failed
-      community.general.filesystem:
+    - name: Unmount disks
+      mount:
+        path: "{{ item.path }}"
+        state: unmounted
+      with_items:
+        - { path: "/mnt/journal", src: "/dev/nvme1n1" }
+        - { path: "/mnt/storage", src: "/dev/nvme2n1" }
+    - name: Format disks
+      filesystem:
         fstype: xfs
-        dev: "{{ ebs_volume_device_name }}"
-        force: no
+        dev: '{{ item }}'
+        force: yes
+      with_items:
+        - '/dev/nvme1n1'
+        - '/dev/nvme2n1'
     - name: Mount disks
       mount:
         path: "{{ item.path }}"
@@ -336,7 +279,8 @@
         opts: defaults,noatime,nodiscard
         state: mounted
       with_items:
-        - { path: "/mnt/journal", src: '{{ ebs_volume_device_name }}' }
+        - { path: "/mnt/journal", src: "/dev/nvme1n1" }
+        - { path: "/mnt/storage", src: "/dev/nvme2n1" }
 
 - name: BookKeeper setup
   hosts: bookkeeper
@@ -387,13 +331,6 @@
   connection: ssh
   become: true
   tasks:
-    - name: Mount EFS volume for Pravega tier 2 storage
-      mount:
-        path: "/mnt/tier2"
-        src: "{{ groups['tier2'][0] }}:/"
-        fstype: nfs4
-        opts: nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport
-        state: mounted
     - template:
         src: "templates/pravega-segmentstore.service"
         dest: "/etc/systemd/system/pravega-segmentstore.service"
@@ -450,7 +387,7 @@
       lineinfile:
          dest: /opt/benchmark/bin/benchmark-worker
          regexp: '^JVM_MEM='
-         line: 'JVM_MEM="-Xms6G -Xmx6G -XX:+UseG1GC -XX:MaxGCPauseMillis=10 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=16 -XX:ConcGCThreads=16 -XX:G1NewSizePercent=50 -XX:+DisableExplicitGC -XX:-ResizePLAB -XX:+PerfDisableSharedMem -XX:+AlwaysPreTouch -XX:-UseBiasedLocking"'
+         line: 'JVM_MEM="-Xms26G -Xmx26G -XX:+UseG1GC -XX:MaxGCPauseMillis=10 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=16 -XX:ConcGCThreads=16 -XX:G1NewSizePercent=50 -XX:+DisableExplicitGC -XX:-ResizePLAB -XX:+PerfDisableSharedMem -XX:+AlwaysPreTouch -XX:-UseBiasedLocking"'
     - name: Configure memory
       lineinfile:
          dest: /opt/benchmark/bin/benchmark

@@ -14,6 +14,12 @@ sudo bin/benchmark \
 
 ```
 sudo bin/benchmark \
+  --drivers driver-pulsar/pulsar-experiment.yaml \
+  workloads/throughput-10kb-500.yaml
+```
+
+```
+sudo bin/benchmark \
   --drivers driver-pulsar/pulsar-effectively-once.yaml \
   --tpc-h-file workloads/tpc-h-default.yaml \
   workloads/simple-workload.yaml
@@ -32,3 +38,6 @@ sudo bin/benchmark \
 * `deploy.yaml`requires modification of the `Configure memory` task.
 * Either the memory configuration including `max_heap_memory` in `deploy.yaml` or the extra variables in `extra_vars.yaml` need to be modified ensure the correct memory configuration is applied to all hosts.
 
+## Extracting metrics from EC2 instances after running the benchmarks
+
+Run the command `sh ../../extract_metrics.sh pulsar-benchmark-ruben-te-wierik`.

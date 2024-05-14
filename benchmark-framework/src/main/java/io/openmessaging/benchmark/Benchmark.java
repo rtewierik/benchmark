@@ -87,9 +87,9 @@ public class Benchmark {
         public File workersFile;
 
         @Parameter(
-                names = {"-tpch", "--tpc-h-file"},
-                description = "Path to a YAML file containing the TPC H command")
-        public File tpcHFile;
+                names = {"-tpch", "--tpc-h-files"},
+                description = "Paths to a YAML file containing the TPC H command")
+        public List<String> tpcHFiles;
 
         @Parameter(
                 names = {"-x", "--extra"},
@@ -201,72 +201,22 @@ public class Benchmark {
         }
 
         log.info("Workloads: {}", writer.writeValueAsString(workloads));
-
-        TpcHArguments tpcHArguments = getTpcHArguments(arguments);
-
+        List<TpcHArguments> tpcHArgumentsList = getTpcHArguments(arguments);
         BenchmarkWorkers workers = getWorkers(arguments);
 
         workloads.forEach(
-                (workloadName, workload) -> {
-                    arguments.drivers.forEach(
-                            driverConfig -> {
-                                try {
-                                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-                                    File driverConfigFile = new File(driverConfig);
-                                    DriverConfiguration driverConfiguration =
-                                            mapper.readValue(driverConfigFile, DriverConfiguration.class);
-                                    log.info(
-                                            "--------------- WORKLOAD : {} --- DRIVER : {}---------------",
-                                            workload.name,
-                                            driverConfiguration.name);
-
-                                    // Stop any left over workload
-                                    workers.stopAll();
-
-                                    workers.initializeDriver(driverConfig);
-
-                                    String driverName = driverConfiguration.name;
-                                    WorkloadGenerator generator =
-                                            new WorkloadGenerator(driverName, workload, tpcHArguments, workers);
-
-                                    TestResult result = generator.run();
-
-                                    if (EnvironmentConfiguration.isDebug()) {
-                                        log.info("Preparing to write test results...");
-                                    }
-
-                                    boolean useOutput = (arguments.output != null) && (arguments.output.length() > 0);
-
-                                    String fileName =
-                                            useOutput
-                                                    ? arguments.output
-                                                    : String.format(
-                                                            "%s-%s-%s.json",
-                                                            workloadName,
-                                                            driverConfiguration.name,
-                                                            dateFormat.format(new Date()));
-
-                                    if (EnvironmentConfiguration.isDebug()) {
-                                        log.info("Writing test result into {}", fileName);
-                                    }
-                                    writer.writeValue(new File(fileName), result);
-
-                                    generator.close();
-
-                                    if (EnvironmentConfiguration.isDebug()) {
-                                        log.info("Finished test and closed generator.");
-                                    }
-                                } catch (Exception e) {
-                                    log.error(
-                                            "Failed to run the workload '{}' for driver '{}'",
-                                            workload.name,
-                                            driverConfig,
-                                            e);
-                                } finally {
-                                    workers.stopAll();
-                                }
-                            });
-                });
+                (workloadName, workload) ->
+                        arguments.drivers.forEach(
+                                driverConfig ->
+                                        tpcHArgumentsList.forEach(
+                                                tpcHArguments ->
+                                                        runBenchmark(
+                                                                arguments,
+                                                                workers,
+                                                                workloadName,
+                                                                workload,
+                                                                driverConfig,
+                                                                tpcHArguments))));
 
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Doing final clean-up...");
@@ -278,15 +228,83 @@ public class Benchmark {
         System.exit(0);
     }
 
-    private static TpcHArguments getTpcHArguments(Arguments arguments) throws IOException {
-        TpcHArguments tpcHArguments;
-        if (arguments.tpcHFile != null) {
-            tpcHArguments = mapper.readValue(arguments.tpcHFile, TpcHArguments.class);
-        } else {
-            tpcHArguments = null;
+    private static void runBenchmark(
+            Arguments arguments,
+            BenchmarkWorkers workers,
+            String workloadName,
+            Workload workload,
+            String driverConfig,
+            TpcHArguments tpcHArguments) {
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+            File driverConfigFile = new File(driverConfig);
+            DriverConfiguration driverConfiguration =
+                    mapper.readValue(driverConfigFile, DriverConfiguration.class);
+            log.info(
+                    "--------------- WORKLOAD : {} --- DRIVER : {}---------------",
+                    workload.name,
+                    driverConfiguration.name);
+
+            // Stop any left over workload
+            workers.stopAll();
+
+            workers.initializeDriver(driverConfig);
+
+            String driverName = driverConfiguration.name;
+            WorkloadGenerator generator =
+                    new WorkloadGenerator(driverName, workload, tpcHArguments, workers);
+
+            TestResult result = generator.run();
+
+            if (EnvironmentConfiguration.isDebug()) {
+                log.info("Preparing to write test results...");
+            }
+
+            boolean useOutput = (arguments.output != null) && (arguments.output.length() > 0);
+
+            String fileName =
+                    useOutput
+                            ? arguments.output
+                            : String.format(
+                                    "%s-%s-%s.json",
+                                    workloadName, driverConfiguration.name, dateFormat.format(new Date()));
+
+            if (EnvironmentConfiguration.isDebug()) {
+                log.info("Writing test result into {}", fileName);
+            }
+            writer.writeValue(new File(fileName), result);
+
+            generator.close();
+
+            if (EnvironmentConfiguration.isDebug()) {
+                log.info("Finished test and closed generator.");
+            }
+        } catch (Exception e) {
+            log.error("Failed to run the workload '{}' for driver '{}'", workload.name, driverConfig, e);
+        } finally {
+            workers.stopAll();
         }
-        log.info("TPC-H arguments: {}", writer.writeValueAsString(tpcHArguments));
-        return tpcHArguments;
+    }
+
+    private static List<TpcHArguments> getTpcHArguments(Arguments arguments) throws IOException {
+        List<TpcHArguments> tpcHArgumentsList = new ArrayList<>();
+        if (arguments.tpcHFiles != null) {
+            arguments.tpcHFiles.forEach(
+                    file -> {
+                        File tpcHArgumentsFile = new File(file);
+                        try {
+                            TpcHArguments tpcHArguments =
+                                    mapper.readValue(tpcHArgumentsFile, TpcHArguments.class);
+                            tpcHArgumentsList.add(tpcHArguments);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+        } else {
+            tpcHArgumentsList.add(null);
+        }
+        log.info("TPC-H arguments: {}", writer.writeValueAsString(tpcHArgumentsList));
+        return tpcHArgumentsList;
     }
 
     private static BenchmarkWorkers getWorkers(Arguments arguments) {
