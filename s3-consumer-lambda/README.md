@@ -43,3 +43,7 @@ Run the following commands locally to deploy the AWS CDK project to AWS.
 ## Extracting metrics from S3 buckets after running the benchmarks
 
 Run the command `sh ../../extract_s3_metrics.sh benchmarking-events`.
+
+## Extracting metrics from Lambda functions after running the benchmarks
+
+Run the command `sh ../../extract_lambda_metrics.sh s3-consumer-lambda`.

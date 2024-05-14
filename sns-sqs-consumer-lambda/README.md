@@ -43,3 +43,7 @@ Run the following commands locally to deploy the AWS CDK project to AWS.
 ## Extracting metrics from SNS topics and SQS queues after running the benchmarks
 
 Run the command `sh ../../extract_sns_sqs_metrics.sh`.
+
+## Extracting metrics from Lambda functions after running the benchmarks
+
+Run the command `sh ../../extract_lambda_metrics.sh sns-sqs-consumer-lambda`.

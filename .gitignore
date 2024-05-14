@@ -44,3 +44,4 @@ core/*.json
 **/sns_metrics.json
 **/sqs_metrics.json
 **/s3_metrics.json
+**/lambda_metrics.json
