@@ -91,9 +91,9 @@ for info in $(echo "${instance_info}" | jq -c '.[]'); do
           }
         ]' \
         --output json)
-      cpu_util+="{\"instanceId\":\"$instance_id\",\"tags\":$tags,\"values\":$(echo "${output}" | jq -r '.MetricDataResults[0].Values')}\n"
-      mem_util+="{\"instanceId\":\"$instance_id\",\"tags\":$tags,\"values\":$(echo "${output}" | jq -r '.MetricDataResults[1].Values')}\n"
-      disk_util+="{\"instanceId\":\"$instance_id\",\"tags\":$tags,\"values\":$(echo "${output}" | jq -r '.MetricDataResults[2].Values')}\n"
+      cpu_util+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[0].Timestamps'),\"tags\":$tags,\"values\":$(echo "${output}" | jq -r '.MetricDataResults[0].Values')}\n"
+      mem_util+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[1].Timestamps'),\"tags\":$tags,\"values\":$(echo "${output}" | jq -r '.MetricDataResults[1].Values')}\n"
+      disk_util+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[2].Timestamps'),\"tags\":$tags,\"values\":$(echo "${output}" | jq -r '.MetricDataResults[2].Values')}\n"
     fi
   fi
 done

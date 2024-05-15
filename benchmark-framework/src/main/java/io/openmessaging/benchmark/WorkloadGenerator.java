@@ -81,7 +81,13 @@ public class WorkloadGenerator implements AutoCloseable {
         this.arguments = arguments;
         this.worker = workers.worker;
         this.localWorker = workers.localWorker;
-        this.experimentId = String.format("%s-%s", workload.name, DATE_FORMAT.get().format(new Date()));
+        String date = DATE_FORMAT.get().format(new Date());
+        String workloadName = this.workload.name;
+        this.experimentId =
+                arguments != null
+                        ? String.format(
+                                "%s-%s-%s-%s", this.driverName, workloadName, this.arguments.queryId, date)
+                        : String.format("%s-%s-%s", this.driverName, workloadName, date);
 
         if (workload.consumerBacklogSizeGB > 0 && workload.producerRate == 0) {
             throw new IllegalArgumentException(
@@ -138,15 +144,15 @@ public class WorkloadGenerator implements AutoCloseable {
         producerWorkAssignment.payloadData = new ArrayList<>();
         producerWorkAssignment.tpcHArguments = this.arguments;
 
+        log.info("[BenchmarkStart] Starting benchmark {} at {}", this.experimentId, System.nanoTime());
         worker.startLoad(producerWorkAssignment);
-        log.info("----- Starting benchmark traffic ------");
 
         TestResult result =
                 printAndCollectStats(
                         workload.testDurationMinutes, TimeUnit.MINUTES, localWorker::getTestCompleted);
         runCompleted = true;
 
-        log.info("----- Completed run. Stopping worker and yielding results ------");
+        log.info("[BenchmarkEnd] Ending benchmark {} at {}", this.experimentId, System.nanoTime());
 
         worker.stopAll();
         if (localWorker != worker) {
@@ -354,13 +360,6 @@ public class WorkloadGenerator implements AutoCloseable {
     }
 
     private ConsumerAssignment createTpcHConsumers(List<String> topics) throws IOException {
-        String experimentId =
-                String.format(
-                        "%s-%s-%s-%s",
-                        this.driverName,
-                        this.experimentId,
-                        this.arguments.queryId,
-                        DATE_FORMAT.get().format(new Date()));
         ConsumerAssignment consumerAssignment = new ConsumerAssignment(experimentId, true);
         ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment(experimentId, true);
 
