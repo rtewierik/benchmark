@@ -57,7 +57,7 @@ output=$(aws cloudwatch get-metric-data \
     }
   ]' \
   --output json)
-s3_metrics+="{\"bucket_name\":\"$bucket_name\",\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[0].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[0].Values')},\n"
-s3_metrics+="{\"bucket_name\":\"$bucket_name\",\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[1].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[1].Values')},\n"
+s3_metrics+="{\"bucket_name\":\"$bucket_name\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[0].Timestamps'),\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[0].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[0].Values')},\n"
+s3_metrics+="{\"bucket_name\":\"$bucket_name\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[1].Timestamps'),\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[1].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[1].Values')},\n"
 
 echo "[${s3_metrics%???}]" > s3_metrics.json

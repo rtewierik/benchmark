@@ -214,15 +214,15 @@ for queue_url in $queue_info; do
         }
       ]' \
       --output json)
-    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[0].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[0].Values')},\n"
-    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[1].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[1].Values')},\n"
-    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[2].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[2].Values')},\n"
-    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[3].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[3].Values')},\n"
-    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[4].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[4].Values')},\n"
-    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[5].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[5].Values')},\n"
-    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[6].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[6].Values')},\n"
-    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[7].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[7].Values')},\n"
-    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[8].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[8].Values')},\n"
+    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[0].Timestamps'),\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[0].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[0].Values')},\n"
+    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[1].Timestamps'),\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[1].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[1].Values')},\n"
+    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[2].Timestamps'),\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[2].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[2].Values')},\n"
+    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[3].Timestamps'),\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[3].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[3].Values')},\n"
+    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[4].Timestamps'),\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[4].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[4].Values')},\n"
+    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[5].Timestamps'),\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[5].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[5].Values')},\n"
+    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[6].Timestamps'),\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[6].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[6].Values')},\n"
+    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[7].Timestamps'),\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[7].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[7].Values')},\n"
+    sqs_metrics+="{\"queue_name\":\"$queue_name\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[8].Timestamps'),\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[8].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[8].Values')},\n"
   fi
 done
 
@@ -305,10 +305,10 @@ for topic_arn in $topic_info; do
         }
       ]' \
       --output json)
-    sns_metrics+="{\"topic_name\":\"$topic_name\",\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[0].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[0].Values')},\n"
-    sns_metrics+="{\"topic_name\":\"$topic_name\",\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[1].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[1].Values')},\n"
-    sns_metrics+="{\"topic_name\":\"$topic_name\",\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[2].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[2].Values')},\n"
-    sns_metrics+="{\"topic_name\":\"$topic_name\",\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[3].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[3].Values')},\n"
+    sns_metrics+="{\"topic_name\":\"$topic_name\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[0].Timestamps'),\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[0].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[0].Values')},\n"
+    sns_metrics+="{\"topic_name\":\"$topic_name\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[1].Timestamps'),\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[1].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[1].Values')},\n"
+    sns_metrics+="{\"topic_name\":\"$topic_name\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[2].Timestamps'),\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[2].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[2].Values')},\n"
+    sns_metrics+="{\"topic_name\":\"$topic_name\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[3].Timestamps'),\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[3].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[3].Values')},\n"
   fi
 done
 
