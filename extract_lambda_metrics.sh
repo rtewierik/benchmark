@@ -25,14 +25,13 @@ lambda_metrics=()
 lambda_name=$1
 echo $lambda_name
 
-lambda_functions=()
-lambda_functions+='s3-consumer-lambda-map'
+lambda_functions=$(list_lambda_functions $lambda_name)
 
 for function_name in $lambda_functions; do
   if [ "$function_name" != "null" ] && [ -n "$function_name" ]; then
   echo $function_name
     output=$(aws cloudwatch get-metric-data \
-      --start-time "$(date -u -v-15H)" \
+      --start-time "$(date -u -v-1H)" \
       --end-time "$(date -u)" \
       --metric-data-queries '[
         {
