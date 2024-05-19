@@ -24,7 +24,6 @@ import path = require('path')
 import { ITopic, Topic } from 'aws-cdk-lib/aws-sns'
 import { SqsSubscription } from 'aws-cdk-lib/aws-sns-subscriptions'
 import { Bucket, IBucket } from 'aws-cdk-lib/aws-s3'
-import { Construct } from 'constructs'
 
 interface SnsTopic {
   topic: ITopic
@@ -51,7 +50,8 @@ const DEFAULT_ID = 'Default'
 
 const AGGREGATE_CONFIG = {
   snsTopicNames: [],
-  functionTimeoutSeconds: 15
+  functionTimeoutSeconds: 15,
+  numberOfConsumers: 1
 }
 
 export class ServiceStack extends Stack {
@@ -154,7 +154,7 @@ export class ServiceStack extends Stack {
   }
 
   private createSnsSqsConsumerLambda(chunksBucket: IBucket, monitoringSqsQueue: IQueue, snsSqsConsumerLambdaQueue: IQueue, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps, id: string, lambdaConfiguration: LambdaConfiguration): LambdaFunction {
-    const { snsTopicNames, numberOfConsumers, functionTimeoutSeconds } = lambdaConfiguration
+    const { numberOfConsumers, functionTimeoutSeconds } = lambdaConfiguration
     const lowerCaseId = id.toLowerCase()
     const iamRole = new Role(
       this,
@@ -201,7 +201,6 @@ export class ServiceStack extends Stack {
       role: iamRole,
       environment: {
         REGION: this.region,
-        SNS_URIS: snsTopicNames.map(name => `arn:aws:sns:${this.region}:${this.account}:${name}`).join(','),
         SQS_URI: snsSqsConsumerLambdaQueue.queueUrl,
         IS_TPC_H: `${props.isTpcH}`,
         DEBUG: props.debug ? 'TRUE' : 'FALSE',
@@ -231,7 +230,7 @@ export class ServiceStack extends Stack {
           batchSize: props.batchSize,
           maxBatchingWindow: props.maxBatchingWindow,
           reportBatchItemFailures: props.reportBatchItemFailures,
-          maxConcurrency: numberOfConsumers
+          maxConcurrency: (numberOfConsumers ?? 0) > 1 ? numberOfConsumers : undefined
         })
     )
 
