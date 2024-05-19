@@ -20,12 +20,11 @@ import {
 } from 'aws-cdk-lib/aws-iam'
 import { SnsSqsConsumerLambdaStackProps } from './stack-configuration'
 
-import { addMonitoring } from '../modules/monitoring'
-import { addAlerting } from '../modules/alerting'
 import path = require('path')
 import { ITopic, Topic } from 'aws-cdk-lib/aws-sns'
 import { SqsSubscription } from 'aws-cdk-lib/aws-sns-subscriptions'
 import { Bucket, IBucket } from 'aws-cdk-lib/aws-s3'
+import { Construct } from 'constructs'
 
 interface SnsTopic {
   topic: ITopic
@@ -56,7 +55,7 @@ const AGGREGATE_CONFIG = {
 }
 
 export class ServiceStack extends Stack {
-  constructor(scope: App, id: string, props: SnsSqsConsumerLambdaStackProps) {
+  constructor(scope: App, id: string, props: SnsSqsConsumerLambdaStackProps, createMapAndResult: boolean, start: number, end: number) {
     super(scope, id, props)
     const chunksBucket = Bucket.fromBucketName(this, 'S3ConsumerChunksBucket', 'tpc-h-chunks')
     const monitoringSqsQueue = Queue.fromQueueArn(this, 'S3ConsumerMonitoringSqsQueue', props.monitoringSqsArn)
@@ -70,19 +69,23 @@ export class ServiceStack extends Stack {
         snsTopicNames.push(this.getSnsTopicName(props, reduceTopicId))
       }
       const aggregateConfig = { ...AGGREGATE_CONFIG, snsTopicNames }
-      const mapTopic = this.createSnsSqsConsumerLambdaSnsTopic(props, MAP_ID)
-      const { topic, deadLetterQueue } = mapTopic
-      const mapConfiguration = { snsTopicNames, ...props }
-      const mapQueue = this.createSnsSqsConsumerLambdaQueue(props, MAP_ID, mapConfiguration)
-      topic.addSubscription(new SqsSubscription(mapQueue, { deadLetterQueue, rawMessageDelivery: true }))
-      this.createDataIngestionLayer(props, MAP_ID, chunksBucket, monitoringSqsQueue, mapConfiguration, mapTopic, mapQueue)
-      for (var i = 0; i < props.numberOfConsumers; i++) {
+      if (createMapAndResult) {
+        const mapTopic = this.createSnsSqsConsumerLambdaSnsTopic(props, MAP_ID)
+        const { topic, deadLetterQueue } = mapTopic
+        const mapConfiguration = { snsTopicNames, ...props }
+        const mapQueue = this.createSnsSqsConsumerLambdaQueue(props, MAP_ID, mapConfiguration)
+        topic.addSubscription(new SqsSubscription(mapQueue, { deadLetterQueue, rawMessageDelivery: true }))
+        this.createDataIngestionLayer(props, MAP_ID, chunksBucket, monitoringSqsQueue, mapConfiguration, mapTopic, mapQueue)
+      }
+      for (var i = start; i < end; i++) {
         const reduceTopicId = `${REDUCE_ID}${i}`
         this.createDataIngestionLayer(props, reduceTopicId, chunksBucket, monitoringSqsQueue, aggregateConfig)
       }
-      this.createDataIngestionLayer(props, RESULT_ID, chunksBucket, monitoringSqsQueue, aggregateConfig)
+      if (createMapAndResult) {
+        this.createDataIngestionLayer(props, RESULT_ID, chunksBucket, monitoringSqsQueue, aggregateConfig)
+      }
     } else {
-      for (var i = 0; i < props.numberOfConsumers; i++) {
+      for (var i = start; i < end; i++) {
         const consumerTopicId = `${DEFAULT_ID}${i}`
         this.createDataIngestionLayer(props, consumerTopicId, chunksBucket, monitoringSqsQueue, AGGREGATE_CONFIG)
       }

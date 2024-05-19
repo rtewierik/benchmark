@@ -28,4 +28,12 @@ const stackProps: SnsSqsConsumerLambdaStackProps = {
   monitoringSqsArn: 'arn:aws:sqs:eu-west-1:138945776678:benchmark-monitoring'
 }
 
-new ServiceStack(app, 'sns-sqs-consumer-lambda', stackProps)
+const batchSize = 40
+const numStacks = stackProps.numberOfConsumers / batchSize
+
+for (let i = 0; i < numStacks; i++) {
+  const createMapAndResult = i === 0
+  const start = i * batchSize
+  const end = i * batchSize + batchSize
+  new ServiceStack(app, `sns-sqs-consumer-lambda-${i}`, stackProps, createMapAndResult, start, end)
+}
