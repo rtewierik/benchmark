@@ -133,6 +133,7 @@ resource "aws_instance" "client" {
     echo "SKIP_READINESS_CHECK=true" >> /etc/environment
     echo "IS_CLOUD_MONITORING_ENABLED=${var.enable_cloud_monitoring}" >> /etc/environment
     echo "MONITORING_SQS_URI=${var.monitoring_sqs_uri}" >> /etc/environment
+    echo "REGION=${var.region}" >> /etc/environment
     echo "DEBUG=${var.is_debug}" >> /etc/environment
     EOF
 

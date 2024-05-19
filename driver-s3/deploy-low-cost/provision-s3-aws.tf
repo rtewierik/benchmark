@@ -123,6 +123,7 @@ resource "aws_instance" "client" {
     #!/bin/bash
     echo "export S3_URIS=${join(",", var.s3_uris)}" >> /etc/profile.d/myenvvars.sh
     echo "export PRODUCE_WITH_ALL_WORKERS=true" >> /etc/profile.d/myenvvars.sh
+    echo "export SKIP_READINESS_CHECK=true" >> /etc/profile.d/myenvvars.sh
     echo "export IS_CLOUD_MONITORING_ENABLED=${var.enable_cloud_monitoring}" >> /etc/profile.d/myenvvars.sh
     echo "export MONITORING_SQS_URI=${var.monitoring_sqs_uri}" >> /etc/profile.d/myenvvars.sh
     echo "export REGION=${var.region}" >> /etc/profile.d/myenvvars.sh
