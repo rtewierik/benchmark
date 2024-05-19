@@ -34,6 +34,14 @@ sudo bin/benchmark \
   --tpc-h-files workloads/tpc-h-q6-1000-10.yaml,workloads/tpc-h-q1-1000-300.yaml,workloads/tpc-h-q6-1000-300.yaml,workloads/tpc-h-q1-1000-300.yaml,workloads/tpc-h-q6-1000-300.yaml,workloads/tpc-h-q1-1000-300.yaml,workloads/tpc-h-q6-1000-300.yaml \
   workloads/tpc-h-base.yaml
 ```
+
+```
+sudo bin/benchmark \
+  --drivers driver-sns-sqs/sns-sqs-default.yaml \
+  --tpc-h-files workloads/tpc-h-q6-10000-10.yaml,workloads/tpc-h-q1-10000-300.yaml,workloads/tpc-h-q6-10000-300.yaml,workloads/tpc-h-q1-10000-300.yaml,workloads/tpc-h-q6-10000-300.yaml,workloads/tpc-h-q1-10000-300.yaml,workloads/tpc-h-q6-10000-300.yaml \
+  workloads/tpc-h-base.yaml
+```
+
 ```
 sudo bin/benchmark \
   --drivers driver-sns-sqs/sns-sqs-default.yaml \

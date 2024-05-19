@@ -78,15 +78,14 @@ public class WorkloadGenerator implements AutoCloseable {
             String driverName, Workload workload, TpcHArguments arguments, BenchmarkWorkers workers) {
         this.driverName = driverName;
         this.workload = workload;
-        this.arguments = arguments;
+        this.arguments = arguments.withQueryIdDate();
         this.worker = workers.worker;
         this.localWorker = workers.localWorker;
         String date = DATE_FORMAT.get().format(new Date());
         String workloadName = this.workload.name;
         this.experimentId =
                 arguments != null
-                        ? String.format(
-                                "%s-%s-%s-%s", this.driverName, workloadName, this.arguments.queryId, date)
+                        ? String.format("%s-%s-%s", this.driverName, workloadName, this.arguments.queryId)
                         : String.format("%s-%s-%s", this.driverName, workloadName, date);
 
         if (workload.consumerBacklogSizeGB > 0 && workload.producerRate == 0) {
