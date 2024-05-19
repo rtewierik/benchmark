@@ -20,7 +20,7 @@ const stackProps: SnsSqsConsumerLambdaStackProps = {
   reportBatchItemFailures: false,
   debug: false,
   functionTimeoutSeconds: 300,
-  numberOfConsumers: 10,
+  numberOfConsumers: 800,
   alertingEnabled: true,
   isTpcH: false,
   isCloudMonitoringEnabled: true,

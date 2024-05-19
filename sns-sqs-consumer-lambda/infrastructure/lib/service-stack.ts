@@ -94,10 +94,10 @@ export class ServiceStack extends Stack {
   }
 
   private createDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, chunksBucket: IBucket, monitoringSqsQueue: IQueue, lambdaConfiguration: LambdaConfiguration, existingTopic?: SnsTopic, existingQueue?: IQueue) {
-    const { queue, snsDeadLetterQueue, lambdaDeadLetterQueue } = this.createSnsSqsConsumerLambdaDataIngestionLayer(props, id, lambdaConfiguration, existingTopic, existingQueue)
-    const lambda = this.createSnsSqsConsumerLambda(chunksBucket, monitoringSqsQueue, queue, lambdaDeadLetterQueue, props, id, lambdaConfiguration)
-    addMonitoring(this, queue, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
-    addAlerting(this, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
+    const { queue, lambdaDeadLetterQueue } = this.createSnsSqsConsumerLambdaDataIngestionLayer(props, id, lambdaConfiguration, existingTopic, existingQueue)
+    this.createSnsSqsConsumerLambda(chunksBucket, monitoringSqsQueue, queue, lambdaDeadLetterQueue, props, id, lambdaConfiguration)
+    // addMonitoring(this, queue, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
+    // addAlerting(this, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
   }
 
   private createSnsSqsConsumerLambdaDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, lambdaConfiguration: LambdaConfiguration, existingTopic: SnsTopic | undefined, existingQueue: IQueue | undefined): DataIngestionLayer {
