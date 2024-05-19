@@ -37,10 +37,6 @@ variable "num_instances" {
   type = map(string)
 }
 
-variable "sns_uris" {
-  type = list(string)
-}
-
 variable "is_tpc_h" {
   type = bool
 }
@@ -55,4 +51,12 @@ variable "enable_cloud_monitoring" {
 
 variable "is_debug" {
   type = bool
+}
+
+variable "number_of_consumers"  {
+  type = number
+}
+
+variable "account_id" {
+  type = string
 }
