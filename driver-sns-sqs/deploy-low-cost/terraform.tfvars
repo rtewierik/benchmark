@@ -6,7 +6,7 @@ ami             = "ami-0f0f1c02e5e4d9d9f" // RHEL-8
 is_tpc_h = true
 
 instance_types = {
-  "client" = "m5n.2xlarge"
+  "client" = "m5n.large"
 }
 
 num_instances = {
@@ -18,5 +18,5 @@ monitoring_sqs_uri      = "https://sqs.eu-west-1.amazonaws.com/138945776678/benc
 
 is_debug = false
 
-number_of_consumers = 800
+number_of_consumers = 300
 account_id = "138945776678"
