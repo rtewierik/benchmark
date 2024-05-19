@@ -19,8 +19,8 @@ const stackProps: SnsSqsConsumerLambdaStackProps = {
   batchSize: 1,
   reportBatchItemFailures: false,
   debug: false,
-  functionTimeoutSeconds: 300,
-  numberOfConsumers: 10,
+  functionTimeoutSeconds: 60,
+  numberOfConsumers: 300,
   alertingEnabled: true,
   isTpcH: true,
   isCloudMonitoringEnabled: true,
@@ -28,4 +28,12 @@ const stackProps: SnsSqsConsumerLambdaStackProps = {
   monitoringSqsArn: 'arn:aws:sqs:eu-west-1:138945776678:benchmark-monitoring'
 }
 
-new ServiceStack(app, 'sns-sqs-consumer-lambda', stackProps)
+const batchSize = 30
+const numStacks = stackProps.numberOfConsumers / batchSize
+
+new ServiceStack(app, `sns-sqs-consumer-lambda`, stackProps, true, 0, 0)
+for (let i = 0; i < numStacks; i++) {
+  const start = i * batchSize
+  const end = i * batchSize + batchSize
+  new ServiceStack(app, `sns-sqs-consumer-lambda-${i}`, stackProps, false, start, end)
+}

@@ -14,26 +14,46 @@
 package io.openmessaging.benchmark.driver.sns.sqs;
 
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SnsSqsBenchmarkConfiguration {
 
     public static final String sqsUri;
-    public static final List<String> snsUris;
     public static final String region;
+    public static final String accountId;
+    public static final Integer numberOfConsumers;
     public static final boolean isTpcH;
+    public static final List<String> snsUris;
 
     static {
         sqsUri = System.getenv("SQS_URI");
-        snsUris = SnsSqsBenchmarkConfiguration.getSnsUrisFromEnvironment();
         region = System.getenv("REGION");
+        accountId = System.getenv("ACCOUNT_ID");
+        numberOfConsumers = Integer.parseInt(System.getenv("NUMBER_OF_CONSUMERS"));
         isTpcH = Boolean.parseBoolean(System.getenv("IS_TPC_H"));
+        snsUris = SnsSqsBenchmarkConfiguration.getSnsUrisFromEnvironment();
     }
 
     private static List<String> getSnsUrisFromEnvironment() {
-        String snsUris = System.getenv("SNS_URIS");
-        return (snsUris != null) ? Arrays.asList(snsUris.split(",")) : Collections.emptyList();
+        ArrayList<String> snsUris = new ArrayList<>();
+        if (isTpcH) {
+            snsUris.add(getSnsUri("map"));
+            snsUris.add(getSnsUri("result"));
+            for (int i = 0; i < numberOfConsumers; i++) {
+                String id = String.format("reduce%s", i);
+                snsUris.add(getSnsUri(id));
+            }
+        } else {
+            for (int i = 0; i < numberOfConsumers; i++) {
+                String id = String.format("default%s", i);
+                snsUris.add(getSnsUri(id));
+            }
+        }
+        return snsUris;
+    }
+
+    private static String getSnsUri(String id) {
+        return String.format("arn:aws:sns:%s:%s:sns-sqs-consumer-lambda-%s", region, accountId, id);
     }
 }

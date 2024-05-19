@@ -46,3 +46,4 @@ core/*.json
 **/s3_metrics.json
 **/lambda_metrics.json
 !experiments/**/*.json
+**/cdk.out*/*

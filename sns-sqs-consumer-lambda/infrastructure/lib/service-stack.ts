@@ -20,8 +20,6 @@ import {
 } from 'aws-cdk-lib/aws-iam'
 import { SnsSqsConsumerLambdaStackProps } from './stack-configuration'
 
-import { addMonitoring } from '../modules/monitoring'
-import { addAlerting } from '../modules/alerting'
 import path = require('path')
 import { ITopic, Topic } from 'aws-cdk-lib/aws-sns'
 import { SqsSubscription } from 'aws-cdk-lib/aws-sns-subscriptions'
@@ -52,11 +50,12 @@ const DEFAULT_ID = 'Default'
 
 const AGGREGATE_CONFIG = {
   snsTopicNames: [],
-  functionTimeoutSeconds: 15
+  functionTimeoutSeconds: 15,
+  numberOfConsumers: 1
 }
 
 export class ServiceStack extends Stack {
-  constructor(scope: App, id: string, props: SnsSqsConsumerLambdaStackProps) {
+  constructor(scope: App, id: string, props: SnsSqsConsumerLambdaStackProps, createMapAndResult: boolean, start: number, end: number) {
     super(scope, id, props)
     const chunksBucket = Bucket.fromBucketName(this, 'S3ConsumerChunksBucket', 'tpc-h-chunks')
     const monitoringSqsQueue = Queue.fromQueueArn(this, 'S3ConsumerMonitoringSqsQueue', props.monitoringSqsArn)
@@ -70,19 +69,23 @@ export class ServiceStack extends Stack {
         snsTopicNames.push(this.getSnsTopicName(props, reduceTopicId))
       }
       const aggregateConfig = { ...AGGREGATE_CONFIG, snsTopicNames }
-      const mapTopic = this.createSnsSqsConsumerLambdaSnsTopic(props, MAP_ID)
-      const { topic, deadLetterQueue } = mapTopic
-      const mapConfiguration = { snsTopicNames, ...props }
-      const mapQueue = this.createSnsSqsConsumerLambdaQueue(props, MAP_ID, mapConfiguration)
-      topic.addSubscription(new SqsSubscription(mapQueue, { deadLetterQueue, rawMessageDelivery: true }))
-      this.createDataIngestionLayer(props, MAP_ID, chunksBucket, monitoringSqsQueue, mapConfiguration, mapTopic, mapQueue)
-      for (var i = 0; i < props.numberOfConsumers; i++) {
+      if (createMapAndResult) {
+        const mapTopic = this.createSnsSqsConsumerLambdaSnsTopic(props, MAP_ID)
+        const { topic, deadLetterQueue } = mapTopic
+        const mapConfiguration = { snsTopicNames, ...props }
+        const mapQueue = this.createSnsSqsConsumerLambdaQueue(props, MAP_ID, mapConfiguration)
+        topic.addSubscription(new SqsSubscription(mapQueue, { deadLetterQueue, rawMessageDelivery: true }))
+        this.createDataIngestionLayer(props, MAP_ID, chunksBucket, monitoringSqsQueue, mapConfiguration, mapTopic, mapQueue)
+      }
+      for (var i = start; i < end; i++) {
         const reduceTopicId = `${REDUCE_ID}${i}`
         this.createDataIngestionLayer(props, reduceTopicId, chunksBucket, monitoringSqsQueue, aggregateConfig)
       }
-      this.createDataIngestionLayer(props, RESULT_ID, chunksBucket, monitoringSqsQueue, aggregateConfig)
+      if (createMapAndResult) {
+        this.createDataIngestionLayer(props, RESULT_ID, chunksBucket, monitoringSqsQueue, aggregateConfig)
+      }
     } else {
-      for (var i = 0; i < props.numberOfConsumers; i++) {
+      for (var i = start; i < end; i++) {
         const consumerTopicId = `${DEFAULT_ID}${i}`
         this.createDataIngestionLayer(props, consumerTopicId, chunksBucket, monitoringSqsQueue, AGGREGATE_CONFIG)
       }
@@ -90,14 +93,14 @@ export class ServiceStack extends Stack {
   }
 
   private getSnsTopicName(props: SnsSqsConsumerLambdaStackProps, id: string) {
-    return `${props.appName}-sns-topic-${id.toLowerCase()}`
+    return `${props.appName}-${id.toLowerCase()}`
   }
 
   private createDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, chunksBucket: IBucket, monitoringSqsQueue: IQueue, lambdaConfiguration: LambdaConfiguration, existingTopic?: SnsTopic, existingQueue?: IQueue) {
-    const { queue, snsDeadLetterQueue, lambdaDeadLetterQueue } = this.createSnsSqsConsumerLambdaDataIngestionLayer(props, id, lambdaConfiguration, existingTopic, existingQueue)
-    const lambda = this.createSnsSqsConsumerLambda(chunksBucket, monitoringSqsQueue, queue, lambdaDeadLetterQueue, props, id, lambdaConfiguration)
-    addMonitoring(this, queue, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
-    addAlerting(this, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
+    const { queue, lambdaDeadLetterQueue } = this.createSnsSqsConsumerLambdaDataIngestionLayer(props, id, lambdaConfiguration, existingTopic, existingQueue)
+    this.createSnsSqsConsumerLambda(chunksBucket, monitoringSqsQueue, queue, lambdaDeadLetterQueue, props, id, lambdaConfiguration)
+    // addMonitoring(this, queue, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
+    // addAlerting(this, lambda, lambdaDeadLetterQueue, snsDeadLetterQueue, props, id)
   }
 
   private createSnsSqsConsumerLambdaDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, lambdaConfiguration: LambdaConfiguration, existingTopic: SnsTopic | undefined, existingQueue: IQueue | undefined): DataIngestionLayer {
@@ -151,7 +154,7 @@ export class ServiceStack extends Stack {
   }
 
   private createSnsSqsConsumerLambda(chunksBucket: IBucket, monitoringSqsQueue: IQueue, snsSqsConsumerLambdaQueue: IQueue, deadLetterQueue: IQueue, props: SnsSqsConsumerLambdaStackProps, id: string, lambdaConfiguration: LambdaConfiguration): LambdaFunction {
-    const { snsTopicNames, numberOfConsumers, functionTimeoutSeconds } = lambdaConfiguration
+    const { numberOfConsumers, functionTimeoutSeconds } = lambdaConfiguration
     const lowerCaseId = id.toLowerCase()
     const iamRole = new Role(
       this,
@@ -181,7 +184,7 @@ export class ServiceStack extends Stack {
     iamRole.addToPolicy(
       new PolicyStatement({
         actions: ['SNS:Publish'],
-        resources: [`arn:aws:sns:${this.region}:${this.account}:sns-sqs-consumer-lambda-sns-topic-*`]
+        resources: [`arn:aws:sns:${this.region}:${this.account}:sns-sqs-consumer-lambda-*`]
       })
     )
 
@@ -198,12 +201,13 @@ export class ServiceStack extends Stack {
       role: iamRole,
       environment: {
         REGION: this.region,
-        SNS_URIS: snsTopicNames.map(name => `arn:aws:sns:${this.region}:${this.account}:${name}`).join(','),
         SQS_URI: snsSqsConsumerLambdaQueue.queueUrl,
         IS_TPC_H: `${props.isTpcH}`,
         DEBUG: props.debug ? 'TRUE' : 'FALSE',
         IS_CLOUD_MONITORING_ENABLED: props.isCloudMonitoringEnabled ? 'TRUE' : 'FALSE',
-        MONITORING_SQS_URI: props.monitoringSqsUri
+        MONITORING_SQS_URI: props.monitoringSqsUri,
+        NUMBER_OF_CONSUMERS: `${props.numberOfConsumers}`,
+        ACCOUNT_ID: props.env?.account!
       },
       retryAttempts: 2
     });
@@ -226,7 +230,7 @@ export class ServiceStack extends Stack {
           batchSize: props.batchSize,
           maxBatchingWindow: props.maxBatchingWindow,
           reportBatchItemFailures: props.reportBatchItemFailures,
-          maxConcurrency: numberOfConsumers
+          maxConcurrency: (numberOfConsumers ?? 0) > 1 ? numberOfConsumers : undefined
         })
     )
 

@@ -14,24 +14,44 @@
 package io.openmessaging.benchmark.driver.s3;
 
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 public class S3BenchmarkConfiguration {
 
-    public static final List<String> s3Uris;
     public static final String region;
+    public static final String accountId;
+    public static final Integer numberOfConsumers;
     public static final boolean isTpcH;
+    public static final List<String> s3Uris;
 
     static {
-        s3Uris = S3BenchmarkConfiguration.getS3UrisFromEnvironment();
         region = System.getenv("REGION");
+        accountId = System.getenv("ACCOUNT_ID");
+        numberOfConsumers = Integer.parseInt(System.getenv("NUMBER_OF_CONSUMERS"));
         isTpcH = Boolean.parseBoolean(System.getenv("IS_TPC_H"));
+        s3Uris = S3BenchmarkConfiguration.getS3UrisFromEnvironment();
     }
 
     private static List<String> getS3UrisFromEnvironment() {
-        String s3Uris = System.getenv("S3_URIS");
-        return (s3Uris != null) ? Arrays.asList(s3Uris.split(",")) : Collections.emptyList();
+        ArrayList<String> s3Uris = new ArrayList<>();
+        if (isTpcH) {
+            s3Uris.add(getS3Uri("map"));
+            s3Uris.add(getS3Uri("result"));
+            for (int i = 0; i < numberOfConsumers; i++) {
+                String id = String.format("reduce%s", i);
+                s3Uris.add(getS3Uri(id));
+            }
+        } else {
+            for (int i = 0; i < numberOfConsumers; i++) {
+                String id = String.format("default%s", i);
+                s3Uris.add(getS3Uri(id));
+            }
+        }
+        return s3Uris;
+    }
+
+    private static String getS3Uri(String id) {
+        return String.format("s3://benchmarking-events/s3-consumer-lambda-%s", id);
     }
 }
