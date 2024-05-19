@@ -1,0 +1,432 @@
+[{"topic_name":"sns-sqs-consumer-lambda-sns-topic-map","timestamps":[
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"NumberOfNotificationsFailed","values":[
+  0,
+  0
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-map","timestamps":[
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"NumberOfNotificationsDelivered","values":[
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-map","timestamps":[
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"PublishSize","values":[
+  436.84,
+  436.4
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-map","timestamps":[
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"NumberOfMessagesPublished","values":[
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"NumberOfNotificationsFailed","values":[
+  0,
+  0,
+  0,
+  0
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"NumberOfNotificationsDelivered","values":[
+  1,
+  1,
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"PublishSize","values":[
+  1782.25,
+  1782,
+  1782.25,
+  1782
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"NumberOfMessagesPublished","values":[
+  1,
+  1,
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"NumberOfNotificationsFailed","values":[
+  0,
+  0,
+  0,
+  0,
+  0
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"NumberOfNotificationsDelivered","values":[
+  1,
+  1,
+  1,
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"PublishSize","values":[
+  1783,
+  1783,
+  1783,
+  1783,
+  1783
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"NumberOfMessagesPublished","values":[
+  1,
+  1,
+  1,
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"NumberOfNotificationsFailed","values":[
+  0,
+  0,
+  0,
+  0,
+  0
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"NumberOfNotificationsDelivered","values":[
+  1,
+  1,
+  1,
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"PublishSize","values":[
+  1783,
+  1783,
+  1783,
+  1783,
+  1783
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"NumberOfMessagesPublished","values":[
+  1,
+  1,
+  1,
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"NumberOfNotificationsFailed","values":[
+  0,
+  0
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"NumberOfNotificationsDelivered","values":[
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"PublishSize","values":[
+  1783,
+  1783
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"NumberOfMessagesPublished","values":[
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"NumberOfNotificationsFailed","values":[
+  0,
+  0,
+  0
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"NumberOfNotificationsDelivered","values":[
+  1,
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"PublishSize","values":[
+  1783,
+  1783,
+  1783
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"NumberOfMessagesPublished","values":[
+  1,
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"NumberOfNotificationsFailed","values":[
+  0,
+  0,
+  0
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"NumberOfNotificationsDelivered","values":[
+  1,
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"PublishSize","values":[
+  1783,
+  1783,
+  1783
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"NumberOfMessagesPublished","values":[
+  1,
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"NumberOfNotificationsFailed","values":[
+  0,
+  0
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"NumberOfNotificationsDelivered","values":[
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"PublishSize","values":[
+  1783,
+  1783
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"NumberOfMessagesPublished","values":[
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"NumberOfNotificationsFailed","values":[
+  0,
+  0,
+  0
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"NumberOfNotificationsDelivered","values":[
+  1,
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"PublishSize","values":[
+  1783,
+  1783,
+  1783
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"NumberOfMessagesPublished","values":[
+  1,
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"NumberOfNotificationsFailed","values":[
+  0,
+  0,
+  0
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"NumberOfNotificationsDelivered","values":[
+  1,
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"PublishSize","values":[
+  1783,
+  1783,
+  1783
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"NumberOfMessagesPublished","values":[
+  1,
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"NumberOfNotificationsFailed","values":[
+  0,
+  0
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"NumberOfNotificationsDelivered","values":[
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"PublishSize","values":[
+  1783.1666666666667,
+  1783
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"NumberOfMessagesPublished","values":[
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"NumberOfNotificationsFailed","values":[
+  0,
+  0
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"NumberOfNotificationsDelivered","values":[
+  1,
+  1
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"PublishSize","values":[
+  1798.9,
+  1798.6666666666667
+]},
+{"topic_name":"sns-sqs-consumer-lambda-sns-topic-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"NumberOfMessagesPublished","values":[
+  1,
+  1
+]}]

@@ -144,7 +144,8 @@ public class WorkloadGenerator implements AutoCloseable {
         producerWorkAssignment.payloadData = new ArrayList<>();
         producerWorkAssignment.tpcHArguments = this.arguments;
 
-        log.info("[BenchmarkStart] Starting benchmark {} at {}", this.experimentId, System.nanoTime());
+        log.info(
+                "[BenchmarkStart] Starting benchmark {} at {}", this.experimentId, new Date().getTime());
         worker.startLoad(producerWorkAssignment);
 
         TestResult result =
@@ -152,7 +153,7 @@ public class WorkloadGenerator implements AutoCloseable {
                         workload.testDurationMinutes, TimeUnit.MINUTES, localWorker::getTestCompleted);
         runCompleted = true;
 
-        log.info("[BenchmarkEnd] Ending benchmark {} at {}", this.experimentId, System.nanoTime());
+        log.info("[BenchmarkEnd] Ending benchmark {} at {}", this.experimentId, new Date().getTime());
 
         worker.stopAll();
         if (localWorker != worker) {

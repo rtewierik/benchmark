@@ -9,7 +9,14 @@ sns_uris = [
   "arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-result",
   "arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce0",
   "arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce1",
-  "arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce2"
+  "arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce2",
+  "arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce3",
+  "arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce4",
+  "arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce5",
+  "arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce6",
+  "arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce7",
+  "arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce8",
+  "arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-reduce9",
 ]
 # sns_uris = [
 #   "arn:aws:sns:eu-west-1:138945776678:sns-sqs-consumer-lambda-sns-topic-default0",

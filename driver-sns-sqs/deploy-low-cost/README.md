@@ -19,6 +19,13 @@ sudo bin/benchmark \
   workloads/simple-workload.yaml
 ```
 
+```
+sudo bin/benchmark \
+  --drivers driver-sns-sqs/sns-sqs-default.yaml \
+  --tpc-h-files workloads/tpc-h-q1-100-10.yaml \
+  workloads/tpc-h-base.yaml
+```
+
 ### Locations to configure memory in case of changing instance size
 
 * `deploy.yaml` requires modification of the `Configure memory` task
