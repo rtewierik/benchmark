@@ -184,7 +184,7 @@ export class ServiceStack extends Stack {
     iamRole.addToPolicy(
       new PolicyStatement({
         actions: ['SNS:Publish'],
-        resources: [`arn:aws:sns:${this.region}:${this.account}:sns-sqs-consumer-lambda-sns-topic-*`]
+        resources: [`arn:aws:sns:${this.region}:${this.account}:sns-sqs-consumer-lambda-*`]
       })
     )
 

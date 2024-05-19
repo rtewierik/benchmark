@@ -360,7 +360,7 @@ resource "aws_iam_role" "sns_sqs_iam_role" {
         {
           Action   = "sns:Publish"
           Effect   = "Allow"
-          Resource = "arn:aws:sns:*:*:sns-sqs-consumer-lambda-sns-topic*"
+          Resource = "arn:aws:sns:*:*:sns-sqs-consumer-lambda-*"
         },
         {
           Action   = "s3:GetObject",

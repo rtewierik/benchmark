@@ -36,15 +36,15 @@ public class S3BenchmarkConfiguration {
     private static List<String> getS3UrisFromEnvironment() {
         ArrayList<String> s3Uris = new ArrayList<>();
         if (isTpcH) {
-            s3Uris.add(getS3Uri("Map"));
-            s3Uris.add(getS3Uri("Result"));
+            s3Uris.add(getS3Uri("map"));
+            s3Uris.add(getS3Uri("result"));
             for (int i = 0; i < numberOfConsumers; i++) {
-                String id = String.format("Reduce%s", i);
+                String id = String.format("reduce%s", i);
                 s3Uris.add(getS3Uri(id));
             }
         } else {
             for (int i = 0; i < numberOfConsumers; i++) {
-                String id = String.format("Default%s", i);
+                String id = String.format("default%s", i);
                 s3Uris.add(getS3Uri(id));
             }
         }

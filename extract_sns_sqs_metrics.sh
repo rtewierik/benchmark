@@ -44,7 +44,7 @@ extract_queue_name() {
 queue_info=$(list_sqs_queues "sns-sqs-consumer-lambda")
 echo $queue_info
 
-topic_info=$(list_sns_topics "sns-sqs-consumer-lambda-sns-topic")
+topic_info=$(list_sns_topics "sns-sqs-consumer-lambda")
 echo $topic_info
 
 sns_metrics=()
