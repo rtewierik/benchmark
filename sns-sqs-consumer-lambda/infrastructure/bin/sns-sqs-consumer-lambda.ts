@@ -18,7 +18,7 @@ const stackProps: SnsSqsConsumerLambdaStackProps = {
   maxBatchingWindow: undefined,
   batchSize: 1,
   reportBatchItemFailures: false,
-  debug: true,
+  debug: false,
   functionTimeoutSeconds: 300,
   numberOfConsumers: 10,
   alertingEnabled: true,
