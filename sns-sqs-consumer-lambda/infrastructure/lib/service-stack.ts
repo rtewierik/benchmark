@@ -90,7 +90,7 @@ export class ServiceStack extends Stack {
   }
 
   private getSnsTopicName(props: SnsSqsConsumerLambdaStackProps, id: string) {
-    return `${props.appName}-sns-topic-${id.toLowerCase()}`
+    return `${props.appName}-${id.toLowerCase()}`
   }
 
   private createDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, chunksBucket: IBucket, monitoringSqsQueue: IQueue, lambdaConfiguration: LambdaConfiguration, existingTopic?: SnsTopic, existingQueue?: IQueue) {
@@ -203,7 +203,9 @@ export class ServiceStack extends Stack {
         IS_TPC_H: `${props.isTpcH}`,
         DEBUG: props.debug ? 'TRUE' : 'FALSE',
         IS_CLOUD_MONITORING_ENABLED: props.isCloudMonitoringEnabled ? 'TRUE' : 'FALSE',
-        MONITORING_SQS_URI: props.monitoringSqsUri
+        MONITORING_SQS_URI: props.monitoringSqsUri,
+        NUMBER_OF_CONSUMERS: `${props.numberOfConsumers}`,
+        ACCOUNT_ID: props.env?.account!
       },
       retryAttempts: 2
     });

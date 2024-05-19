@@ -59,26 +59,22 @@ export class ServiceStack extends Stack {
       const mapConfiguration = { s3Prefixes, ...props }
       this.createDataIngestionLayer(props, MAP_ID, bucket, chunksBucket, monitoringSqsQueue, mapConfiguration, mapPrefix)
       for (var i = 0; i < props.numberOfConsumers; i++) {
-        const prefix = s3Prefixes[2 + i]
         const reducePrefixId = `${REDUCE_ID}${i}`
+        const prefix = s3Prefixes[2 + i]
         this.createDataIngestionLayer(props, reducePrefixId, bucket, chunksBucket, monitoringSqsQueue, aggregateConfig, prefix)
       }
       this.createDataIngestionLayer(props, RESULT_ID, bucket, chunksBucket, monitoringSqsQueue, aggregateConfig, resultPrefix)
     } else {
       for (var i = 0; i < props.numberOfConsumers; i++) {
-        const prefix = this.getS3Prefix(props, DEFAULT_ID)
         const consumerPrefixId = `${DEFAULT_ID}${i}`
+        const prefix = this.getS3Prefix(props, consumerPrefixId)
         this.createDataIngestionLayer(props, consumerPrefixId, bucket, chunksBucket, monitoringSqsQueue, AGGREGATE_CONFIG, prefix)
       }
     }
   }
 
   private getS3Prefix(props: S3ConsumerLambdaStackProps, id: string) {
-    return `${props.appName}-s3-${id.toLowerCase()}-${this.getRandomString()}`
-  }
-
-  private getRandomString() {
-    return Math.random().toString(36).substr(2, 5);
+    return `${props.appName}-${id.toLowerCase()}`
   }
 
   private createDataIngestionLayer(props: S3ConsumerLambdaStackProps, id: string, bucket: IBucket, chunksBucket: IBucket, monitoringSqsQueue: IQueue, lambdaConfiguration: LambdaConfiguration, s3Prefix: string) {
@@ -141,7 +137,9 @@ export class ServiceStack extends Stack {
         IS_TPC_H: `${props.isTpcH}`,
         DEBUG: props.debug ? 'TRUE' : 'FALSE',
         IS_CLOUD_MONITORING_ENABLED: props.isCloudMonitoringEnabled ? 'TRUE' : 'FALSE',
-        MONITORING_SQS_URI: props.monitoringSqsUri
+        MONITORING_SQS_URI: props.monitoringSqsUri,
+        NUMBER_OF_CONSUMERS: `${props.numberOfConsumers}`,
+        ACCOUNT_ID: props.env?.account!
       },
       retryAttempts: 2
     });
