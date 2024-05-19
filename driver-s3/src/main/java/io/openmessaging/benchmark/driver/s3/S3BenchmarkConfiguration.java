@@ -15,8 +15,6 @@ package io.openmessaging.benchmark.driver.s3;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class S3BenchmarkConfiguration {
