@@ -31,7 +31,7 @@ producerConfig: |
   acks=all
   linger.ms=1
   batch.size=1048576
-  compression.type=uncompressed
+  compression.type=none
 
 consumerConfig: |
   auto.offset.reset=earliest
