@@ -151,7 +151,6 @@ public class Benchmark {
 
         log.info("Workloads: {}", writer.writeValueAsString(workloads));
         List<TpcHArguments> tpcHArgumentsList = getTpcHArguments(arguments);
-        BenchmarkWorkers workers = getWorkers(arguments);
 
         workloads.forEach(
                 (workloadName, workload) ->
@@ -161,7 +160,6 @@ public class Benchmark {
                                                 tpcHArguments ->
                                                         runBenchmark(
                                                                 arguments,
-                                                                workers,
                                                                 workloadName,
                                                                 workload,
                                                                 driverConfig,
@@ -170,7 +168,6 @@ public class Benchmark {
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Doing final clean-up...");
         }
-        workers.close();
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Final clean-up finished.");
         }
@@ -179,11 +176,11 @@ public class Benchmark {
 
     private static void runBenchmark(
             Arguments arguments,
-            BenchmarkWorkers workers,
             String workloadName,
             Workload workload,
             String driverConfig,
             TpcHArguments tpcHArguments) {
+        BenchmarkWorkers workers = getWorkers(arguments);
         try {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
             File driverConfigFile = new File(driverConfig);
@@ -224,6 +221,7 @@ public class Benchmark {
             writer.writeValue(new File(fileName), result);
 
             generator.close();
+            workers.close();
 
             if (EnvironmentConfiguration.isDebug()) {
                 log.info("Finished test and closed generator.");
