@@ -25,7 +25,6 @@ import com.amazonaws.services.s3.model.S3Object;
 import io.openmessaging.benchmark.common.utils.RandomGenerator;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,35 +37,35 @@ public class AmazonS3Client {
         this.s3Client = AmazonS3ClientBuilder.standard().withRegion("eu-west-1").build();
     }
 
-    public InputStream readFileFromS3(String bucketName, String key) throws IOException {
+    public S3Object readFileFromS3(String bucketName, String key) throws IOException {
         try {
-            S3Object s3Object = this.s3Client.getObject(new GetObjectRequest(bucketName, key));
-            return s3Object.getObjectContent();
+            return this.s3Client.getObject(new GetObjectRequest(bucketName, key));
         } catch (Exception exception) {
             throw new IOException("Failed to read and CSV from S3: " + exception.getMessage(), exception);
         }
     }
 
-    public InputStream readFileFromS3(String s3Uri) throws IOException {
+    public S3Object readFileFromS3(String s3Uri) throws IOException {
         URI uri = URI.create(s3Uri);
         String bucketName = uri.getHost();
         String key = uri.getPath().substring(1);
         return readFileFromS3(bucketName, key);
     }
 
-    public void writeMessageToS3(String bucketName, String key, byte[] message) {
+    public void writeMessageToS3(String bucketName, String key, byte[] message) throws IOException {
         String fileName =
                 String.format(
                         "%s-%s", RandomGenerator.getRandomString(), RandomGenerator.getRandomString());
         String s3Uri = String.format("%s/%s", key, fileName);
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(message.length);
-        PutObjectRequest request =
-                new PutObjectRequest(bucketName, s3Uri, new ByteArrayInputStream(message), metadata);
-        s3Client.putObject(request);
+        try (ByteArrayInputStream messageStream = new ByteArrayInputStream(message)) {
+            PutObjectRequest request = new PutObjectRequest(bucketName, s3Uri, messageStream, metadata);
+            s3Client.putObject(request);
+        }
     }
 
-    public void writeMessageToS3(String bucketName, String key, String message) {
+    public void writeMessageToS3(String bucketName, String key, String message) throws IOException {
         this.writeMessageToS3(bucketName, key, message.getBytes(UTF_8));
     }
 

@@ -17,6 +17,7 @@ package io.openmessaging.benchmark.driver.s3;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.S3Event;
+import com.amazonaws.services.s3.model.S3Object;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -73,9 +74,12 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                 }
                 String bucketName = record.getS3().getBucket().getName();
                 String key = record.getS3().getObject().getKey();
-                try (InputStream stream = s3Client.readFileFromS3(bucketName, key)) {
+                try (S3Object object = s3Client.readFileFromS3(bucketName, key)) {
+                    InputStream stream = object.getObjectContent();
                     int payloadLength = stream.available();
                     TpcHMessage tpcHMessage = mapper.readValue(stream, TpcHMessage.class);
+                    stream.close();
+                    object.close();
                     String experimentId = messageProcessor.processTpcHMessage(tpcHMessage);
                     long now = System.currentTimeMillis();
                     long publishTimestamp = record.getEventTime().getMillis();
@@ -98,8 +102,11 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                 }
                 String bucketName = record.getS3().getBucket().getName();
                 String key = record.getS3().getObject().getKey();
-                try (InputStream stream = s3Client.readFileFromS3(bucketName, key)) {
+                try (S3Object object = s3Client.readFileFromS3(bucketName, key)) {
+                    InputStream stream = object.getObjectContent();
                     int payloadLength = stream.available();
+                    stream.close();
+                    object.close();
                     long now = System.currentTimeMillis();
                     long publishTimestamp = record.getEventTime().getMillis();
                     long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);

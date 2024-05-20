@@ -155,14 +155,14 @@ public class Benchmark {
         workloads.forEach(
                 (workloadName, workload) ->
                         arguments.drivers.forEach(
-                                driverConfig ->
+                                driverConfiguration ->
                                         tpcHArgumentsList.forEach(
                                                 tpcHArguments ->
-                                                        runBenchmark(
+                                                        executeBenchmark(
                                                                 arguments,
                                                                 workloadName,
                                                                 workload,
-                                                                driverConfig,
+                                                                driverConfiguration,
                                                                 tpcHArguments))));
 
         if (EnvironmentConfiguration.isDebug()) {
@@ -174,7 +174,7 @@ public class Benchmark {
         System.exit(0);
     }
 
-    private static void runBenchmark(
+    private static void executeBenchmark(
             Arguments arguments,
             String workloadName,
             Workload workload,
