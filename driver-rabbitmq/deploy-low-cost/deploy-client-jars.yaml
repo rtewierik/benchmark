@@ -43,6 +43,11 @@
         src: "templates/rabbitmq-quorum.yaml"
         dest: "/opt/benchmark/driver-rabbitmq/rabbitmq-quorum.yaml"
       tags: [client-code]
+    - name: Benchmark - Configure experiment driver
+      template:
+        src: "templates/rabbitmq-experiment.yaml"
+        dest: "/opt/benchmark/driver-rabbitmq/rabbitmq-experiment.yaml"
+      tags: [client-code]
     - name: Benchmark - Start service
       systemd:
         state: restarted
