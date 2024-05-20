@@ -88,7 +88,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
      */
     private final List<BenchmarkConsumer> consumers = new ArrayList<>();
     private volatile MessageProducerImpl messageProducer;
-    private final TpcHMessageProcessor tpcHMessageProcessor;
+    private TpcHMessageProcessor tpcHMessageProcessor;
     private final ExecutorService executor =
             Executors.newCachedThreadPool(new DefaultThreadFactory("local-worker"));
     private final StatsLogger statsLogger;
@@ -146,6 +146,12 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 | InterruptedException e) {
             throw new RuntimeException(e);
         }
+        this.tpcHMessageProcessor = new TpcHMessageProcessor(
+                this.producers,
+                this.messageProducer,
+                () -> testCompleted = true,
+                log
+        );
     }
 
     @Override

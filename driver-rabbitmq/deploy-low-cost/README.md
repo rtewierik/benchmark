@@ -19,6 +19,19 @@ sudo bin/benchmark \
   workloads/simple-workload-1-partition.yaml
 ```
 
+```
+sudo bin/benchmark \
+  --drivers driver-rabbitmq/rabbitmq-quorum.yaml \
+  --tpc-h-files workloads/tpc-h-q6-10000-800.yaml \
+  workloads/tpc-h-base-long.yaml
+```
+
+```
+sudo bin/benchmark \
+  --drivers driver-rabbitmq/rabbitmq-quorum.yaml \
+  workloads/throughput-100b-100.yaml
+```
+
 ### Locations to configure memory in case of changing instance size
 
 * `deploy.yaml`requires modification of the `Configure memory` tasks.

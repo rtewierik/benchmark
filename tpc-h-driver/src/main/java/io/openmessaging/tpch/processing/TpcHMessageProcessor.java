@@ -14,6 +14,7 @@
 package io.openmessaging.tpch.processing;
 
 
+import com.amazonaws.services.s3.model.S3Object;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -125,8 +126,11 @@ public class TpcHMessageProcessor {
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Applying map to chunk \"{}\"...", s3Uri);
         }
-        try (InputStream stream = s3Client.readFileFromS3(s3Uri)) {
+        try (S3Object object = s3Client.readFileFromS3(s3Uri)) {
+            InputStream stream = object.getObjectContent();
             List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
+            stream.close();
+            object.close();
             TpcHIntermediateResult result =
                     TpcHAlgorithm.applyQueryToChunk(chunkData, assignment.query, assignment);
             int producerIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.producerIndex;
@@ -191,6 +195,7 @@ public class TpcHMessageProcessor {
                     queryId,
                     message.messageId,
                     true);
+            this.collectedIntermediateResults.remove(batchId);
         }
         return queryId;
     }
@@ -222,6 +227,11 @@ public class TpcHMessageProcessor {
                 == reducedResult.numberOfChunks.intValue()) {
             TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
             log.info("[RESULT] TPC-H query result: {}", writer.writeValueAsString(result));
+            processedMessages.clear();
+            processedIntermediateResults.clear();
+            processedReducedResults.clear();
+            collectedIntermediateResults.clear();
+            collectedReducedResults.clear();
             onTestCompleted.run();
         }
         return queryId;

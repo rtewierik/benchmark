@@ -4,7 +4,7 @@ import { Duration, Stack } from 'aws-cdk-lib'
 import { Function as LambdaFunction } from 'aws-cdk-lib/aws-lambda'
 import { IQueue } from 'aws-cdk-lib/aws-sqs'
 
-export function addMonitoring(stack: Stack, queue: IQueue, lambda: LambdaFunction, dlq: IQueue, ingestionDlq: IQueue, props: BenchmarkMonitoringStackProps) {
+export function addMonitoring(stack: Stack, queue: IQueue, lambda: LambdaFunction, dlq: IQueue, props: BenchmarkMonitoringStackProps) {
   const widgetWidth = 8
   const dashboardName = `${props.appName}-dashboard`
 
@@ -136,27 +136,11 @@ export function addMonitoring(stack: Stack, queue: IQueue, lambda: LambdaFunctio
     }
   })
 
-  const ingestionDlqMessagesCount = new GraphWidget({
-    width: widgetWidth,
-    title: 'Ingestion DLQ: # of messages in queue',
-    left: [new Metric({
-      metricName: 'ApproximateNumberOfMessagesVisible',
-      namespace: 'AWS/SQS',
-      dimensionsMap: { 'QueueName': ingestionDlq.queueName },
-      statistic: 'sum',
-      label: 'Amount in queue',
-      period: Duration.minutes(1)
-    })],
-    leftYAxis: {
-      min: 0
-    }
-  })
-
   const dashboard = new Dashboard(stack, dashboardName, {
     dashboardName: dashboardName
   })
 
   dashboard.addWidgets(new Row(sqsInOut, sqsTimeInStream, lambdaInvocations))
   dashboard.addWidgets(new Row(lambdaErrors, lambdaMaxBatchSize, lambdaExecutionDuration))
-  dashboard.addWidgets(new Row(dlqMessagesCount, ingestionDlqMessagesCount))
+  dashboard.addWidgets(new Row(dlqMessagesCount))
 }
