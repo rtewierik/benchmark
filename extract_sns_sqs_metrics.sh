@@ -56,7 +56,7 @@ for queue_url in $queue_info; do
     echo $queue_name
 
     output=$(aws cloudwatch get-metric-data \
-      --start-time "$(date -u -v-1H)" \
+      --start-time "$(date -u -v-3H)" \
       --end-time "$(date -u)" \
       --metric-data-queries '[
         {
@@ -232,7 +232,7 @@ for topic_arn in $topic_info; do
     topic_name=$(extract_topic_name $topic_arn)
 
     output=$(aws cloudwatch get-metric-data \
-      --start-time "$(date -u -v-1H)" \
+      --start-time "$(date -u -v-3H)" \
       --end-time "$(date -u)" \
       --metric-data-queries '[
         {

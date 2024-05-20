@@ -221,7 +221,6 @@ public class Benchmark {
             writer.writeValue(new File(fileName), result);
 
             generator.close();
-            workers.close();
 
             if (EnvironmentConfiguration.isDebug()) {
                 log.info("Finished test and closed generator.");

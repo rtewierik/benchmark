@@ -154,10 +154,6 @@ public class WorkloadGenerator implements AutoCloseable {
 
         log.info("[BenchmarkEnd] Ending benchmark {} at {}", this.experimentId, new Date().getTime());
 
-        worker.stopAll();
-        if (localWorker != worker) {
-            localWorker.stopAll();
-        }
         return result;
     }
 
@@ -328,9 +324,13 @@ public class WorkloadGenerator implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-        worker.stopAll();
-        if (worker != localWorker) {
-            localWorker.close();
+        try {
+            worker.stopAll();
+            if (localWorker != worker) {
+                localWorker.stopAll();
+            }
+        } catch (Throwable t) {
+            log.error("Exception occurred while stopping all workers.", t);
         }
         executor.shutdownNow();
     }
