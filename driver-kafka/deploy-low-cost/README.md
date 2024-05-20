@@ -163,7 +163,7 @@ sudo bin/benchmark \
 ```
 sudo bin/benchmark \
   --drivers driver-kafka/kafka-throughput.yaml \
-  --tpc-h-files workloads/tpc-h-q6-1000-10.yaml,workloads/tpc-h-q6-100-10.yaml \
+  --tpc-h-files workloads/tpc-h-q6-1000-500.yaml,workloads/tpc-h-q6-100-50.yaml \
   workloads/tpc-h-base-long.yaml
 ```
 

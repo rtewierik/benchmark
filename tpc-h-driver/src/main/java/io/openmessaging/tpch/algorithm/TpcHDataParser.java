@@ -30,16 +30,21 @@ public class TpcHDataParser {
             ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd"));
 
     public static List<TpcHRow> readTpcHRowsFromStream(InputStream stream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream, UTF_8));
-        List<TpcHRow> csvRows = new ArrayList<>();
-        String dataLine;
-        while ((dataLine = reader.readLine()) != null) {
-            String[] values = dataLine.split("\\|");
-            TpcHRow row = parseCsvRow(values);
-            csvRows.add(row);
+        try (InputStreamReader inputStreamReader = new InputStreamReader(stream, UTF_8)) {
+            try (BufferedReader reader = new BufferedReader(inputStreamReader)) {
+                List<TpcHRow> csvRows = new ArrayList<>();
+                String dataLine;
+                while ((dataLine = reader.readLine()) != null) {
+                    String[] values = dataLine.split("\\|");
+                    TpcHRow row = parseCsvRow(values);
+                    csvRows.add(row);
+                }
+                reader.close();
+                inputStreamReader.close();
+                stream.close();
+                return csvRows;
+            }
         }
-        stream.close();
-        return csvRows;
     }
 
     private static TpcHRow parseCsvRow(String[] values) throws RuntimeException {
