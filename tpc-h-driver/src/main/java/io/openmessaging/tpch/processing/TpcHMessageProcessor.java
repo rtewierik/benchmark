@@ -195,6 +195,7 @@ public class TpcHMessageProcessor {
                     queryId,
                     message.messageId,
                     true);
+            this.collectedIntermediateResults.remove(batchId);
         }
         return queryId;
     }
@@ -226,6 +227,11 @@ public class TpcHMessageProcessor {
                 == reducedResult.numberOfChunks.intValue()) {
             TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
             log.info("[RESULT] TPC-H query result: {}", writer.writeValueAsString(result));
+            processedMessages.clear();
+            processedIntermediateResults.clear();
+            processedReducedResults.clear();
+            collectedIntermediateResults.clear();
+            collectedReducedResults.clear();
             onTestCompleted.run();
         }
         return queryId;

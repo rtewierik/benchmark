@@ -167,6 +167,13 @@ sudo bin/benchmark \
   workloads/tpc-h-base-long.yaml
 ```
 
+```
+sudo bin/benchmark \
+  --drivers driver-kafka/kafka-throughput.yaml \
+  --tpc-h-files workloads/tpc-h-q6-10000-500.yaml \
+  workloads/tpc-h-base-long.yaml
+```
+
 ## Specify client hosts
 
 By default, benchmarks will be run from the set of hosts created by Terraform. You can also specify a comma-separated list of client hosts using the `--workers` flag (or `-w` for short):

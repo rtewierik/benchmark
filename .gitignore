@@ -47,3 +47,5 @@ core/*.json
 **/lambda_metrics.json
 !experiments/**/*.json
 **/cdk.out*/*
+
+**/*dmp*
