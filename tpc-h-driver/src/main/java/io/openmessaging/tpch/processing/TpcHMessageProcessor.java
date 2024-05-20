@@ -60,7 +60,7 @@ public class TpcHMessageProcessor {
     private final Logger log;
     private static final AmazonS3Client s3Client = new AmazonS3Client();
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
-    private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
+    private static final ObjectWriter writer = new ObjectMapper().writer();
     private static final ObjectMapper mapper =
             new ObjectMapper(new YAMLFactory())
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

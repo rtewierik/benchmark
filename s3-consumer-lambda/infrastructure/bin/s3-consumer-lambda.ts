@@ -18,7 +18,7 @@ const stackProps: S3ConsumerLambdaStackProps = {
   maxBatchingWindow: undefined,
   batchSize: 1,
   reportBatchItemFailures: false,
-  debug: true,
+  debug: false,
   functionTimeoutSeconds: 300,
   numberOfConsumers: 3,
   alertingEnabled: true,

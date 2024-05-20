@@ -1,0 +1,1610 @@
+[{"function_name":"sns-sqs-consumer-lambda-map","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-map Throttles","values":[
+  0,
+  0,
+  0,
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-map","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-map Duration","values":[
+  8071.346666666666,
+  8547.999994444444,
+  16172.221530769231,
+  8388.789999999999,
+  13524.244347826088
+]},
+{"function_name":"sns-sqs-consumer-lambda-map","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-map ConcurrentExecutions","values":[
+  8.606060606060606,
+  7.7592592592592595,
+  5.846153846153846,
+  7.428571428571429,
+  6.3478260869565215
+]},
+{"function_name":"sns-sqs-consumer-lambda-map","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-map Invocations","values":[
+  1,
+  1,
+  1,
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-map","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-map Errors","values":[
+  0,
+  0,
+  0,
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-map","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-map rx_bytes","values":[
+  70705234.43478261,
+  70678264.12962963,
+  70762137.46153846,
+  70703815.57142857,
+  70778759.13043478
+]},
+{"function_name":"sns-sqs-consumer-lambda-map","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-map total_network","values":[
+  70952969.60869566,
+  70936733.98148148,
+  71048553.61538461,
+  70963392.14285715,
+  71049913.60869566
+]},
+{"function_name":"sns-sqs-consumer-lambda-map","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-map tx_bytes","values":[
+  247735.1739130435,
+  258469.85185185185,
+  286416.1538461539,
+  259576.57142857142,
+  271154.47826086957
+]},
+{"function_name":"sns-sqs-consumer-lambda-map","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-map used_memory_max","values":[
+  884.6086956521739,
+  880.3703703703703,
+  762.3076923076923,
+  879.8571428571429,
+  813.4347826086956
+]},
+{"function_name":"sns-sqs-consumer-lambda-map","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-map tmp_used","values":[
+  12173312,
+  12173312,
+  12170161.23076923,
+  12173312,
+  12171531.130434783
+]},
+{"function_name":"sns-sqs-consumer-lambda-map","timestamps":[
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-map init_duration","values":[
+  4487,
+  4511.2
+]},
+{"function_name":"sns-sqs-consumer-lambda-map","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-map cpu_total_time","values":[
+  4479.565217391304,
+  4731.666666666667,
+  9017.692307692309,
+  4644.285714285715,
+  7385.652173913043
+]},
+{"function_name":"sns-sqs-consumer-lambda-map","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-map memory_utilization","values":[
+  86.1304347826087,
+  85.64814814814815,
+  74.07692307692308,
+  85.57142857142857,
+  78.95652173913044
+]},
+{"function_name":"sns-sqs-consumer-lambda-map","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-map total_memory","values":[
+  1024,
+  1024,
+  1024,
+  1024,
+  1024
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce0 Throttles","values":[
+  0,
+  0.14285714285714285,
+  0,
+  0.14285714285714285
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce0 Duration","values":[
+  219.8725,
+  397.9399999999999,
+  192.04999975,
+  398.9483333333333
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce0 ConcurrentExecutions","values":[
+  1,
+  1,
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce0 Invocations","values":[
+  1,
+  1,
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce0 Errors","values":[
+  0,
+  0,
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce0 rx_bytes","values":[
+  6323,
+  8512.333333333334,
+  5413,
+  5864
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce0 total_network","values":[
+  18068.333333333332,
+  19484,
+  17777,
+  14836.833333333334
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce0 tx_bytes","values":[
+  11745.333333333334,
+  10971.666666666666,
+  12364,
+  8972.833333333334
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce0 used_memory_max","values":[
+  240,
+  238.83333333333334,
+  240.75,
+  239.33333333333334
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce0 tmp_used","values":[
+  12173312,
+  12172629.333333334,
+  12173312,
+  12171946.666666666
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce0","timestamps":[
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce0 init_duration","values":[
+  4778,
+  4500
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce0 cpu_total_time","values":[
+  53.333333333333336,
+  235,
+  122.5,
+  233.33333333333334
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce0 memory_utilization","values":[
+  23,
+  23,
+  23,
+  23
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce0","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce0 total_memory","values":[
+  1024,
+  1024,
+  1024,
+  1024
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce7 Throttles","values":[
+  0,
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce7 Duration","values":[
+  400.89500000000004,
+  63.83285714285715,
+  2037.51
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce7 ConcurrentExecutions","values":[
+  1,
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce7 Invocations","values":[
+  1,
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce7 Errors","values":[
+  0,
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce7 rx_bytes","values":[
+  9647.5,
+  6712.142857142857,
+  13722
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce7 total_network","values":[
+  25654.5,
+  18081.14285714286,
+  21670
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce7 tx_bytes","values":[
+  16007,
+  11369,
+  7948
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce7 used_memory_max","values":[
+  243.5,
+  241.71428571428572,
+  240
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce7 tmp_used","values":[
+  12173312,
+  12173312,
+  12169216
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce7","timestamps":[
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce7 init_duration","values":[
+  3987
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce7 cpu_total_time","values":[
+  265,
+  47.142857142857146,
+  1000
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce7 memory_utilization","values":[
+  23,
+  23,
+  23
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce7","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce7 total_memory","values":[
+  1024,
+  1024,
+  1024
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce6 Throttles","values":[
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce6 Duration","values":[
+  216.5219998,
+  511.73400000000004
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce6 ConcurrentExecutions","values":[
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce6 Invocations","values":[
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce6 Errors","values":[
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce6 rx_bytes","values":[
+  6092.6,
+  9891.6
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce6 total_network","values":[
+  18529,
+  21267.8
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce6 tx_bytes","values":[
+  12436.4,
+  11376.2
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce6 used_memory_max","values":[
+  241.4,
+  239.8
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce6 tmp_used","values":[
+  12173312,
+  12172492.8
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce6","timestamps":[
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce6 init_duration","values":[
+  4829
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce6 cpu_total_time","values":[
+  144,
+  306
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce6 memory_utilization","values":[
+  23,
+  23
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce6","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce6 total_memory","values":[
+  1024,
+  1024
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce2 Throttles","values":[
+  0,
+  0,
+  0,
+  0,
+  0.25
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce2 Duration","values":[
+  199.502,
+  67.6125,
+  1939.9,
+  139.51142857142858,
+  742.6466666666666
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce2 ConcurrentExecutions","values":[
+  1,
+  1,
+  1,
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce2 Invocations","values":[
+  1,
+  1,
+  1,
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce2 Errors","values":[
+  0,
+  0,
+  0,
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce2 rx_bytes","values":[
+  6035.8,
+  8964.25,
+  13722,
+  4651.714285714285,
+  10587.666666666666
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce2 total_network","values":[
+  17787.2,
+  21253.25,
+  21670,
+  15462.857142857143,
+  21687.666666666668
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce2 tx_bytes","values":[
+  11751.4,
+  12289,
+  7948,
+  10811.142857142857,
+  11100
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce2 used_memory_max","values":[
+  242.4,
+  241,
+  240,
+  240.71428571428572,
+  238.66666666666666
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce2 tmp_used","values":[
+  12173312,
+  12173312,
+  12169216,
+  12173312,
+  12171946.666666666
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce2","timestamps":[
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce2 init_duration","values":[
+  3897,
+  3936
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce2 cpu_total_time","values":[
+  130,
+  45,
+  970,
+  88.57142857142857,
+  380
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce2 memory_utilization","values":[
+  23,
+  23,
+  23,
+  23,
+  23
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce2","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce2 total_memory","values":[
+  1024,
+  1024,
+  1024,
+  1024,
+  1024
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce5 Throttles","values":[
+  0,
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce5 Duration","values":[
+  273.7,
+  69.575,
+  2050.62
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce5 ConcurrentExecutions","values":[
+  1,
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce5 Invocations","values":[
+  1,
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce5 Errors","values":[
+  0,
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce5 rx_bytes","values":[
+  4995.5,
+  6462.166666666667,
+  13656
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce5 total_network","values":[
+  14232.5,
+  18049.666666666668,
+  21538
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce5 tx_bytes","values":[
+  9237,
+  11587.5,
+  7882
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce5 used_memory_max","values":[
+  240,
+  239.66666666666666,
+  238
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce5 tmp_used","values":[
+  12173312,
+  12173312,
+  12169216
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce5","timestamps":[
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce5 init_duration","values":[
+  4504
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce5 cpu_total_time","values":[
+  45,
+  53.333333333333336,
+  1110
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce5 memory_utilization","values":[
+  23,
+  23,
+  23
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce5","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce5 total_memory","values":[
+  1024,
+  1024,
+  1024
+]},
+{"function_name":"sns-sqs-consumer-lambda-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-result Throttles","values":[
+  0.09090909090909091,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-result Duration","values":[
+  256.02099999999996,
+  708.3966666666666
+]},
+{"function_name":"sns-sqs-consumer-lambda-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-result ConcurrentExecutions","values":[
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-result Invocations","values":[
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-result Errors","values":[
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-result rx_bytes","values":[
+  5908,
+  10754.333333333334
+]},
+{"function_name":"sns-sqs-consumer-lambda-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-result total_network","values":[
+  15591.5,
+  22196.666666666668
+]},
+{"function_name":"sns-sqs-consumer-lambda-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-result tx_bytes","values":[
+  9683.5,
+  11442.333333333334
+]},
+{"function_name":"sns-sqs-consumer-lambda-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-result used_memory_max","values":[
+  239.5,
+  238
+]},
+{"function_name":"sns-sqs-consumer-lambda-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-result tmp_used","values":[
+  12172629.333333334,
+  12171946.666666666
+]},
+{"function_name":"sns-sqs-consumer-lambda-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-result init_duration","values":[
+  4603,
+  3928
+]},
+{"function_name":"sns-sqs-consumer-lambda-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-result cpu_total_time","values":[
+  241.66666666666666,
+  416.6666666666667
+]},
+{"function_name":"sns-sqs-consumer-lambda-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-result memory_utilization","values":[
+  23,
+  23
+]},
+{"function_name":"sns-sqs-consumer-lambda-result","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-result total_memory","values":[
+  1024,
+  1024
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce4 Throttles","values":[
+  0,
+  0,
+  0.5
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce4 Duration","values":[
+  269.1133333333333,
+  78.34833333333333,
+  2085.37
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce4 ConcurrentExecutions","values":[
+  1,
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce4 Invocations","values":[
+  1,
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce4 Errors","values":[
+  0,
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce4 rx_bytes","values":[
+  1380,
+  7613,
+  13788
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce4 total_network","values":[
+  10091.5,
+  19382.5,
+  21802
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce4 tx_bytes","values":[
+  8711.5,
+  11769.5,
+  8014
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce4 used_memory_max","values":[
+  240,
+  239.83333333333334,
+  238
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce4 tmp_used","values":[
+  12173312,
+  12173312,
+  12169216
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce4","timestamps":[
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce4 init_duration","values":[
+  4551
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce4 cpu_total_time","values":[
+  35,
+  56.666666666666664,
+  1200
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce4 memory_utilization","values":[
+  23,
+  23,
+  23
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce4","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce4 total_memory","values":[
+  1024,
+  1024,
+  1024
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce3 Throttles","values":[
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce3 Duration","values":[
+  163.04833333333335,
+  586.6800000000001
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce3 ConcurrentExecutions","values":[
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce3 Invocations","values":[
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce3 Errors","values":[
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce3 rx_bytes","values":[
+  7695,
+  12026
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce3 total_network","values":[
+  19925.833333333332,
+  24129.5
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce3 tx_bytes","values":[
+  12230.833333333334,
+  12103.5
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce3 used_memory_max","values":[
+  240.83333333333334,
+  239.5
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce3 tmp_used","values":[
+  12173312,
+  12172288
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce3","timestamps":[
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce3 init_duration","values":[
+  4722
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce3 cpu_total_time","values":[
+  121.66666666666667,
+  342.5
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce3 memory_utilization","values":[
+  23,
+  23
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce3","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce3 total_memory","values":[
+  1024,
+  1024
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce8 Throttles","values":[
+  0,
+  0.16666666666666666,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce8 Duration","values":[
+  212.92000000000002,
+  77.506,
+  1991.33
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce8 ConcurrentExecutions","values":[
+  1,
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce8 Invocations","values":[
+  1,
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce8 Errors","values":[
+  0,
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce8 rx_bytes","values":[
+  3939.3333333333335,
+  7463.2,
+  13656
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce8 total_network","values":[
+  14250,
+  18979.6,
+  21538
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce8 tx_bytes","values":[
+  10310.666666666666,
+  11516.4,
+  7882
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce8 used_memory_max","values":[
+  240,
+  239.4,
+  238
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce8 tmp_used","values":[
+  12173312,
+  12173312,
+  12169216
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce8","timestamps":[
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce8 init_duration","values":[
+  4462
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce8 cpu_total_time","values":[
+  50,
+  64,
+  1140
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce8 memory_utilization","values":[
+  23,
+  23,
+  23
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce8","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce8 total_memory","values":[
+  1024,
+  1024,
+  1024
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce1 Throttles","values":[
+  0,
+  0,
+  0,
+  0.16666666666666666,
+  0.2857142857142857
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce1 Duration","values":[
+  291.8566666666667,
+  71.12,
+  1925.28,
+  184.72,
+  468.654
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce1 ConcurrentExecutions","values":[
+  1,
+  1,
+  1,
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce1 Invocations","values":[
+  1,
+  1,
+  1,
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:59:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce1 Errors","values":[
+  0,
+  0,
+  0,
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce1 rx_bytes","values":[
+  4957.5,
+  9577,
+  6091.4,
+  6902.2
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce1 total_network","values":[
+  14369.5,
+  21485.571428571428,
+  19100.4,
+  16308.2
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce1 tx_bytes","values":[
+  9412,
+  11908.57142857143,
+  13009,
+  9406
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce1 used_memory_max","values":[
+  240,
+  238.85714285714286,
+  240.6,
+  239.4
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce1 tmp_used","values":[
+  12173312,
+  12172726.857142856,
+  12173312,
+  12172492.8
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce1","timestamps":[
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce1 init_duration","values":[
+  3896,
+  4483
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce1 cpu_total_time","values":[
+  55,
+  188.57142857142858,
+  152,
+  274
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce1 memory_utilization","values":[
+  23,
+  23,
+  23,
+  23
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce1","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:10:00+00:00",
+  "2024-05-18T23:09:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce1 total_memory","values":[
+  1024,
+  1024,
+  1024,
+  1024
+]},
+{"function_name":"benchmark-monitoring","timestamps":[
+  "2024-05-19T00:02:00+00:00",
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:11:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"AWS/Lambda benchmark-monitoring Throttles","values":[
+  0,
+  0,
+  0,
+  0,
+  0
+]},
+{"function_name":"benchmark-monitoring","timestamps":[
+  "2024-05-19T00:02:00+00:00",
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:11:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"AWS/Lambda benchmark-monitoring Duration","values":[
+  8.855999999999998,
+  399.172,
+  524.3799999999999,
+  7.873333333333332,
+  246.66
+]},
+{"function_name":"benchmark-monitoring","timestamps":[
+  "2024-05-19T00:02:00+00:00",
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:11:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"AWS/Lambda benchmark-monitoring ConcurrentExecutions","values":[
+  1,
+  1.6,
+  1.8,
+  1,
+  1
+]},
+{"function_name":"benchmark-monitoring","timestamps":[
+  "2024-05-19T00:02:00+00:00",
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:11:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"AWS/Lambda benchmark-monitoring Invocations","values":[
+  1,
+  1,
+  1,
+  1,
+  1
+]},
+{"function_name":"benchmark-monitoring","timestamps":[
+  "2024-05-19T00:02:00+00:00",
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00",
+  "2024-05-18T23:11:00+00:00",
+  "2024-05-18T23:10:00+00:00"
+],"label":"AWS/Lambda benchmark-monitoring Errors","values":[
+  0,
+  0,
+  0,
+  0,
+  0
+]},
+{"function_name":"benchmark-monitoring","timestamps":[],"label":"LambdaInsights benchmark-monitoring rx_bytes","values":[]},
+{"function_name":"benchmark-monitoring","timestamps":[],"label":"LambdaInsights benchmark-monitoring total_network","values":[]},
+{"function_name":"benchmark-monitoring","timestamps":[],"label":"LambdaInsights benchmark-monitoring tx_bytes","values":[]},
+{"function_name":"benchmark-monitoring","timestamps":[],"label":"LambdaInsights benchmark-monitoring used_memory_max","values":[]},
+{"function_name":"benchmark-monitoring","timestamps":[],"label":"LambdaInsights benchmark-monitoring tmp_used","values":[]},
+{"function_name":"benchmark-monitoring","timestamps":[],"label":"LambdaInsights benchmark-monitoring init_duration","values":[]},
+{"function_name":"benchmark-monitoring","timestamps":[],"label":"LambdaInsights benchmark-monitoring cpu_total_time","values":[]},
+{"function_name":"benchmark-monitoring","timestamps":[],"label":"LambdaInsights benchmark-monitoring memory_utilization","values":[]},
+{"function_name":"benchmark-monitoring","timestamps":[],"label":"LambdaInsights benchmark-monitoring total_memory","values":[]},
+{"function_name":"sns-sqs-consumer-lambda-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce9 Throttles","values":[
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce9 Duration","values":[
+  171.14166666666665,
+  596.475
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce9 ConcurrentExecutions","values":[
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce9 Invocations","values":[
+  1,
+  1
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"AWS/Lambda sns-sqs-consumer-lambda-reduce9 Errors","values":[
+  0,
+  0
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce9 rx_bytes","values":[
+  7718,
+  8308
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce9 total_network","values":[
+  19487.833333333332,
+  18836.75
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce9 tx_bytes","values":[
+  11769.833333333334,
+  10528.75
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce9 used_memory_max","values":[
+  240.66666666666666,
+  239.25
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce9 tmp_used","values":[
+  12173312,
+  12172288
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce9","timestamps":[
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce9 init_duration","values":[
+  4724
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce9 cpu_total_time","values":[
+  121.66666666666667,
+  350
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce9 memory_utilization","values":[
+  23,
+  23
+]},
+{"function_name":"sns-sqs-consumer-lambda-reduce9","timestamps":[
+  "2024-05-19T00:01:00+00:00",
+  "2024-05-19T00:00:00+00:00"
+],"label":"LambdaInsights sns-sqs-consumer-lambda-reduce9 total_memory","values":[
+  1024,
+  1024
+]}]

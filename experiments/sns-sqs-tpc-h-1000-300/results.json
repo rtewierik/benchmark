@@ -1,0 +1,218 @@
+[
+  {
+    "rows": [
+      {
+        "columns": {
+          "revenue": 1106886908.0572
+        }
+      }
+    ]
+  },
+  {
+    "rows": [
+      {
+        "columns": {
+          "lineStatus": "O",
+          "returnFlag": "N",
+          "discountedPriceSum": 692969433134.2497,
+          "chargeSum": 720694299770.132732,
+          "orderCount": 19077602,
+          "basePriceSum": 729448143820.78,
+          "averageQuantity": 25.5,
+          "averagePrice": 38235.84,
+          "averageDiscount": 0.05,
+          "quantitySum": 486415690
+        }
+      },
+      {
+        "columns": {
+          "lineStatus": "F",
+          "returnFlag": "R",
+          "discountedPriceSum": 484203993195.0628,
+          "chargeSum": 503570450844.88007,
+          "orderCount": 13324947,
+          "basePriceSum": 509684306612.03,
+          "averageQuantity": 25.5,
+          "averagePrice": 38250.38,
+          "averageDiscount": 0.05,
+          "quantitySum": 339894957
+        }
+      },
+      {
+        "columns": {
+          "lineStatus": "F",
+          "returnFlag": "A",
+          "discountedPriceSum": 483946017285.3019,
+          "chargeSum": 503310457149.612943,
+          "orderCount": 13322390,
+          "basePriceSum": 509419078748.72,
+          "averageQuantity": 25.5,
+          "averagePrice": 38237.81,
+          "averageDiscount": 0.05,
+          "quantitySum": 339737725
+        }
+      },
+      {
+        "columns": {
+          "lineStatus": "F",
+          "returnFlag": "N",
+          "discountedPriceSum": 12628053899.1349,
+          "chargeSum": 13133599534.652978,
+          "orderCount": 347260,
+          "basePriceSum": 13292554922.64,
+          "averageQuantity": 25.5,
+          "averagePrice": 38278.39,
+          "averageDiscount": 0.05,
+          "quantitySum": 8863383
+        }
+      }
+    ]
+  },
+  {
+    "rows": [
+      {
+        "columns": {
+          "revenue": 1106886908.0572
+        }
+      }
+    ]
+  },
+  {
+    "rows": [
+      {
+        "columns": {
+          "lineStatus": "O",
+          "returnFlag": "N",
+          "discountedPriceSum": 692969433134.2497,
+          "chargeSum": 720694299770.132732,
+          "orderCount": 19077602,
+          "basePriceSum": 729448143820.78,
+          "averageQuantity": 25.5,
+          "averagePrice": 38235.84,
+          "averageDiscount": 0.05,
+          "quantitySum": 486415690
+        }
+      },
+      {
+        "columns": {
+          "lineStatus": "F",
+          "returnFlag": "R",
+          "discountedPriceSum": 484203993195.0628,
+          "chargeSum": 503570450844.88007,
+          "orderCount": 13324947,
+          "basePriceSum": 509684306612.03,
+          "averageQuantity": 25.5,
+          "averagePrice": 38250.38,
+          "averageDiscount": 0.05,
+          "quantitySum": 339894957
+        }
+      },
+      {
+        "columns": {
+          "lineStatus": "F",
+          "returnFlag": "A",
+          "discountedPriceSum": 483946017285.3019,
+          "chargeSum": 503310457149.612943,
+          "orderCount": 13322390,
+          "basePriceSum": 509419078748.72,
+          "averageQuantity": 25.5,
+          "averagePrice": 38237.81,
+          "averageDiscount": 0.05,
+          "quantitySum": 339737725
+        }
+      },
+      {
+        "columns": {
+          "lineStatus": "F",
+          "returnFlag": "N",
+          "discountedPriceSum": 12628053899.1349,
+          "chargeSum": 13133599534.652978,
+          "orderCount": 347260,
+          "basePriceSum": 13292554922.64,
+          "averageQuantity": 25.5,
+          "averagePrice": 38278.39,
+          "averageDiscount": 0.05,
+          "quantitySum": 8863383
+        }
+      }
+    ]
+  },
+  {
+    "rows": [
+      {
+        "columns": {
+          "revenue": 1106886908.0572
+        }
+      }
+    ]
+  },
+  {
+    "rows": [
+      {
+        "columns": {
+          "lineStatus": "O",
+          "returnFlag": "N",
+          "discountedPriceSum": 692969433134.2497,
+          "chargeSum": 720694299770.132732,
+          "orderCount": 19077602,
+          "basePriceSum": 729448143820.78,
+          "averageQuantity": 25.5,
+          "averagePrice": 38235.84,
+          "averageDiscount": 0.05,
+          "quantitySum": 486415690
+        }
+      },
+      {
+        "columns": {
+          "lineStatus": "F",
+          "returnFlag": "R",
+          "discountedPriceSum": 484203993195.0628,
+          "chargeSum": 503570450844.88007,
+          "orderCount": 13324947,
+          "basePriceSum": 509684306612.03,
+          "averageQuantity": 25.5,
+          "averagePrice": 38250.38,
+          "averageDiscount": 0.05,
+          "quantitySum": 339894957
+        }
+      },
+      {
+        "columns": {
+          "lineStatus": "F",
+          "returnFlag": "A",
+          "discountedPriceSum": 483946017285.3019,
+          "chargeSum": 503310457149.612943,
+          "orderCount": 13322390,
+          "basePriceSum": 509419078748.72,
+          "averageQuantity": 25.5,
+          "averagePrice": 38237.81,
+          "averageDiscount": 0.05,
+          "quantitySum": 339737725
+        }
+      },
+      {
+        "columns": {
+          "lineStatus": "F",
+          "returnFlag": "N",
+          "discountedPriceSum": 12628053899.1349,
+          "chargeSum": 13133599534.652978,
+          "orderCount": 347260,
+          "basePriceSum": 13292554922.64,
+          "averageQuantity": 25.5,
+          "averagePrice": 38278.39,
+          "averageDiscount": 0.05,
+          "quantitySum": 8863383
+        }
+      }
+    ]
+  },
+  {
+    "rows": [
+      {
+        "columns": {
+          "revenue": 1106886908.0572
+        }
+      }
+    ]
+  }
+]

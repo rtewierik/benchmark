@@ -15,8 +15,13 @@ package io.openmessaging.tpch.model;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class TpcHArguments {
+    private static final ThreadLocal<DateFormat> DATE_FORMAT =
+            ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss"));
     public final String queryId;
     public final TpcHQuery query;
     public final String sourceDataS3FolderUri;
@@ -34,6 +39,16 @@ public class TpcHArguments {
         this.sourceDataS3FolderUri = sourceDataS3FolderUri;
         this.numberOfChunks = numberOfChunks;
         this.numberOfReducers = numberOfReducers;
+    }
+
+    public TpcHArguments withQueryIdDate() {
+        String date = DATE_FORMAT.get().format(new Date());
+        return new TpcHArguments(
+                String.format("%s-%s", this.queryId, date),
+                this.query,
+                this.sourceDataS3FolderUri,
+                this.numberOfChunks,
+                this.numberOfReducers);
     }
 
     public int getNumberOfMapResults(int index) {
