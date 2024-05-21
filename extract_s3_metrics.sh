@@ -18,7 +18,7 @@ bucket_name=$1
 echo $bucket_name
 
 output=$(aws cloudwatch get-metric-data \
-  --start-time "$(date -u -v-3H)" \
+  --start-time "$(date -u -v-4H)" \
   --end-time "$(date -u)" \
   --metric-data-queries '[
     {

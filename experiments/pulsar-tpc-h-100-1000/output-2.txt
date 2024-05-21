@@ -1,0 +1,1067 @@
+sudo bin/benchmark \
+>   --drivers driver-pulsar/pulsar-experiment.yaml \
+>   --tpc-h-files workloads/tpc-h-q1-1000-300.yaml,workloads/tpc-h-q1-100-30.yaml,workloads/tpc-h-q6-1000-300.yaml,workloads/tpc-h-q6-100-30.yaml,workloads/tpc-h-q1-1000-300.yaml,workloads/tpc-h-q1-100-30.yaml,workloads/tpc-h-q6-1000-300.yaml,workloads/tpc-h-q6-100-30.yaml,workloads/tpc-h-q1-1000-300.yaml,workloads/tpc-h-q1-100-30.yaml,workloads/tpc-h-q6-1000-300.yaml,workloads/tpc-h-q6-100-30.yaml \
+>   workloads/tpc-h-base-long.yaml
+22:34:13.345 [main] INFO Benchmark - Using default worker file workers.yaml!
+22:34:13.351 [main] INFO Benchmark - Reading workers list from workers.yaml
+22:34:13.395 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-pulsar/pulsar-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.207:8080", "http://10.0.0.15:8080", "http://10.0.0.93:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-1000-300.yaml", "workloads/tpc-h-q1-100-30.yaml", "workloads/tpc-h-q6-1000-300.yaml", "workloads/tpc-h-q6-100-30.yaml", "workloads/tpc-h-q1-1000-300.yaml", "workloads/tpc-h-q1-100-30.yaml", "workloads/tpc-h-q6-1000-300.yaml", "workloads/tpc-h-q6-100-30.yaml", "workloads/tpc-h-q1-1000-300.yaml", "workloads/tpc-h-q1-100-30.yaml", "workloads/tpc-h-q6-1000-300.yaml", "workloads/tpc-h-q6-100-30.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+22:34:13.416 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+22:34:13.433 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-1000-300",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 300,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q1-100-30",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 30,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q6-1000-300",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 300,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q6-100-30",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 30,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q1-1000-300",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 300,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q1-100-30",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 30,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q6-1000-300",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 300,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q6-100-30",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 30,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q1-1000-300",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 300,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q1-100-30",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 30,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q6-1000-300",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 300,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q6-100-30",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 30,
+  "defaultNumberOfMapResults" : 4
+} ]
+22:34:13.820 [main] INFO CentralWorkerStats - Central worker stats initialized
+22:34:14.015 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.207:8080]
+22:34:14.015 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.93:8080,http://10.0.0.15:8080
+22:34:14.027 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pulsar---------------
+22:34:14.398 [main] INFO LocalWorker - Driver: {
+  "name" : "Pulsar",
+  "driverClass" : "io.openmessaging.benchmark.driver.pulsar.PulsarBenchmarkDriver"
+}
+22:34:14.410 [main] INFO PulsarBenchmarkProducer - Pulsar driver configuration: {
+  "client" : {
+    "serviceUrl" : "pulsar://10.0.0.148:6650/",
+    "httpUrl" : "http://10.0.0.148:8080/",
+    "clientMemoryLimitMB" : 256,
+    "ioThreads" : 16,
+    "connectionsPerBroker" : 8,
+    "maxConcurrentLookupRequests" : 1000,
+    "namespacePrefix" : "benchmark/ns",
+    "clusterName" : "local",
+    "topicType" : "persistent",
+    "persistence" : {
+      "ensembleSize" : 3,
+      "writeQuorum" : 3,
+      "ackQuorum" : 2,
+      "deduplicationEnabled" : false
+    },
+    "tlsAllowInsecureConnection" : false,
+    "tlsEnableHostnameVerification" : false,
+    "tlsTrustCertsFilePath" : null,
+    "authentication" : {
+      "plugin" : null,
+      "data" : null
+    }
+  },
+  "producer" : {
+    "batchingEnabled" : true,
+    "batchingMaxPublishDelayMs" : 1,
+    "batchingMaxBytes" : 131072,
+    "blockIfQueueFull" : true,
+    "pendingQueueSize" : 0,
+    "compressionEnabled" : false
+  },
+  "consumer" : {
+    "receiverQueueSize" : 10000,
+    "subscriptionType" : "Failover"
+  }
+}
+22:34:14.548 [main] WARN DnsResolverUtil - Cannot get DNS TTL settings from sun.net.InetAddressCachePolicy class
+java.lang.IllegalAccessException: class org.apache.pulsar.common.util.netty.DnsResolverUtil cannot access class sun.net.InetAddressCachePolicy (in module java.base) because module java.base does not export sun.net to unnamed module @2a80c531
+	at jdk.internal.reflect.Reflection.newIllegalAccessException(Reflection.java:392) ~[?:?]
+	at java.lang.reflect.AccessibleObject.checkAccess(AccessibleObject.java:674) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:560) ~[?:?]
+	at org.apache.pulsar.common.util.netty.DnsResolverUtil.<clinit>(DnsResolverUtil.java:46) ~[org.apache.pulsar-pulsar-client-all-2.11.0.jar:2.11.0]
+	at org.apache.pulsar.client.impl.ConnectionPool.createAddressResolver(ConnectionPool.java:159) ~[org.apache.pulsar-pulsar-client-all-2.11.0.jar:2.11.0]
+	at org.apache.pulsar.client.impl.ConnectionPool.lambda$new$1(ConnectionPool.java:126) ~[org.apache.pulsar-pulsar-client-all-2.11.0.jar:2.11.0]
+	at java.util.Optional.orElseGet(Optional.java:364) ~[?:?]
+	at org.apache.pulsar.client.impl.ConnectionPool.<init>(ConnectionPool.java:126) ~[org.apache.pulsar-pulsar-client-all-2.11.0.jar:2.11.0]
+	at org.apache.pulsar.client.impl.ConnectionPool.<init>(ConnectionPool.java:95) ~[org.apache.pulsar-pulsar-client-all-2.11.0.jar:2.11.0]
+	at org.apache.pulsar.client.impl.ConnectionPool.<init>(ConnectionPool.java:90) ~[org.apache.pulsar-pulsar-client-all-2.11.0.jar:2.11.0]
+	at org.apache.pulsar.client.impl.PulsarClientImpl.<init>(PulsarClientImpl.java:198) ~[org.apache.pulsar-pulsar-client-all-2.11.0.jar:2.11.0]
+	at org.apache.pulsar.client.impl.PulsarClientImpl.<init>(PulsarClientImpl.java:154) ~[org.apache.pulsar-pulsar-client-all-2.11.0.jar:2.11.0]
+	at org.apache.pulsar.client.impl.ClientBuilderImpl.build(ClientBuilderImpl.java:63) ~[org.apache.pulsar-pulsar-client-all-2.11.0.jar:2.11.0]
+	at io.openmessaging.benchmark.driver.pulsar.PulsarBenchmarkDriver.initialize(PulsarBenchmarkDriver.java:116) ~[io.openmessaging.benchmark-driver-pulsar-0.0.1-SNAPSHOT.jar:?]
+	at io.openmessaging.benchmark.worker.LocalWorker.initializeDriver(LocalWorker.java:142) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at io.openmessaging.benchmark.worker.BenchmarkWorkers.initializeDriver(BenchmarkWorkers.java:48) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at io.openmessaging.benchmark.Benchmark.executeBenchmark(Benchmark.java:197) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at io.openmessaging.benchmark.Benchmark.lambda$benchmark$0(Benchmark.java:161) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.ArrayList.forEach(ArrayList.java:1511) ~[?:?]
+	at io.openmessaging.benchmark.Benchmark.lambda$benchmark$1(Benchmark.java:159) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.ArrayList.forEach(ArrayList.java:1511) ~[?:?]
+	at io.openmessaging.benchmark.Benchmark.lambda$benchmark$2(Benchmark.java:157) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.TreeMap.forEach(TreeMap.java:1282) [?:?]
+	at io.openmessaging.benchmark.Benchmark.benchmark(Benchmark.java:155) [io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at io.openmessaging.benchmark.Benchmark.main(Benchmark.java:96) [io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+22:34:14.594 [main] INFO PulsarBenchmarkProducer - Created Pulsar client for service URL pulsar://10.0.0.148:6650/
+22:34:14.712 [main] INFO PulsarBenchmarkProducer - Created Pulsar admin client for HTTP URL http://10.0.0.148:8080/
+22:34:15.117 [main] INFO PulsarBenchmarkProducer - Created Pulsar tenant benchmark with allowed cluster local
+22:34:15.140 [main] INFO PulsarBenchmarkProducer - Created Pulsar namespace benchmark/ns-veebzrI
+22:34:15.190 [main] INFO PulsarBenchmarkProducer - Applied persistence configuration for namespace benchmark/local/benchmark/ns-veebzrI: {
+  "ensembleSize" : 3,
+  "writeQuorum" : 3,
+  "ackQuorum" : 2,
+  "deduplicationEnabled" : false
+}
+22:34:15.911 [main] INFO WorkloadGenerator - Created 302 topics in 717.131809 ms
+22:34:15.986 [main] INFO WorkloadGenerator - Created 302 external consumers in 66.620884 ms
+22:34:16.015 [pulsar-client-io-1-3] INFO ConnectionPool - [[id: 0xeeb73fb5, L:/10.0.0.207:50058 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+22:34:16.041 [pulsar-client-io-1-5] INFO ConnectionPool - [[id: 0x202f772a, L:/10.0.0.207:50060 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+22:34:16.065 [pulsar-client-io-1-8] INFO ConnectionPool - [[id: 0x118e02be, L:/10.0.0.207:52614 - R:10.0.0.47/10.0.0.47:6650]] Connected to server
+22:34:16.068 [pulsar-client-io-1-8] INFO ConsumerImpl - [persistent://benchmark/ns-wrN0SqI/test-0000001-g2HkFEs][sub-001-Bych304] Subscribing to topic on cnx [id: 0x118e02be, L:/10.0.0.207:52614 - R:10.0.0.47/10.0.0.47:6650], consumerId 0
+22:34:16.080 [pulsar-client-io-1-8] INFO ConsumerImpl - [persistent://benchmark/ns-wrN0SqI/test-0000001-g2HkFEs][sub-001-Bych304] Subscribed to topic on 10.0.0.47/10.0.0.47:6650 -- consumer: 0
+22:34:16.081 [main] INFO LocalWorker - Created 1 consumers in 94.533452 ms
+22:34:16.137 [main] INFO WorkloadGenerator - Created 302 producers in 55.87722 ms
+22:34:16.138 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+22:34:16.148 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 38, Received: 0, Expected: 0
+22:34:16.149 [main] INFO WorkloadGenerator - All consumers are ready!
+22:34:16.149 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pulsar-tpc-h-tpc-h-q1-1000-300-2024-05-20-22-34-15 at 1716244456149
+22:39:55.130 [pulsar-external-listener-4-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+22:39:56.324 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pulsar-tpc-h-tpc-h-q1-1000-300-2024-05-20-22-34-15 at 1716244796324
+22:39:58.646 [main] INFO ConsumerImpl - [persistent://benchmark/ns-wrN0SqI/test-0000001-g2HkFEs] [sub-001-Bych304] Closed consumer
+22:39:58.647 [main] INFO PulsarClientImpl - Client closing. URL: pulsar://10.0.0.148:6650/
+22:39:58.652 [pulsar-client-io-1-8] INFO ClientCnx - [id: 0x118e02be, L:/10.0.0.207:52614 ! R:10.0.0.47/10.0.0.47:6650] Disconnected
+22:39:58.653 [pulsar-client-io-1-3] INFO ClientCnx - [id: 0xeeb73fb5, L:/10.0.0.207:50058 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+22:39:58.654 [pulsar-client-io-1-5] INFO ClientCnx - [id: 0x202f772a, L:/10.0.0.207:50060 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+22:40:00.872 [main] INFO CentralWorkerStats - Central worker stats initialized
+22:40:00.876 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.207:8080]
+22:40:00.876 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.93:8080,http://10.0.0.15:8080
+22:40:00.877 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pulsar---------------
+22:40:01.141 [main] INFO LocalWorker - Driver: {
+  "name" : "Pulsar",
+  "driverClass" : "io.openmessaging.benchmark.driver.pulsar.PulsarBenchmarkDriver"
+}
+22:40:01.142 [main] INFO PulsarBenchmarkProducer - Pulsar driver configuration: {
+  "client" : {
+    "serviceUrl" : "pulsar://10.0.0.148:6650/",
+    "httpUrl" : "http://10.0.0.148:8080/",
+    "clientMemoryLimitMB" : 256,
+    "ioThreads" : 16,
+    "connectionsPerBroker" : 8,
+    "maxConcurrentLookupRequests" : 1000,
+    "namespacePrefix" : "benchmark/ns",
+    "clusterName" : "local",
+    "topicType" : "persistent",
+    "persistence" : {
+      "ensembleSize" : 3,
+      "writeQuorum" : 3,
+      "ackQuorum" : 2,
+      "deduplicationEnabled" : false
+    },
+    "tlsAllowInsecureConnection" : false,
+    "tlsEnableHostnameVerification" : false,
+    "tlsTrustCertsFilePath" : null,
+    "authentication" : {
+      "plugin" : null,
+      "data" : null
+    }
+  },
+  "producer" : {
+    "batchingEnabled" : true,
+    "batchingMaxPublishDelayMs" : 1,
+    "batchingMaxBytes" : 131072,
+    "blockIfQueueFull" : true,
+    "pendingQueueSize" : 0,
+    "compressionEnabled" : false
+  },
+  "consumer" : {
+    "receiverQueueSize" : 10000,
+    "subscriptionType" : "Failover"
+  }
+}
+22:40:01.144 [main] INFO PulsarBenchmarkProducer - Created Pulsar client for service URL pulsar://10.0.0.148:6650/
+22:40:01.147 [main] INFO PulsarBenchmarkProducer - Created Pulsar admin client for HTTP URL http://10.0.0.148:8080/
+22:40:01.174 [main] INFO PulsarBenchmarkProducer - Created Pulsar tenant benchmark with allowed cluster local
+22:40:01.185 [main] INFO PulsarBenchmarkProducer - Created Pulsar namespace benchmark/ns-PgeY53A
+22:40:01.210 [main] INFO PulsarBenchmarkProducer - Applied persistence configuration for namespace benchmark/local/benchmark/ns-PgeY53A: {
+  "ensembleSize" : 3,
+  "writeQuorum" : 3,
+  "ackQuorum" : 2,
+  "deduplicationEnabled" : false
+}
+22:40:01.546 [main] INFO WorkloadGenerator - Created 32 topics in 335.487645 ms
+22:40:01.591 [main] INFO WorkloadGenerator - Created 32 external consumers in 44.004086 ms
+22:40:01.593 [pulsar-client-io-51-3] INFO ConnectionPool - [[id: 0x55f534ef, L:/10.0.0.207:50308 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+22:40:01.601 [pulsar-client-io-51-6] INFO ConnectionPool - [[id: 0xeab7c791, L:/10.0.0.207:50310 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+22:40:01.603 [pulsar-client-io-51-8] INFO ConnectionPool - [[id: 0xaeefb2b0, L:/10.0.0.207:41770 - R:10.0.0.63/10.0.0.63:6650]] Connected to server
+22:40:01.604 [pulsar-client-io-51-8] INFO ConsumerImpl - [persistent://benchmark/ns-mBuAofM/test-0000001-EYZRo_w][sub-001-GveYe9I] Subscribing to topic on cnx [id: 0xaeefb2b0, L:/10.0.0.207:41770 - R:10.0.0.63/10.0.0.63:6650], consumerId 0
+22:40:01.610 [pulsar-client-io-51-8] INFO ConsumerImpl - [persistent://benchmark/ns-mBuAofM/test-0000001-EYZRo_w][sub-001-GveYe9I] Subscribed to topic on 10.0.0.63/10.0.0.63:6650 -- consumer: 0
+22:40:01.611 [main] INFO LocalWorker - Created 1 consumers in 19.322799 ms
+22:40:01.622 [main] INFO WorkloadGenerator - Created 32 producers in 11.20696 ms
+22:40:01.622 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+22:40:01.625 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 0, Expected: 0
+22:40:01.625 [main] INFO WorkloadGenerator - All consumers are ready!
+22:40:01.625 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pulsar-tpc-h-tpc-h-q1-100-30-2024-05-20-22-40-01 at 1716244801625
+22:44:00.946 [pulsar-external-listener-53-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132740,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880077,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":26,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612940,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":26,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+22:44:01.643 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pulsar-tpc-h-tpc-h-q1-100-30-2024-05-20-22-40-01 at 1716245041643
+22:44:03.866 [pulsar-client-io-51-8] INFO ConsumerImpl - [persistent://benchmark/ns-mBuAofM/test-0000001-EYZRo_w] [sub-001-GveYe9I] Closed consumer
+22:44:03.867 [main] INFO PulsarClientImpl - Client closing. URL: pulsar://10.0.0.148:6650/
+22:44:03.868 [pulsar-client-io-51-3] INFO ClientCnx - [id: 0x55f534ef, L:/10.0.0.207:50308 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+22:44:03.869 [pulsar-client-io-51-6] INFO ClientCnx - [id: 0xeab7c791, L:/10.0.0.207:50310 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+22:44:03.870 [pulsar-client-io-51-8] INFO ClientCnx - [id: 0xaeefb2b0, L:/10.0.0.207:41770 ! R:10.0.0.63/10.0.0.63:6650] Disconnected
+22:44:06.076 [main] INFO CentralWorkerStats - Central worker stats initialized
+22:44:06.081 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.207:8080]
+22:44:06.081 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.93:8080,http://10.0.0.15:8080
+22:44:06.082 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pulsar---------------
+22:44:06.342 [main] INFO LocalWorker - Driver: {
+  "name" : "Pulsar",
+  "driverClass" : "io.openmessaging.benchmark.driver.pulsar.PulsarBenchmarkDriver"
+}
+22:44:06.342 [main] INFO PulsarBenchmarkProducer - Pulsar driver configuration: {
+  "client" : {
+    "serviceUrl" : "pulsar://10.0.0.148:6650/",
+    "httpUrl" : "http://10.0.0.148:8080/",
+    "clientMemoryLimitMB" : 256,
+    "ioThreads" : 16,
+    "connectionsPerBroker" : 8,
+    "maxConcurrentLookupRequests" : 1000,
+    "namespacePrefix" : "benchmark/ns",
+    "clusterName" : "local",
+    "topicType" : "persistent",
+    "persistence" : {
+      "ensembleSize" : 3,
+      "writeQuorum" : 3,
+      "ackQuorum" : 2,
+      "deduplicationEnabled" : false
+    },
+    "tlsAllowInsecureConnection" : false,
+    "tlsEnableHostnameVerification" : false,
+    "tlsTrustCertsFilePath" : null,
+    "authentication" : {
+      "plugin" : null,
+      "data" : null
+    }
+  },
+  "producer" : {
+    "batchingEnabled" : true,
+    "batchingMaxPublishDelayMs" : 1,
+    "batchingMaxBytes" : 131072,
+    "blockIfQueueFull" : true,
+    "pendingQueueSize" : 0,
+    "compressionEnabled" : false
+  },
+  "consumer" : {
+    "receiverQueueSize" : 10000,
+    "subscriptionType" : "Failover"
+  }
+}
+22:44:06.344 [main] INFO PulsarBenchmarkProducer - Created Pulsar client for service URL pulsar://10.0.0.148:6650/
+22:44:06.347 [main] INFO PulsarBenchmarkProducer - Created Pulsar admin client for HTTP URL http://10.0.0.148:8080/
+22:44:06.374 [main] INFO PulsarBenchmarkProducer - Created Pulsar tenant benchmark with allowed cluster local
+22:44:06.385 [main] INFO PulsarBenchmarkProducer - Created Pulsar namespace benchmark/ns-IwzFe6M
+22:44:06.410 [main] INFO PulsarBenchmarkProducer - Applied persistence configuration for namespace benchmark/local/benchmark/ns-IwzFe6M: {
+  "ensembleSize" : 3,
+  "writeQuorum" : 3,
+  "ackQuorum" : 2,
+  "deduplicationEnabled" : false
+}
+22:44:07.112 [main] INFO WorkloadGenerator - Created 302 topics in 701.847435 ms
+22:44:07.170 [main] INFO WorkloadGenerator - Created 302 external consumers in 53.382234 ms
+22:44:07.172 [pulsar-client-io-100-3] INFO ConnectionPool - [[id: 0x3c73cfdd, L:/10.0.0.207:51118 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+22:44:07.184 [pulsar-client-io-100-5] INFO ConnectionPool - [[id: 0xa4ad5b08, L:/10.0.0.207:51120 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+22:44:07.187 [pulsar-client-io-100-8] INFO ConnectionPool - [[id: 0xe9c5ac08, L:/10.0.0.207:51122 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+22:44:07.188 [pulsar-client-io-100-10] INFO ConnectionPool - [[id: 0xfa92c811, L:/10.0.0.207:42582 - R:10.0.0.63/10.0.0.63:6650]] Connected to server
+22:44:07.189 [pulsar-client-io-100-10] INFO ConsumerImpl - [persistent://benchmark/ns-U6OkCD4/test-0000001-nA-VIAE][sub-001-3Y4tzYs] Subscribing to topic on cnx [id: 0xfa92c811, L:/10.0.0.207:42582 - R:10.0.0.63/10.0.0.63:6650], consumerId 0
+22:44:07.195 [pulsar-client-io-100-10] INFO ConsumerImpl - [persistent://benchmark/ns-U6OkCD4/test-0000001-nA-VIAE][sub-001-3Y4tzYs] Subscribed to topic on 10.0.0.63/10.0.0.63:6650 -- consumer: 0
+22:44:07.196 [main] INFO LocalWorker - Created 1 consumers in 25.486597 ms
+22:44:07.233 [main] INFO WorkloadGenerator - Created 302 producers in 37.620636 ms
+22:44:07.234 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+22:44:07.238 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 0, Expected: 0
+22:44:07.238 [main] INFO WorkloadGenerator - All consumers are ready!
+22:44:07.238 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pulsar-tpc-h-tpc-h-q6-1000-300-2024-05-20-22-44-06 at 1716245047238
+22:49:15.775 [pulsar-external-listener-102-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+22:49:17.311 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pulsar-tpc-h-tpc-h-q6-1000-300-2024-05-20-22-44-06 at 1716245357311
+22:49:19.617 [pulsar-client-io-100-10] INFO ConsumerImpl - [persistent://benchmark/ns-U6OkCD4/test-0000001-nA-VIAE] [sub-001-3Y4tzYs] Closed consumer
+22:49:19.618 [main] INFO PulsarClientImpl - Client closing. URL: pulsar://10.0.0.148:6650/
+22:49:19.619 [pulsar-client-io-100-3] INFO ClientCnx - [id: 0x3c73cfdd, L:/10.0.0.207:51118 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+22:49:19.619 [pulsar-client-io-100-5] INFO ClientCnx - [id: 0xa4ad5b08, L:/10.0.0.207:51120 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+22:49:19.619 [pulsar-client-io-100-8] INFO ClientCnx - [id: 0xe9c5ac08, L:/10.0.0.207:51122 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+22:49:19.619 [pulsar-client-io-100-10] INFO ClientCnx - [id: 0xfa92c811, L:/10.0.0.207:42582 ! R:10.0.0.63/10.0.0.63:6650] Disconnected
+22:49:21.825 [main] INFO CentralWorkerStats - Central worker stats initialized
+22:49:21.830 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.207:8080]
+22:49:21.830 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.93:8080,http://10.0.0.15:8080
+22:49:21.831 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pulsar---------------
+22:49:22.092 [main] INFO LocalWorker - Driver: {
+  "name" : "Pulsar",
+  "driverClass" : "io.openmessaging.benchmark.driver.pulsar.PulsarBenchmarkDriver"
+}
+22:49:22.092 [main] INFO PulsarBenchmarkProducer - Pulsar driver configuration: {
+  "client" : {
+    "serviceUrl" : "pulsar://10.0.0.148:6650/",
+    "httpUrl" : "http://10.0.0.148:8080/",
+    "clientMemoryLimitMB" : 256,
+    "ioThreads" : 16,
+    "connectionsPerBroker" : 8,
+    "maxConcurrentLookupRequests" : 1000,
+    "namespacePrefix" : "benchmark/ns",
+    "clusterName" : "local",
+    "topicType" : "persistent",
+    "persistence" : {
+      "ensembleSize" : 3,
+      "writeQuorum" : 3,
+      "ackQuorum" : 2,
+      "deduplicationEnabled" : false
+    },
+    "tlsAllowInsecureConnection" : false,
+    "tlsEnableHostnameVerification" : false,
+    "tlsTrustCertsFilePath" : null,
+    "authentication" : {
+      "plugin" : null,
+      "data" : null
+    }
+  },
+  "producer" : {
+    "batchingEnabled" : true,
+    "batchingMaxPublishDelayMs" : 1,
+    "batchingMaxBytes" : 131072,
+    "blockIfQueueFull" : true,
+    "pendingQueueSize" : 0,
+    "compressionEnabled" : false
+  },
+  "consumer" : {
+    "receiverQueueSize" : 10000,
+    "subscriptionType" : "Failover"
+  }
+}
+22:49:22.094 [main] INFO PulsarBenchmarkProducer - Created Pulsar client for service URL pulsar://10.0.0.148:6650/
+22:49:22.097 [main] INFO PulsarBenchmarkProducer - Created Pulsar admin client for HTTP URL http://10.0.0.148:8080/
+22:49:22.118 [main] INFO PulsarBenchmarkProducer - Created Pulsar tenant benchmark with allowed cluster local
+22:49:22.130 [main] INFO PulsarBenchmarkProducer - Created Pulsar namespace benchmark/ns-T75F6Rk
+22:49:22.155 [main] INFO PulsarBenchmarkProducer - Applied persistence configuration for namespace benchmark/local/benchmark/ns-T75F6Rk: {
+  "ensembleSize" : 3,
+  "writeQuorum" : 3,
+  "ackQuorum" : 2,
+  "deduplicationEnabled" : false
+}
+22:49:22.470 [main] INFO WorkloadGenerator - Created 32 topics in 313.897844 ms
+22:49:22.526 [main] INFO WorkloadGenerator - Created 32 external consumers in 55.586271 ms
+22:49:22.527 [pulsar-client-io-149-3] INFO ConnectionPool - [[id: 0xca3872df, L:/10.0.0.207:51344 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+22:49:22.530 [pulsar-client-io-149-5] INFO ConnectionPool - [[id: 0x99be5141, L:/10.0.0.207:51346 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+22:49:22.532 [pulsar-client-io-149-8] INFO ConnectionPool - [[id: 0x7fa10aab, L:/10.0.0.207:51348 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+22:49:22.534 [pulsar-client-io-149-10] INFO ConnectionPool - [[id: 0xe6218f79, L:/10.0.0.207:51350 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+22:49:22.534 [pulsar-client-io-149-10] INFO ConsumerImpl - [persistent://benchmark/ns-jIbHr5g/test-0000001--teyf2E][sub-001-8UVAaS0] Subscribing to topic on cnx [id: 0xe6218f79, L:/10.0.0.207:51350 - R:10.0.0.148/10.0.0.148:6650], consumerId 0
+22:49:22.537 [pulsar-client-io-149-10] INFO ConsumerImpl - [persistent://benchmark/ns-jIbHr5g/test-0000001--teyf2E][sub-001-8UVAaS0] Subscribed to topic on 10.0.0.148/10.0.0.148:6650 -- consumer: 0
+22:49:22.537 [main] INFO LocalWorker - Created 1 consumers in 10.833088 ms
+22:49:22.548 [main] INFO WorkloadGenerator - Created 32 producers in 10.597893 ms
+22:49:22.548 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+22:49:22.550 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 0, Expected: 0
+22:49:22.550 [main] INFO WorkloadGenerator - All consumers are ready!
+22:49:22.550 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pulsar-tpc-h-tpc-h-q6-100-30-2024-05-20-22-49-22 at 1716245362550
+22:53:15.331 [pulsar-external-listener-151-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+22:53:22.571 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pulsar-tpc-h-tpc-h-q6-100-30-2024-05-20-22-49-22 at 1716245602571
+22:53:24.794 [pulsar-client-io-149-10] INFO ConsumerImpl - [persistent://benchmark/ns-jIbHr5g/test-0000001--teyf2E] [sub-001-8UVAaS0] Closed consumer
+22:53:24.794 [main] INFO PulsarClientImpl - Client closing. URL: pulsar://10.0.0.148:6650/
+22:53:24.795 [pulsar-client-io-149-3] INFO ClientCnx - [id: 0xca3872df, L:/10.0.0.207:51344 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+22:53:24.795 [pulsar-client-io-149-8] INFO ClientCnx - [id: 0x7fa10aab, L:/10.0.0.207:51348 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+22:53:24.795 [pulsar-client-io-149-10] INFO ClientCnx - [id: 0xe6218f79, L:/10.0.0.207:51350 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+22:53:24.795 [pulsar-client-io-149-5] INFO ClientCnx - [id: 0x99be5141, L:/10.0.0.207:51346 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+22:53:27.003 [main] INFO CentralWorkerStats - Central worker stats initialized
+22:53:27.007 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.207:8080]
+22:53:27.007 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.93:8080,http://10.0.0.15:8080
+22:53:27.008 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pulsar---------------
+22:53:27.266 [main] INFO LocalWorker - Driver: {
+  "name" : "Pulsar",
+  "driverClass" : "io.openmessaging.benchmark.driver.pulsar.PulsarBenchmarkDriver"
+}
+22:53:27.267 [main] INFO PulsarBenchmarkProducer - Pulsar driver configuration: {
+  "client" : {
+    "serviceUrl" : "pulsar://10.0.0.148:6650/",
+    "httpUrl" : "http://10.0.0.148:8080/",
+    "clientMemoryLimitMB" : 256,
+    "ioThreads" : 16,
+    "connectionsPerBroker" : 8,
+    "maxConcurrentLookupRequests" : 1000,
+    "namespacePrefix" : "benchmark/ns",
+    "clusterName" : "local",
+    "topicType" : "persistent",
+    "persistence" : {
+      "ensembleSize" : 3,
+      "writeQuorum" : 3,
+      "ackQuorum" : 2,
+      "deduplicationEnabled" : false
+    },
+    "tlsAllowInsecureConnection" : false,
+    "tlsEnableHostnameVerification" : false,
+    "tlsTrustCertsFilePath" : null,
+    "authentication" : {
+      "plugin" : null,
+      "data" : null
+    }
+  },
+  "producer" : {
+    "batchingEnabled" : true,
+    "batchingMaxPublishDelayMs" : 1,
+    "batchingMaxBytes" : 131072,
+    "blockIfQueueFull" : true,
+    "pendingQueueSize" : 0,
+    "compressionEnabled" : false
+  },
+  "consumer" : {
+    "receiverQueueSize" : 10000,
+    "subscriptionType" : "Failover"
+  }
+}
+22:53:27.269 [main] INFO PulsarBenchmarkProducer - Created Pulsar client for service URL pulsar://10.0.0.148:6650/
+22:53:27.271 [main] INFO PulsarBenchmarkProducer - Created Pulsar admin client for HTTP URL http://10.0.0.148:8080/
+22:53:27.290 [main] INFO PulsarBenchmarkProducer - Created Pulsar tenant benchmark with allowed cluster local
+22:53:27.300 [main] INFO PulsarBenchmarkProducer - Created Pulsar namespace benchmark/ns-WVX5RiU
+22:53:27.325 [main] INFO PulsarBenchmarkProducer - Applied persistence configuration for namespace benchmark/local/benchmark/ns-WVX5RiU: {
+  "ensembleSize" : 3,
+  "writeQuorum" : 3,
+  "ackQuorum" : 2,
+  "deduplicationEnabled" : false
+}
+22:53:28.030 [main] INFO WorkloadGenerator - Created 302 topics in 704.686889 ms
+22:53:28.078 [main] INFO WorkloadGenerator - Created 302 external consumers in 46.418049 ms
+22:53:28.080 [pulsar-client-io-198-3] INFO ConnectionPool - [[id: 0x0ed4af22, L:/10.0.0.207:52148 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+22:53:28.083 [pulsar-client-io-198-6] INFO ConnectionPool - [[id: 0xc6eb1bc5, L:/10.0.0.207:52150 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+22:53:28.084 [pulsar-client-io-198-6] INFO ConsumerImpl - [persistent://benchmark/ns-9nN2nn0/test-0000001-x8Tp3cg][sub-001-OXaedWo] Subscribing to topic on cnx [id: 0x0ed4af22, L:/10.0.0.207:52148 - R:10.0.0.148/10.0.0.148:6650], consumerId 0
+22:53:28.087 [pulsar-client-io-198-3] INFO ConsumerImpl - [persistent://benchmark/ns-9nN2nn0/test-0000001-x8Tp3cg][sub-001-OXaedWo] Subscribed to topic on 10.0.0.148/10.0.0.148:6650 -- consumer: 0
+22:53:28.087 [main] INFO LocalWorker - Created 1 consumers in 8.295622 ms
+22:53:28.119 [main] INFO WorkloadGenerator - Created 302 producers in 31.669971 ms
+22:53:28.119 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+22:53:28.121 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 0, Expected: 0
+22:53:28.122 [main] INFO WorkloadGenerator - All consumers are ready!
+22:53:28.122 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pulsar-tpc-h-tpc-h-q1-1000-300-2024-05-20-22-53-27 at 1716245608122
+22:58:58.337 [pulsar-external-listener-200-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+22:59:08.220 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pulsar-tpc-h-tpc-h-q1-1000-300-2024-05-20-22-53-27 at 1716245948220
+22:59:10.519 [pulsar-client-io-198-3] INFO ConsumerImpl - [persistent://benchmark/ns-9nN2nn0/test-0000001-x8Tp3cg] [sub-001-OXaedWo] Closed consumer
+22:59:10.519 [main] INFO PulsarClientImpl - Client closing. URL: pulsar://10.0.0.148:6650/
+22:59:10.520 [pulsar-client-io-198-3] INFO ClientCnx - [id: 0x0ed4af22, L:/10.0.0.207:52148 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+22:59:10.520 [pulsar-client-io-198-6] INFO ClientCnx - [id: 0xc6eb1bc5, L:/10.0.0.207:52150 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+22:59:12.726 [main] INFO CentralWorkerStats - Central worker stats initialized
+22:59:12.730 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.207:8080]
+22:59:12.730 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.93:8080,http://10.0.0.15:8080
+22:59:12.730 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pulsar---------------
+22:59:12.996 [main] INFO LocalWorker - Driver: {
+  "name" : "Pulsar",
+  "driverClass" : "io.openmessaging.benchmark.driver.pulsar.PulsarBenchmarkDriver"
+}
+22:59:12.996 [main] INFO PulsarBenchmarkProducer - Pulsar driver configuration: {
+  "client" : {
+    "serviceUrl" : "pulsar://10.0.0.148:6650/",
+    "httpUrl" : "http://10.0.0.148:8080/",
+    "clientMemoryLimitMB" : 256,
+    "ioThreads" : 16,
+    "connectionsPerBroker" : 8,
+    "maxConcurrentLookupRequests" : 1000,
+    "namespacePrefix" : "benchmark/ns",
+    "clusterName" : "local",
+    "topicType" : "persistent",
+    "persistence" : {
+      "ensembleSize" : 3,
+      "writeQuorum" : 3,
+      "ackQuorum" : 2,
+      "deduplicationEnabled" : false
+    },
+    "tlsAllowInsecureConnection" : false,
+    "tlsEnableHostnameVerification" : false,
+    "tlsTrustCertsFilePath" : null,
+    "authentication" : {
+      "plugin" : null,
+      "data" : null
+    }
+  },
+  "producer" : {
+    "batchingEnabled" : true,
+    "batchingMaxPublishDelayMs" : 1,
+    "batchingMaxBytes" : 131072,
+    "blockIfQueueFull" : true,
+    "pendingQueueSize" : 0,
+    "compressionEnabled" : false
+  },
+  "consumer" : {
+    "receiverQueueSize" : 10000,
+    "subscriptionType" : "Failover"
+  }
+}
+22:59:12.998 [main] INFO PulsarBenchmarkProducer - Created Pulsar client for service URL pulsar://10.0.0.148:6650/
+22:59:13.001 [main] INFO PulsarBenchmarkProducer - Created Pulsar admin client for HTTP URL http://10.0.0.148:8080/
+22:59:13.023 [main] INFO PulsarBenchmarkProducer - Created Pulsar tenant benchmark with allowed cluster local
+22:59:13.035 [main] INFO PulsarBenchmarkProducer - Created Pulsar namespace benchmark/ns-fY5kbHo
+22:59:13.060 [main] INFO PulsarBenchmarkProducer - Applied persistence configuration for namespace benchmark/local/benchmark/ns-fY5kbHo: {
+  "ensembleSize" : 3,
+  "writeQuorum" : 3,
+  "ackQuorum" : 2,
+  "deduplicationEnabled" : false
+}
+22:59:13.382 [main] INFO WorkloadGenerator - Created 32 topics in 321.545069 ms
+22:59:13.426 [main] INFO WorkloadGenerator - Created 32 external consumers in 43.32359 ms
+22:59:13.427 [pulsar-client-io-247-3] INFO ConnectionPool - [[id: 0x6bcfe23b, L:/10.0.0.207:52392 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+22:59:13.430 [pulsar-client-io-247-6] INFO ConnectionPool - [[id: 0x8d39f1c4, L:/10.0.0.207:52394 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+22:59:13.432 [pulsar-client-io-247-8] INFO ConnectionPool - [[id: 0xb07cd338, L:/10.0.0.207:52396 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+22:59:13.433 [pulsar-client-io-247-8] INFO ConsumerImpl - [persistent://benchmark/ns-XuiR2GA/test-0000001-HOaTy84][sub-001-0VEzFig] Subscribing to topic on cnx [id: 0xb07cd338, L:/10.0.0.207:52396 - R:10.0.0.148/10.0.0.148:6650], consumerId 0
+22:59:13.437 [pulsar-client-io-247-8] INFO ConsumerImpl - [persistent://benchmark/ns-XuiR2GA/test-0000001-HOaTy84][sub-001-0VEzFig] Subscribed to topic on 10.0.0.148/10.0.0.148:6650 -- consumer: 0
+22:59:13.437 [main] INFO LocalWorker - Created 1 consumers in 11.512261 ms
+22:59:13.446 [main] INFO WorkloadGenerator - Created 32 producers in 8.764468 ms
+22:59:13.446 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+22:59:13.448 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 0, Expected: 0
+22:59:13.449 [main] INFO WorkloadGenerator - All consumers are ready!
+22:59:13.449 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pulsar-tpc-h-tpc-h-q1-100-30-2024-05-20-22-59-13 at 1716245953449
+23:03:14.032 [pulsar-external-listener-249-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132740,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880077,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":26,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612940,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":26,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+23:03:23.470 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pulsar-tpc-h-tpc-h-q1-100-30-2024-05-20-22-59-13 at 1716246203470
+23:03:25.692 [pulsar-client-io-247-8] INFO ConsumerImpl - [persistent://benchmark/ns-XuiR2GA/test-0000001-HOaTy84] [sub-001-0VEzFig] Closed consumer
+23:03:25.692 [main] INFO PulsarClientImpl - Client closing. URL: pulsar://10.0.0.148:6650/
+23:03:25.693 [pulsar-client-io-247-3] INFO ClientCnx - [id: 0x6bcfe23b, L:/10.0.0.207:52392 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:03:25.693 [pulsar-client-io-247-8] INFO ClientCnx - [id: 0xb07cd338, L:/10.0.0.207:52396 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:03:25.693 [pulsar-client-io-247-6] INFO ClientCnx - [id: 0x8d39f1c4, L:/10.0.0.207:52394 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:03:27.899 [main] INFO CentralWorkerStats - Central worker stats initialized
+23:03:27.902 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.207:8080]
+23:03:27.903 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.93:8080,http://10.0.0.15:8080
+23:03:27.903 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pulsar---------------
+23:03:28.161 [main] INFO LocalWorker - Driver: {
+  "name" : "Pulsar",
+  "driverClass" : "io.openmessaging.benchmark.driver.pulsar.PulsarBenchmarkDriver"
+}
+23:03:28.162 [main] INFO PulsarBenchmarkProducer - Pulsar driver configuration: {
+  "client" : {
+    "serviceUrl" : "pulsar://10.0.0.148:6650/",
+    "httpUrl" : "http://10.0.0.148:8080/",
+    "clientMemoryLimitMB" : 256,
+    "ioThreads" : 16,
+    "connectionsPerBroker" : 8,
+    "maxConcurrentLookupRequests" : 1000,
+    "namespacePrefix" : "benchmark/ns",
+    "clusterName" : "local",
+    "topicType" : "persistent",
+    "persistence" : {
+      "ensembleSize" : 3,
+      "writeQuorum" : 3,
+      "ackQuorum" : 2,
+      "deduplicationEnabled" : false
+    },
+    "tlsAllowInsecureConnection" : false,
+    "tlsEnableHostnameVerification" : false,
+    "tlsTrustCertsFilePath" : null,
+    "authentication" : {
+      "plugin" : null,
+      "data" : null
+    }
+  },
+  "producer" : {
+    "batchingEnabled" : true,
+    "batchingMaxPublishDelayMs" : 1,
+    "batchingMaxBytes" : 131072,
+    "blockIfQueueFull" : true,
+    "pendingQueueSize" : 0,
+    "compressionEnabled" : false
+  },
+  "consumer" : {
+    "receiverQueueSize" : 10000,
+    "subscriptionType" : "Failover"
+  }
+}
+23:03:28.164 [main] INFO PulsarBenchmarkProducer - Created Pulsar client for service URL pulsar://10.0.0.148:6650/
+23:03:28.166 [main] INFO PulsarBenchmarkProducer - Created Pulsar admin client for HTTP URL http://10.0.0.148:8080/
+23:03:28.190 [main] INFO PulsarBenchmarkProducer - Created Pulsar tenant benchmark with allowed cluster local
+23:03:28.200 [main] INFO PulsarBenchmarkProducer - Created Pulsar namespace benchmark/ns-6El7jCE
+23:03:28.225 [main] INFO PulsarBenchmarkProducer - Applied persistence configuration for namespace benchmark/local/benchmark/ns-6El7jCE: {
+  "ensembleSize" : 3,
+  "writeQuorum" : 3,
+  "ackQuorum" : 2,
+  "deduplicationEnabled" : false
+}
+23:03:28.945 [main] INFO WorkloadGenerator - Created 302 topics in 719.830825 ms
+23:03:29.012 [main] INFO WorkloadGenerator - Created 302 external consumers in 65.392185 ms
+23:03:29.014 [pulsar-client-io-296-3] INFO ConnectionPool - [[id: 0xf7717376, L:/10.0.0.207:53220 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+23:03:29.016 [pulsar-client-io-296-5] INFO ConnectionPool - [[id: 0x28b63e8d, L:/10.0.0.207:53222 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+23:03:29.018 [pulsar-client-io-296-8] INFO ConnectionPool - [[id: 0x46daaed6, L:/10.0.0.207:53224 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+23:03:29.019 [pulsar-client-io-296-8] INFO ConsumerImpl - [persistent://benchmark/ns-Ea9xAqg/test-0000001-7TjA7Wg][sub-001-IUQrAFU] Subscribing to topic on cnx [id: 0x46daaed6, L:/10.0.0.207:53224 - R:10.0.0.148/10.0.0.148:6650], consumerId 0
+23:03:29.021 [pulsar-client-io-296-8] INFO ConsumerImpl - [persistent://benchmark/ns-Ea9xAqg/test-0000001-7TjA7Wg][sub-001-IUQrAFU] Subscribed to topic on 10.0.0.148/10.0.0.148:6650 -- consumer: 0
+23:03:29.022 [main] INFO LocalWorker - Created 1 consumers in 9.013035 ms
+23:03:29.058 [main] INFO WorkloadGenerator - Created 302 producers in 36.336439 ms
+23:03:29.058 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+23:03:29.061 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 0, Expected: 0
+23:03:29.061 [main] INFO WorkloadGenerator - All consumers are ready!
+23:03:29.061 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pulsar-tpc-h-tpc-h-q6-1000-300-2024-05-20-23-03-28 at 1716246209061
+23:08:36.859 [pulsar-external-listener-298-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+23:08:39.111 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pulsar-tpc-h-tpc-h-q6-1000-300-2024-05-20-23-03-28 at 1716246519111
+23:08:41.410 [pulsar-client-io-296-8] INFO ConsumerImpl - [persistent://benchmark/ns-Ea9xAqg/test-0000001-7TjA7Wg] [sub-001-IUQrAFU] Closed consumer
+23:08:41.411 [main] INFO PulsarClientImpl - Client closing. URL: pulsar://10.0.0.148:6650/
+23:08:41.411 [pulsar-client-io-296-3] INFO ClientCnx - [id: 0xf7717376, L:/10.0.0.207:53220 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:08:41.411 [pulsar-client-io-296-5] INFO ClientCnx - [id: 0x28b63e8d, L:/10.0.0.207:53222 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:08:41.411 [pulsar-client-io-296-8] INFO ClientCnx - [id: 0x46daaed6, L:/10.0.0.207:53224 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:08:43.617 [main] INFO CentralWorkerStats - Central worker stats initialized
+23:08:43.621 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.207:8080]
+23:08:43.621 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.93:8080,http://10.0.0.15:8080
+23:08:43.621 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pulsar---------------
+23:08:43.881 [main] INFO LocalWorker - Driver: {
+  "name" : "Pulsar",
+  "driverClass" : "io.openmessaging.benchmark.driver.pulsar.PulsarBenchmarkDriver"
+}
+23:08:43.882 [main] INFO PulsarBenchmarkProducer - Pulsar driver configuration: {
+  "client" : {
+    "serviceUrl" : "pulsar://10.0.0.148:6650/",
+    "httpUrl" : "http://10.0.0.148:8080/",
+    "clientMemoryLimitMB" : 256,
+    "ioThreads" : 16,
+    "connectionsPerBroker" : 8,
+    "maxConcurrentLookupRequests" : 1000,
+    "namespacePrefix" : "benchmark/ns",
+    "clusterName" : "local",
+    "topicType" : "persistent",
+    "persistence" : {
+      "ensembleSize" : 3,
+      "writeQuorum" : 3,
+      "ackQuorum" : 2,
+      "deduplicationEnabled" : false
+    },
+    "tlsAllowInsecureConnection" : false,
+    "tlsEnableHostnameVerification" : false,
+    "tlsTrustCertsFilePath" : null,
+    "authentication" : {
+      "plugin" : null,
+      "data" : null
+    }
+  },
+  "producer" : {
+    "batchingEnabled" : true,
+    "batchingMaxPublishDelayMs" : 1,
+    "batchingMaxBytes" : 131072,
+    "blockIfQueueFull" : true,
+    "pendingQueueSize" : 0,
+    "compressionEnabled" : false
+  },
+  "consumer" : {
+    "receiverQueueSize" : 10000,
+    "subscriptionType" : "Failover"
+  }
+}
+23:08:43.884 [main] INFO PulsarBenchmarkProducer - Created Pulsar client for service URL pulsar://10.0.0.148:6650/
+23:08:43.886 [main] INFO PulsarBenchmarkProducer - Created Pulsar admin client for HTTP URL http://10.0.0.148:8080/
+23:08:43.909 [main] INFO PulsarBenchmarkProducer - Created Pulsar tenant benchmark with allowed cluster local
+23:08:43.920 [main] INFO PulsarBenchmarkProducer - Created Pulsar namespace benchmark/ns-DjXT6Do
+23:08:43.945 [main] INFO PulsarBenchmarkProducer - Applied persistence configuration for namespace benchmark/local/benchmark/ns-DjXT6Do: {
+  "ensembleSize" : 3,
+  "writeQuorum" : 3,
+  "ackQuorum" : 2,
+  "deduplicationEnabled" : false
+}
+23:08:44.267 [main] INFO WorkloadGenerator - Created 32 topics in 321.395588 ms
+23:08:44.296 [main] INFO WorkloadGenerator - Created 32 external consumers in 28.330947 ms
+23:08:44.297 [pulsar-client-io-345-3] INFO ConnectionPool - [[id: 0x5963480c, L:/10.0.0.207:53444 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+23:08:44.301 [pulsar-client-io-345-6] INFO ConnectionPool - [[id: 0xd84f76d9, L:/10.0.0.207:53446 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+23:08:44.302 [pulsar-client-io-345-8] INFO ConnectionPool - [[id: 0x5f9c1c4d, L:/10.0.0.207:44906 - R:10.0.0.63/10.0.0.63:6650]] Connected to server
+23:08:44.303 [pulsar-client-io-345-8] INFO ConsumerImpl - [persistent://benchmark/ns-Nx73KlM/test-0000001-HTh8_cw][sub-001-gmTaIO0] Subscribing to topic on cnx [id: 0x5f9c1c4d, L:/10.0.0.207:44906 - R:10.0.0.63/10.0.0.63:6650], consumerId 0
+23:08:44.305 [pulsar-client-io-345-8] INFO ConsumerImpl - [persistent://benchmark/ns-Nx73KlM/test-0000001-HTh8_cw][sub-001-gmTaIO0] Subscribed to topic on 10.0.0.63/10.0.0.63:6650 -- consumer: 0
+23:08:44.305 [main] INFO LocalWorker - Created 1 consumers in 9.477665 ms
+23:08:44.314 [main] INFO WorkloadGenerator - Created 32 producers in 8.713988 ms
+23:08:44.314 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+23:08:44.316 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 0, Expected: 0
+23:08:44.316 [main] INFO WorkloadGenerator - All consumers are ready!
+23:08:44.316 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pulsar-tpc-h-tpc-h-q6-100-30-2024-05-20-23-08-43 at 1716246524316
+23:12:46.627 [pulsar-external-listener-347-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+23:12:54.330 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pulsar-tpc-h-tpc-h-q6-100-30-2024-05-20-23-08-43 at 1716246774330
+23:12:56.551 [pulsar-client-io-345-8] INFO ConsumerImpl - [persistent://benchmark/ns-Nx73KlM/test-0000001-HTh8_cw] [sub-001-gmTaIO0] Closed consumer
+23:12:56.551 [main] INFO PulsarClientImpl - Client closing. URL: pulsar://10.0.0.148:6650/
+23:12:56.552 [pulsar-client-io-345-3] INFO ClientCnx - [id: 0x5963480c, L:/10.0.0.207:53444 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:12:56.552 [pulsar-client-io-345-6] INFO ClientCnx - [id: 0xd84f76d9, L:/10.0.0.207:53446 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:12:56.552 [pulsar-client-io-345-8] INFO ClientCnx - [id: 0x5f9c1c4d, L:/10.0.0.207:44906 ! R:10.0.0.63/10.0.0.63:6650] Disconnected
+23:12:58.757 [main] INFO CentralWorkerStats - Central worker stats initialized
+23:12:58.772 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.207:8080]
+23:12:58.772 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.93:8080,http://10.0.0.15:8080
+23:12:58.773 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pulsar---------------
+23:12:59.031 [main] INFO LocalWorker - Driver: {
+  "name" : "Pulsar",
+  "driverClass" : "io.openmessaging.benchmark.driver.pulsar.PulsarBenchmarkDriver"
+}
+23:12:59.032 [main] INFO PulsarBenchmarkProducer - Pulsar driver configuration: {
+  "client" : {
+    "serviceUrl" : "pulsar://10.0.0.148:6650/",
+    "httpUrl" : "http://10.0.0.148:8080/",
+    "clientMemoryLimitMB" : 256,
+    "ioThreads" : 16,
+    "connectionsPerBroker" : 8,
+    "maxConcurrentLookupRequests" : 1000,
+    "namespacePrefix" : "benchmark/ns",
+    "clusterName" : "local",
+    "topicType" : "persistent",
+    "persistence" : {
+      "ensembleSize" : 3,
+      "writeQuorum" : 3,
+      "ackQuorum" : 2,
+      "deduplicationEnabled" : false
+    },
+    "tlsAllowInsecureConnection" : false,
+    "tlsEnableHostnameVerification" : false,
+    "tlsTrustCertsFilePath" : null,
+    "authentication" : {
+      "plugin" : null,
+      "data" : null
+    }
+  },
+  "producer" : {
+    "batchingEnabled" : true,
+    "batchingMaxPublishDelayMs" : 1,
+    "batchingMaxBytes" : 131072,
+    "blockIfQueueFull" : true,
+    "pendingQueueSize" : 0,
+    "compressionEnabled" : false
+  },
+  "consumer" : {
+    "receiverQueueSize" : 10000,
+    "subscriptionType" : "Failover"
+  }
+}
+23:12:59.034 [main] INFO PulsarBenchmarkProducer - Created Pulsar client for service URL pulsar://10.0.0.148:6650/
+23:12:59.035 [main] INFO PulsarBenchmarkProducer - Created Pulsar admin client for HTTP URL http://10.0.0.148:8080/
+23:12:59.051 [main] INFO PulsarBenchmarkProducer - Created Pulsar tenant benchmark with allowed cluster local
+23:12:59.065 [main] INFO PulsarBenchmarkProducer - Created Pulsar namespace benchmark/ns-VyT1coA
+23:12:59.090 [main] INFO PulsarBenchmarkProducer - Applied persistence configuration for namespace benchmark/local/benchmark/ns-VyT1coA: {
+  "ensembleSize" : 3,
+  "writeQuorum" : 3,
+  "ackQuorum" : 2,
+  "deduplicationEnabled" : false
+}
+23:12:59.786 [main] INFO WorkloadGenerator - Created 302 topics in 695.720586 ms
+23:12:59.829 [main] INFO WorkloadGenerator - Created 302 external consumers in 42.327944 ms
+23:12:59.831 [pulsar-client-io-394-3] INFO ConnectionPool - [[id: 0xa8dc11d6, L:/10.0.0.207:54248 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+23:12:59.835 [pulsar-client-io-394-5] INFO ConnectionPool - [[id: 0xede413b1, L:/10.0.0.207:54250 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+23:12:59.837 [pulsar-client-io-394-8] INFO ConnectionPool - [[id: 0x3c0df327, L:/10.0.0.207:45710 - R:10.0.0.63/10.0.0.63:6650]] Connected to server
+23:12:59.838 [pulsar-client-io-394-8] INFO ConsumerImpl - [persistent://benchmark/ns-DkKrPQg/test-0000001-9Md11Kk][sub-001-oFM6cbM] Subscribing to topic on cnx [id: 0x3c0df327, L:/10.0.0.207:45710 - R:10.0.0.63/10.0.0.63:6650], consumerId 0
+23:12:59.840 [pulsar-client-io-394-8] INFO ConsumerImpl - [persistent://benchmark/ns-DkKrPQg/test-0000001-9Md11Kk][sub-001-oFM6cbM] Subscribed to topic on 10.0.0.63/10.0.0.63:6650 -- consumer: 0
+23:12:59.840 [main] INFO LocalWorker - Created 1 consumers in 10.739204 ms
+23:12:59.868 [main] INFO WorkloadGenerator - Created 302 producers in 27.269559 ms
+23:12:59.868 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+23:12:59.870 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 0, Expected: 0
+23:12:59.870 [main] INFO WorkloadGenerator - All consumers are ready!
+23:12:59.870 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pulsar-tpc-h-tpc-h-q1-1000-300-2024-05-20-23-12-59 at 1716246779870
+23:18:12.551 [pulsar-external-listener-396-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+23:18:19.919 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pulsar-tpc-h-tpc-h-q1-1000-300-2024-05-20-23-12-59 at 1716247099919
+23:18:22.220 [pulsar-client-io-394-8] INFO ConsumerImpl - [persistent://benchmark/ns-DkKrPQg/test-0000001-9Md11Kk] [sub-001-oFM6cbM] Closed consumer
+23:18:22.220 [main] INFO PulsarClientImpl - Client closing. URL: pulsar://10.0.0.148:6650/
+23:18:22.221 [pulsar-client-io-394-3] INFO ClientCnx - [id: 0xa8dc11d6, L:/10.0.0.207:54248 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:18:22.221 [pulsar-client-io-394-8] INFO ClientCnx - [id: 0x3c0df327, L:/10.0.0.207:45710 ! R:10.0.0.63/10.0.0.63:6650] Disconnected
+23:18:22.221 [pulsar-client-io-394-5] INFO ClientCnx - [id: 0xede413b1, L:/10.0.0.207:54250 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:18:24.428 [main] INFO CentralWorkerStats - Central worker stats initialized
+23:18:24.431 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.207:8080]
+23:18:24.431 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.93:8080,http://10.0.0.15:8080
+23:18:24.431 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pulsar---------------
+23:18:24.691 [main] INFO LocalWorker - Driver: {
+  "name" : "Pulsar",
+  "driverClass" : "io.openmessaging.benchmark.driver.pulsar.PulsarBenchmarkDriver"
+}
+23:18:24.692 [main] INFO PulsarBenchmarkProducer - Pulsar driver configuration: {
+  "client" : {
+    "serviceUrl" : "pulsar://10.0.0.148:6650/",
+    "httpUrl" : "http://10.0.0.148:8080/",
+    "clientMemoryLimitMB" : 256,
+    "ioThreads" : 16,
+    "connectionsPerBroker" : 8,
+    "maxConcurrentLookupRequests" : 1000,
+    "namespacePrefix" : "benchmark/ns",
+    "clusterName" : "local",
+    "topicType" : "persistent",
+    "persistence" : {
+      "ensembleSize" : 3,
+      "writeQuorum" : 3,
+      "ackQuorum" : 2,
+      "deduplicationEnabled" : false
+    },
+    "tlsAllowInsecureConnection" : false,
+    "tlsEnableHostnameVerification" : false,
+    "tlsTrustCertsFilePath" : null,
+    "authentication" : {
+      "plugin" : null,
+      "data" : null
+    }
+  },
+  "producer" : {
+    "batchingEnabled" : true,
+    "batchingMaxPublishDelayMs" : 1,
+    "batchingMaxBytes" : 131072,
+    "blockIfQueueFull" : true,
+    "pendingQueueSize" : 0,
+    "compressionEnabled" : false
+  },
+  "consumer" : {
+    "receiverQueueSize" : 10000,
+    "subscriptionType" : "Failover"
+  }
+}
+23:18:24.694 [main] INFO PulsarBenchmarkProducer - Created Pulsar client for service URL pulsar://10.0.0.148:6650/
+23:18:24.696 [main] INFO PulsarBenchmarkProducer - Created Pulsar admin client for HTTP URL http://10.0.0.148:8080/
+23:18:24.711 [main] INFO PulsarBenchmarkProducer - Created Pulsar tenant benchmark with allowed cluster local
+23:18:24.720 [main] INFO PulsarBenchmarkProducer - Created Pulsar namespace benchmark/ns-SgMKPgE
+23:18:24.745 [main] INFO PulsarBenchmarkProducer - Applied persistence configuration for namespace benchmark/local/benchmark/ns-SgMKPgE: {
+  "ensembleSize" : 3,
+  "writeQuorum" : 3,
+  "ackQuorum" : 2,
+  "deduplicationEnabled" : false
+}
+23:18:25.037 [main] INFO WorkloadGenerator - Created 32 topics in 291.298566 ms
+23:18:25.066 [main] INFO WorkloadGenerator - Created 32 external consumers in 28.639192 ms
+23:18:25.067 [pulsar-client-io-443-3] INFO ConnectionPool - [[id: 0xc2e16a80, L:/10.0.0.207:54560 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+23:18:25.070 [pulsar-client-io-443-5] INFO ConnectionPool - [[id: 0x47a63b53, L:/10.0.0.207:54562 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+23:18:25.072 [pulsar-client-io-443-8] INFO ConnectionPool - [[id: 0x6cb44417, L:/10.0.0.207:54564 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+23:18:25.073 [pulsar-client-io-443-10] INFO ConnectionPool - [[id: 0x77324d19, L:/10.0.0.207:57118 - R:10.0.0.47/10.0.0.47:6650]] Connected to server
+23:18:25.074 [pulsar-client-io-443-10] INFO ConsumerImpl - [persistent://benchmark/ns-PskSUHo/test-0000001-plnv2-I][sub-001-y5u8dqE] Subscribing to topic on cnx [id: 0x77324d19, L:/10.0.0.207:57118 - R:10.0.0.47/10.0.0.47:6650], consumerId 0
+23:18:25.079 [pulsar-client-io-443-10] INFO ConsumerImpl - [persistent://benchmark/ns-PskSUHo/test-0000001-plnv2-I][sub-001-y5u8dqE] Subscribed to topic on 10.0.0.47/10.0.0.47:6650 -- consumer: 0
+23:18:25.079 [main] INFO LocalWorker - Created 1 consumers in 13.257619 ms
+23:18:25.088 [main] INFO WorkloadGenerator - Created 32 producers in 8.375361 ms
+23:18:25.088 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+23:18:25.089 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 0, Expected: 0
+23:18:25.090 [main] INFO WorkloadGenerator - All consumers are ready!
+23:18:25.090 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pulsar-tpc-h-tpc-h-q1-100-30-2024-05-20-23-18-24 at 1716247105090
+23:22:15.684 [pulsar-external-listener-445-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132740,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880077,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":26,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612940,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":26,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+23:22:25.107 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pulsar-tpc-h-tpc-h-q1-100-30-2024-05-20-23-18-24 at 1716247345107
+23:22:27.329 [pulsar-client-io-443-10] INFO ConsumerImpl - [persistent://benchmark/ns-PskSUHo/test-0000001-plnv2-I] [sub-001-y5u8dqE] Closed consumer
+23:22:27.329 [main] INFO PulsarClientImpl - Client closing. URL: pulsar://10.0.0.148:6650/
+23:22:27.330 [pulsar-client-io-443-3] INFO ClientCnx - [id: 0xc2e16a80, L:/10.0.0.207:54560 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:22:27.330 [pulsar-client-io-443-5] INFO ClientCnx - [id: 0x47a63b53, L:/10.0.0.207:54562 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:22:27.330 [pulsar-client-io-443-8] INFO ClientCnx - [id: 0x6cb44417, L:/10.0.0.207:54564 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:22:27.331 [pulsar-client-io-443-10] INFO ClientCnx - [id: 0x77324d19, L:/10.0.0.207:57118 ! R:10.0.0.47/10.0.0.47:6650] Disconnected
+23:22:29.535 [main] INFO CentralWorkerStats - Central worker stats initialized
+23:22:29.538 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.207:8080]
+23:22:29.539 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.93:8080,http://10.0.0.15:8080
+23:22:29.539 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pulsar---------------
+23:22:29.796 [main] INFO LocalWorker - Driver: {
+  "name" : "Pulsar",
+  "driverClass" : "io.openmessaging.benchmark.driver.pulsar.PulsarBenchmarkDriver"
+}
+23:22:29.797 [main] INFO PulsarBenchmarkProducer - Pulsar driver configuration: {
+  "client" : {
+    "serviceUrl" : "pulsar://10.0.0.148:6650/",
+    "httpUrl" : "http://10.0.0.148:8080/",
+    "clientMemoryLimitMB" : 256,
+    "ioThreads" : 16,
+    "connectionsPerBroker" : 8,
+    "maxConcurrentLookupRequests" : 1000,
+    "namespacePrefix" : "benchmark/ns",
+    "clusterName" : "local",
+    "topicType" : "persistent",
+    "persistence" : {
+      "ensembleSize" : 3,
+      "writeQuorum" : 3,
+      "ackQuorum" : 2,
+      "deduplicationEnabled" : false
+    },
+    "tlsAllowInsecureConnection" : false,
+    "tlsEnableHostnameVerification" : false,
+    "tlsTrustCertsFilePath" : null,
+    "authentication" : {
+      "plugin" : null,
+      "data" : null
+    }
+  },
+  "producer" : {
+    "batchingEnabled" : true,
+    "batchingMaxPublishDelayMs" : 1,
+    "batchingMaxBytes" : 131072,
+    "blockIfQueueFull" : true,
+    "pendingQueueSize" : 0,
+    "compressionEnabled" : false
+  },
+  "consumer" : {
+    "receiverQueueSize" : 10000,
+    "subscriptionType" : "Failover"
+  }
+}
+23:22:29.798 [main] INFO PulsarBenchmarkProducer - Created Pulsar client for service URL pulsar://10.0.0.148:6650/
+23:22:29.800 [main] INFO PulsarBenchmarkProducer - Created Pulsar admin client for HTTP URL http://10.0.0.148:8080/
+23:22:29.815 [main] INFO PulsarBenchmarkProducer - Created Pulsar tenant benchmark with allowed cluster local
+23:22:29.825 [main] INFO PulsarBenchmarkProducer - Created Pulsar namespace benchmark/ns-LtOqzSg
+23:22:29.850 [main] INFO PulsarBenchmarkProducer - Applied persistence configuration for namespace benchmark/local/benchmark/ns-LtOqzSg: {
+  "ensembleSize" : 3,
+  "writeQuorum" : 3,
+  "ackQuorum" : 2,
+  "deduplicationEnabled" : false
+}
+23:22:30.553 [main] INFO WorkloadGenerator - Created 302 topics in 702.766475 ms
+23:22:30.616 [main] INFO WorkloadGenerator - Created 302 external consumers in 62.599468 ms
+23:22:30.618 [pulsar-client-io-492-3] INFO ConnectionPool - [[id: 0xb1c28ab1, L:/10.0.0.207:55390 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+23:22:30.625 [pulsar-client-io-492-5] INFO ConnectionPool - [[id: 0xecb1bded, L:/10.0.0.207:55392 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+23:22:30.627 [pulsar-client-io-492-8] INFO ConnectionPool - [[id: 0xa4a7759b, L:/10.0.0.207:55394 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+23:22:30.628 [pulsar-client-io-492-10] INFO ConnectionPool - [[id: 0xf463225b, L:/10.0.0.207:46854 - R:10.0.0.63/10.0.0.63:6650]] Connected to server
+23:22:30.629 [pulsar-client-io-492-10] INFO ConsumerImpl - [persistent://benchmark/ns-U35vduI/test-0000001-xXExxVI][sub-001-u_MyPew] Subscribing to topic on cnx [id: 0xf463225b, L:/10.0.0.207:46854 - R:10.0.0.63/10.0.0.63:6650], consumerId 0
+23:22:30.635 [pulsar-client-io-492-10] INFO ConsumerImpl - [persistent://benchmark/ns-U35vduI/test-0000001-xXExxVI][sub-001-u_MyPew] Subscribed to topic on 10.0.0.63/10.0.0.63:6650 -- consumer: 0
+23:22:30.635 [main] INFO LocalWorker - Created 1 consumers in 18.958586 ms
+23:22:30.665 [main] INFO WorkloadGenerator - Created 302 producers in 29.594363 ms
+23:22:30.665 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+23:22:30.668 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 0, Expected: 0
+23:22:30.668 [main] INFO WorkloadGenerator - All consumers are ready!
+23:22:30.668 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pulsar-tpc-h-tpc-h-q6-1000-300-2024-05-20-23-22-29 at 1716247350668
+23:27:45.250 [pulsar-external-listener-494-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+23:27:50.720 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pulsar-tpc-h-tpc-h-q6-1000-300-2024-05-20-23-22-29 at 1716247670720
+23:27:53.020 [pulsar-client-io-492-10] INFO ConsumerImpl - [persistent://benchmark/ns-U35vduI/test-0000001-xXExxVI] [sub-001-u_MyPew] Closed consumer
+23:27:53.020 [main] INFO PulsarClientImpl - Client closing. URL: pulsar://10.0.0.148:6650/
+23:27:53.021 [pulsar-client-io-492-5] INFO ClientCnx - [id: 0xecb1bded, L:/10.0.0.207:55392 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:27:53.021 [pulsar-client-io-492-10] INFO ClientCnx - [id: 0xf463225b, L:/10.0.0.207:46854 ! R:10.0.0.63/10.0.0.63:6650] Disconnected
+23:27:53.021 [pulsar-client-io-492-3] INFO ClientCnx - [id: 0xb1c28ab1, L:/10.0.0.207:55390 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:27:53.021 [pulsar-client-io-492-8] INFO ClientCnx - [id: 0xa4a7759b, L:/10.0.0.207:55394 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:27:55.226 [main] INFO CentralWorkerStats - Central worker stats initialized
+23:27:55.229 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.207:8080]
+23:27:55.229 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.93:8080,http://10.0.0.15:8080
+23:27:55.230 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pulsar---------------
+23:27:55.486 [main] INFO LocalWorker - Driver: {
+  "name" : "Pulsar",
+  "driverClass" : "io.openmessaging.benchmark.driver.pulsar.PulsarBenchmarkDriver"
+}
+23:27:55.486 [main] INFO PulsarBenchmarkProducer - Pulsar driver configuration: {
+  "client" : {
+    "serviceUrl" : "pulsar://10.0.0.148:6650/",
+    "httpUrl" : "http://10.0.0.148:8080/",
+    "clientMemoryLimitMB" : 256,
+    "ioThreads" : 16,
+    "connectionsPerBroker" : 8,
+    "maxConcurrentLookupRequests" : 1000,
+    "namespacePrefix" : "benchmark/ns",
+    "clusterName" : "local",
+    "topicType" : "persistent",
+    "persistence" : {
+      "ensembleSize" : 3,
+      "writeQuorum" : 3,
+      "ackQuorum" : 2,
+      "deduplicationEnabled" : false
+    },
+    "tlsAllowInsecureConnection" : false,
+    "tlsEnableHostnameVerification" : false,
+    "tlsTrustCertsFilePath" : null,
+    "authentication" : {
+      "plugin" : null,
+      "data" : null
+    }
+  },
+  "producer" : {
+    "batchingEnabled" : true,
+    "batchingMaxPublishDelayMs" : 1,
+    "batchingMaxBytes" : 131072,
+    "blockIfQueueFull" : true,
+    "pendingQueueSize" : 0,
+    "compressionEnabled" : false
+  },
+  "consumer" : {
+    "receiverQueueSize" : 10000,
+    "subscriptionType" : "Failover"
+  }
+}
+23:27:55.488 [main] INFO PulsarBenchmarkProducer - Created Pulsar client for service URL pulsar://10.0.0.148:6650/
+23:27:55.490 [main] INFO PulsarBenchmarkProducer - Created Pulsar admin client for HTTP URL http://10.0.0.148:8080/
+23:27:55.504 [main] INFO PulsarBenchmarkProducer - Created Pulsar tenant benchmark with allowed cluster local
+23:27:55.515 [main] INFO PulsarBenchmarkProducer - Created Pulsar namespace benchmark/ns-e958RHk
+23:27:55.540 [main] INFO PulsarBenchmarkProducer - Applied persistence configuration for namespace benchmark/local/benchmark/ns-e958RHk: {
+  "ensembleSize" : 3,
+  "writeQuorum" : 3,
+  "ackQuorum" : 2,
+  "deduplicationEnabled" : false
+}
+23:27:55.804 [main] INFO WorkloadGenerator - Created 32 topics in 264.086682 ms
+23:27:55.830 [main] INFO WorkloadGenerator - Created 32 external consumers in 25.941473 ms
+23:27:55.832 [pulsar-client-io-541-3] INFO ConnectionPool - [[id: 0x5dde69b6, L:/10.0.0.207:55624 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+23:27:55.835 [pulsar-client-io-541-5] INFO ConnectionPool - [[id: 0x23bc7c13, L:/10.0.0.207:55626 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+23:27:55.837 [pulsar-client-io-541-8] INFO ConnectionPool - [[id: 0xdc89ce49, L:/10.0.0.207:55628 - R:10.0.0.148/10.0.0.148:6650]] Connected to server
+23:27:55.838 [pulsar-client-io-541-10] INFO ConnectionPool - [[id: 0x2d38e9a8, L:/10.0.0.207:47088 - R:10.0.0.63/10.0.0.63:6650]] Connected to server
+23:27:55.839 [pulsar-client-io-541-10] INFO ConsumerImpl - [persistent://benchmark/ns-nE4eNtw/test-0000001-XtomgJg][sub-001-dekBWm4] Subscribing to topic on cnx [id: 0x2d38e9a8, L:/10.0.0.207:47088 - R:10.0.0.63/10.0.0.63:6650], consumerId 0
+23:27:55.845 [pulsar-client-io-541-10] INFO ConsumerImpl - [persistent://benchmark/ns-nE4eNtw/test-0000001-XtomgJg][sub-001-dekBWm4] Subscribed to topic on 10.0.0.63/10.0.0.63:6650 -- consumer: 0
+23:27:55.845 [main] INFO LocalWorker - Created 1 consumers in 14.678124 ms
+23:27:55.853 [main] INFO WorkloadGenerator - Created 32 producers in 7.229522 ms
+23:27:55.853 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+23:27:55.854 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 0, Expected: 0
+23:27:55.854 [main] INFO WorkloadGenerator - All consumers are ready!
+23:27:55.854 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pulsar-tpc-h-tpc-h-q6-100-30-2024-05-20-23-27-55 at 1716247675854
+23:31:50.555 [pulsar-external-listener-543-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+23:31:55.864 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pulsar-tpc-h-tpc-h-q6-100-30-2024-05-20-23-27-55 at 1716247915864
+23:31:58.085 [pulsar-client-io-541-10] INFO ConsumerImpl - [persistent://benchmark/ns-nE4eNtw/test-0000001-XtomgJg] [sub-001-dekBWm4] Closed consumer
+23:31:58.085 [main] INFO PulsarClientImpl - Client closing. URL: pulsar://10.0.0.148:6650/
+23:31:58.086 [pulsar-client-io-541-3] INFO ClientCnx - [id: 0x5dde69b6, L:/10.0.0.207:55624 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:31:58.086 [pulsar-client-io-541-5] INFO ClientCnx - [id: 0x23bc7c13, L:/10.0.0.207:55626 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:31:58.086 [pulsar-client-io-541-8] INFO ClientCnx - [id: 0xdc89ce49, L:/10.0.0.207:55628 ! R:10.0.0.148/10.0.0.148:6650] Disconnected
+23:31:58.086 [pulsar-client-io-541-10] INFO ClientCnx - [id: 0x2d38e9a8, L:/10.0.0.207:47088 ! R:10.0.0.63/10.0.0.63:6650] Disconnected

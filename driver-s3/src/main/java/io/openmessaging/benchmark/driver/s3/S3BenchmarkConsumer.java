@@ -22,9 +22,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.common.client.AmazonS3Client;
 import io.openmessaging.benchmark.common.monitoring.CentralWorkerStats;
+import io.openmessaging.benchmark.common.monitoring.CumulativeLatencies;
+import io.openmessaging.benchmark.common.monitoring.InstanceWorkerStats;
+import io.openmessaging.benchmark.common.monitoring.PeriodStats;
+import io.openmessaging.benchmark.common.monitoring.PeriodicMonitoring;
 import io.openmessaging.benchmark.common.monitoring.WorkerStats;
 import io.openmessaging.benchmark.common.producer.MessageProducerImpl;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
@@ -33,6 +38,8 @@ import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -40,12 +47,14 @@ import org.slf4j.LoggerFactory;
 
 public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, BenchmarkConsumer {
 
+    private static final ExecutorService executor =
+            Executors.newCachedThreadPool(new DefaultThreadFactory("s3-benchmark-consumer"));
     private static final ObjectMapper mapper =
             new ObjectMapper(new YAMLFactory())
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final Logger log = LoggerFactory.getLogger(S3BenchmarkConsumer.class);
-    private static final WorkerStats stats = new CentralWorkerStats();
+    private static final WorkerStats stats = S3BenchmarkConfiguration.isTpcH ? new CentralWorkerStats() : new InstanceWorkerStats();
     private static final TpcHMessageProcessor messageProcessor =
             new TpcHMessageProcessor(
                     S3BenchmarkConfiguration.s3Uris.stream()
@@ -55,6 +64,20 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                     () -> {},
                     log);
     private static final AmazonS3Client s3Client = new AmazonS3Client();
+
+    static {
+        if (!S3BenchmarkConfiguration.isTpcH) {
+            executor.submit(() -> {
+                while (true) {
+                    Thread.sleep(10000);
+                    PeriodStats periodStats = stats.toPeriodStats();
+                    CumulativeLatencies cumulativeLatencies = stats.toCumulativeLatencies();
+                    PeriodicMonitoring monitoring = new PeriodicMonitoring(periodStats, cumulativeLatencies);
+                    log.info(writer.writeValueAsString(monitoring));
+                }
+            });
+        }
+    }
 
     @Override
     public Void handleRequest(S3Event event, Context context) {
