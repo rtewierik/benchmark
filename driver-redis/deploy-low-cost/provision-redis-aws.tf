@@ -221,6 +221,7 @@ resource "aws_instance" "client" {
     echo "export DEBUG=${var.is_debug}" >> /etc/profile.d/myenvvars.sh
     echo "IS_CLOUD_MONITORING_ENABLED=${var.enable_cloud_monitoring}" >> /etc/environment
     echo "MONITORING_SQS_URI=${var.monitoring_sqs_uri}" >> /etc/environment
+    echo "REGION=${var.region}" >> /etc/environment
     echo "DEBUG=${var.is_debug}" >> /etc/environment
     EOF
 
