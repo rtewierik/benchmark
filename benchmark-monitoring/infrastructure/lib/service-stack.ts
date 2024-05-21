@@ -12,6 +12,7 @@ import {
 } from 'aws-cdk-lib/aws-sqs'
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources'
 import {
+  AccountPrincipal,
   IRole,
   ManagedPolicy,
   PolicyStatement,
@@ -44,7 +45,7 @@ export class ServiceStack extends Stack {
     super(scope, id, props)
 
     const iamRoles = this.getIamRoles()
-    const sqsQueue = this.createBenchmarkMonitoringDataIngestionLayer(iamRoles, props)
+    const sqsQueue = this.createBenchmarkMonitoringDataIngestionLayer(iamRoles)
     const deadLetterQueue = this.createBenchmarkMonitoringLambdaDeadLetterQueue(props)
     const lambda = this.createBenchmarkMonitoringLambda(sqsQueue, deadLetterQueue, props)
     this.createBenchmarkMonitoringDynamoDb(lambda, props)
@@ -56,11 +57,17 @@ export class ServiceStack extends Stack {
     return IAM_ROLE_NAMES.map((roleName, index) => Role.fromRoleName(this, `BenchmarkMonitoringRole${index}`, roleName))
   }
 
-  private createBenchmarkMonitoringDataIngestionLayer(iamRoles: IRole[], props: BenchmarkMonitoringStackProps): Queue {
+  private createBenchmarkMonitoringDataIngestionLayer(iamRoles: IRole[]): Queue {
     const sqsQueue = new Queue(this, 'BenchmarkMonitoringDataIngestionSqsQueue', {
       queueName: 'benchmark-monitoring'
     })
     iamRoles.forEach(role => sqsQueue.grantSendMessages(role));
+    const adminPolicyStatement = new PolicyStatement({
+      actions: ['sqs:*'],
+      principals: [new AccountPrincipal('730335367108')],
+      resources: [sqsQueue.queueArn]
+    });
+    sqsQueue.addToResourcePolicy(adminPolicyStatement);
     return sqsQueue;
   }
 

@@ -35,7 +35,7 @@ for info in $(echo "${instance_info}" | jq -c '.[]'); do
 
       # Retrieve metric data for the instance
       output=$(aws cloudwatch get-metric-data \
-        --start-time "$(date -u -v-3H)" \
+        --start-time "$(date -u -v-4H)" \
         --end-time "$(date -u)" \
         --metric-data-queries '[
           {

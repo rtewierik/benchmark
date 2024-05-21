@@ -262,6 +262,7 @@
                         <exclude>**/.terraform*/**</exclude>
                         <exclude>**/*.tf</exclude>
                         <exclude>**/*.tfvars</exclude>
+                        <exclude>**/*.txt</exclude>
                     </excludes>
                     <mapping>
                         <benchmark>SCRIPT_STYLE</benchmark>
