@@ -56,7 +56,8 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final Logger log = LoggerFactory.getLogger(SnsSqsBenchmarkConsumer.class);
-    private static final WorkerStats stats = SnsSqsBenchmarkConfiguration.isTpcH ? new CentralWorkerStats() : new InstanceWorkerStats();
+    private static final WorkerStats stats =
+            SnsSqsBenchmarkConfiguration.isTpcH ? new CentralWorkerStats() : new InstanceWorkerStats();
     private static final TpcHMessageProcessor messageProcessor =
             new TpcHMessageProcessor(
                     SnsSqsBenchmarkConfiguration.snsUris.stream()
@@ -74,15 +75,17 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
 
     static {
         if (!SnsSqsBenchmarkConfiguration.isTpcH) {
-            executor.submit(() -> {
-                while (true) {
-                    Thread.sleep(10000);
-                    PeriodStats periodStats = stats.toPeriodStats();
-                    CumulativeLatencies cumulativeLatencies = stats.toCumulativeLatencies();
-                    PeriodicMonitoring monitoring = new PeriodicMonitoring(periodStats, cumulativeLatencies);
-                    log.info(writer.writeValueAsString(monitoring));
-                }
-            });
+            executor.submit(
+                    () -> {
+                        while (true) {
+                            Thread.sleep(10000);
+                            PeriodStats periodStats = stats.toPeriodStats();
+                            CumulativeLatencies cumulativeLatencies = stats.toCumulativeLatencies();
+                            PeriodicMonitoring monitoring =
+                                    new PeriodicMonitoring(periodStats, cumulativeLatencies);
+                            log.info(writer.writeValueAsString(monitoring));
+                        }
+                    });
         }
     }
 
