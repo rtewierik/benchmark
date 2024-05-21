@@ -70,15 +70,15 @@ workloads/tpc-h-base-long.yaml
 
 sudo bin/benchmark \
 --drivers driver-rabbitmq/rabbitmq-experiment.yaml \
-workloads/throughput-100b-10.yaml,workloads/throughput-100b-100.yaml,workloads/throughput-100b-500.yaml,workloads/throughput-100b-10.yaml,workloads/throughput-100b-100.yaml,workloads/throughput-100b-500.yaml,workloads/throughput-100b-10.yaml,workloads/throughput-100b-100.yaml,workloads/throughput-100b-500.yaml
+workloads/throughput-100b-10.yaml workloads/throughput-100b-100.yaml workloads/throughput-100b-500.yaml workloads/throughput-100b-10.yaml workloads/throughput-100b-100.yaml workloads/throughput-100b-500.yaml workloads/throughput-100b-10.yaml workloads/throughput-100b-100.yaml workloads/throughput-100b-500.yaml
 
 sudo bin/benchmark \
 --drivers driver-rabbitmq/rabbitmq-experiment.yaml \
-workloads/throughput-1kb-10.yaml,workloads/throughput-1kb-100.yaml,workloads/throughput-1kb-500.yaml,workloads/throughput-1kb-10.yaml,workloads/throughput-1kb-100.yaml,workloads/throughput-1kb-500.yaml,workloads/throughput-1kb-10.yaml,workloads/throughput-1kb-100.yaml,workloads/throughput-1kb-500.yaml
+workloads/throughput-1kb-10.yaml workloads/throughput-1kb-100.yaml workloads/throughput-1kb-500.yaml workloads/throughput-1kb-10.yaml workloads/throughput-1kb-100.yaml workloads/throughput-1kb-500.yaml workloads/throughput-1kb-10.yaml workloads/throughput-1kb-100.yaml workloads/throughput-1kb-500.yaml
 
 sudo bin/benchmark \
 --drivers driver-rabbitmq/rabbitmq-experiment.yaml \
-workloads/throughput-10kb-10.yaml,workloads/throughput-10kb-100.yaml,workloads/throughput-10kb-500.yaml,workloads/throughput-10kb-10.yaml,workloads/throughput-10kb-100.yaml,workloads/throughput-10kb-500.yaml,workloads/throughput-10kb-10.yaml,workloads/throughput-10kb-100.yaml,workloads/throughput-10kb-500.yaml
+workloads/throughput-10kb-10.yaml workloads/throughput-10kb-100.yaml workloads/throughput-10kb-500.yaml workloads/throughput-10kb-10.yaml workloads/throughput-10kb-100.yaml workloads/throughput-10kb-500.yaml workloads/throughput-10kb-10.yaml workloads/throughput-10kb-100.yaml workloads/throughput-10kb-500.yaml
 
 ### Locations to configure memory in case of changing instance size
 

@@ -1,0 +1,348 @@
+sudo bin/benchmark \
+> --drivers driver-redis/redis-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-1000-500.yaml,workloads/tpc-h-q1-100-50.yaml,workloads/tpc-h-q6-1000-500.yaml,workloads/tpc-h-q6-100-50.yaml,workloads/tpc-h-q1-1000-500.yaml,workloads/tpc-h-q1-100-50.yaml,workloads/tpc-h-q6-1000-500.yaml,workloads/tpc-h-q6-100-50.yaml,workloads/tpc-h-q1-1000-500.yaml,workloads/tpc-h-q1-100-50.yaml,workloads/tpc-h-q6-1000-500.yaml,workloads/tpc-h-q6-100-50.yaml \
+> workloads/tpc-h-base-long.yaml
+11:48:23.474 [main] INFO Benchmark - Using default worker file workers.yaml!
+11:48:23.482 [main] INFO Benchmark - Reading workers list from workers.yaml
+11:48:23.530 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-redis/redis-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.84:8080", "http://10.0.0.215:8080", "http://10.0.0.43:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-1000-500.yaml", "workloads/tpc-h-q1-100-50.yaml", "workloads/tpc-h-q6-1000-500.yaml", "workloads/tpc-h-q6-100-50.yaml", "workloads/tpc-h-q1-1000-500.yaml", "workloads/tpc-h-q1-100-50.yaml", "workloads/tpc-h-q6-1000-500.yaml", "workloads/tpc-h-q6-100-50.yaml", "workloads/tpc-h-q1-1000-500.yaml", "workloads/tpc-h-q1-100-50.yaml", "workloads/tpc-h-q6-1000-500.yaml", "workloads/tpc-h-q6-100-50.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+11:48:23.546 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+11:48:23.561 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-1000-500",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 500,
+  "defaultNumberOfMapResults" : 2
+}, {
+  "queryId" : "tpc-h-q1-100-50",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 50,
+  "defaultNumberOfMapResults" : 2
+}, {
+  "queryId" : "tpc-h-q6-1000-500",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 500,
+  "defaultNumberOfMapResults" : 2
+}, {
+  "queryId" : "tpc-h-q6-100-50",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 50,
+  "defaultNumberOfMapResults" : 2
+}, {
+  "queryId" : "tpc-h-q1-1000-500",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 500,
+  "defaultNumberOfMapResults" : 2
+}, {
+  "queryId" : "tpc-h-q1-100-50",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 50,
+  "defaultNumberOfMapResults" : 2
+}, {
+  "queryId" : "tpc-h-q6-1000-500",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 500,
+  "defaultNumberOfMapResults" : 2
+}, {
+  "queryId" : "tpc-h-q6-100-50",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 50,
+  "defaultNumberOfMapResults" : 2
+}, {
+  "queryId" : "tpc-h-q1-1000-500",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 500,
+  "defaultNumberOfMapResults" : 2
+}, {
+  "queryId" : "tpc-h-q1-100-50",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 50,
+  "defaultNumberOfMapResults" : 2
+}, {
+  "queryId" : "tpc-h-q6-1000-500",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 500,
+  "defaultNumberOfMapResults" : 2
+}, {
+  "queryId" : "tpc-h-q6-100-50",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 50,
+  "defaultNumberOfMapResults" : 2
+} ]
+11:48:23.903 [main] INFO CentralWorkerStats - Central worker stats initialized
+11:48:24.148 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.84:8080]
+11:48:24.148 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.43:8080,http://10.0.0.215:8080
+11:48:24.150 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+11:48:24.498 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+11:48:24.517 [main] INFO WorkloadGenerator - Created 502 topics in 11.904761 ms
+11:48:24.951 [main] INFO WorkloadGenerator - Created 502 external consumers in 416.881233 ms
+11:48:24.955 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.ng.0001.euw1.cache.amazonaws.com:6379 with user null
+11:48:25.027 [main] INFO LocalWorker - Created 1 consumers in 75.104664 ms
+11:48:25.037 [main] INFO WorkloadGenerator - Created 502 producers in 9.300347 ms
+11:48:25.037 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+11:48:25.230 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 502, Received: 501, Expected: 0
+11:48:25.230 [main] INFO WorkloadGenerator - All consumers are ready!
+11:48:25.230 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q1-1000-500-2024-05-21-11-48-24 at 1716292105230
+11:55:25.431 [pool-2-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+11:55:25.623 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q1-1000-500-2024-05-21-11-48-24 at 1716292525623
+11:55:26.040 [main] INFO CentralWorkerStats - Central worker stats initialized
+11:55:26.046 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.84:8080]
+11:55:26.046 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.43:8080,http://10.0.0.215:8080
+11:55:26.048 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+11:55:26.256 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+11:55:26.259 [main] INFO WorkloadGenerator - Created 52 topics in 1.989324 ms
+11:55:26.311 [main] INFO WorkloadGenerator - Created 52 external consumers in 50.755861 ms
+11:55:26.311 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.ng.0001.euw1.cache.amazonaws.com:6379 with user null
+11:55:26.314 [main] INFO LocalWorker - Created 1 consumers in 2.459565 ms
+11:55:26.316 [main] INFO WorkloadGenerator - Created 52 producers in 2.003451 ms
+11:55:26.316 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+11:55:26.343 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 52, Received: 51, Expected: 0
+11:55:26.343 [main] INFO WorkloadGenerator - All consumers are ready!
+11:55:26.343 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q1-100-50-2024-05-21-11-55-26 at 1716292526343
+12:00:34.295 [pool-3-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132737,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880071,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612946,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+12:00:36.383 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q1-100-50-2024-05-21-11-55-26 at 1716292836383
+12:00:36.791 [main] INFO CentralWorkerStats - Central worker stats initialized
+12:00:36.805 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.84:8080]
+12:00:36.805 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.43:8080,http://10.0.0.215:8080
+12:00:36.806 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+12:00:37.013 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+12:00:37.017 [main] INFO WorkloadGenerator - Created 502 topics in 3.495199 ms
+12:00:37.433 [main] INFO WorkloadGenerator - Created 502 external consumers in 409.402755 ms
+12:00:37.433 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.ng.0001.euw1.cache.amazonaws.com:6379 with user null
+12:00:37.436 [main] INFO LocalWorker - Created 1 consumers in 2.683053 ms
+12:00:37.439 [main] INFO WorkloadGenerator - Created 502 producers in 2.899163 ms
+12:00:37.439 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+12:00:37.614 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 502, Received: 501, Expected: 0
+12:00:37.614 [main] INFO WorkloadGenerator - All consumers are ready!
+12:00:37.614 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-1000-500-2024-05-21-12-00-37 at 1716292837614
+12:07:01.834 [pool-4-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+12:07:07.757 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-1000-500-2024-05-21-12-00-37 at 1716293227757
+12:07:08.169 [main] INFO CentralWorkerStats - Central worker stats initialized
+12:07:08.173 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.84:8080]
+12:07:08.174 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.43:8080,http://10.0.0.215:8080
+12:07:08.174 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+12:07:08.381 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+12:07:08.383 [main] INFO WorkloadGenerator - Created 52 topics in 1.352046 ms
+12:07:08.434 [main] INFO WorkloadGenerator - Created 52 external consumers in 50.537584 ms
+12:07:08.434 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.ng.0001.euw1.cache.amazonaws.com:6379 with user null
+12:07:08.437 [main] INFO LocalWorker - Created 1 consumers in 2.95809 ms
+12:07:08.439 [main] INFO WorkloadGenerator - Created 52 producers in 1.528831 ms
+12:07:08.440 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+12:07:08.462 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 52, Received: 51, Expected: 0
+12:07:08.462 [main] INFO WorkloadGenerator - All consumers are ready!
+12:07:08.463 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-100-50-2024-05-21-12-07-08 at 1716293228463
+12:11:29.741 [pool-5-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+12:11:38.504 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-100-50-2024-05-21-12-07-08 at 1716293498504
+12:11:38.915 [main] INFO CentralWorkerStats - Central worker stats initialized
+12:11:38.920 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.84:8080]
+12:11:38.920 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.43:8080,http://10.0.0.215:8080
+12:11:38.920 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+12:11:39.129 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+12:11:39.132 [main] INFO WorkloadGenerator - Created 502 topics in 2.717947 ms
+12:11:39.592 [main] INFO WorkloadGenerator - Created 502 external consumers in 458.061854 ms
+12:11:39.592 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.ng.0001.euw1.cache.amazonaws.com:6379 with user null
+12:11:39.594 [main] INFO LocalWorker - Created 1 consumers in 2.604964 ms
+12:11:39.598 [main] INFO WorkloadGenerator - Created 502 producers in 2.858879 ms
+12:11:39.598 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+12:11:39.756 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 502, Received: 501, Expected: 0
+12:11:39.756 [main] INFO WorkloadGenerator - All consumers are ready!
+12:11:39.756 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q1-1000-500-2024-05-21-12-11-39 at 1716293499756
+12:18:48.769 [pool-6-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+12:18:49.914 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q1-1000-500-2024-05-21-12-11-39 at 1716293929914
+12:18:50.321 [main] INFO CentralWorkerStats - Central worker stats initialized
+12:18:50.340 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.84:8080]
+12:18:50.340 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.43:8080,http://10.0.0.215:8080
+12:18:50.341 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+12:18:50.548 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+12:18:50.550 [main] INFO WorkloadGenerator - Created 52 topics in 1.339031 ms
+12:18:50.651 [main] INFO WorkloadGenerator - Created 52 external consumers in 100.251208 ms
+12:18:50.651 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.ng.0001.euw1.cache.amazonaws.com:6379 with user null
+12:18:50.654 [main] INFO LocalWorker - Created 1 consumers in 2.694665 ms
+12:18:50.656 [main] INFO WorkloadGenerator - Created 52 producers in 1.436768 ms
+12:18:50.656 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+12:18:50.684 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 52, Received: 51, Expected: 0
+12:18:50.684 [main] INFO WorkloadGenerator - All consumers are ready!
+12:18:50.684 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q1-100-50-2024-05-21-12-18-50 at 1716293930684
+12:24:06.167 [pool-7-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132737,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880071,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612946,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+12:24:10.726 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q1-100-50-2024-05-21-12-18-50 at 1716294250726
+12:24:11.132 [main] INFO CentralWorkerStats - Central worker stats initialized
+12:24:11.136 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.84:8080]
+12:24:11.136 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.43:8080,http://10.0.0.215:8080
+12:24:11.137 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+12:24:11.343 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+12:24:11.346 [main] INFO WorkloadGenerator - Created 502 topics in 2.468931 ms
+12:24:11.752 [main] INFO WorkloadGenerator - Created 502 external consumers in 404.585499 ms
+12:24:11.752 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.ng.0001.euw1.cache.amazonaws.com:6379 with user null
+12:24:11.754 [main] INFO LocalWorker - Created 1 consumers in 2.573736 ms
+12:24:11.758 [main] INFO WorkloadGenerator - Created 502 producers in 2.76471 ms
+12:24:11.758 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+12:24:11.934 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 502, Received: 501, Expected: 0
+12:24:11.934 [main] INFO WorkloadGenerator - All consumers are ready!
+12:24:11.934 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-1000-500-2024-05-21-12-24-11 at 1716294251934
+12:30:38.788 [pool-8-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+12:30:42.070 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-1000-500-2024-05-21-12-24-11 at 1716294642070
+12:30:42.476 [main] INFO CentralWorkerStats - Central worker stats initialized
+12:30:42.480 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.84:8080]
+12:30:42.480 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.43:8080,http://10.0.0.215:8080
+12:30:42.480 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+12:30:42.685 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+12:30:42.687 [main] INFO WorkloadGenerator - Created 52 topics in 1.105356 ms
+12:30:42.739 [main] INFO WorkloadGenerator - Created 52 external consumers in 51.519484 ms
+12:30:42.739 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.ng.0001.euw1.cache.amazonaws.com:6379 with user null
+12:30:42.742 [main] INFO LocalWorker - Created 1 consumers in 2.511418 ms
+12:30:42.743 [main] INFO WorkloadGenerator - Created 52 producers in 1.384172 ms
+12:30:42.744 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+12:30:42.766 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 52, Received: 51, Expected: 0
+12:30:42.766 [main] INFO WorkloadGenerator - All consumers are ready!
+12:30:42.766 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-100-50-2024-05-21-12-30-42 at 1716294642766
+12:35:09.398 [pool-9-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+12:35:12.790 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-100-50-2024-05-21-12-30-42 at 1716294912790
+12:35:13.195 [main] INFO CentralWorkerStats - Central worker stats initialized
+12:35:13.200 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.84:8080]
+12:35:13.200 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.43:8080,http://10.0.0.215:8080
+12:35:13.200 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+12:35:13.405 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+12:35:13.408 [main] INFO WorkloadGenerator - Created 502 topics in 2.311433 ms
+12:35:13.823 [main] INFO WorkloadGenerator - Created 502 external consumers in 413.770354 ms
+12:35:13.823 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.ng.0001.euw1.cache.amazonaws.com:6379 with user null
+12:35:13.826 [main] INFO LocalWorker - Created 1 consumers in 2.722462 ms
+12:35:13.829 [main] INFO WorkloadGenerator - Created 502 producers in 2.573589 ms
+12:35:13.829 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+12:35:13.988 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 502, Received: 501, Expected: 0
+12:35:13.989 [main] INFO WorkloadGenerator - All consumers are ready!
+12:35:13.989 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q1-1000-500-2024-05-21-12-35-13 at 1716294913989
+12:42:26.155 [pool-10-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+12:42:34.106 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q1-1000-500-2024-05-21-12-35-13 at 1716295354106
+12:42:34.511 [main] INFO CentralWorkerStats - Central worker stats initialized
+12:42:34.515 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.84:8080]
+12:42:34.515 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.43:8080,http://10.0.0.215:8080
+12:42:34.515 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+12:42:34.721 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+12:42:34.723 [main] INFO WorkloadGenerator - Created 52 topics in 1.308985 ms
+12:42:34.776 [main] INFO WorkloadGenerator - Created 52 external consumers in 53.013903 ms
+12:42:34.776 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.ng.0001.euw1.cache.amazonaws.com:6379 with user null
+12:42:34.779 [main] INFO LocalWorker - Created 1 consumers in 2.55328 ms
+12:42:34.780 [main] INFO WorkloadGenerator - Created 52 producers in 1.19413 ms
+12:42:34.781 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+12:42:34.805 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 52, Received: 51, Expected: 0
+12:42:34.805 [main] INFO WorkloadGenerator - All consumers are ready!
+12:42:34.805 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q1-100-50-2024-05-21-12-42-34 at 1716295354805
+12:47:38.687 [pool-11-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132737,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880071,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612946,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+12:47:44.840 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q1-100-50-2024-05-21-12-42-34 at 1716295664840
+12:47:45.258 [main] INFO CentralWorkerStats - Central worker stats initialized
+12:47:45.262 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.84:8080]
+12:47:45.262 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.43:8080,http://10.0.0.215:8080
+12:47:45.262 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+12:47:45.467 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+12:47:45.470 [main] INFO WorkloadGenerator - Created 502 topics in 2.336073 ms
+12:47:45.887 [main] INFO WorkloadGenerator - Created 502 external consumers in 416.059674 ms
+12:47:45.887 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.ng.0001.euw1.cache.amazonaws.com:6379 with user null
+12:47:45.890 [main] INFO LocalWorker - Created 1 consumers in 2.615086 ms
+12:47:45.897 [main] INFO WorkloadGenerator - Created 502 producers in 2.566367 ms
+12:47:45.897 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+12:47:46.071 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 502, Received: 501, Expected: 0
+12:47:46.071 [main] INFO WorkloadGenerator - All consumers are ready!
+12:47:46.071 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-1000-500-2024-05-21-12-47-45 at 1716295666071
+12:54:00.516 [pool-12-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+12:54:06.203 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-1000-500-2024-05-21-12-47-45 at 1716296046203
+12:54:06.608 [main] INFO CentralWorkerStats - Central worker stats initialized
+12:54:06.612 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.84:8080]
+12:54:06.613 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.43:8080,http://10.0.0.215:8080
+12:54:06.613 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+12:54:06.818 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+12:54:06.820 [main] INFO WorkloadGenerator - Created 52 topics in 1.106 ms
+12:54:06.874 [main] INFO WorkloadGenerator - Created 52 external consumers in 53.821212 ms
+12:54:06.874 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.ng.0001.euw1.cache.amazonaws.com:6379 with user null
+12:54:06.876 [main] INFO LocalWorker - Created 1 consumers in 2.557447 ms
+12:54:06.878 [main] INFO WorkloadGenerator - Created 52 producers in 1.126107 ms
+12:54:06.878 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+12:54:06.901 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 52, Received: 51, Expected: 0
+12:54:06.901 [main] INFO WorkloadGenerator - All consumers are ready!
+12:54:06.901 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-100-50-2024-05-21-12-54-06 at 1716296046901
+12:58:28.136 [pool-13-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+12:58:36.927 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-100-50-2024-05-21-12-54-06 at 1716296316927
