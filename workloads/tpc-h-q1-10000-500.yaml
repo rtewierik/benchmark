@@ -16,5 +16,4 @@ queryId: tpc-h-q1-10000-500
 query: PricingSummaryReport
 sourceDataS3FolderUri: s3://tpc-h-chunks/chunks-by-file-size/7kb
 numberOfChunks: 10000
-numberOfReducers: 500
-numberOfProducers: 500
+numberOfWorkers: 500

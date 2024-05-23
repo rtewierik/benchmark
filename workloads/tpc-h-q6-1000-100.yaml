@@ -16,5 +16,4 @@ queryId: tpc-h-q6-1000-100
 query: ForecastingRevenueChange
 sourceDataS3FolderUri: s3://tpc-h-chunks/chunks-by-file-size/7mb
 numberOfChunks: 1000
-numberOfReducers: 100
-numberOfProducers: 100
+numberOfWorkers: 100

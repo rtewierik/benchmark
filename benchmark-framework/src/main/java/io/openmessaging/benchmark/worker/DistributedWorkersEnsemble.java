@@ -126,15 +126,10 @@ public class DistributedWorkersEnsemble implements Worker {
         log.debug("Setting worker assigned publish rate to {} msgs/sec", newRate);
         List<Worker> workersToStart =
                 producerWorkAssignment.tpcHArguments != null ? this.workers : this.producerWorkers;
-        int producersNeeded =
-                producerWorkAssignment.tpcHArguments != null
-                        ? producerWorkAssignment.tpcHArguments.numberOfReducers
-                        : workersToStart.size();
+        int producersNeeded = workersToStart.size();
         List<AbstractMap.SimpleEntry<Worker, Integer>> workersToStartWithIndices =
                 IntStream.range(0, producersNeeded)
-                        .mapToObj(
-                                i ->
-                                        new AbstractMap.SimpleEntry<>(workersToStart.get(i % workersToStart.size()), i))
+                        .mapToObj(i -> new AbstractMap.SimpleEntry<>(workersToStart.get(i), i))
                         .collect(Collectors.toList());
         workersToStartWithIndices.parallelStream()
                 .forEach(

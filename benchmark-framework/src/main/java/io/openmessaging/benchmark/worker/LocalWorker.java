@@ -251,23 +251,13 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
         updateMessageProducer(producerWorkAssignment.publishRate);
 
-        Map<Integer, List<BenchmarkProducer>> processorAssignment = new TreeMap<>();
-
         BenchmarkProducer producer = producers.get(TpcHConstants.MAP_CMD_INDEX);
-        int processorIdx = 0;
-        for (int i = 0; i < producerWorkAssignment.tpcHArguments.numberOfProducers; i++) {
-            processorAssignment
-                    .computeIfAbsent(processorIdx, x -> new ArrayList<>())
-                    .add(producer);
-            processorIdx = (processorIdx + 1) % processors;
-        }
-
-        processorAssignment.forEach((key, value) ->
-                submitTpcHProducersToExecutor(producerWorkAssignment, processors, value, key));
+        IntStream.range(0, processors).forEach(index ->
+                submitTpcHProducersToExecutor(producerWorkAssignment, processors, producer, index));
     }
 
-    public int getProducerNumberOfMapResults(int numberOfMapResults, int numberOfProducers, int index) {
-        int defaultNumberOfMapResults = getDefaultProducerNumberOfMapResults(numberOfMapResults, numberOfProducers);
+    public int getProcessorNumberOfMapResults(int numberOfMapResults, int numberOfProcessors, int index) {
+        int defaultNumberOfMapResults = getDefaultProcessorNumberOfMapResults(numberOfMapResults, numberOfProcessors);
         int mapResultsLeft = numberOfMapResults - index * defaultNumberOfMapResults;
         if (mapResultsLeft < 0) {
             return 0;
@@ -275,14 +265,14 @@ public class LocalWorker implements Worker, ConsumerCallback {
         return Math.min(mapResultsLeft, defaultNumberOfMapResults);
     }
 
-    public int getDefaultProducerNumberOfMapResults(int numberOfMapResults, int numberOfProducers) {
-         return (int) Math.ceil((double) numberOfMapResults / numberOfProducers);
+    public int getDefaultProcessorNumberOfMapResults(int numberOfMapResults, int numberOfProcessors) {
+         return (int) Math.ceil((double) numberOfMapResults / numberOfProcessors);
     }
 
     private void submitTpcHProducersToExecutor(
             ProducerWorkAssignment producerWorkAssignment,
             Integer numProcessors,
-            List<BenchmarkProducer> producers,
+            BenchmarkProducer producer,
             Integer processorProducerIndex
     ) {
         executor.submit(
@@ -292,64 +282,52 @@ public class LocalWorker implements Worker, ConsumerCallback {
                             producerWorkAssignment.producerIndex
                     );
                     KeyDistributor keyDistributor = KeyDistributor.build(producerWorkAssignment.keyDistributorType);
-                    Integer numberOfMapResults = this.getProducerNumberOfMapResults(
-                            assignment.numberOfMapResults,
+                    Integer defaultProcessorNumberOfMapResults = getDefaultProcessorNumberOfMapResults(
+                            assignment.producerNumberOfMapResults,
+                            numProcessors
+                    );
+                    Integer numberOfMapResults = getProcessorNumberOfMapResults(
+                            assignment.producerNumberOfMapResults,
                             numProcessors,
                             processorProducerIndex);
                     Integer batchSize = assignment.batchSize;
-                    Integer numProducers = producers.size();
                     Integer start = assignment.offset * batchSize;
-                    Integer numberOfProducerMapResults = this.getDefaultProducerNumberOfMapResults(
-                            numberOfMapResults,
-                            numProducers
-                    );
                     String folderUri = assignment.sourceDataS3FolderUri;
                     String batchId = String.format(
                             "%s-batch-%d-%s", assignment.queryId, assignment.offset, assignment.batchSize);
-                    for (int mapResultIdx = 1; mapResultIdx <= numberOfProducerMapResults; mapResultIdx++) {
-                        for (int producerIdx = 0; producerIdx < numProducers; producerIdx++) {
-                            // ATTEND: Can be memoized.
-                            int producerNumberOfMapResults = getProducerNumberOfMapResults(
-                                    numberOfMapResults,
-                                    numProducers,
-                                    producerIdx
+                    for (int mapResultIdx = 1; mapResultIdx <= numberOfMapResults; mapResultIdx++) {
+                        try {
+                            Integer chunkIndex = start + processorProducerIndex * defaultProcessorNumberOfMapResults + mapResultIdx;
+                            Integer groupedChunkIndex = (chunkIndex - 1) / 1000;
+                            String s3Uri = chunkIndex > 1000
+                                    ? String.format("%s/%s/chunk_%d.csv", folderUri, groupedChunkIndex, chunkIndex)
+                                    : String.format("%s/chunk_%d.csv", folderUri, chunkIndex);
+                            TpcHConsumerAssignment consumerAssignment = new TpcHConsumerAssignment(
+                                    assignment.query,
+                                    assignment.queryId,
+                                    batchId,
+                                    chunkIndex,
+                                    producerWorkAssignment.producerIndex,
+                                    assignment.consumerNumberOfMapResults,
+                                    assignment.numberOfChunks,
+                                    s3Uri
                             );
-                            if (mapResultIdx > producerNumberOfMapResults) {
-                                continue;
-                            }
-                            try {
-                                Integer chunkIndex = start + producerIdx * numberOfProducerMapResults + mapResultIdx;
-                                Integer groupedChunkIndex = (chunkIndex - 1) / 1000;
-                                String s3Uri = chunkIndex > 1000
-                                        ? String.format("%s/%s/chunk_%d.csv", folderUri, groupedChunkIndex, chunkIndex)
-                                        : String.format("%s/chunk_%d.csv", folderUri, chunkIndex);
-                                TpcHConsumerAssignment consumerAssignment = new TpcHConsumerAssignment(
-                                        assignment.query,
-                                        assignment.queryId,
-                                        batchId,
-                                        chunkIndex,
-                                        producerWorkAssignment.producerIndex,
-                                        assignment.numberOfMapResults,
-                                        assignment.numberOfChunks,
-                                        s3Uri
-                                );
-                                TpcHMessage message = new TpcHMessage(
-                                        TpcHMessageType.ConsumerAssignment,
-                                        messageWriter.writeValueAsString(consumerAssignment)
-                                );
-                                String key = keyDistributor.next();
-                                Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
-                                messageProducer.sendMessage(
-                                        producers.get(producerIdx),
-                                        optionalKey,
-                                        messageWriter.writeValueAsBytes(message),
-                                        this.experimentId,
-                                        message.messageId,
-                                        true
-                                );
-                            } catch (Throwable t) {
-                                log.error("Got error", t);
-                            }
+                            TpcHMessage message = new TpcHMessage(
+                                    TpcHMessageType.ConsumerAssignment,
+                                    messageWriter.writeValueAsString(consumerAssignment)
+                            );
+                            String key = keyDistributor.next();
+                            Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
+                            messageProducer.sendMessage(
+                                    producer,
+                                    optionalKey,
+                                    messageWriter.writeValueAsBytes(message),
+                                    this.experimentId,
+                                    message.messageId,
+                                    true
+                            );
+                        } catch (Throwable t) {
+                            log.error("Got error", t);
                         }
                     }
                 });

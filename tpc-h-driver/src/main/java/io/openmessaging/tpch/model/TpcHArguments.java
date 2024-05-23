@@ -26,22 +26,19 @@ public class TpcHArguments {
     public final TpcHQuery query;
     public final String sourceDataS3FolderUri;
     public final Integer numberOfChunks;
-    public final Integer numberOfReducers;
-    public final Integer numberOfProducers;
+    public final Integer numberOfWorkers;
 
     public TpcHArguments(
             @JsonProperty("queryId") String queryId,
             @JsonProperty("query") TpcHQuery query,
             @JsonProperty("sourceDataS3FolderUri") String sourceDataS3FolderUri,
             @JsonProperty("numberOfChunks") Integer numberOfChunks,
-            @JsonProperty("numberOFReducers") Integer numberOfReducers,
-            @JsonProperty("numberOfProducers") Integer numberOfProducers) {
+            @JsonProperty("numberOfWorkers") Integer numberOfWorkers) {
         this.queryId = queryId;
         this.query = query;
         this.sourceDataS3FolderUri = sourceDataS3FolderUri;
         this.numberOfChunks = numberOfChunks;
-        this.numberOfReducers = numberOfReducers;
-        this.numberOfProducers = numberOfProducers;
+        this.numberOfWorkers = numberOfWorkers;
     }
 
     public TpcHArguments withQueryIdDate() {
@@ -51,20 +48,19 @@ public class TpcHArguments {
                 this.query,
                 this.sourceDataS3FolderUri,
                 this.numberOfChunks,
-                this.numberOfReducers,
-                this.numberOfProducers);
+                this.numberOfWorkers);
     }
 
-    public int getNumberOfMapResults(int index) {
-        int defaultNumberOfIntermediateResults = this.getDefaultNumberOfMapResults();
-        int chunksLeft = numberOfChunks - index * defaultNumberOfIntermediateResults;
+    public int getNumberOfMapResults(int producerIndex, int numberOfWorkers) {
+        int defaultNumberOfIntermediateResults = this.getDefaultNumberOfMapResults(numberOfWorkers);
+        int chunksLeft = numberOfChunks - producerIndex * defaultNumberOfIntermediateResults;
         if (chunksLeft < 0) {
             return 0;
         }
         return Math.min(chunksLeft, defaultNumberOfIntermediateResults);
     }
 
-    public int getDefaultNumberOfMapResults() {
-        return (int) Math.ceil((double) this.numberOfChunks / this.numberOfReducers);
+    public int getDefaultNumberOfMapResults(int numberOfWorkers) {
+        return (int) Math.ceil((double) this.numberOfChunks / numberOfWorkers);
     }
 }

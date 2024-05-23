@@ -108,7 +108,7 @@ public class WorkloadGenerator implements AutoCloseable {
          * 1 topic to send aggregated intermediate results to.
          * x topics to send intermediate results to;
          */
-        int numberOfTopics = 1 + 1 + this.arguments.numberOfReducers;
+        int numberOfTopics = 1 + 1 + this.arguments.numberOfWorkers;
         List<String> topics =
                 worker.createTopics(new TopicsInfo(numberOfTopics, workload.partitionsPerTopic));
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
@@ -129,6 +129,7 @@ public class WorkloadGenerator implements AutoCloseable {
         createTpcHProducers(topics);
 
         ensureTopicsAreReady();
+        worker.pauseConsumers();
 
         if (workload.producerRate > 0) {
             targetPublishRate = workload.producerRate;
@@ -146,6 +147,36 @@ public class WorkloadGenerator implements AutoCloseable {
         log.info(
                 "[BenchmarkStart] Starting benchmark {} at {}", this.experimentId, new Date().getTime());
         worker.startLoad(producerWorkAssignment);
+
+        // Could consider not awaiting here, will need to be tested.
+        int expectedMessages = this.arguments.numberOfChunks;
+
+        long start = System.currentTimeMillis();
+        long end = start + 60 * 1000;
+        while (System.currentTimeMillis() < end) {
+            CountersStats stats = worker.getCountersStats();
+
+            log.info(
+                    "Waiting for producers to be ready -- Sent: {}, Received: {}, Expected: {}",
+                    stats.messagesSent,
+                    stats.messagesReceived,
+                    expectedMessages);
+            if (stats.messagesReceived < expectedMessages) {
+                try {
+                    Thread.sleep(2_000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                break;
+            }
+        }
+
+        if (System.currentTimeMillis() >= end) {
+            throw new RuntimeException("Timed out waiting for producers to be ready");
+        } else {
+            log.info("All producers are ready!");
+        }
 
         TestResult result =
                 printAndCollectStats(
@@ -375,7 +406,7 @@ public class WorkloadGenerator implements AutoCloseable {
         consumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
         orchestratorConsumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
 
-        for (int i = 0; i < this.arguments.numberOfReducers; i++) {
+        for (int i = 0; i < this.arguments.numberOfWorkers; i++) {
             int sourceIndex = TpcHConstants.REDUCE_SRC_START_INDEX + i;
             consumerAssignment.topicsSubscriptions.add(
                     new TopicSubscription(topics.get(sourceIndex), generateSubscriptionName(sourceIndex)));

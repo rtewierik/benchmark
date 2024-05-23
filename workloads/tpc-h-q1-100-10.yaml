@@ -16,5 +16,4 @@ queryId: tpc-h-q1-100-10
 query: PricingSummaryReport
 sourceDataS3FolderUri: s3://tpc-h-chunks/chunks-by-file-size/70mb
 numberOfChunks: 100
-numberOfReducers: 10
-numberOfProducers: 10
+numberOfWorkers: 10
