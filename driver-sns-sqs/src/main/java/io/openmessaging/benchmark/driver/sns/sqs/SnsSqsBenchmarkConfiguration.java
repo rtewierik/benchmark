@@ -30,8 +30,20 @@ public class SnsSqsBenchmarkConfiguration {
         sqsUri = System.getenv("SQS_URI");
         region = System.getenv("REGION");
         accountId = System.getenv("ACCOUNT_ID");
-        numberOfConsumers = Integer.parseInt(System.getenv("NUMBER_OF_CONSUMERS"));
-        isTpcH = Boolean.parseBoolean(System.getenv("IS_TPC_H"));
+        Integer numberOfConsumersFromEnv;
+        try {
+            numberOfConsumersFromEnv = Integer.parseInt(System.getenv("NUMBER_OF_CONSUMERS"));
+        } catch (Throwable ignored) {
+            numberOfConsumersFromEnv = 1;
+        }
+        numberOfConsumers = numberOfConsumersFromEnv;
+        Boolean isTpcHFromEnv;
+        try {
+            isTpcHFromEnv = Boolean.parseBoolean(System.getenv("IS_TPC_H"));
+        } catch (Throwable ignored) {
+            isTpcHFromEnv = false;
+        }
+        isTpcH = isTpcHFromEnv;
         snsUris = SnsSqsBenchmarkConfiguration.getSnsUrisFromEnvironment();
     }
 
