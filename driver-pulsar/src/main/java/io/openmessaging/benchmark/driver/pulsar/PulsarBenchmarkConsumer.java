@@ -17,20 +17,29 @@ import static java.util.Collections.unmodifiableList;
 
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.pulsar.client.api.Consumer;
 
 public class PulsarBenchmarkConsumer implements BenchmarkConsumer {
 
-    private final List<Consumer<ByteBuffer>> consumer;
+    private List<Consumer<ByteBuffer>> consumers;
+
+    public PulsarBenchmarkConsumer() {
+        this.consumers = unmodifiableList(new ArrayList<>());
+    }
 
     public PulsarBenchmarkConsumer(List<Consumer<ByteBuffer>> consumer) {
-        this.consumer = unmodifiableList(consumer);
+        this.consumers = unmodifiableList(consumer);
+    }
+
+    public void setConsumers(List<Consumer<ByteBuffer>> consumers) {
+        this.consumers = unmodifiableList(consumers);
     }
 
     @Override
     public void close() throws Exception {
-        for (Consumer<?> c : consumer) {
+        for (Consumer<?> c : consumers) {
             c.close();
         }
     }

@@ -53,6 +53,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -70,7 +71,9 @@ import io.openmessaging.tpch.model.TpcHConsumerAssignment;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.model.TpcHMessageType;
 import io.openmessaging.tpch.model.TpcHProducerAssignment;
+import io.openmessaging.tpch.processing.SingleThreadTpcHStateProvider;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
+import io.openmessaging.tpch.processing.TpcHStateProvider;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
@@ -89,6 +92,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
      */
     private final List<BenchmarkConsumer> consumers = new ArrayList<>();
     private volatile MessageProducerImpl messageProducer;
+    private final Map<BenchmarkConsumer, TpcHStateProvider> stateProviders = new HashMap<>();
     private TpcHMessageProcessor tpcHMessageProcessor;
     private final ExecutorService executor =
             Executors.newCachedThreadPool(new DefaultThreadFactory("local-worker"));
@@ -221,6 +225,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                         .filter(Objects::nonNull)
                         .collect(toList())
         );
+        consumers.forEach(c -> stateProviders.put(c, new SingleThreadTpcHStateProvider()));
 
         log.info("Created {} consumers in {} ms", consumers.size(), timer.elapsedMillis());
     }
@@ -255,11 +260,16 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     Integer batchSize = assignment.batchSize;
                     Integer start = assignment.offset * batchSize;
                     Integer numberOfMapResults = assignment.numberOfMapResults;
+                    String folderUri = assignment.sourceDataS3FolderUri;
                     String batchId = String.format(
                         "%s-batch-%d-%s", assignment.queryId, assignment.offset, assignment.batchSize);
                     try {
                         while (currentAssignment.get() < numberOfMapResults) {
                             Integer chunkIndex = start + currentAssignment.incrementAndGet();
+                            Integer groupedChunkIndex = (chunkIndex - 1) / 1000;
+                            String s3Uri = chunkIndex > 1000
+                                    ? String.format("%s/%s/chunk_%d.csv", folderUri, groupedChunkIndex, chunkIndex)
+                                    : String.format("%s/chunk_%d.csv", folderUri, chunkIndex);
                             TpcHConsumerAssignment consumerAssignment = new TpcHConsumerAssignment(
                                 assignment.query,
                                 assignment.queryId,
@@ -268,7 +278,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                 producerWorkAssignment.producerIndex,
                                 numberOfMapResults,
                                 assignment.numberOfChunks,
-                                String.format("%s/chunk_%d.csv", assignment.sourceDataS3FolderUri, chunkIndex)
+                                s3Uri
                             );
                             TpcHMessage message = new TpcHMessage(
                                 TpcHMessageType.ConsumerAssignment,
@@ -375,10 +385,10 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     @Override
-    public void messageReceived(byte[] data, long publishTimestamp) throws IOException {
+    public void messageReceived(byte[] data, long publishTimestamp, BenchmarkConsumer consumer) throws IOException {
         if (this.isTpcH && data.length != 10) {
             TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
-            String queryId = handleTpcHMessage(message);
+            String queryId = handleTpcHMessage(message, consumer);
             internalMessageReceived(data.length, publishTimestamp, queryId, message.messageId);
         } else {
             internalMessageReceived(data.length, publishTimestamp, this.experimentId, null);
@@ -386,14 +396,14 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     @Override
-    public void messageReceived(ByteBuffer data, long publishTimestamp) throws IOException {
+    public void messageReceived(ByteBuffer data, long publishTimestamp, BenchmarkConsumer consumer) throws IOException {
         int length = data.remaining();
         if (this.isTpcH && length != 10) {
             byte[] byteArray = new byte[length];
             data.get(byteArray);
             try {
                 TpcHMessage message = mapper.readValue(byteArray, TpcHMessage.class);
-                String queryId = handleTpcHMessage(message);
+                String queryId = handleTpcHMessage(message, consumer);
                 internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
             } catch (Throwable t) {
                 String message = new String(byteArray, StandardCharsets.UTF_8);
@@ -404,8 +414,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
         }
     }
 
-    private String handleTpcHMessage(TpcHMessage message) throws IOException {
-        return tpcHMessageProcessor.processTpcHMessage(message);
+    private String handleTpcHMessage(TpcHMessage message, BenchmarkConsumer consumer) throws IOException {
+        TpcHStateProvider stateProvider = stateProviders.get(consumer);
+        return tpcHMessageProcessor.processTpcHMessage(message, stateProvider);
     }
 
     public boolean getTestCompleted() {
@@ -477,6 +488,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 consumer.close();
             }
             consumers.clear();
+            stateProviders.clear();
 
             if (EnvironmentConfiguration.isDebug()) {
                 log.info("Attempting to shut down benchmark driver...");

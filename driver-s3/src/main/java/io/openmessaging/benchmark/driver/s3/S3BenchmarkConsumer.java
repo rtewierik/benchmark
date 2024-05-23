@@ -35,6 +35,7 @@ import io.openmessaging.benchmark.common.producer.MessageProducerImpl;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.tpch.model.TpcHMessage;
+import io.openmessaging.tpch.processing.SingleThreadTpcHStateProvider;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +44,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import io.openmessaging.tpch.processing.TpcHStateProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,6 +69,7 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                     () -> {},
                     log);
     private static final AmazonS3Client s3Client = new AmazonS3Client();
+    private static final TpcHStateProvider stateProvider = new SingleThreadTpcHStateProvider();
 
     static {
         if (!S3BenchmarkConfiguration.isTpcH) {
@@ -107,7 +111,7 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                     TpcHMessage tpcHMessage = mapper.readValue(stream, TpcHMessage.class);
                     stream.close();
                     object.close();
-                    String experimentId = messageProcessor.processTpcHMessage(tpcHMessage);
+                    String experimentId = messageProcessor.processTpcHMessage(tpcHMessage, stateProvider);
                     long now = System.currentTimeMillis();
                     long publishTimestamp = record.getEventTime().getMillis();
                     long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);

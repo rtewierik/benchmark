@@ -41,17 +41,10 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TpcHMessageProcessor {
-    private final Map<String, TpcHIntermediateResult> collectedIntermediateResults =
-            new ConcurrentHashMap<>();
-    private final Map<String, TpcHIntermediateResult> collectedReducedResults =
-            new ConcurrentHashMap<>();
-    private final Map<String, Void> processedIntermediateResults = new ConcurrentHashMap<>();
-    private final Map<String, Void> processedReducedResults = new ConcurrentHashMap<>();
     private final List<BenchmarkProducer> producers;
     private volatile MessageProducer messageProducer;
     private final Runnable onTestCompleted;
@@ -78,7 +71,8 @@ public class TpcHMessageProcessor {
         this.messageProducer = messageProducer;
     }
 
-    public String processTpcHMessage(TpcHMessage message) throws IOException {
+    public String processTpcHMessage(TpcHMessage message, TpcHStateProvider stateProvider)
+            throws IOException {
         if (EnvironmentConfiguration.isDebug()) {
             log.info(
                     "Processing TPC-H message: {} {}",
@@ -94,11 +88,11 @@ public class TpcHMessageProcessor {
                 case IntermediateResult:
                     TpcHIntermediateResult intermediateResult =
                             mapper.readValue(message.message, TpcHIntermediateResult.class);
-                    return processIntermediateResult(intermediateResult);
+                    return processIntermediateResult(intermediateResult, stateProvider);
                 case ReducedResult:
                     TpcHIntermediateResult reducedResult =
                             mapper.readValue(message.message, TpcHIntermediateResult.class);
-                    return processReducedResult(reducedResult);
+                    return processReducedResult(reducedResult, stateProvider);
                 default:
                     throw new IllegalArgumentException("Invalid message type detected!");
             }
@@ -149,11 +143,16 @@ public class TpcHMessageProcessor {
         return assignment.queryId;
     }
 
-    private String processIntermediateResult(TpcHIntermediateResult intermediateResult)
+    private String processIntermediateResult(
+            TpcHIntermediateResult intermediateResult, TpcHStateProvider stateProvider)
             throws IOException {
         String queryId = intermediateResult.queryId;
         String chunkId = this.getChunkId(intermediateResult);
         String batchId = intermediateResult.batchId;
+        Map<String, Void> processedIntermediateResults =
+                stateProvider.getProcessedIntermediateResults();
+        Map<String, TpcHIntermediateResult> collectedIntermediateResults =
+                stateProvider.getCollectedIntermediateResults();
         if (processedIntermediateResults.containsKey(chunkId)) {
             log.warn("Ignored intermediate result with chunk ID {} due to duplicity!", chunkId);
             return queryId;
@@ -161,11 +160,11 @@ public class TpcHMessageProcessor {
             processedIntermediateResults.put(chunkId, null);
         }
         TpcHIntermediateResult existingIntermediateResult;
-        if (!this.collectedIntermediateResults.containsKey(batchId)) {
-            this.collectedIntermediateResults.put(batchId, intermediateResult);
+        if (!collectedIntermediateResults.containsKey(batchId)) {
+            collectedIntermediateResults.put(batchId, intermediateResult);
             existingIntermediateResult = intermediateResult;
         } else {
-            existingIntermediateResult = this.collectedIntermediateResults.get(batchId);
+            existingIntermediateResult = collectedIntermediateResults.get(batchId);
             existingIntermediateResult.aggregateIntermediateResult(intermediateResult);
         }
         if (existingIntermediateResult.numberOfAggregatedResults.intValue()
@@ -186,14 +185,18 @@ public class TpcHMessageProcessor {
                     queryId,
                     message.messageId,
                     true);
-            this.collectedIntermediateResults.remove(batchId);
+            collectedIntermediateResults.remove(batchId);
         }
         return queryId;
     }
 
-    private String processReducedResult(TpcHIntermediateResult reducedResult) throws IOException {
+    private String processReducedResult(
+            TpcHIntermediateResult reducedResult, TpcHStateProvider stateProvider) throws IOException {
         String queryId = reducedResult.queryId;
         String batchId = reducedResult.batchId;
+        Map<String, Void> processedReducedResults = stateProvider.getProcessedReducedResults();
+        Map<String, TpcHIntermediateResult> collectedReducedResults =
+                stateProvider.getCollectedReducedResults();
         if (processedReducedResults.containsKey(batchId)) {
             log.warn("Ignored reduced result with batch ID {} due to duplicity!", batchId);
             return queryId;
@@ -201,11 +204,11 @@ public class TpcHMessageProcessor {
             processedReducedResults.put(batchId, null);
         }
         TpcHIntermediateResult existingReducedResult;
-        if (!this.collectedReducedResults.containsKey(reducedResult.queryId)) {
-            this.collectedReducedResults.put(reducedResult.queryId, reducedResult);
+        if (!collectedReducedResults.containsKey(reducedResult.queryId)) {
+            collectedReducedResults.put(reducedResult.queryId, reducedResult);
             existingReducedResult = reducedResult;
         } else {
-            existingReducedResult = this.collectedReducedResults.get(reducedResult.queryId);
+            existingReducedResult = collectedReducedResults.get(reducedResult.queryId);
             existingReducedResult.aggregateReducedResult(reducedResult);
         }
         if (EnvironmentConfiguration.isDebug()) {
@@ -218,9 +221,9 @@ public class TpcHMessageProcessor {
                 == reducedResult.numberOfChunks.intValue()) {
             TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
             log.info("[RESULT] TPC-H query result: {}", writer.writeValueAsString(result));
-            processedIntermediateResults.clear();
+            stateProvider.getProcessedIntermediateResults().clear();
             processedReducedResults.clear();
-            collectedIntermediateResults.clear();
+            stateProvider.getCollectedIntermediateResults().clear();
             collectedReducedResults.clear();
             onTestCompleted.run();
         }

@@ -24,14 +24,18 @@ public interface ConsumerCallback {
      *
      * @param payload the received message payload
      * @param publishTimestamp the publish timestamp in milliseconds
+     * @param consumer reference to the consumer executing the callback
      */
-    void messageReceived(byte[] payload, long publishTimestamp) throws IOException;
+    void messageReceived(byte[] payload, long publishTimestamp, BenchmarkConsumer consumer)
+            throws IOException;
 
     /**
      * Driver should invoke this method (or the byte[] variant) once for each message received.
      *
      * @param payload the received message payload
      * @param publishTimestamp the publish timestamp in milliseconds
+     * @param consumer reference to the consumer executing the callback
      */
-    void messageReceived(ByteBuffer payload, long publishTimestamp) throws IOException;
+    void messageReceived(ByteBuffer payload, long publishTimestamp, BenchmarkConsumer consumer)
+            throws IOException;
 }

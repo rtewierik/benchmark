@@ -72,7 +72,7 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
                                             for (StreamEntry entry : streamEntries.getValue()) {
                                                 long timestamp = entry.getID().getTime();
                                                 byte[] payload = entry.getFields().get("payload").getBytes(UTF_8);
-                                                consumerCallback.messageReceived(payload, timestamp);
+                                                consumerCallback.messageReceived(payload, timestamp, this);
                                             }
                                         }
                                     }

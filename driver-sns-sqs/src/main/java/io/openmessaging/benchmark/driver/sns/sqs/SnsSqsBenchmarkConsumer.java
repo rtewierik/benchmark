@@ -38,6 +38,7 @@ import io.openmessaging.benchmark.common.producer.MessageProducerImpl;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.tpch.model.TpcHMessage;
+import io.openmessaging.tpch.processing.SingleThreadTpcHStateProvider;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import java.io.IOException;
 import java.util.Date;
@@ -45,6 +46,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import io.openmessaging.tpch.processing.TpcHStateProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,6 +76,7 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
                     .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
                     .build();
     private static final String sqsUri = SnsSqsBenchmarkConfiguration.sqsUri;
+    private static final TpcHStateProvider stateProvider = new SingleThreadTpcHStateProvider();
 
     static {
         if (!SnsSqsBenchmarkConfiguration.isTpcH) {
@@ -115,7 +119,7 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
                 }
                 String body = message.getBody();
                 TpcHMessage tpcHMessage = mapper.readValue(body, TpcHMessage.class);
-                String experimentId = messageProcessor.processTpcHMessage(tpcHMessage);
+                String experimentId = messageProcessor.processTpcHMessage(tpcHMessage, stateProvider);
                 long now = System.currentTimeMillis();
                 String sentTimestampStr = message.getAttributes().get("SentTimestamp");
                 long publishTimestamp = Long.parseLong(sentTimestampStr);
@@ -128,7 +132,6 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
                         experimentId,
                         tpcHMessage.messageId,
                         true);
-                messageProcessor.processTpcHMessage(tpcHMessage);
                 this.deleteMessage(message.getReceiptHandle());
             } catch (IOException e) {
                 throw new RuntimeException(e);
