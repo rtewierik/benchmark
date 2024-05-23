@@ -51,16 +51,16 @@ public class TpcHArguments {
                 this.numberOfWorkers);
     }
 
-    public int getNumberOfMapResults(int producerIndex, int numberOfWorkers) {
-        int defaultNumberOfIntermediateResults = this.getDefaultNumberOfMapResults(numberOfWorkers);
-        int chunksLeft = numberOfChunks - producerIndex * defaultNumberOfIntermediateResults;
+    public int getBatchSize(int batchIndex, int numberOfWorkers) {
+        int defaultBatchSize = this.getDefaultBatchSize(numberOfWorkers);
+        int chunksLeft = numberOfChunks - batchIndex * defaultBatchSize;
         if (chunksLeft < 0) {
             return 0;
         }
-        return Math.min(chunksLeft, defaultNumberOfIntermediateResults);
+        return Math.min(chunksLeft, defaultBatchSize);
     }
 
-    public int getDefaultNumberOfMapResults(int numberOfWorkers) {
+    public int getDefaultBatchSize(int numberOfWorkers) {
         return (int) Math.ceil((double) this.numberOfChunks / numberOfWorkers);
     }
 }

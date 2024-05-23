@@ -256,17 +256,17 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 submitTpcHProducersToExecutor(producerWorkAssignment, processors, producer, index));
     }
 
-    public int getProcessorNumberOfMapResults(int numberOfMapResults, int numberOfProcessors, int index) {
-        int defaultNumberOfMapResults = getDefaultProcessorNumberOfMapResults(numberOfMapResults, numberOfProcessors);
-        int mapResultsLeft = numberOfMapResults - index * defaultNumberOfMapResults;
-        if (mapResultsLeft < 0) {
+    public int getProcessorNumberOfCommands(int numberOfCommands, int numberOfProcessors, int index) {
+        int defaultNumberOfCommands = getDefaultProcessorNumberOfCommands(numberOfCommands, numberOfProcessors);
+        int commandsLeft = numberOfCommands - index * defaultNumberOfCommands;
+        if (commandsLeft < 0) {
             return 0;
         }
-        return Math.min(mapResultsLeft, defaultNumberOfMapResults);
+        return Math.min(commandsLeft, defaultNumberOfCommands);
     }
 
-    public int getDefaultProcessorNumberOfMapResults(int numberOfMapResults, int numberOfProcessors) {
-         return (int) Math.ceil((double) numberOfMapResults / numberOfProcessors);
+    public int getDefaultProcessorNumberOfCommands(int numberOfCommands, int numberOfProcessors) {
+         return (int) Math.ceil((double) numberOfCommands / numberOfProcessors);
     }
 
     private void submitTpcHProducersToExecutor(
@@ -282,22 +282,23 @@ public class LocalWorker implements Worker, ConsumerCallback {
                             producerWorkAssignment.producerIndex
                     );
                     KeyDistributor keyDistributor = KeyDistributor.build(producerWorkAssignment.keyDistributorType);
-                    Integer defaultProcessorNumberOfMapResults = getDefaultProcessorNumberOfMapResults(
-                            assignment.producerNumberOfMapResults,
+                    Integer defaultProcessorNumberOfCommands = getDefaultProcessorNumberOfCommands(
+                            assignment.producerNumberOfCommands,
                             numProcessors
                     );
-                    Integer numberOfMapResults = getProcessorNumberOfMapResults(
-                            assignment.producerNumberOfMapResults,
+                    Integer processorNumberOfCommands = getProcessorNumberOfCommands(
+                            assignment.producerNumberOfCommands,
                             numProcessors,
                             processorProducerIndex);
-                    Integer batchSize = assignment.batchSize;
-                    Integer start = assignment.offset * batchSize;
+                    Integer producerStart = producerWorkAssignment.producerIndex * assignment.producerNumberOfCommands;
                     String folderUri = assignment.sourceDataS3FolderUri;
-                    String batchId = String.format(
-                            "%s-batch-%d-%s", assignment.queryId, assignment.offset, assignment.batchSize);
-                    for (int mapResultIdx = 1; mapResultIdx <= numberOfMapResults; mapResultIdx++) {
+                    for (int commandIdx = 1; commandIdx <= processorNumberOfCommands; commandIdx++) {
                         try {
-                            Integer chunkIndex = start + processorProducerIndex * defaultProcessorNumberOfMapResults + mapResultIdx;
+                            Integer chunkIndex = producerStart + processorProducerIndex * defaultProcessorNumberOfCommands + commandIdx;
+                            Integer batchIdx = chunkIndex / assignment.commandsPerBatch;
+                            Integer numberOfMapResults = assignment.getBatchSize(batchIdx);
+                            String batchId = String.format(
+                                    "%s-batch-%d-%s", assignment.queryId, batchIdx, numberOfMapResults);
                             Integer groupedChunkIndex = (chunkIndex - 1) / 1000;
                             String s3Uri = chunkIndex > 1000
                                     ? String.format("%s/%s/chunk_%d.csv", folderUri, groupedChunkIndex, chunkIndex)
@@ -308,7 +309,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                     batchId,
                                     chunkIndex,
                                     producerWorkAssignment.producerIndex,
-                                    assignment.consumerNumberOfMapResults,
+                                    numberOfMapResults,
                                     assignment.numberOfChunks,
                                     s3Uri
                             );

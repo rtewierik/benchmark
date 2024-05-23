@@ -17,22 +17,24 @@ public class TpcHProducerAssignment {
     public final String queryId;
     public final TpcHQuery query;
     public final String sourceDataS3FolderUri;
-    public final Integer batchSize;
-    public final Integer producerNumberOfMapResults;
-    public final Integer consumerNumberOfMapResults;
+    public final Integer commandsPerBatch;
+    public final Integer producerNumberOfCommands;
     public final Integer numberOfChunks;
-    public final Integer offset;
+
+    private TpcHArguments arguments;
 
     public TpcHProducerAssignment(TpcHArguments arguments, Integer producerIndex) {
+        this.arguments = arguments;
         this.queryId = arguments.queryId;
         this.query = arguments.query;
         this.sourceDataS3FolderUri = arguments.sourceDataS3FolderUri;
-        this.batchSize = arguments.getDefaultNumberOfMapResults(arguments.numberOfWorkers);
-        // HARDCODED
-        this.producerNumberOfMapResults = arguments.getNumberOfMapResults(producerIndex, 3);
-        this.consumerNumberOfMapResults =
-                arguments.getNumberOfMapResults(producerIndex, arguments.numberOfWorkers);
+        this.commandsPerBatch = arguments.getDefaultBatchSize(arguments.numberOfWorkers);
+        // HARDCODED - should be called chunks
+        this.producerNumberOfCommands = arguments.getBatchSize(producerIndex, 3);
         this.numberOfChunks = arguments.numberOfChunks;
-        this.offset = producerIndex;
+    }
+
+    public Integer getBatchSize(int batchIndex) {
+        return arguments.getBatchSize(batchIndex, arguments.numberOfWorkers);
     }
 }
