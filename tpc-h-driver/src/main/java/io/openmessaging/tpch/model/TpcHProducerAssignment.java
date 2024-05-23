@@ -21,7 +21,7 @@ public class TpcHProducerAssignment {
     public final Integer producerNumberOfCommands;
     public final Integer numberOfChunks;
 
-    private TpcHArguments arguments;
+    private final TpcHArguments arguments;
 
     public TpcHProducerAssignment(TpcHArguments arguments, Integer producerIndex) {
         this.arguments = arguments;

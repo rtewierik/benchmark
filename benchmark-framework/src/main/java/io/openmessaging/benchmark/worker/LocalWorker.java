@@ -308,7 +308,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                     assignment.queryId,
                                     batchId,
                                     chunkIndex,
-                                    producerWorkAssignment.producerIndex,
+                                    batchIdx,
                                     numberOfMapResults,
                                     assignment.numberOfChunks,
                                     s3Uri
