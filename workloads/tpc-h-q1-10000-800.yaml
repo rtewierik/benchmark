@@ -17,3 +17,4 @@ query: PricingSummaryReport
 sourceDataS3FolderUri: s3://tpc-h-chunks/chunks-by-file-size/7kb
 numberOfChunks: 10000
 numberOfReducers: 800
+numberOfProducers: 800

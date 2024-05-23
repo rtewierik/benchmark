@@ -17,3 +17,4 @@ query: ForecastingRevenueChange
 sourceDataS3FolderUri: s3://tpc-h-chunks/chunks-by-file-size/7kb
 numberOfChunks: 10000
 numberOfReducers: 500
+numberOfProducers: 500
