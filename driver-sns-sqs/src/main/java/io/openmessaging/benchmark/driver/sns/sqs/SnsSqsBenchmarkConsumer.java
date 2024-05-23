@@ -40,14 +40,13 @@ import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.processing.SingleThreadTpcHStateProvider;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
+import io.openmessaging.tpch.processing.TpcHStateProvider;
 import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import io.openmessaging.tpch.processing.TpcHStateProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -27,18 +27,21 @@ public class TpcHArguments {
     public final String sourceDataS3FolderUri;
     public final Integer numberOfChunks;
     public final Integer numberOfReducers;
+    public final Integer numberOfProducers;
 
     public TpcHArguments(
             @JsonProperty("queryId") String queryId,
             @JsonProperty("query") TpcHQuery query,
             @JsonProperty("sourceDataS3FolderUri") String sourceDataS3FolderUri,
             @JsonProperty("numberOfChunks") Integer numberOfChunks,
-            @JsonProperty("numberOFReducers") Integer numberOfReducers) {
+            @JsonProperty("numberOFReducers") Integer numberOfReducers,
+            @JsonProperty("numberOfProducers") Integer numberOfProducers) {
         this.queryId = queryId;
         this.query = query;
         this.sourceDataS3FolderUri = sourceDataS3FolderUri;
         this.numberOfChunks = numberOfChunks;
         this.numberOfReducers = numberOfReducers;
+        this.numberOfProducers = numberOfProducers;
     }
 
     public TpcHArguments withQueryIdDate() {
@@ -48,7 +51,8 @@ public class TpcHArguments {
                 this.query,
                 this.sourceDataS3FolderUri,
                 this.numberOfChunks,
-                this.numberOfReducers);
+                this.numberOfReducers,
+                this.numberOfProducers);
     }
 
     public int getNumberOfMapResults(int index) {
