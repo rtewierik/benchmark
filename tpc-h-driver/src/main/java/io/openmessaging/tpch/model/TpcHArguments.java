@@ -52,12 +52,12 @@ public class TpcHArguments {
     }
 
     public int getNumberOfMapResults(int index) {
-        int actualIndex = index % numberOfReducers;
         int defaultNumberOfIntermediateResults = this.getDefaultNumberOfMapResults();
-        if (actualIndex < numberOfReducers - 1) {
-            return defaultNumberOfIntermediateResults;
+        int chunksLeft = numberOfChunks - index * defaultNumberOfIntermediateResults;
+        if (chunksLeft < 0) {
+            return 0;
         }
-        return numberOfChunks - (numberOfReducers - 1) * defaultNumberOfIntermediateResults;
+        return Math.min(chunksLeft, defaultNumberOfIntermediateResults);
     }
 
     public int getDefaultNumberOfMapResults() {
