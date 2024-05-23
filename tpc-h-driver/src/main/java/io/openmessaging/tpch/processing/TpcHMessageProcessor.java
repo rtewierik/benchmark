@@ -41,9 +41,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,9 +50,8 @@ public class TpcHMessageProcessor {
             new ConcurrentHashMap<>();
     private final Map<String, TpcHIntermediateResult> collectedReducedResults =
             new ConcurrentHashMap<>();
-    private final Set<String> processedMessages = new ConcurrentSkipListSet<>();
-    private final Set<String> processedIntermediateResults = new ConcurrentSkipListSet<>();
-    private final Set<String> processedReducedResults = new ConcurrentSkipListSet<>();
+    private final Map<String, Void> processedIntermediateResults = new ConcurrentHashMap<>();
+    private final Map<String, Void> processedReducedResults = new ConcurrentHashMap<>();
     private final List<BenchmarkProducer> producers;
     private volatile MessageProducer messageProducer;
     private final Runnable onTestCompleted;
@@ -82,17 +79,11 @@ public class TpcHMessageProcessor {
     }
 
     public String processTpcHMessage(TpcHMessage message) throws IOException {
-        String messageId = message.messageId;
         if (EnvironmentConfiguration.isDebug()) {
             log.info(
                     "Processing TPC-H message: {} {}",
                     this.producers.size(),
                     writer.writeValueAsString(message));
-        }
-        if (processedMessages.contains(messageId)) {
-            return null;
-        } else {
-            processedMessages.add(messageId);
         }
         try {
             switch (message.type) {
@@ -163,11 +154,11 @@ public class TpcHMessageProcessor {
         String queryId = intermediateResult.queryId;
         String chunkId = this.getChunkId(intermediateResult);
         String batchId = intermediateResult.batchId;
-        if (processedIntermediateResults.contains(chunkId)) {
+        if (processedIntermediateResults.containsKey(chunkId)) {
             log.warn("Ignored intermediate result with chunk ID {} due to duplicity!", chunkId);
             return queryId;
         } else {
-            processedIntermediateResults.add(chunkId);
+            processedIntermediateResults.put(chunkId, null);
         }
         TpcHIntermediateResult existingIntermediateResult;
         if (!this.collectedIntermediateResults.containsKey(batchId)) {
@@ -203,11 +194,11 @@ public class TpcHMessageProcessor {
     private String processReducedResult(TpcHIntermediateResult reducedResult) throws IOException {
         String queryId = reducedResult.queryId;
         String batchId = reducedResult.batchId;
-        if (processedReducedResults.contains(batchId)) {
+        if (processedReducedResults.containsKey(batchId)) {
             log.warn("Ignored reduced result with batch ID {} due to duplicity!", batchId);
             return queryId;
         } else {
-            processedReducedResults.add(batchId);
+            processedReducedResults.put(batchId, null);
         }
         TpcHIntermediateResult existingReducedResult;
         if (!this.collectedReducedResults.containsKey(reducedResult.queryId)) {
@@ -227,7 +218,6 @@ public class TpcHMessageProcessor {
                 == reducedResult.numberOfChunks.intValue()) {
             TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
             log.info("[RESULT] TPC-H query result: {}", writer.writeValueAsString(result));
-            processedMessages.clear();
             processedIntermediateResults.clear();
             processedReducedResults.clear();
             collectedIntermediateResults.clear();

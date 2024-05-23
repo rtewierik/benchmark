@@ -52,6 +52,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -418,7 +419,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
         }
         long now = System.currentTimeMillis();
         long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
-        stats.recordMessageReceived(size, endToEndLatencyMicros, experimentId, messageId, this.isTpcH);
+        long processTimestamp = new Date().getTime();
+        stats.recordMessageReceived(
+                size, endToEndLatencyMicros, publishTimestamp, processTimestamp, experimentId, messageId, this.isTpcH);
 
         while (consumersArePaused) {
             try {

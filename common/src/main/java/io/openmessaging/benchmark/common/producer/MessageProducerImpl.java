@@ -20,6 +20,7 @@ import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.MessageProducer;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
@@ -84,6 +85,7 @@ public class MessageProducerImpl implements MessageProducer {
             Throwable t)
             throws IOException {
         long nowNs = nanoClock.get();
+        long timestamp = new Date().getTime();
         boolean isError = t != null;
         if (stats != null) {
             stats.recordMessageProduced(
@@ -91,6 +93,7 @@ public class MessageProducerImpl implements MessageProducer {
                     intendedSendTime,
                     sendTime,
                     nowNs,
+                    timestamp,
                     experimentId,
                     messageId,
                     isTpcH,

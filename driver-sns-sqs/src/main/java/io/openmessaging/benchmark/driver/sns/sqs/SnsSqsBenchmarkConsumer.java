@@ -40,6 +40,7 @@ import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -122,6 +123,8 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
                 stats.recordMessageReceived(
                         message.getBody().length(),
                         endToEndLatencyMicros,
+                        publishTimestamp,
+                        new Date().getTime(),
                         experimentId,
                         tpcHMessage.messageId,
                         true);
@@ -142,6 +145,8 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
             stats.recordMessageReceived(
                     message.getBody().length(),
                     endToEndLatencyMicros,
+                    publishTimestamp,
+                    new Date().getTime(),
                     "THROUGHPUT_SNS_SQS",
                     message.getMessageId(),
                     false);

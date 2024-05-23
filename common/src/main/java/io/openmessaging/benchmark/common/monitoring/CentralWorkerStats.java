@@ -60,6 +60,8 @@ public class CentralWorkerStats implements WorkerStats {
     public void recordMessageReceived(
             long payloadLength,
             long endToEndLatencyMicros,
+            long publishTimestamp,
+            long processTimestamp,
             String experimentId,
             String messageId,
             boolean isTpcH)
@@ -71,6 +73,8 @@ public class CentralWorkerStats implements WorkerStats {
                 new MonitoredReceivedMessage(
                         payloadLength,
                         endToEndLatencyMicros,
+                        publishTimestamp,
+                        processTimestamp,
                         experimentId != null ? experimentId : "UNAVAILABLE",
                         messageId,
                         isTpcH);
@@ -84,11 +88,13 @@ public class CentralWorkerStats implements WorkerStats {
     }
 
     @Override
+    @SuppressWarnings("checkstyle:ParameterNumber")
     public void recordMessageProduced(
             long payloadLength,
             long intendedSendTimeNs,
             long sendTimeNs,
             long nowNs,
+            long timestamp,
             String experimentId,
             String messageId,
             boolean isTpcH,
@@ -105,6 +111,7 @@ public class CentralWorkerStats implements WorkerStats {
                         intendedSendTimeNs,
                         sendTimeNs,
                         nowNs,
+                        timestamp,
                         experimentId != null ? experimentId : "UNAVAILABLE",
                         messageId,
                         isTpcH,

@@ -70,6 +70,11 @@ workloads/tpc-h-base-long.yaml
 
 sudo bin/benchmark \
 --drivers driver-rabbitmq/rabbitmq-experiment.yaml \
+--tpc-h-files workloads/tpc-h-q1-10000-2000.yaml \
+workloads/tpc-h-base-long.yaml
+
+sudo bin/benchmark \
+--drivers driver-rabbitmq/rabbitmq-experiment.yaml \
 --tpc-h-files workloads/tpc-h-q1-10000-300.yaml workloads/tpc-h-q1-10000-500.yaml workloads/tpc-h-q1-10000-800.yaml workloads/tpc-h-q1-10000-300.yaml workloads/tpc-h-q1-10000-500.yaml workloads/tpc-h-q1-10000-800.yaml workloads/tpc-h-q1-10000-300.yaml workloads/tpc-h-q1-10000-500.yaml workloads/tpc-h-q1-10000-800.yaml \
 workloads/tpc-h-base-long.yaml
 

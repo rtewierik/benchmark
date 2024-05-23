@@ -134,8 +134,7 @@ public class DistributedWorkersEnsemble implements Worker {
                 IntStream.range(0, producersNeeded)
                         .mapToObj(
                                 i ->
-                                        new AbstractMap.SimpleEntry<>(
-                                                workersToStart.get(i % workersToStart.size()), i))
+                                        new AbstractMap.SimpleEntry<>(workersToStart.get(i % workersToStart.size()), i))
                         .collect(Collectors.toList());
         workersToStartWithIndices.parallelStream()
                 .forEach(
