@@ -54,7 +54,11 @@ public class MessageProducerImpl implements MessageProducer {
         boolean isDebug = EnvironmentConfiguration.isDebug();
         final long intendedSendTime = rateLimiter.acquire();
         if (isDebug) {
-            log.info("Rate limiter suggested sleep for {} ns.", intendedSendTime);
+            long waitNs = intendedSendTime - System.nanoTime();
+            log.info(
+                    "Rate limiter suggested sleep for {} ns with {}} ops/sec.",
+                    waitNs,
+                    rateLimiter.getOpsPerSec());
         }
         uninterruptibleSleepNs(intendedSendTime);
         final long sendTime = nanoClock.get();

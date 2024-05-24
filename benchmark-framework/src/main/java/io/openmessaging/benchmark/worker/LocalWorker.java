@@ -62,6 +62,7 @@ import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -186,13 +187,17 @@ public class LocalWorker implements Worker, ConsumerCallback {
     public void createProducers(ProducerAssignment producerAssignment) throws IOException {
         Timer timer = new Timer();
         AtomicInteger producerIndex = new AtomicInteger();
-        producers.addAll(
-                benchmarkDriver
-                        .createProducers(
-                                producerAssignment.topics.stream()
-                                        .map(t -> new BenchmarkDriver.ProducerInfo(producerIndex.getAndIncrement(), t))
-                                        .collect(toList()))
-                        .join());
+        List<BenchmarkDriver.ProducerInfo> producerInfo = producerAssignment.topics.stream()
+                .map(t -> new BenchmarkDriver.ProducerInfo(producerIndex.getAndIncrement(), t))
+                .collect(toList());
+        if (producerAssignment.isTpcH) {
+            int processors = Runtime.getRuntime().availableProcessors();
+            String mapTopic = producerAssignment.topics.get(TpcHConstants.MAP_CMD_INDEX);
+            for (int i = 0; i < processors; i++) {
+                producerInfo.add(new BenchmarkDriver.ProducerInfo(producerIndex.getAndIncrement(), mapTopic));
+            }
+        }
+        producers.addAll(benchmarkDriver.createProducers(producerInfo).join());
 
         String assignment = writer.writeValueAsString(producerAssignment);
         log.info("Created {} producers in {} ms from {}", producers.size(), timer.elapsedMillis(), assignment);
@@ -247,14 +252,14 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 producer.sendAsync(Optional.of("key"), new byte[10]).thenRun(stats::recordMessageSent));
     }
 
-    private void startLoadForTpcHProducers(ProducerWorkAssignment producerWorkAssignment) {
+    private void startLoadForTpcHProducers(ProducerWorkAssignment assignment) {
         int processors = Runtime.getRuntime().availableProcessors();
 
-        updateMessageProducer(producerWorkAssignment.publishRate);
+        updateMessageProducer(assignment.publishRate);
 
-        BenchmarkProducer producer = producers.get(TpcHConstants.MAP_CMD_INDEX);
+        int startIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.tpcHArguments.numberOfWorkers;
         IntStream.range(0, processors).forEach(index ->
-                submitTpcHProducersToExecutor(producerWorkAssignment, processors, producer, index));
+                submitTpcHProducersToExecutor(assignment, processors, producers.get(startIndex + index), index));
     }
 
     public int getProcessorNumberOfCommands(int numberOfCommands, int numberOfProcessors, int index) {
@@ -278,6 +283,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     ) {
         executor.submit(
                 () -> {
+                    Semaphore semaphore = new Semaphore(1);
                     TpcHProducerAssignment assignment = new TpcHProducerAssignment(
                             producerWorkAssignment.tpcHArguments,
                             producerWorkAssignment.producerIndex
@@ -325,15 +331,30 @@ public class LocalWorker implements Worker, ConsumerCallback {
                             );
                             String key = keyDistributor.next();
                             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
-                            futures[commandIdx - 1] = messageProducer.sendMessage(
-                                    producer,
-                                    optionalKey,
-                                    messageWriter.writeValueAsBytes(message),
-                                    this.experimentId,
-                                    message.messageId,
-                                    true
-                            );
-                            messagesSent++;
+
+                            try {
+                                semaphore.acquire();
+                            } catch (InterruptedException e) {
+                                break;
+                            }
+                            try {
+                                CompletableFuture<Void> future = messageProducer.sendMessage(
+                                        producer,
+                                        optionalKey,
+                                        messageWriter.writeValueAsBytes(message),
+                                        this.experimentId,
+                                        message.messageId,
+                                        true
+                                );
+                                future.whenComplete((result, ignored) -> {
+                                    log.info("Future completed! Releasing semaphore...");
+                                    semaphore.release();
+                                });
+                                futures[commandIdx - 1] = future;
+                                messagesSent++;
+                            } catch (Exception e) {
+                                semaphore.release();
+                            }
                         } catch (Throwable t) {
                             log.error("Got error", t);
                         }
