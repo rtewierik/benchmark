@@ -294,7 +294,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     String folderUri = assignment.sourceDataS3FolderUri;
                     for (int commandIdx = 1; commandIdx <= processorNumberOfCommands; commandIdx++) {
                         try {
-                            Integer chunkIndex = producerStart + processorProducerIndex * defaultProcessorNumberOfCommands + commandIdx;
+                            Integer chunkIndex = producerStart
+                                    + processorProducerIndex * defaultProcessorNumberOfCommands
+                                    + commandIdx;
                             Integer batchIdx = chunkIndex / assignment.commandsPerBatch;
                             Integer numberOfMapResults = assignment.getBatchSize(batchIdx);
                             String batchId = String.format(
@@ -331,6 +333,13 @@ public class LocalWorker implements Worker, ConsumerCallback {
                             log.error("Got error", t);
                         }
                     }
+//                    while (!testCompleted) {
+//                        try {
+//                            Thread.sleep(1000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
                 });
     }
 

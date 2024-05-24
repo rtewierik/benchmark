@@ -55,7 +55,8 @@ public class DistributedWorkersEnsemble implements Worker {
 
     private int numberOfUsedProducerWorkers;
 
-    public DistributedWorkersEnsemble(List<Worker> workers, boolean extraConsumerWorkers) {
+    public DistributedWorkersEnsemble(
+            List<Worker> workers, boolean extraConsumerWorkers, boolean isTpcH) {
         Preconditions.checkArgument(workers.size() > 1);
         this.workers = unmodifiableList(workers);
         leader = workers.get(LEADER_WORKER_INDEX);
@@ -77,7 +78,10 @@ public class DistributedWorkersEnsemble implements Worker {
                 "Workers list - consumers: {}",
                 consumerWorkers.stream().map(Worker::id).collect(joining(",")));
 
-        Runtime.getRuntime().addShutdownHook(shutdownHook);
+        if (!isTpcH) {
+            Thread shutdownHook = new Thread(this::stopAll);
+            Runtime.getRuntime().addShutdownHook(shutdownHook);
+        }
     }
 
     /*

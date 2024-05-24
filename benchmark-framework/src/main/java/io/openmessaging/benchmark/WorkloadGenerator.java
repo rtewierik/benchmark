@@ -129,7 +129,7 @@ public class WorkloadGenerator implements AutoCloseable {
         createTpcHProducers(topics);
 
         ensureTopicsAreReady();
-        worker.pauseConsumers();
+        //        worker.pauseConsumers();
 
         if (workload.producerRate > 0) {
             targetPublishRate = workload.producerRate;
@@ -149,34 +149,35 @@ public class WorkloadGenerator implements AutoCloseable {
         worker.startLoad(producerWorkAssignment);
 
         // Could consider not awaiting here, will need to be tested.
-        int expectedMessages = this.arguments.numberOfChunks;
-
-        long start = System.currentTimeMillis();
-        long end = start + 60 * 1000;
-        while (System.currentTimeMillis() < end) {
-            CountersStats stats = worker.getCountersStats();
-
-            log.info(
-                    "Waiting for producers to be ready -- Sent: {}, Received: {}, Expected: {}",
-                    stats.messagesSent,
-                    stats.messagesReceived,
-                    expectedMessages);
-            if (stats.messagesReceived < expectedMessages) {
-                try {
-                    Thread.sleep(2_000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            } else {
-                break;
-            }
-        }
-
-        if (System.currentTimeMillis() >= end) {
-            throw new RuntimeException("Timed out waiting for producers to be ready");
-        } else {
-            log.info("All producers are ready!");
-        }
+        //        int expectedMessages = this.arguments.numberOfChunks;
+        //
+        //        long start = System.currentTimeMillis();
+        //        long end = start + 60 * 1000;
+        //        while (System.currentTimeMillis() < end) {
+        //            CountersStats stats = worker.getCountersStats();
+        //
+        //            log.info(
+        //                    "Waiting for producers to be ready -- Sent: {}, Received: {}, Expected:
+        // {}",
+        //                    stats.messagesSent,
+        //                    stats.messagesReceived,
+        //                    expectedMessages);
+        //            if (stats.messagesReceived < expectedMessages) {
+        //                try {
+        //                    Thread.sleep(2_000);
+        //                } catch (InterruptedException e) {
+        //                    throw new RuntimeException(e);
+        //                }
+        //            } else {
+        //                break;
+        //            }
+        //        }
+        //
+        //        if (System.currentTimeMillis() >= end) {
+        //            throw new RuntimeException("Timed out waiting for producers to be ready");
+        //        } else {
+        //            log.info("All producers are ready!");
+        //        }
 
         TestResult result =
                 printAndCollectStats(
