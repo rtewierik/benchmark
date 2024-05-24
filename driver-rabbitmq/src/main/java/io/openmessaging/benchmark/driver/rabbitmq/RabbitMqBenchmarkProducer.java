@@ -55,6 +55,7 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
                     public void handleNack(long deliveryTag, boolean multiple) {
                         if (multiple) {
                             SortedSet<Long> treeHeadSet = ackSet.headSet(deliveryTag + 1);
+                            log.info("Nacking multiple. {}", treeHeadSet.size());
                             synchronized (ackSet) {
                                 for (Iterator<Long> iterator = treeHeadSet.iterator(); iterator.hasNext(); ) {
                                     long value = iterator.next();
@@ -77,6 +78,8 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
                                 future.completeExceptionally(
                                         new RuntimeException("Message was negatively acknowledged"));
                                 futureConcurrentHashMap.remove(deliveryTag);
+                            } else {
+                                log.info("Nacking single, not found. {}", deliveryTag);
                             }
                             ackSet.remove(deliveryTag);
                         }
@@ -86,6 +89,7 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
                     public void handleAck(long deliveryTag, boolean multiple) {
                         if (multiple) {
                             SortedSet<Long> treeHeadSet = ackSet.headSet(deliveryTag + 1);
+                            log.info("Acking multiple. {}", treeHeadSet.size());
                             synchronized (ackSet) {
                                 for (long value : treeHeadSet) {
                                     CompletableFuture<Void> future = futureConcurrentHashMap.get(value);
@@ -103,6 +107,8 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
                                 log.info("Completing future by delivery tag...");
                                 future.complete(null);
                                 futureConcurrentHashMap.remove(deliveryTag);
+                            } else {
+                                log.info("Nacking single, not found. {}", deliveryTag);
                             }
                             ackSet.remove(deliveryTag);
                         }
@@ -147,7 +153,7 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
             if (isDebug) {
                 log.info("Attempting to publish message {} over channel", msgId);
             }
-            channel.basicPublish(exchange, key.orElse(""), props, payload);
+            channel.basicPublish(exchange, key.orElse(""), true, props, payload);
             if (isDebug) {
                 log.info("Published message {} over channel successfully.", msgId);
             }
