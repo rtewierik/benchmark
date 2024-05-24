@@ -61,7 +61,7 @@ public class DistributedWorkersEnsemble implements Worker {
         this.workers = unmodifiableList(workers);
         leader = workers.get(LEADER_WORKER_INDEX);
         int numberOfProducerWorkers = getNumberOfProducerWorkers(workers, extraConsumerWorkers);
-        if (numberOfProducerWorkers == workers.size()) {
+        if (numberOfProducerWorkers == workers.size() || isTpcH) {
             this.producerWorkers = new ArrayList<>(this.workers);
             this.consumerWorkers = new ArrayList<>(this.workers);
         } else {
@@ -128,12 +128,10 @@ public class DistributedWorkersEnsemble implements Worker {
     public void startLoad(ProducerWorkAssignment producerWorkAssignment) throws IOException {
         double newRate = producerWorkAssignment.publishRate / numberOfUsedProducerWorkers;
         log.debug("Setting worker assigned publish rate to {} msgs/sec", newRate);
-        List<Worker> workersToStart =
-                producerWorkAssignment.tpcHArguments != null ? this.workers : this.producerWorkers;
-        int producersNeeded = workersToStart.size();
+        int producersNeeded = this.producerWorkers.size();
         List<AbstractMap.SimpleEntry<Worker, Integer>> workersToStartWithIndices =
                 IntStream.range(0, producersNeeded)
-                        .mapToObj(i -> new AbstractMap.SimpleEntry<>(workersToStart.get(i), i))
+                        .mapToObj(i -> new AbstractMap.SimpleEntry<>(this.producerWorkers.get(i), i))
                         .collect(Collectors.toList());
         workersToStartWithIndices.parallelStream()
                 .forEach(

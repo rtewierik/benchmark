@@ -59,6 +59,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
@@ -293,6 +294,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     Integer producerStart = producerWorkAssignment.producerIndex
                             * assignment.defaultProducerNumberOfCommands;
                     String folderUri = assignment.sourceDataS3FolderUri;
+                    Integer messagesSent = 0;
+                    CompletableFuture<Void>[] futures = new CompletableFuture[processorNumberOfCommands];
                     for (int commandIdx = 1; commandIdx <= processorNumberOfCommands; commandIdx++) {
                         try {
                             Integer chunkIndex = producerStart
@@ -322,7 +325,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                             );
                             String key = keyDistributor.next();
                             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
-                            messageProducer.sendMessage(
+                            futures[commandIdx - 1] = messageProducer.sendMessage(
                                     producer,
                                     optionalKey,
                                     messageWriter.writeValueAsBytes(message),
@@ -330,17 +333,25 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                     message.messageId,
                                     true
                             );
+                            messagesSent++;
                         } catch (Throwable t) {
                             log.error("Got error", t);
                         }
                     }
-//                    while (!testCompleted) {
-//                        try {
-//                            Thread.sleep(1000);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
+                    log.info("[TpcHBenchmark] Launched {} completable futures. Awaiting...", messagesSent);
+                    CompletableFuture<Void> allOf = CompletableFuture.allOf(futures);
+                    allOf.join();
+                    log.info("[TpcHBenchmark] Finished TPC-H producer {}-{} after sending {} messages. Sleeping...",
+                            producerWorkAssignment.producerIndex,
+                            processorProducerIndex,
+                            messagesSent);
+                    while (!testCompleted) {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 });
     }
 
@@ -396,6 +407,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public void adjustPublishRate(double publishRate) {
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Adjusting publish rate to {}", publishRate);
+        }
         if (publishRate < 1.0) {
             updateMessageProducer(1.0);
             return;
@@ -404,6 +418,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     private void updateMessageProducer(double publishRate) {
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Updating message producer with new publish rate {}", publishRate);
+        }
         messageProducer = new MessageProducerImpl(new UniformRateLimiter(publishRate), stats);
         tpcHMessageProcessor.updateMessageProducer(this.messageProducer);
     }
@@ -436,6 +453,13 @@ public class LocalWorker implements Worker, ConsumerCallback {
         } else {
             internalMessageReceived(data.length, publishTimestamp, this.experimentId, null);
         }
+        while (consumersArePaused) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -454,6 +478,13 @@ public class LocalWorker implements Worker, ConsumerCallback {
             }
         } else {
             internalMessageReceived(length, publishTimestamp, this.experimentId, null);
+        }
+        while (consumersArePaused) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -476,14 +507,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
         long processTimestamp = new Date().getTime();
         stats.recordMessageReceived(
                 size, endToEndLatencyMicros, publishTimestamp, processTimestamp, experimentId, messageId, this.isTpcH);
-
-        while (consumersArePaused) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override

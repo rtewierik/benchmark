@@ -128,13 +128,14 @@ public class WorkloadGenerator implements AutoCloseable {
         }
         createTpcHProducers(topics);
 
+        worker.pauseConsumers();
         ensureTopicsAreReady();
-        //        worker.pauseConsumers();
 
         if (workload.producerRate > 0) {
             targetPublishRate = workload.producerRate;
         } else {
             // Producer rate is 0 and we need to discover the sustainable rate
+            // ADDRESS: TPC-H queries do not support finding max sustainable rate.
             targetPublishRate = 10000;
         }
 
@@ -148,36 +149,35 @@ public class WorkloadGenerator implements AutoCloseable {
                 "[BenchmarkStart] Starting benchmark {} at {}", this.experimentId, new Date().getTime());
         worker.startLoad(producerWorkAssignment);
 
-        // Could consider not awaiting here, will need to be tested.
-        //        int expectedMessages = this.arguments.numberOfChunks;
-        //
-        //        long start = System.currentTimeMillis();
-        //        long end = start + 60 * 1000;
-        //        while (System.currentTimeMillis() < end) {
-        //            CountersStats stats = worker.getCountersStats();
-        //
-        //            log.info(
-        //                    "Waiting for producers to be ready -- Sent: {}, Received: {}, Expected:
-        // {}",
-        //                    stats.messagesSent,
-        //                    stats.messagesReceived,
-        //                    expectedMessages);
-        //            if (stats.messagesReceived < expectedMessages) {
-        //                try {
-        //                    Thread.sleep(2_000);
-        //                } catch (InterruptedException e) {
-        //                    throw new RuntimeException(e);
-        //                }
-        //            } else {
-        //                break;
-        //            }
-        //        }
-        //
-        //        if (System.currentTimeMillis() >= end) {
-        //            throw new RuntimeException("Timed out waiting for producers to be ready");
-        //        } else {
-        //            log.info("All producers are ready!");
-        //        }
+        int expectedMessages = this.arguments.numberOfChunks + numberOfTopics;
+
+        long start = System.currentTimeMillis();
+        long end = start + 60 * 1000;
+        while (System.currentTimeMillis() < end) {
+            CountersStats stats = worker.getCountersStats();
+
+            log.info(
+                    "Waiting for producers to be ready -- Sent: {}, Received: {}, Expected: {}",
+                    stats.messagesSent,
+                    stats.messagesReceived,
+                    expectedMessages);
+            if (stats.messagesSent < expectedMessages) {
+                try {
+                    Thread.sleep(2_000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                break;
+            }
+        }
+
+        if (System.currentTimeMillis() >= end) {
+            throw new RuntimeException("Timed out waiting for producers to be done");
+        } else {
+            log.info("All producers are done!");
+        }
+        worker.resumeConsumers();
 
         TestResult result =
                 printAndCollectStats(
@@ -325,6 +325,9 @@ public class WorkloadGenerator implements AutoCloseable {
      * @param currentRate
      */
     private void findMaximumSustainableRate(double currentRate) throws IOException {
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Finding maximum sustainable rate...");
+        }
         CountersStats stats = worker.getCountersStats();
 
         int controlPeriodMillis = 3000;
@@ -350,6 +353,9 @@ public class WorkloadGenerator implements AutoCloseable {
             currentRate =
                     rateController.nextRate(
                             currentRate, periodNanos, stats.messagesSent, stats.messagesReceived);
+            if (EnvironmentConfiguration.isDebug()) {
+                log.info("Adjusting publish rate to sustainable rate {}", currentRate);
+            }
             worker.adjustPublishRate(currentRate);
         }
     }
