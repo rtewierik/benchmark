@@ -15,4 +15,3 @@ WITH SERDEPROPERTIES (
   'serialization.format' = '1'
 )
 LOCATION '{{ s3_uri }}';
-

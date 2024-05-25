@@ -104,7 +104,7 @@ public class WorkloadGenerator implements AutoCloseable {
     private TestResult runTpcH() throws Exception {
         Timer timer = new Timer();
         /*
-         * 3 topics for Map commands;
+         * 6 topics for Map commands;
          * 1 topic to send aggregated intermediate results to.
          * x topics to send intermediate results to;
          */
@@ -128,7 +128,6 @@ public class WorkloadGenerator implements AutoCloseable {
         }
         createTpcHProducers(topics);
 
-//        worker.pauseConsumers();
         ensureTopicsAreReady();
 
         if (workload.producerRate > 0) {
@@ -148,36 +147,6 @@ public class WorkloadGenerator implements AutoCloseable {
         log.info(
                 "[BenchmarkStart] Starting benchmark {} at {}", this.experimentId, new Date().getTime());
         worker.startLoad(producerWorkAssignment);
-
-//        int expectedMessages = this.arguments.numberOfChunks + numberOfTopics;
-//
-//        long start = System.currentTimeMillis();
-//        long end = start + 60 * 1000;
-//        while (System.currentTimeMillis() < end) {
-//            CountersStats stats = worker.getCountersStats();
-//
-//            log.info(
-//                    "Waiting for producers to be ready -- Sent: {}, Received: {}, Expected: {}",
-//                    stats.messagesSent,
-//                    stats.messagesReceived,
-//                    expectedMessages);
-//            if (stats.messagesSent < expectedMessages) {
-//                try {
-//                    Thread.sleep(2_000);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            } else {
-//                break;
-//            }
-//        }
-//
-//        if (System.currentTimeMillis() >= end) {
-//            throw new RuntimeException("Timed out waiting for producers to be done");
-//        } else {
-//            log.info("All producers are done!");
-//        }
-//        worker.resumeConsumers();
 
         TestResult result =
                 printAndCollectStats(
