@@ -166,6 +166,20 @@ sudo bin/benchmark \
 --tpc-h-files workloads/tpc-h-q1-1000-500.yaml,workloads/tpc-h-q1-100-50.yaml,workloads/tpc-h-q6-1000-500.yaml,workloads/tpc-h-q6-100-50.yaml,workloads/tpc-h-q1-1000-500.yaml,workloads/tpc-h-q1-100-50.yaml,workloads/tpc-h-q6-1000-500.yaml,workloads/tpc-h-q6-100-50.yaml,workloads/tpc-h-q1-1000-500.yaml,workloads/tpc-h-q1-100-50.yaml,workloads/tpc-h-q6-1000-500.yaml,workloads/tpc-h-q6-100-50.yaml \
 workloads/tpc-h-base-long.yaml
 
+ALL
+sudo bin/benchmark \
+--drivers driver-kafka/kafka-experiment.yaml \
+workloads/throughput-100b-10.yaml workloads/throughput-100b-100.yaml workloads/throughput-100b-500.yaml workloads/throughput-100b-10.yaml workloads/throughput-100b-100.yaml workloads/throughput-100b-500.yaml workloads/throughput-100b-10.yaml workloads/throughput-100b-100.yaml workloads/throughput-100b-500.yaml workloads/throughput-1kb-10.yaml workloads/throughput-1kb-100.yaml workloads/throughput-1kb-500.yaml workloads/throughput-1kb-10.yaml workloads/throughput-1kb-100.yaml workloads/throughput-1kb-500.yaml workloads/throughput-1kb-10.yaml workloads/throughput-1kb-100.yaml workloads/throughput-1kb-500.yaml workloads/throughput-100b-10.yaml workloads/throughput-100b-100.yaml workloads/throughput-100b-500.yaml workloads/throughput-100b-10.yaml workloads/throughput-100b-100.yaml workloads/throughput-100b-500.yaml workloads/throughput-100b-10.yaml workloads/throughput-100b-100.yaml workloads/throughput-100b-500.yaml
+
+ALL-MAX
+sudo bin/benchmark \
+--drivers driver-kafka/kafka-experiment.yaml \
+workloads/throughput-100b-10-max.yaml workloads/throughput-100b-100-max.yaml workloads/throughput-100b-500-max.yaml workloads/throughput-100b-10-max.yaml workloads/throughput-100b-100-max.yaml workloads/throughput-100b-500-max.yaml workloads/throughput-100b-10-max.yaml workloads/throughput-100b-100-max.yaml workloads/throughput-100b-500-max.yaml workloads/throughput-1kb-10-max.yaml workloads/throughput-1kb-100-max.yaml workloads/throughput-1kb-500-max.yaml workloads/throughput-1kb-10-max.yaml workloads/throughput-1kb-100-max.yaml workloads/throughput-1kb-500-max.yaml workloads/throughput-1kb-10-max.yaml workloads/throughput-1kb-100-max.yaml workloads/throughput-1kb-500-max.yaml workloads/throughput-10kb-10-max.yaml workloads/throughput-10kb-100-max.yaml workloads/throughput-10kb-500-max.yaml workloads/throughput-10kb-10-max.yaml workloads/throughput-10kb-100-max.yaml workloads/throughput-10kb-500-max.yaml workloads/throughput-10kb-10-max.yaml workloads/throughput-10kb-100-max.yaml workloads/throughput-10kb-500-max.yaml
+ALL-MAX
+sudo bin/benchmark \
+--drivers driver-kafka/kafka-experiment.yaml \
+workloads/throughput-10kb-500-max.yaml
+
 ## Specify client hosts
 
 By default, benchmarks will be run from the set of hosts created by Terraform. You can also specify a comma-separated list of client hosts using the `--workers` flag (or `-w` for short):

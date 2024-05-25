@@ -84,7 +84,6 @@
         dev: '{{ item }}'
       with_items:
         - '/dev/nvme1n1'
-        - '/dev/nvme2n1'
     - name: Mount disks
       mount:
         path: "{{ item.path }}"
@@ -93,8 +92,7 @@
         opts: defaults,noatime,nodiscard
         state: mounted
       with_items:
-        - { path: "/mnt/zookeeper/logs", src: "/dev/nvme1n1" }
-        - { path: "/mnt/zookeeper/data", src: "/dev/nvme2n1" }
+        - { path: "/mnt/zookeeper/data", src: "/dev/nvme1n1" }
 
 - name: Kafka setup
   hosts: all
