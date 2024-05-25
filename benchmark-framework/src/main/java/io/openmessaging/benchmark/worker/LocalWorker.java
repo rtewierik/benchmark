@@ -190,12 +190,12 @@ public class LocalWorker implements Worker, ConsumerCallback {
         List<BenchmarkDriver.ProducerInfo> producerInfo = producerAssignment.topics.stream()
                 .map(t -> new BenchmarkDriver.ProducerInfo(producerIndex.getAndIncrement(), t))
                 .collect(toList());
+        int index = TpcHConstants.MAP_CMD_START_INDEX + (producerAssignment.producerIndex * 2);
+        String mapTopic1 = producerAssignment.topics.get(index);
+        String mapTopic2 = producerAssignment.topics.get(index + 1);
         if (producerAssignment.isTpcH) {
             int processors = Runtime.getRuntime().availableProcessors();
             for (int i = 0; i < processors; i++) {
-                int index = TpcHConstants.MAP_CMD_START_INDEX + (producerAssignment.producerIndex * 2);
-                String mapTopic1 = producerAssignment.topics.get(index);
-                String mapTopic2 = producerAssignment.topics.get(index + 1);
                 producerInfo.add(new BenchmarkDriver.ProducerInfo(producerIndex.getAndIncrement(), mapTopic1));
                 producerInfo.add(new BenchmarkDriver.ProducerInfo(producerIndex.getAndIncrement(), mapTopic2));
             }

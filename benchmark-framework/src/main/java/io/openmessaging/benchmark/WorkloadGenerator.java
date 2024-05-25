@@ -128,7 +128,7 @@ public class WorkloadGenerator implements AutoCloseable {
         }
         createTpcHProducers(topics);
 
-        worker.pauseConsumers();
+//        worker.pauseConsumers();
         ensureTopicsAreReady();
 
         if (workload.producerRate > 0) {
@@ -149,35 +149,35 @@ public class WorkloadGenerator implements AutoCloseable {
                 "[BenchmarkStart] Starting benchmark {} at {}", this.experimentId, new Date().getTime());
         worker.startLoad(producerWorkAssignment);
 
-        int expectedMessages = this.arguments.numberOfChunks + numberOfTopics;
-
-        long start = System.currentTimeMillis();
-        long end = start + 60 * 1000;
-        while (System.currentTimeMillis() < end) {
-            CountersStats stats = worker.getCountersStats();
-
-            log.info(
-                    "Waiting for producers to be ready -- Sent: {}, Received: {}, Expected: {}",
-                    stats.messagesSent,
-                    stats.messagesReceived,
-                    expectedMessages);
-            if (stats.messagesSent < expectedMessages) {
-                try {
-                    Thread.sleep(2_000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            } else {
-                break;
-            }
-        }
-
-        if (System.currentTimeMillis() >= end) {
-            throw new RuntimeException("Timed out waiting for producers to be done");
-        } else {
-            log.info("All producers are done!");
-        }
-        worker.resumeConsumers();
+//        int expectedMessages = this.arguments.numberOfChunks + numberOfTopics;
+//
+//        long start = System.currentTimeMillis();
+//        long end = start + 60 * 1000;
+//        while (System.currentTimeMillis() < end) {
+//            CountersStats stats = worker.getCountersStats();
+//
+//            log.info(
+//                    "Waiting for producers to be ready -- Sent: {}, Received: {}, Expected: {}",
+//                    stats.messagesSent,
+//                    stats.messagesReceived,
+//                    expectedMessages);
+//            if (stats.messagesSent < expectedMessages) {
+//                try {
+//                    Thread.sleep(2_000);
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            } else {
+//                break;
+//            }
+//        }
+//
+//        if (System.currentTimeMillis() >= end) {
+//            throw new RuntimeException("Timed out waiting for producers to be done");
+//        } else {
+//            log.info("All producers are done!");
+//        }
+//        worker.resumeConsumers();
 
         TestResult result =
                 printAndCollectStats(
@@ -408,12 +408,12 @@ public class WorkloadGenerator implements AutoCloseable {
         ConsumerAssignment consumerAssignment = new ConsumerAssignment(experimentId, true);
         ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment(experimentId, true);
 
-//        addMapSubscription(consumerAssignment, topics, 0);
-//        addMapSubscription(consumerAssignment, topics, 1);
-//        addMapSubscription(consumerAssignment, topics, 2);
-//        addMapSubscription(consumerAssignment, topics, 3);
-//        addMapSubscription(consumerAssignment, topics, 4);
-//        addMapSubscription(consumerAssignment, topics, 5);
+        addMapSubscription(consumerAssignment, topics, 0);
+        addMapSubscription(consumerAssignment, topics, 1);
+        addMapSubscription(consumerAssignment, topics, 2);
+        addMapSubscription(consumerAssignment, topics, 3);
+        addMapSubscription(consumerAssignment, topics, 4);
+        addMapSubscription(consumerAssignment, topics, 5);
 
         TopicSubscription orchestratorSubscription =
                 new TopicSubscription(
