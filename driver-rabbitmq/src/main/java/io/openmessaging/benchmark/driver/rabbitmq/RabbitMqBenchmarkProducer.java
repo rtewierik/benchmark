@@ -142,28 +142,12 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
         CompletableFuture<Void> future = new CompletableFuture<>();
         long msgId = channel.getNextPublishSeqNo();
         ackSet.add(msgId);
-        boolean isDebug = EnvironmentConfiguration.isDebug();
-        if (isDebug) {
-            if (futureConcurrentHashMap.containsKey(msgId)) {
-                log.info("Message ID {} is already present in future concurrent hash map!", msgId);
-            }
-        }
         futureConcurrentHashMap.putIfAbsent(msgId, future);
         try {
-            if (isDebug) {
-                log.info("Attempting to publish message {} over channel", msgId);
-            }
             channel.basicPublish(exchange, key.orElse(""), true, props, payload);
-            if (isDebug) {
-                log.info("Published message {} over channel successfully.", msgId);
-            }
         } catch (Exception e) {
             log.error("Exception occurred while producing RabbitMQ message!", e);
             future.completeExceptionally(e);
-        }
-
-        if (isDebug) {
-            log.info("Returning future!");
         }
         return future;
     }
