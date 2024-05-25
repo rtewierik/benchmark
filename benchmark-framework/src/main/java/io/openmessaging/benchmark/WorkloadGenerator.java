@@ -78,7 +78,7 @@ public class WorkloadGenerator implements AutoCloseable {
             String driverName, Workload workload, TpcHArguments arguments, BenchmarkWorkers workers) {
         this.driverName = driverName;
         this.workload = workload;
-        this.arguments = arguments.withQueryIdDate();
+        this.arguments = arguments != null ? arguments.withQueryIdDate() : null;
         this.worker = workers.worker;
         this.localWorker = workers.localWorker;
         String date = DATE_FORMAT.get().format(new Date());
@@ -104,11 +104,11 @@ public class WorkloadGenerator implements AutoCloseable {
     private TestResult runTpcH() throws Exception {
         Timer timer = new Timer();
         /*
-         * 1 topic for Map commands;
+         * 6 topics for Map commands;
          * 1 topic to send aggregated intermediate results to.
          * x topics to send intermediate results to;
          */
-        int numberOfTopics = 1 + 1 + this.arguments.numberOfReducers;
+        int numberOfTopics = 6 + 1 + this.arguments.numberOfWorkers;
         List<String> topics =
                 worker.createTopics(new TopicsInfo(numberOfTopics, workload.partitionsPerTopic));
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
@@ -134,6 +134,7 @@ public class WorkloadGenerator implements AutoCloseable {
             targetPublishRate = workload.producerRate;
         } else {
             // Producer rate is 0 and we need to discover the sustainable rate
+            // ADDRESS: TPC-H queries do not support finding max sustainable rate.
             targetPublishRate = 10000;
         }
 
@@ -154,10 +155,6 @@ public class WorkloadGenerator implements AutoCloseable {
 
         log.info("[BenchmarkEnd] Ending benchmark {} at {}", this.experimentId, new Date().getTime());
 
-        worker.stopAll();
-        if (localWorker != worker) {
-            localWorker.stopAll();
-        }
         return result;
     }
 
@@ -297,6 +294,9 @@ public class WorkloadGenerator implements AutoCloseable {
      * @param currentRate
      */
     private void findMaximumSustainableRate(double currentRate) throws IOException {
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Finding maximum sustainable rate...");
+        }
         CountersStats stats = worker.getCountersStats();
 
         int controlPeriodMillis = 3000;
@@ -322,15 +322,22 @@ public class WorkloadGenerator implements AutoCloseable {
             currentRate =
                     rateController.nextRate(
                             currentRate, periodNanos, stats.messagesSent, stats.messagesReceived);
+            if (EnvironmentConfiguration.isDebug()) {
+                log.info("Adjusting publish rate to sustainable rate {}", currentRate);
+            }
             worker.adjustPublishRate(currentRate);
         }
     }
 
     @Override
     public void close() throws Exception {
-        worker.stopAll();
-        if (worker != localWorker) {
-            localWorker.close();
+        try {
+            worker.stopAll();
+            if (localWorker != worker) {
+                localWorker.stopAll();
+            }
+        } catch (Throwable t) {
+            log.error("Exception occurred while stopping all workers.", t);
         }
         executor.shutdownNow();
     }
@@ -359,14 +366,23 @@ public class WorkloadGenerator implements AutoCloseable {
                 timer.elapsedMillis());
     }
 
+    private void addMapSubscription(
+            ConsumerAssignment consumerAssignment, List<String> topics, int offset) {
+        int index = TpcHConstants.MAP_CMD_START_INDEX + offset;
+        consumerAssignment.topicsSubscriptions.add(
+                new TopicSubscription(topics.get(index), generateSubscriptionName(index)));
+    }
+
     private ConsumerAssignment createTpcHConsumers(List<String> topics) throws IOException {
         ConsumerAssignment consumerAssignment = new ConsumerAssignment(experimentId, true);
         ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment(experimentId, true);
 
-        consumerAssignment.topicsSubscriptions.add(
-                new TopicSubscription(
-                        topics.get(TpcHConstants.MAP_CMD_INDEX),
-                        generateSubscriptionName(TpcHConstants.MAP_CMD_INDEX)));
+        addMapSubscription(consumerAssignment, topics, 0);
+        addMapSubscription(consumerAssignment, topics, 1);
+        addMapSubscription(consumerAssignment, topics, 2);
+        addMapSubscription(consumerAssignment, topics, 3);
+        addMapSubscription(consumerAssignment, topics, 4);
+        addMapSubscription(consumerAssignment, topics, 5);
 
         TopicSubscription orchestratorSubscription =
                 new TopicSubscription(
@@ -375,7 +391,7 @@ public class WorkloadGenerator implements AutoCloseable {
         consumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
         orchestratorConsumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
 
-        for (int i = 0; i < this.arguments.numberOfReducers; i++) {
+        for (int i = 0; i < this.arguments.numberOfWorkers; i++) {
             int sourceIndex = TpcHConstants.REDUCE_SRC_START_INDEX + i;
             consumerAssignment.topicsSubscriptions.add(
                     new TopicSubscription(topics.get(sourceIndex), generateSubscriptionName(sourceIndex)));

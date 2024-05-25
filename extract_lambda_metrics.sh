@@ -31,7 +31,7 @@ for function_name in $lambda_functions; do
   if [ "$function_name" != "null" ] && [ -n "$function_name" ]; then
   echo $function_name
     output=$(aws cloudwatch get-metric-data \
-      --start-time "$(date -u -v-1H)" \
+      --start-time "$(date -u -v-4H)" \
       --end-time "$(date -u)" \
       --metric-data-queries '[
         {

@@ -1,0 +1,360 @@
+sudo bin/benchmark \
+>   --drivers driver-rabbitmq/rabbitmq-experiment.yaml \
+>   --tpc-h-files workloads/tpc-h-q1-1000-300.yaml,workloads/tpc-h-q1-100-30.yaml,workloads/tpc-h-q6-1000-300.yaml,workloads/tpc-h-q6-100-30.yaml,workloads/tpc-h-q1-1000-300.yaml,workloads/tpc-h-q1-100-30.yaml,workloads/tpc-h-q6-1000-300.yaml,workloads/tpc-h-q6-100-30.yaml,workloads/tpc-h-q1-1000-300.yaml,workloads/tpc-h-q1-100-30.yaml,workloads/tpc-h-q6-1000-300.yaml,workloads/tpc-h-q6-100-30.yaml \
+>   workloads/tpc-h-base-long.yaml
+18:50:08.004 [main] INFO Benchmark - Using default worker file workers.yaml!
+18:50:08.015 [main] INFO Benchmark - Reading workers list from workers.yaml
+18:50:08.067 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-rabbitmq/rabbitmq-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.205:8080", "http://10.0.0.70:8080", "http://10.0.0.104:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-1000-300.yaml", "workloads/tpc-h-q1-100-30.yaml", "workloads/tpc-h-q6-1000-300.yaml", "workloads/tpc-h-q6-100-30.yaml", "workloads/tpc-h-q1-1000-300.yaml", "workloads/tpc-h-q1-100-30.yaml", "workloads/tpc-h-q6-1000-300.yaml", "workloads/tpc-h-q6-100-30.yaml", "workloads/tpc-h-q1-1000-300.yaml", "workloads/tpc-h-q1-100-30.yaml", "workloads/tpc-h-q6-1000-300.yaml", "workloads/tpc-h-q6-100-30.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+18:50:08.084 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+18:50:08.101 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-1000-300",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 300,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q1-100-30",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 30,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q6-1000-300",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 300,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q6-100-30",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 30,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q1-1000-300",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 300,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q1-100-30",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 30,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q6-1000-300",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 300,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q6-100-30",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 30,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q1-1000-300",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 300,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q1-100-30",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 30,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q6-1000-300",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 300,
+  "defaultNumberOfMapResults" : 4
+}, {
+  "queryId" : "tpc-h-q6-100-30",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 30,
+  "defaultNumberOfMapResults" : 4
+} ]
+18:50:08.459 [main] INFO CentralWorkerStats - Central worker stats initialized
+18:50:08.713 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.205:8080]
+18:50:08.714 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.104:8080,http://10.0.0.70:8080
+18:50:08.716 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+18:50:09.066 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+18:50:09.091 [main] INFO WorkloadGenerator - Created 302 topics in 13.270803 ms
+18:50:14.588 [main] INFO WorkloadGenerator - Created 302 external consumers in 5478.294914 ms
+18:50:14.783 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+18:50:14.784 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+18:50:14.785 [main] INFO LocalWorker - Created 1 consumers in 196.126179 ms
+18:50:21.014 [main] INFO WorkloadGenerator - Created 302 producers in 6228.809692 ms
+18:50:21.014 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+18:50:21.030 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 145, Received: 21, Expected: 0
+18:50:21.031 [main] INFO WorkloadGenerator - All consumers are ready!
+18:50:21.031 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q1-1000-300-2024-05-20-18-50-09 at 1716231021031
+18:52:20.115 [pool-3-thread-6] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+18:52:21.274 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q1-1000-300-2024-05-20-18-50-09 at 1716231141274
+18:52:21.825 [main] INFO CentralWorkerStats - Central worker stats initialized
+18:52:21.830 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.205:8080]
+18:52:21.830 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.104:8080,http://10.0.0.70:8080
+18:52:21.831 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+18:52:22.042 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+18:52:22.045 [main] INFO WorkloadGenerator - Created 32 topics in 2.496894 ms
+18:52:23.205 [main] INFO WorkloadGenerator - Created 32 external consumers in 1159.929812 ms
+18:52:23.325 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+18:52:23.325 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+18:52:23.325 [main] INFO LocalWorker - Created 1 consumers in 119.517116 ms
+18:52:24.042 [main] INFO WorkloadGenerator - Created 32 producers in 716.892151 ms
+18:52:24.042 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+18:52:24.047 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 12, Received: 19, Expected: 0
+18:52:24.047 [main] INFO WorkloadGenerator - All consumers are ready!
+18:52:24.047 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q1-100-30-2024-05-20-18-52-22 at 1716231144047
+18:54:03.380 [pool-6-thread-5] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132740,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880077,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":26,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612940,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":26,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+18:54:04.090 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q1-100-30-2024-05-20-18-52-22 at 1716231244090
+18:54:04.524 [main] INFO CentralWorkerStats - Central worker stats initialized
+18:54:04.536 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.205:8080]
+18:54:04.536 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.104:8080,http://10.0.0.70:8080
+18:54:04.537 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+18:54:04.744 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+18:54:04.749 [main] INFO WorkloadGenerator - Created 302 topics in 4.194804 ms
+18:54:10.244 [main] INFO WorkloadGenerator - Created 302 external consumers in 5492.182538 ms
+18:54:10.364 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+18:54:10.364 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+18:54:10.364 [main] INFO LocalWorker - Created 1 consumers in 119.680616 ms
+18:54:16.566 [main] INFO WorkloadGenerator - Created 302 producers in 6201.936864 ms
+18:54:16.566 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+18:54:16.574 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 47, Received: 25, Expected: 0
+18:54:16.574 [main] INFO WorkloadGenerator - All consumers are ready!
+18:54:16.574 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q6-1000-300-2024-05-20-18-54-04 at 1716231256574
+18:55:58.687 [pool-9-thread-6] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+18:56:06.772 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q6-1000-300-2024-05-20-18-54-04 at 1716231366772
+18:56:07.336 [main] INFO CentralWorkerStats - Central worker stats initialized
+18:56:07.342 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.205:8080]
+18:56:07.342 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.104:8080,http://10.0.0.70:8080
+18:56:07.343 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+18:56:07.551 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+18:56:07.554 [main] INFO WorkloadGenerator - Created 32 topics in 2.024689 ms
+18:56:08.331 [main] INFO WorkloadGenerator - Created 32 external consumers in 776.196864 ms
+18:56:08.451 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+18:56:08.451 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+18:56:08.451 [main] INFO LocalWorker - Created 1 consumers in 120.350971 ms
+18:56:09.184 [main] INFO WorkloadGenerator - Created 32 producers in 731.941331 ms
+18:56:09.184 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+18:56:09.188 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 32, Received: 24, Expected: 0
+18:56:09.189 [main] INFO WorkloadGenerator - All consumers are ready!
+18:56:09.189 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q6-100-30-2024-05-20-18-56-07 at 1716231369189
+18:57:34.974 [pool-12-thread-5] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+18:57:39.230 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q6-100-30-2024-05-20-18-56-07 at 1716231459229
+18:57:39.664 [main] INFO CentralWorkerStats - Central worker stats initialized
+18:57:39.669 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.205:8080]
+18:57:39.669 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.104:8080,http://10.0.0.70:8080
+18:57:39.670 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+18:57:39.877 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+18:57:39.881 [main] INFO WorkloadGenerator - Created 302 topics in 3.456655 ms
+18:57:45.365 [main] INFO WorkloadGenerator - Created 302 external consumers in 5480.384006 ms
+18:57:45.485 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+18:57:45.485 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+18:57:45.485 [main] INFO LocalWorker - Created 1 consumers in 120.266161 ms
+18:57:51.702 [main] INFO WorkloadGenerator - Created 302 producers in 6216.897126 ms
+18:57:51.702 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+18:57:51.707 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 24, Expected: 0
+18:57:51.708 [main] INFO WorkloadGenerator - All consumers are ready!
+18:57:51.708 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q1-1000-300-2024-05-20-18-57-39 at 1716231471708
+18:59:50.542 [pool-15-thread-8] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+18:59:51.860 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q1-1000-300-2024-05-20-18-57-39 at 1716231591860
+18:59:52.405 [main] INFO CentralWorkerStats - Central worker stats initialized
+18:59:52.419 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.205:8080]
+18:59:52.420 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.104:8080,http://10.0.0.70:8080
+18:59:52.420 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+18:59:52.627 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+18:59:52.629 [main] INFO WorkloadGenerator - Created 32 topics in 1.380277 ms
+18:59:53.399 [main] INFO WorkloadGenerator - Created 32 external consumers in 770.037483 ms
+18:59:53.519 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+18:59:53.519 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+18:59:53.519 [main] INFO LocalWorker - Created 1 consumers in 119.727291 ms
+18:59:54.234 [main] INFO WorkloadGenerator - Created 32 producers in 715.067954 ms
+18:59:54.234 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+18:59:54.237 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 14, Expected: 0
+18:59:54.238 [main] INFO WorkloadGenerator - All consumers are ready!
+18:59:54.238 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q1-100-30-2024-05-20-18-59-52 at 1716231594238
+19:01:38.965 [pool-18-thread-5] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132740,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880077,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":26,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612940,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":26,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+19:01:44.280 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q1-100-30-2024-05-20-18-59-52 at 1716231704280
+19:01:44.716 [main] INFO CentralWorkerStats - Central worker stats initialized
+19:01:44.720 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.205:8080]
+19:01:44.721 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.104:8080,http://10.0.0.70:8080
+19:01:44.721 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+19:01:44.931 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+19:01:44.935 [main] INFO WorkloadGenerator - Created 302 topics in 2.682878 ms
+19:01:50.422 [main] INFO WorkloadGenerator - Created 302 external consumers in 5485.169079 ms
+19:01:50.543 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+19:01:50.543 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+19:01:50.543 [main] INFO LocalWorker - Created 1 consumers in 121.009849 ms
+19:01:56.924 [main] INFO WorkloadGenerator - Created 302 producers in 6380.463068 ms
+19:01:56.924 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+19:01:56.930 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 4, Received: 21, Expected: 0
+19:01:56.930 [main] INFO WorkloadGenerator - All consumers are ready!
+19:01:56.930 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q6-1000-300-2024-05-20-19-01-44 at 1716231716930
+19:03:39.889 [pool-21-thread-6] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+19:03:47.061 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q6-1000-300-2024-05-20-19-01-44 at 1716231827061
+19:03:47.613 [main] INFO CentralWorkerStats - Central worker stats initialized
+19:03:47.617 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.205:8080]
+19:03:47.617 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.104:8080,http://10.0.0.70:8080
+19:03:47.618 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+19:03:47.825 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+19:03:47.826 [main] INFO WorkloadGenerator - Created 32 topics in 1.31144 ms
+19:03:48.583 [main] INFO WorkloadGenerator - Created 32 external consumers in 756.412268 ms
+19:03:48.715 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+19:03:48.715 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+19:03:48.715 [main] INFO LocalWorker - Created 1 consumers in 131.856093 ms
+19:03:49.431 [main] INFO WorkloadGenerator - Created 32 producers in 715.360787 ms
+19:03:49.431 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+19:03:49.433 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 11, Expected: 0
+19:03:49.434 [main] INFO WorkloadGenerator - All consumers are ready!
+19:03:49.434 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q6-100-30-2024-05-20-19-03-47 at 1716231829434
+19:05:15.356 [pool-24-thread-5] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+19:05:19.473 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q6-100-30-2024-05-20-19-03-47 at 1716231919473
+19:05:19.914 [main] INFO CentralWorkerStats - Central worker stats initialized
+19:05:19.918 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.205:8080]
+19:05:19.918 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.104:8080,http://10.0.0.70:8080
+19:05:19.918 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+19:05:20.125 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+19:05:20.128 [main] INFO WorkloadGenerator - Created 302 topics in 2.644155 ms
+19:05:25.570 [main] INFO WorkloadGenerator - Created 302 external consumers in 5441.008041 ms
+19:05:25.693 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+19:05:25.694 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+19:05:25.694 [main] INFO LocalWorker - Created 1 consumers in 123.374715 ms
+19:05:31.897 [main] INFO WorkloadGenerator - Created 302 producers in 6203.32757 ms
+19:05:31.897 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+19:05:31.905 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 70, Received: 22, Expected: 0
+19:05:31.905 [main] INFO WorkloadGenerator - All consumers are ready!
+19:05:31.905 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q1-1000-300-2024-05-20-19-05-20 at 1716231931905
+19:07:33.208 [pool-27-thread-6] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+19:07:42.060 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q1-1000-300-2024-05-20-19-05-20 at 1716232062060
+19:07:42.608 [main] INFO CentralWorkerStats - Central worker stats initialized
+19:07:42.612 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.205:8080]
+19:07:42.612 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.104:8080,http://10.0.0.70:8080
+19:07:42.613 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+19:07:42.819 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+19:07:42.821 [main] INFO WorkloadGenerator - Created 32 topics in 1.327399 ms
+19:07:43.578 [main] INFO WorkloadGenerator - Created 32 external consumers in 756.487695 ms
+19:07:43.698 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+19:07:43.699 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+19:07:43.699 [main] INFO LocalWorker - Created 1 consumers in 120.940734 ms
+19:07:44.414 [main] INFO WorkloadGenerator - Created 32 producers in 715.164463 ms
+19:07:44.414 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+19:07:44.417 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 13, Expected: 0
+19:07:44.417 [main] INFO WorkloadGenerator - All consumers are ready!
+19:07:44.417 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q1-100-30-2024-05-20-19-07-42 at 1716232064417
+19:09:31.934 [pool-30-thread-5] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132740,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880077,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":26,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612940,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":26,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+19:09:34.465 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q1-100-30-2024-05-20-19-07-42 at 1716232174465
+19:09:34.911 [main] INFO CentralWorkerStats - Central worker stats initialized
+19:09:34.915 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.205:8080]
+19:09:34.915 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.104:8080,http://10.0.0.70:8080
+19:09:34.916 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+19:09:35.123 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+19:09:35.126 [main] INFO WorkloadGenerator - Created 302 topics in 2.466206 ms
+19:09:40.555 [main] INFO WorkloadGenerator - Created 302 external consumers in 5428.701746 ms
+19:09:40.689 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+19:09:40.689 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+19:09:40.689 [main] INFO LocalWorker - Created 1 consumers in 133.732274 ms
+19:09:46.890 [main] INFO WorkloadGenerator - Created 302 producers in 6200.397096 ms
+19:09:46.890 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+19:09:46.894 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 10, Received: 12, Expected: 0
+19:09:46.894 [main] INFO WorkloadGenerator - All consumers are ready!
+19:09:46.894 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q6-1000-300-2024-05-20-19-09-35 at 1716232186894
+19:11:29.752 [pool-33-thread-9] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+19:11:37.020 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q6-1000-300-2024-05-20-19-09-35 at 1716232297020
+19:11:37.559 [main] INFO CentralWorkerStats - Central worker stats initialized
+19:11:37.563 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.205:8080]
+19:11:37.563 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.104:8080,http://10.0.0.70:8080
+19:11:37.563 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+19:11:37.771 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+19:11:37.772 [main] INFO WorkloadGenerator - Created 32 topics in 1.13358 ms
+19:11:38.889 [main] INFO WorkloadGenerator - Created 32 external consumers in 1116.376664 ms
+19:11:39.022 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+19:11:39.022 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+19:11:39.022 [main] INFO LocalWorker - Created 1 consumers in 133.084534 ms
+19:11:39.745 [main] INFO WorkloadGenerator - Created 32 producers in 722.623831 ms
+19:11:39.745 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+19:11:39.748 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 2, Expected: 0
+19:11:39.748 [main] INFO WorkloadGenerator - All consumers are ready!
+19:11:39.748 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q6-100-30-2024-05-20-19-11-37 at 1716232299748
+19:13:10.560 [pool-36-thread-5] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+19:13:19.796 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q6-100-30-2024-05-20-19-11-37 at 1716232399796

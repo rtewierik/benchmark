@@ -22,16 +22,19 @@ public class MonitoredProducedMessage {
     public final long intendedSendTimeNs;
     public final long sendTimeNs;
     public final long nowNs;
+    public final long timestamp;
     public final String experimentId;
     public final String messageId;
     public final boolean isTpcH;
     public final boolean isError;
 
+    @SuppressWarnings("checkstyle:ParameterNumber")
     public MonitoredProducedMessage(
             long payloadLength,
             long intendedSendTimeNs,
             long sendTimeNs,
             long nowNs,
+            long timestamp,
             String experimentId,
             String messageId,
             boolean isTpcH,
@@ -41,6 +44,7 @@ public class MonitoredProducedMessage {
         this.intendedSendTimeNs = intendedSendTimeNs;
         this.sendTimeNs = sendTimeNs;
         this.nowNs = nowNs;
+        this.timestamp = timestamp;
         this.experimentId = experimentId;
         this.messageId = messageId;
         this.isTpcH = isTpcH;

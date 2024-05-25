@@ -10,7 +10,7 @@ import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions'
 const PERSONAL_EMAIL = 'rtewierik64@gmail.com'
 const STUDENT_EMAIL = 'rubeneduardconstantijn.tewierik@estudiants.urv.cat'
 
-export function addAlerting(stack: Stack, lambda: LambdaFunction, deadLetterQueue: IQueue, ingestionDeadLetterQueue: IQueue, props: BenchmarkMonitoringStackProps) {
+export function addAlerting(stack: Stack, lambda: LambdaFunction, deadLetterQueue: IQueue, props: BenchmarkMonitoringStackProps) {
   const invocationsMetric = lambda.metricInvocations({
     period: Duration.minutes(1),
     statistic: 'sum',
@@ -82,29 +82,4 @@ export function addAlerting(stack: Stack, lambda: LambdaFunction, deadLetterQueu
   })
   deadLetterQueueMessageCount.addAlarmAction(new SnsAction(alertTopic))
   deadLetterQueueMessageCount.addOkAction(new SnsAction(alertTopic))
-
-  const ingestionDeadLetterQueueMessageCountMetric = ingestionDeadLetterQueue.metricApproximateNumberOfMessagesVisible()
-  const ingestionDeadLetterQueueMessagesAddedAlarm = ingestionDeadLetterQueueMessageCountMetric.createAlarm(stack, 'BenchmarkMonitoringMessagesAddedToIngestionDlqAlarm', {
-    alarmName: 'benchmark-monitoring-ingestion-dlq-messages-added',
-    actionsEnabled: props.alertingEnabled,
-    comparisonOperator: ComparisonOperator.GREATER_THAN_THRESHOLD,
-    threshold: 5,
-    evaluationPeriods: 1,
-    alarmDescription:
-        'Number of messages in the ingestion DLQ above 5',
-  })
-  ingestionDeadLetterQueueMessagesAddedAlarm.addAlarmAction(new SnsAction(alertTopic))
-  ingestionDeadLetterQueueMessagesAddedAlarm.addOkAction(new SnsAction(alertTopic))
-
-  const ingestionDeadLetterQueueMessageCount = ingestionDeadLetterQueueMessageCountMetric.createAlarm(stack, 'BenchmarkMonitoringIngestionDlqMessageCountAlarm', {
-    alarmName: 'benchmark-monitoring-ingestion-dlq-message-count',
-    actionsEnabled: props.alertingEnabled,
-    comparisonOperator: ComparisonOperator.GREATER_THAN_THRESHOLD,
-    threshold: 10,
-    evaluationPeriods: 1,
-    alarmDescription:
-        'Number of messages in the ingestion DLQ above 100',
-  })
-  ingestionDeadLetterQueueMessageCount.addAlarmAction(new SnsAction(alertTopic))
-  ingestionDeadLetterQueueMessageCount.addOkAction(new SnsAction(alertTopic))
 }

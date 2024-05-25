@@ -60,6 +60,8 @@ public class CentralWorkerStats implements WorkerStats {
     public void recordMessageReceived(
             long payloadLength,
             long endToEndLatencyMicros,
+            long publishTimestamp,
+            long processTimestamp,
             String experimentId,
             String messageId,
             boolean isTpcH)
@@ -71,22 +73,28 @@ public class CentralWorkerStats implements WorkerStats {
                 new MonitoredReceivedMessage(
                         payloadLength,
                         endToEndLatencyMicros,
+                        publishTimestamp,
+                        processTimestamp,
                         experimentId != null ? experimentId : "UNAVAILABLE",
                         messageId,
                         isTpcH);
         String body = writer.writeValueAsString(message);
-        log.info("Sending received message to cloud: {}", body);
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Sending received message to cloud: {}", body);
+        }
         SendMessageRequest request =
                 new SendMessageRequest(EnvironmentConfiguration.getMonitoringSqsUri(), body);
         sqsClient.sendMessage(request);
     }
 
     @Override
+    @SuppressWarnings("checkstyle:ParameterNumber")
     public void recordMessageProduced(
             long payloadLength,
             long intendedSendTimeNs,
             long sendTimeNs,
             long nowNs,
+            long timestamp,
             String experimentId,
             String messageId,
             boolean isTpcH,
@@ -103,12 +111,15 @@ public class CentralWorkerStats implements WorkerStats {
                         intendedSendTimeNs,
                         sendTimeNs,
                         nowNs,
+                        timestamp,
                         experimentId != null ? experimentId : "UNAVAILABLE",
                         messageId,
                         isTpcH,
                         isError);
         String body = writer.writeValueAsString(message);
-        log.info("Sending produced message to cloud: {}", body);
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Sending produced message to cloud: {}", body);
+        }
         SendMessageRequest request =
                 new SendMessageRequest(EnvironmentConfiguration.getMonitoringSqsUri(), body);
         sqsClient.sendMessage(request);

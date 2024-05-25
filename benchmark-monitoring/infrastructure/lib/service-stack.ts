@@ -12,6 +12,7 @@ import {
 } from 'aws-cdk-lib/aws-sqs'
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources'
 import {
+  AccountPrincipal,
   IRole,
   ManagedPolicy,
   PolicyStatement,
@@ -22,7 +23,6 @@ import { BenchmarkMonitoringStackProps } from './stack-configuration'
 
 import { addMonitoring } from '../modules/monitoring'
 import { addAlerting } from '../modules/alerting'
-import { ApiGatewayToSqs } from '@aws-solutions-constructs/aws-apigateway-sqs'
 import { AttributeType, BillingMode, Table, TableEncryption } from 'aws-cdk-lib/aws-dynamodb'
 
 const IAM_ROLE_NAMES = [
@@ -45,36 +45,30 @@ export class ServiceStack extends Stack {
     super(scope, id, props)
 
     const iamRoles = this.getIamRoles()
-    const { sqsQueue, ingestionDeadLetterQueue } = this.createBenchmarkMonitoringDataIngestionLayer(iamRoles, props)
+    const sqsQueue = this.createBenchmarkMonitoringDataIngestionLayer(iamRoles)
     const deadLetterQueue = this.createBenchmarkMonitoringLambdaDeadLetterQueue(props)
     const lambda = this.createBenchmarkMonitoringLambda(sqsQueue, deadLetterQueue, props)
     this.createBenchmarkMonitoringDynamoDb(lambda, props)
-    addMonitoring(this, sqsQueue, lambda, deadLetterQueue, ingestionDeadLetterQueue, props)
-    addAlerting(this, lambda, deadLetterQueue, ingestionDeadLetterQueue, props)
+    addMonitoring(this, sqsQueue, lambda, deadLetterQueue, props)
+    addAlerting(this, lambda, deadLetterQueue, props)
   }
 
   private getIamRoles() {
     return IAM_ROLE_NAMES.map((roleName, index) => Role.fromRoleName(this, `BenchmarkMonitoringRole${index}`, roleName))
   }
 
-  private createBenchmarkMonitoringDataIngestionLayer(iamRoles: IRole[], props: BenchmarkMonitoringStackProps): DataIngestionLayer {
-    const { sqsQueue, deadLetterQueue } = new ApiGatewayToSqs(this, 'BenchmarkMonitoringDataIngestion', {
-      queueProps: {
-        queueName: props.appName,
-        visibilityTimeout: Duration.seconds(props.eventsVisibilityTimeoutSeconds),
-        encryption: QueueEncryption.KMS_MANAGED,
-        dataKeyReuse: Duration.seconds(300),
-        retentionPeriod: Duration.days(14),
-      },
-      deployDeadLetterQueue: true,
-      maxReceiveCount: 10,
-      allowCreateOperation: true
+  private createBenchmarkMonitoringDataIngestionLayer(iamRoles: IRole[]): Queue {
+    const sqsQueue = new Queue(this, 'BenchmarkMonitoringDataIngestionSqsQueue', {
+      queueName: 'benchmark-monitoring'
     })
     iamRoles.forEach(role => sqsQueue.grantSendMessages(role));
-    if (!deadLetterQueue) {
-      throw new Error('The ApiGatewayToSqs dependency did not yield a dead letter queue!')
-    }
-    return { sqsQueue, ingestionDeadLetterQueue: deadLetterQueue.queue }
+    const adminPolicyStatement = new PolicyStatement({
+      actions: ['sqs:*'],
+      principals: [new AccountPrincipal('730335367108')],
+      resources: [sqsQueue.queueArn]
+    });
+    sqsQueue.addToResourcePolicy(adminPolicyStatement);
+    return sqsQueue;
   }
 
   private createBenchmarkMonitoringLambdaDeadLetterQueue(props: BenchmarkMonitoringStackProps): IQueue {

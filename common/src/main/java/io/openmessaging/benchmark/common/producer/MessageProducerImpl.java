@@ -15,12 +15,15 @@ package io.openmessaging.benchmark.common.producer;
 
 import static io.openmessaging.benchmark.common.utils.UniformRateLimiter.uninterruptibleSleepNs;
 
+import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.common.monitoring.WorkerStats;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.MessageProducer;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,21 +44,35 @@ public class MessageProducerImpl implements MessageProducer {
         this.stats = stats;
     }
 
-    public void sendMessage(
+    public CompletableFuture<Void> sendMessage(
             BenchmarkProducer producer,
             Optional<String> key,
             byte[] payload,
             String experimentId,
             String messageId,
             boolean isTpcH) {
+        boolean isDebug = EnvironmentConfiguration.isDebug();
         final long intendedSendTime = rateLimiter.acquire();
+        if (isDebug) {
+            long waitNs = intendedSendTime - System.nanoTime();
+            log.info(
+                    "Rate limiter suggested sleep for {} ns with {}} ops/sec.",
+                    waitNs,
+                    rateLimiter.getOpsPerSec());
+        }
         uninterruptibleSleepNs(intendedSendTime);
         final long sendTime = nanoClock.get();
         long length = payload.length;
-        producer
+        if (isDebug) {
+            log.info("Sending message in producer implementation.");
+        }
+        return producer
                 .sendAsync(key, payload)
                 .thenRun(
                         () -> {
+                            if (isDebug) {
+                                log.info("Trying to record result.");
+                            }
                             try {
                                 recordResult(
                                         length, intendedSendTime, sendTime, experimentId, messageId, isTpcH, null);
@@ -65,6 +82,9 @@ public class MessageProducerImpl implements MessageProducer {
                         })
                 .exceptionally(
                         (t) -> {
+                            if (isDebug) {
+                                log.info("Trying to record exception result.", t);
+                            }
                             try {
                                 return recordResult(
                                         length, intendedSendTime, sendTime, experimentId, messageId, isTpcH, t);
@@ -84,13 +104,18 @@ public class MessageProducerImpl implements MessageProducer {
             Throwable t)
             throws IOException {
         long nowNs = nanoClock.get();
+        long timestamp = new Date().getTime();
         boolean isError = t != null;
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Recording result in message producer with stats {} and t {}", stats, t);
+        }
         if (stats != null) {
             stats.recordMessageProduced(
                     payloadLength,
                     intendedSendTime,
                     sendTime,
                     nowNs,
+                    timestamp,
                     experimentId,
                     messageId,
                     isTpcH,

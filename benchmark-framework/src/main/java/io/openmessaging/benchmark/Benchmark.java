@@ -202,39 +202,36 @@ public class Benchmark {
 
         log.info("Workloads: {}", writer.writeValueAsString(workloads));
         List<TpcHArguments> tpcHArgumentsList = getTpcHArguments(arguments);
-        BenchmarkWorkers workers = getWorkers(arguments);
 
         workloads.forEach(
                 (workloadName, workload) ->
                         arguments.drivers.forEach(
-                                driverConfig ->
+                                driverConfiguration ->
                                         tpcHArgumentsList.forEach(
                                                 tpcHArguments ->
-                                                        runBenchmark(
+                                                        executeBenchmark(
                                                                 arguments,
-                                                                workers,
                                                                 workloadName,
                                                                 workload,
-                                                                driverConfig,
+                                                                driverConfiguration,
                                                                 tpcHArguments))));
 
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Doing final clean-up...");
         }
-        workers.close();
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Final clean-up finished.");
         }
         System.exit(0);
     }
 
-    private static void runBenchmark(
+    private static void executeBenchmark(
             Arguments arguments,
-            BenchmarkWorkers workers,
             String workloadName,
             Workload workload,
             String driverConfig,
             TpcHArguments tpcHArguments) {
+        BenchmarkWorkers workers = getWorkers(arguments);
         try {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
             File driverConfigFile = new File(driverConfig);
@@ -313,7 +310,8 @@ public class Benchmark {
         if (arguments.workers != null && !arguments.workers.isEmpty()) {
             List<Worker> workers =
                     arguments.workers.stream().map(HttpWorkerClient::new).collect(toList());
-            worker = new DistributedWorkersEnsemble(workers, arguments.extraConsumers);
+            boolean isTpcH = arguments.tpcHFiles != null && arguments.tpcHFiles.size() > 0;
+            worker = new DistributedWorkersEnsemble(workers, arguments.extraConsumers, isTpcH);
         } else {
             // Use local worker implementation
             worker = localWorker;

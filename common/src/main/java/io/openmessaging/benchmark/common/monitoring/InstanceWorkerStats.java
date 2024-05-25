@@ -14,13 +14,19 @@
 package io.openmessaging.benchmark.common.monitoring;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
 import org.HdrHistogram.Recorder;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
+import org.apache.bookkeeper.stats.Stats;
 import org.apache.bookkeeper.stats.StatsLogger;
+import org.apache.bookkeeper.stats.StatsProvider;
+import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +65,29 @@ public class InstanceWorkerStats implements WorkerStats {
     protected final Recorder cumulativePublishDelayLatencyRecorder =
             new Recorder(highestTrackableValue, 5);
 
+    private static final ObjectWriter writer = new ObjectMapper().writer();
+
+    public InstanceWorkerStats() {
+        Configuration conf = new CompositeConfiguration();
+        Stats.loadStatsProvider(conf);
+        StatsProvider provider = Stats.get();
+        provider.start(conf);
+        StatsLogger statsLogger = provider.getStatsLogger("benchmark");
+
+        StatsLogger producerStatsLogger = statsLogger.scope("producer");
+        this.messagesSentCounter = producerStatsLogger.getCounter("messages_sent");
+        this.messageSendErrorCounter = producerStatsLogger.getCounter("message_send_errors");
+        this.bytesSentCounter = producerStatsLogger.getCounter("bytes_sent");
+        this.publishDelayLatencyStats = producerStatsLogger.getOpStatsLogger("producer_delay_latency");
+        this.publishLatencyStats = producerStatsLogger.getOpStatsLogger("produce_latency");
+
+        StatsLogger consumerStatsLogger = statsLogger.scope("consumer");
+        this.messagesReceivedCounter = consumerStatsLogger.getCounter("messages_recv");
+        this.bytesReceivedCounter = consumerStatsLogger.getCounter("bytes_recv");
+        this.endToEndLatencyStats = consumerStatsLogger.getOpStatsLogger("e2e_latency");
+        log.info("Instance worker stats initialized.");
+    }
+
     public InstanceWorkerStats(StatsLogger statsLogger) {
         StatsLogger producerStatsLogger = statsLogger.scope("producer");
         this.messagesSentCounter = producerStatsLogger.getCounter("messages_sent");
@@ -77,6 +106,8 @@ public class InstanceWorkerStats implements WorkerStats {
     public void recordMessageReceived(
             long payloadLength,
             long endToEndLatencyMicros,
+            long publishTimestamp,
+            long processTimestamp,
             String experimentId,
             String messageId,
             boolean isTpcH) {
@@ -93,11 +124,13 @@ public class InstanceWorkerStats implements WorkerStats {
         }
     }
 
+    @SuppressWarnings("checkstyle:ParameterNumber")
     public void recordMessageProduced(
             long payloadLength,
             long intendedSendTimeNs,
             long sendTimeNs,
             long nowNs,
+            long timestamp,
             String experimentId,
             String messageId,
             boolean isTpcH,

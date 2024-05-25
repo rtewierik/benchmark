@@ -19,6 +19,7 @@ import java.util.List;
 
 public class ProducerAssignment {
     public List<String> topics;
+    public int producerIndex;
     public boolean isTpcH = false;
 
     public ProducerAssignment() {
@@ -27,5 +28,12 @@ public class ProducerAssignment {
 
     public ProducerAssignment(List<String> topics) {
         this.topics = topics;
+    }
+
+    public ProducerAssignment withProducerIndex(int producerIndex) {
+        ProducerAssignment result = new ProducerAssignment(new ArrayList<>(topics));
+        result.producerIndex = producerIndex;
+        result.isTpcH = isTpcH;
+        return result;
     }
 }

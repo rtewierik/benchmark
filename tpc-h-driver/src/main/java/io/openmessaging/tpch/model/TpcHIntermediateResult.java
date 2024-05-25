@@ -19,9 +19,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
 
 public class TpcHIntermediateResult {
     public final TpcHQuery query;
@@ -32,7 +29,6 @@ public class TpcHIntermediateResult {
     public final Integer numberOfMapResults;
     public final Integer numberOfChunks;
     public final List<TpcHIntermediateResultGroup> groups;
-    private final Lock lock = new ReentrantLock();
 
     public TpcHIntermediateResult(
             TpcHConsumerAssignment assignment, Map<String, TpcHIntermediateResultGroup> groups) {
@@ -81,59 +77,52 @@ public class TpcHIntermediateResult {
     }
 
     private void aggregateResult(TpcHIntermediateResult result) {
-        lock.lock();
-        try {
-            String queryId = result.queryId;
-            if (!this.queryId.equals(queryId)) {
-                throw new IllegalArgumentException(
-                        String.format(
-                                "Inconsistent query ID \"%s\" found relative to \"%s\".", queryId, this.queryId));
-            }
-            for (TpcHIntermediateResultGroup group : result.groups) {
-                TpcHIntermediateResultGroup existingGroup = this.findGroupByIdentifiers(group.identifiers);
-                if (existingGroup == null) {
-                    this.groups.add(new TpcHIntermediateResultGroup(group));
-                } else {
-                    Map<String, Number> existingAggregates = existingGroup.aggregates;
-                    for (Map.Entry<String, Number> aggregate : group.aggregates.entrySet()) {
-                        String key = aggregate.getKey();
-                        Number existingAggregate = existingAggregates.get(key);
-                        Number additionalAggregate = aggregate.getValue();
-                        Number updatedAggregate;
-                        if ((existingAggregate instanceof Long || existingAggregate instanceof Integer)
-                                && (additionalAggregate instanceof Long
-                                        || additionalAggregate instanceof Integer)) {
-                            updatedAggregate = existingAggregate.longValue() + additionalAggregate.longValue();
-                        } else if ((existingAggregate instanceof Double
-                                        || existingAggregate instanceof BigDecimal)
-                                && (additionalAggregate instanceof Double
-                                        || additionalAggregate instanceof BigDecimal)) {
-                            BigDecimal existingAggregateDecimal =
-                                    existingAggregate instanceof Double
-                                            ? BigDecimal.valueOf((Double) existingAggregate)
-                                            : (BigDecimal) existingAggregate;
-                            BigDecimal additionalAggregateDecimal =
-                                    additionalAggregate instanceof Double
-                                            ? BigDecimal.valueOf((Double) additionalAggregate)
-                                            : (BigDecimal) additionalAggregate;
-                            updatedAggregate = existingAggregateDecimal.add(additionalAggregateDecimal);
-                        } else {
-                            throw new ArithmeticException("Invalid aggregates detected.");
-                        }
-                        existingGroup.aggregates.put(key, updatedAggregate);
+        String queryId = result.queryId;
+        if (!this.queryId.equals(queryId)) {
+            throw new IllegalArgumentException(
+                    String.format(
+                            "Inconsistent query ID \"%s\" found relative to \"%s\".", queryId, this.queryId));
+        }
+        for (TpcHIntermediateResultGroup group : result.groups) {
+            TpcHIntermediateResultGroup existingGroup = this.findGroupByIdentifiers(group.identifiers);
+            if (existingGroup == null) {
+                this.groups.add(new TpcHIntermediateResultGroup(group));
+            } else {
+                Map<String, Number> existingAggregates = existingGroup.aggregates;
+                for (Map.Entry<String, Number> aggregate : group.aggregates.entrySet()) {
+                    String key = aggregate.getKey();
+                    Number existingAggregate = existingAggregates.get(key);
+                    Number additionalAggregate = aggregate.getValue();
+                    Number updatedAggregate;
+                    if ((existingAggregate instanceof Long || existingAggregate instanceof Integer)
+                            && (additionalAggregate instanceof Long || additionalAggregate instanceof Integer)) {
+                        updatedAggregate = existingAggregate.longValue() + additionalAggregate.longValue();
+                    } else if ((existingAggregate instanceof Double
+                                    || existingAggregate instanceof BigDecimal)
+                            && (additionalAggregate instanceof Double
+                                    || additionalAggregate instanceof BigDecimal)) {
+                        BigDecimal existingAggregateDecimal =
+                                existingAggregate instanceof Double
+                                        ? BigDecimal.valueOf((Double) existingAggregate)
+                                        : (BigDecimal) existingAggregate;
+                        BigDecimal additionalAggregateDecimal =
+                                additionalAggregate instanceof Double
+                                        ? BigDecimal.valueOf((Double) additionalAggregate)
+                                        : (BigDecimal) additionalAggregate;
+                        updatedAggregate = existingAggregateDecimal.add(additionalAggregateDecimal);
+                    } else {
+                        throw new ArithmeticException("Invalid aggregates detected.");
                     }
+                    existingGroup.aggregates.put(key, updatedAggregate);
                 }
             }
-            this.numberOfAggregatedResults += result.numberOfAggregatedResults;
-        } finally {
-            lock.unlock();
         }
+        this.numberOfAggregatedResults += result.numberOfAggregatedResults;
     }
 
     public TpcHIntermediateResultGroup findGroupByIdentifiers(Map<String, Object> identifiers) {
         int numIdentifiers = identifiers.size();
-        List<Map.Entry<String, Object>> identifiersCollection =
-                identifiers.entrySet().stream().collect(Collectors.toList());
+        List<Map.Entry<String, Object>> identifiersCollection = new ArrayList<>(identifiers.entrySet());
         for (TpcHIntermediateResultGroup group : this.groups) {
             if (group.identifiers.size() != numIdentifiers) {
                 continue;

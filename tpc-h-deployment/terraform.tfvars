@@ -1,4 +1,4 @@
-tpc_h_s3_bucket          = "tpc-h-chunks"
+tpc_h_s3_bucket = "tpc-h-chunks"
 iam_roles = [
   "arn:aws:iam::138945776678:role/kafka-iam-role",
   "arn:aws:iam::138945776678:role/pravega-iam-role",
@@ -7,6 +7,13 @@ iam_roles = [
   "arn:aws:iam::138945776678:role/redis-iam-role",
   "arn:aws:iam::138945776678:role/s3-iam-role",
   "arn:aws:iam::138945776678:role/sns-sqs-iam-role",
+  "arn:aws:iam::730335367108:role/kafka-iam-role",
+  "arn:aws:iam::730335367108:role/pravega-iam-role",
+  "arn:aws:iam::730335367108:role/pulsar-iam-role",
+  "arn:aws:iam::730335367108:role/rabbitmq-iam-role",
+  "arn:aws:iam::730335367108:role/redis-iam-role",
+  "arn:aws:iam::730335367108:role/s3-iam-role",
+  "arn:aws:iam::730335367108:role/sns-sqs-iam-role",
   "arn:aws:iam::533267013102:role/voclabs",
   "arn:aws:iam::533267013102:role/LabRole"
 ]
