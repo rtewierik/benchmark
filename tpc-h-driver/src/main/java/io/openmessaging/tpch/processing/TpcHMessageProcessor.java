@@ -41,10 +41,12 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TpcHMessageProcessor {
+    private final Supplier<String> getExperimentId;
     private final List<BenchmarkProducer> producers;
     private volatile MessageProducer messageProducer;
     private final Runnable onTestCompleted;
@@ -57,10 +59,12 @@ public class TpcHMessageProcessor {
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     public TpcHMessageProcessor(
+            Supplier<String> getExperimentId,
             List<BenchmarkProducer> producers,
             MessageProducer messageProducer,
             Runnable onTestCompleted,
             Logger log) {
+        this.getExperimentId = getExperimentId;
         this.producers = producers;
         this.messageProducer = messageProducer;
         this.onTestCompleted = onTestCompleted;
@@ -130,11 +134,13 @@ public class TpcHMessageProcessor {
             if (EnvironmentConfiguration.isDebug()) {
                 log.info("Sending consumer assignment: {}", serializedMessage);
             }
+            String experimentId = getExperimentId.get();
+            String queryId = assignment.queryId;
             this.messageProducer.sendMessage(
                     producer,
                     optionalKey,
                     messageWriter.writeValueAsBytes(message),
-                    assignment.queryId,
+                    experimentId == null ? queryId : experimentId.replace("QUERY_ID", queryId),
                     message.messageId,
                     true);
         } catch (Throwable t) {
@@ -178,11 +184,12 @@ public class TpcHMessageProcessor {
             if (EnvironmentConfiguration.isDebug()) {
                 log.info("Sending reduced result: {}", reducedResult);
             }
+            String experimentId = getExperimentId.get();
             this.messageProducer.sendMessage(
                     producer,
                     optionalKey,
                     messageWriter.writeValueAsBytes(message),
-                    queryId,
+                    experimentId == null ? queryId : experimentId.replace("QUERY_ID", queryId),
                     message.messageId,
                     true);
             collectedIntermediateResults.remove(batchId);

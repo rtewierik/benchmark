@@ -61,8 +61,13 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
     private static final Logger log = LoggerFactory.getLogger(SnsSqsBenchmarkConsumer.class);
     private static final WorkerStats stats =
             SnsSqsBenchmarkConfiguration.isTpcH ? new CentralWorkerStats() : new InstanceWorkerStats();
+    private static final String experimentId =
+            SnsSqsBenchmarkConfiguration.isTpcH
+                    ? String.format("sns-sqs-tpc-h-QUERY_ID-%d", new Date().getTime())
+                    : String.format("sns-sqs-throughput-%d", new Date().getTime());
     private static final TpcHMessageProcessor messageProcessor =
             new TpcHMessageProcessor(
+                    () -> experimentId,
                     SnsSqsBenchmarkConfiguration.snsUris.stream()
                             .map(SnsSqsBenchmarkSnsProducer::new)
                             .collect(Collectors.toList()),
