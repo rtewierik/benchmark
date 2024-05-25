@@ -104,11 +104,11 @@ public class WorkloadGenerator implements AutoCloseable {
     private TestResult runTpcH() throws Exception {
         Timer timer = new Timer();
         /*
-         * 1 topic for Map commands;
+         * 3 topics for Map commands;
          * 1 topic to send aggregated intermediate results to.
          * x topics to send intermediate results to;
          */
-        int numberOfTopics = 1 + 1 + this.arguments.numberOfWorkers;
+        int numberOfTopics = 6 + 1 + this.arguments.numberOfWorkers;
         List<String> topics =
                 worker.createTopics(new TopicsInfo(numberOfTopics, workload.partitionsPerTopic));
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
@@ -397,14 +397,23 @@ public class WorkloadGenerator implements AutoCloseable {
                 timer.elapsedMillis());
     }
 
+    private void addMapSubscription(
+            ConsumerAssignment consumerAssignment, List<String> topics, int offset) {
+        int index = TpcHConstants.MAP_CMD_START_INDEX + offset;
+        consumerAssignment.topicsSubscriptions.add(
+                new TopicSubscription(topics.get(index), generateSubscriptionName(index)));
+    }
+
     private ConsumerAssignment createTpcHConsumers(List<String> topics) throws IOException {
         ConsumerAssignment consumerAssignment = new ConsumerAssignment(experimentId, true);
         ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment(experimentId, true);
 
-        consumerAssignment.topicsSubscriptions.add(
-                new TopicSubscription(
-                        topics.get(TpcHConstants.MAP_CMD_INDEX),
-                        generateSubscriptionName(TpcHConstants.MAP_CMD_INDEX)));
+//        addMapSubscription(consumerAssignment, topics, 0);
+//        addMapSubscription(consumerAssignment, topics, 1);
+//        addMapSubscription(consumerAssignment, topics, 2);
+//        addMapSubscription(consumerAssignment, topics, 3);
+//        addMapSubscription(consumerAssignment, topics, 4);
+//        addMapSubscription(consumerAssignment, topics, 5);
 
         TopicSubscription orchestratorSubscription =
                 new TopicSubscription(

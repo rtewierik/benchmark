@@ -231,7 +231,12 @@ public class DistributedWorkersEnsemble implements Worker {
         List<TopicSubscription> distributableConsumerSubscriptions =
                 new ArrayList<>(
                         subscriptions.subList(TpcHConstants.REDUCE_SRC_START_INDEX, subscriptions.size()));
-        TopicSubscription mapSubscription = subscriptions.get(TpcHConstants.MAP_CMD_INDEX);
+        TopicSubscription mapSubscription1 = subscriptions.get(TpcHConstants.MAP_CMD_START_INDEX);
+        TopicSubscription mapSubscription2 = subscriptions.get(TpcHConstants.MAP_CMD_START_INDEX + 1);
+        TopicSubscription mapSubscription3 = subscriptions.get(TpcHConstants.MAP_CMD_START_INDEX + 2);
+        TopicSubscription mapSubscription4 = subscriptions.get(TpcHConstants.MAP_CMD_START_INDEX + 3);
+        TopicSubscription mapSubscription5 = subscriptions.get(TpcHConstants.MAP_CMD_START_INDEX + 4);
+        TopicSubscription mapSubscription6 = subscriptions.get(TpcHConstants.MAP_CMD_START_INDEX + 5);
         TopicSubscription resultSubscription = subscriptions.get(TpcHConstants.REDUCE_DST_INDEX);
         List<List<TopicSubscription>> reduceSubscriptionsPerConsumer =
                 ListPartition.partitionList(distributableConsumerSubscriptions, workers.size());
@@ -239,7 +244,12 @@ public class DistributedWorkersEnsemble implements Worker {
         int i = 0;
         for (List<TopicSubscription> reduceSubscriptions : reduceSubscriptionsPerConsumer) {
             ConsumerAssignment individualAssignment = new ConsumerAssignment(assignment);
-            individualAssignment.topicsSubscriptions.add(mapSubscription);
+            individualAssignment.topicsSubscriptions.add(mapSubscription1);
+            individualAssignment.topicsSubscriptions.add(mapSubscription2);
+            individualAssignment.topicsSubscriptions.add(mapSubscription3);
+            individualAssignment.topicsSubscriptions.add(mapSubscription4);
+            individualAssignment.topicsSubscriptions.add(mapSubscription5);
+            individualAssignment.topicsSubscriptions.add(mapSubscription6);
             individualAssignment.topicsSubscriptions.add(resultSubscription);
             individualAssignment.topicsSubscriptions.addAll(reduceSubscriptions);
             topicsPerConsumerMap.put(workers.get(i++), individualAssignment);
@@ -283,10 +293,10 @@ public class DistributedWorkersEnsemble implements Worker {
     private void createThroughputProducers(ProducerAssignment producerAssignment) {
         List<List<String>> topicsPerProducer =
                 ListPartition.partitionList(producerAssignment.topics, producerWorkers.size());
-        Map<Worker, List<String>> topicsPerProducerMap = Maps.newHashMap();
+        Map<Integer, List<String>> topicsPerProducerMap = Maps.newHashMap();
         int i = 0;
         for (List<String> assignedTopics : topicsPerProducer) {
-            topicsPerProducerMap.put(producerWorkers.get(i++), assignedTopics);
+            topicsPerProducerMap.put(i++, assignedTopics);
         }
 
         // Number of actually used workers might be less than available workers
@@ -298,7 +308,11 @@ public class DistributedWorkersEnsemble implements Worker {
                 .forEach(
                         e -> {
                             try {
-                                e.getKey().createProducers(new ProducerAssignment(e.getValue()));
+                                Integer producerIndex = e.getKey();
+                                Worker worker = producerWorkers.get(producerIndex);
+                                ProducerAssignment assignment =
+                                        new ProducerAssignment(e.getValue()).withProducerIndex(producerIndex);
+                                worker.createProducers(assignment);
                             } catch (IOException ex) {
                                 throw new RuntimeException(ex);
                             }
@@ -307,11 +321,13 @@ public class DistributedWorkersEnsemble implements Worker {
 
     private void createTpcHProducers(ProducerAssignment producerAssignment) {
         numberOfUsedProducerWorkers = workers.size();
-        workers.parallelStream()
+        IntStream.range(0, numberOfUsedProducerWorkers)
+                .parallel()
                 .forEach(
-                        worker -> {
+                        index -> {
+                            Worker worker = workers.get(index);
                             try {
-                                worker.createProducers(producerAssignment);
+                                worker.createProducers(producerAssignment.withProducerIndex(index));
                             } catch (IOException ex) {
                                 throw new RuntimeException(ex);
                             }

@@ -192,9 +192,12 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 .collect(toList());
         if (producerAssignment.isTpcH) {
             int processors = Runtime.getRuntime().availableProcessors();
-            String mapTopic = producerAssignment.topics.get(TpcHConstants.MAP_CMD_INDEX);
             for (int i = 0; i < processors; i++) {
-                producerInfo.add(new BenchmarkDriver.ProducerInfo(producerIndex.getAndIncrement(), mapTopic));
+                int index = TpcHConstants.MAP_CMD_START_INDEX + (producerAssignment.producerIndex * 2);
+                String mapTopic1 = producerAssignment.topics.get(index);
+                String mapTopic2 = producerAssignment.topics.get(index + 1);
+                producerInfo.add(new BenchmarkDriver.ProducerInfo(producerIndex.getAndIncrement(), mapTopic1));
+                producerInfo.add(new BenchmarkDriver.ProducerInfo(producerIndex.getAndIncrement(), mapTopic2));
             }
         }
         producers.addAll(benchmarkDriver.createProducers(producerInfo).join());
@@ -257,9 +260,15 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
         updateMessageProducer(assignment.publishRate);
 
-        int startIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.tpcHArguments.numberOfWorkers;
+        Integer startIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.tpcHArguments.numberOfWorkers;
         IntStream.range(0, processors).forEach(index ->
-                submitTpcHProducersToExecutor(assignment, processors, producers.get(startIndex + index), index));
+                submitTpcHProducersToExecutor(
+                        assignment,
+                        processors,
+                        producers,
+                        startIndex + (index * 2),
+                        index
+                ));
     }
 
     public int getProcessorNumberOfCommands(int numberOfCommands, int numberOfProcessors, int index) {
@@ -278,7 +287,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private void submitTpcHProducersToExecutor(
             ProducerWorkAssignment producerWorkAssignment,
             Integer numProcessors,
-            BenchmarkProducer producer,
+            List<BenchmarkProducer> producers,
+            Integer producerStartIndex,
             Integer processorProducerIndex
     ) {
         executor.submit(
@@ -338,6 +348,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                 break;
                             }
                             try {
+                                int producerIndex = producerStartIndex + (commandIdx % 2);
+                                BenchmarkProducer producer = producers.get(producerIndex);
                                 CompletableFuture<Void> future = messageProducer.sendMessage(
                                         producer,
                                         optionalKey,
