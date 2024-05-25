@@ -249,6 +249,8 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
                     try {
                         ConnectionFactory connectionFactory = new ConnectionFactory();
                         connectionFactory.setAutomaticRecoveryEnabled(true);
+                        connectionFactory.setNetworkRecoveryInterval(5000);
+                        connectionFactory.setRequestedHeartbeat(30);
                         String userInfo = newURI(primaryBrokerUri).getUserInfo();
                         if (userInfo != null) {
                             String[] userInfoElems = userInfo.split(":");

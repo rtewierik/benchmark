@@ -20,6 +20,8 @@ public class MonitoredReceivedMessage {
     public final String transactionId;
     public final long payloadLength;
     public final long endToEndLatencyMicros;
+    public final long publishTimestamp;
+    public final long processTimestamp;
     public final String experimentId;
     public final String messageId;
     public final boolean isTpcH;
@@ -27,12 +29,16 @@ public class MonitoredReceivedMessage {
     public MonitoredReceivedMessage(
             long payloadLength,
             long endToEndLatencyMicros,
+            long publishTimestamp,
+            long processTimestamp,
             String experimentId,
             String messageId,
             boolean isTpcH) {
         this.transactionId = UUID.randomUUID().toString();
         this.payloadLength = payloadLength;
         this.endToEndLatencyMicros = endToEndLatencyMicros;
+        this.publishTimestamp = publishTimestamp;
+        this.processTimestamp = processTimestamp;
         this.experimentId = experimentId;
         this.messageId = messageId;
         this.isTpcH = isTpcH;

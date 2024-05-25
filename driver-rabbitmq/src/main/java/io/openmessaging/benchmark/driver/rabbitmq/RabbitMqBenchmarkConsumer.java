@@ -45,7 +45,7 @@ public class RabbitMqBenchmarkConsumer extends DefaultConsumer implements Benchm
     public void handleDelivery(
             String consumerTag, Envelope envelope, BasicProperties properties, byte[] body)
             throws IOException {
-        callback.messageReceived(body, properties.getTimestamp().getTime());
+        callback.messageReceived(body, properties.getTimestamp().getTime(), this);
     }
 
     @Override

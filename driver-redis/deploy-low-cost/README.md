@@ -25,6 +25,31 @@ sudo bin/benchmark \
   workloads/simple-workload.yaml
 ```
 
+sudo bin/benchmark \
+--drivers driver-redis/redis-experiment.yaml \
+--tpc-h-files workloads/tpc-h-q6-1000-100.yaml,workloads/tpc-h-q6-100-10.yaml \
+workloads/tpc-h-base-long.yaml
+
+sudo bin/benchmark \
+--drivers driver-redis/redis-experiment.yaml \
+--tpc-h-files workloads/tpc-h-q1-1000-100.yaml \
+workloads/tpc-h-base-long.yaml
+
+sudo bin/benchmark \
+--drivers driver-redis/redis-experiment.yaml \
+--tpc-h-files workloads/tpc-h-q1-1000-100.yaml,workloads/tpc-h-q1-100-10.yaml,workloads/tpc-h-q6-1000-100.yaml,workloads/tpc-h-q6-100-10.yaml,workloads/tpc-h-q1-1000-100.yaml,workloads/tpc-h-q1-100-10.yaml,workloads/tpc-h-q6-1000-100.yaml,workloads/tpc-h-q6-100-10.yaml,workloads/tpc-h-q1-1000-100.yaml,workloads/tpc-h-q1-100-10.yaml,workloads/tpc-h-q6-1000-100.yaml,workloads/tpc-h-q6-100-10.yaml \
+workloads/tpc-h-base-long.yaml
+
+sudo bin/benchmark \
+--drivers driver-redis/redis-experiment.yaml \
+--tpc-h-files workloads/tpc-h-q1-1000-300.yaml,workloads/tpc-h-q1-100-30.yaml,workloads/tpc-h-q6-1000-300.yaml,workloads/tpc-h-q6-100-30.yaml,workloads/tpc-h-q1-1000-300.yaml,workloads/tpc-h-q1-100-30.yaml,workloads/tpc-h-q6-1000-300.yaml,workloads/tpc-h-q6-100-30.yaml,workloads/tpc-h-q1-1000-300.yaml,workloads/tpc-h-q1-100-30.yaml,workloads/tpc-h-q6-1000-300.yaml,workloads/tpc-h-q6-100-30.yaml \
+workloads/tpc-h-base-long.yaml
+
+sudo bin/benchmark \
+--drivers driver-redis/redis-experiment.yaml \
+--tpc-h-files workloads/tpc-h-q1-1000-500.yaml,workloads/tpc-h-q1-100-50.yaml,workloads/tpc-h-q6-1000-500.yaml,workloads/tpc-h-q6-100-50.yaml,workloads/tpc-h-q1-1000-500.yaml,workloads/tpc-h-q1-100-50.yaml,workloads/tpc-h-q6-1000-500.yaml,workloads/tpc-h-q6-100-50.yaml,workloads/tpc-h-q1-1000-500.yaml,workloads/tpc-h-q1-100-50.yaml,workloads/tpc-h-q6-1000-500.yaml,workloads/tpc-h-q6-100-50.yaml \
+workloads/tpc-h-base-long.yaml
+
 ## Additional manual steps to fix deployment of Redis
 
 **NOTE:** The current Terraform project creates default security groups to which the 0.0.0.0/0 inbound rule needs to be added for the Redis cluster to be reachable. A fix should be implemented.

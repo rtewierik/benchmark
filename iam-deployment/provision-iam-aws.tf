@@ -66,6 +66,11 @@ resource "aws_iam_role" "kafka_iam_role" {
           Effect   = "Allow",
           Action   = "ssm:GetParameter",
           Resource = "*"
+        },
+        {
+          Effect   = "Allow",
+          Action   = "sqs:SendMessage",
+          Resource = "arn:aws:sqs:eu-west-1:138945776678:benchmark-monitoring"
         }
       ]
     })
@@ -132,6 +137,11 @@ resource "aws_iam_role" "pravega_iam_role" {
           Effect   = "Allow",
           Action   = "ssm:GetParameter",
           Resource = "*"
+        },
+        {
+          Effect   = "Allow",
+          Action   = "sqs:SendMessage",
+          Resource = "arn:aws:sqs:eu-west-1:138945776678:benchmark-monitoring"
         }
       ]
     })
@@ -198,6 +208,11 @@ resource "aws_iam_role" "pulsar_iam_role" {
           Effect   = "Allow",
           Action   = "ssm:GetParameter",
           Resource = "*"
+        },
+        {
+          Effect   = "Allow",
+          Action   = "sqs:SendMessage",
+          Resource = "arn:aws:sqs:eu-west-1:138945776678:benchmark-monitoring"
         }
       ]
     })
@@ -264,6 +279,11 @@ resource "aws_iam_role" "rabbitmq_iam_role" {
           Effect   = "Allow",
           Action   = "ssm:GetParameter",
           Resource = "*"
+        },
+        {
+          Effect   = "Allow",
+          Action   = "sqs:SendMessage",
+          Resource = "arn:aws:sqs:eu-west-1:138945776678:benchmark-monitoring"
         }
       ]
     })
@@ -322,6 +342,11 @@ resource "aws_iam_role" "redis_iam_role" {
           Effect   = "Allow",
           Action   = "ssm:GetParameter",
           Resource = "*"
+        },
+        {
+          Effect   = "Allow",
+          Action   = "sqs:SendMessage",
+          Resource = "arn:aws:sqs:eu-west-1:138945776678:benchmark-monitoring"
         }
       ]
     })
@@ -385,6 +410,11 @@ resource "aws_iam_role" "sns_sqs_iam_role" {
           Effect   = "Allow",
           Action   = "ssm:GetParameter",
           Resource = "*"
+        },
+        {
+          Effect   = "Allow",
+          Action   = "sqs:SendMessage",
+          Resource = "arn:aws:sqs:eu-west-1:138945776678:benchmark-monitoring"
         }
       ]
     })
@@ -457,6 +487,11 @@ resource "aws_iam_role" "s3_iam_role" {
           Effect   = "Allow",
           Action   = "ssm:GetParameter",
           Resource = "*"
+        },
+        {
+          Effect   = "Allow",
+          Action   = "sqs:SendMessage",
+          Resource = "arn:aws:sqs:eu-west-1:138945776678:benchmark-monitoring"
         }
       ]
     })

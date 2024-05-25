@@ -14,12 +14,11 @@
 package io.openmessaging.benchmark.common.monitoring;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.HdrHistogram.Recorder;
 import org.apache.bookkeeper.stats.Counter;
 import org.apache.bookkeeper.stats.OpStatsLogger;
@@ -107,6 +106,8 @@ public class InstanceWorkerStats implements WorkerStats {
     public void recordMessageReceived(
             long payloadLength,
             long endToEndLatencyMicros,
+            long publishTimestamp,
+            long processTimestamp,
             String experimentId,
             String messageId,
             boolean isTpcH) {
@@ -123,11 +124,13 @@ public class InstanceWorkerStats implements WorkerStats {
         }
     }
 
+    @SuppressWarnings("checkstyle:ParameterNumber")
     public void recordMessageProduced(
             long payloadLength,
             long intendedSendTimeNs,
             long sendTimeNs,
             long nowNs,
+            long timestamp,
             String experimentId,
             String messageId,
             boolean isTpcH,

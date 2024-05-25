@@ -1,0 +1,1 @@
+SELECT date_trunc('minute', from_unixtime(Item.sendTimeNs.N / 1000)) AS minute, COUNT(*) AS row_count FROM "default"."monitoring" where Item.experimentId.S = 'tpc-h-q1-1000-100-2024-05-20-18-19-57' GROUP BY date_trunc('minute', from_unixtime(Item.sendTimeNs.N / 1000));

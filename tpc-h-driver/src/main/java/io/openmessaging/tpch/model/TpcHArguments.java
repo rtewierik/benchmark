@@ -26,19 +26,19 @@ public class TpcHArguments {
     public final TpcHQuery query;
     public final String sourceDataS3FolderUri;
     public final Integer numberOfChunks;
-    public final Integer numberOfReducers;
+    public final Integer numberOfWorkers;
 
     public TpcHArguments(
             @JsonProperty("queryId") String queryId,
             @JsonProperty("query") TpcHQuery query,
             @JsonProperty("sourceDataS3FolderUri") String sourceDataS3FolderUri,
             @JsonProperty("numberOfChunks") Integer numberOfChunks,
-            @JsonProperty("numberOFReducers") Integer numberOfReducers) {
+            @JsonProperty("numberOfWorkers") Integer numberOfWorkers) {
         this.queryId = queryId;
         this.query = query;
         this.sourceDataS3FolderUri = sourceDataS3FolderUri;
         this.numberOfChunks = numberOfChunks;
-        this.numberOfReducers = numberOfReducers;
+        this.numberOfWorkers = numberOfWorkers;
     }
 
     public TpcHArguments withQueryIdDate() {
@@ -48,19 +48,19 @@ public class TpcHArguments {
                 this.query,
                 this.sourceDataS3FolderUri,
                 this.numberOfChunks,
-                this.numberOfReducers);
+                this.numberOfWorkers);
     }
 
-    public int getNumberOfMapResults(int index) {
-        int actualIndex = index % numberOfReducers;
-        int defaultNumberOfIntermediateResults = this.getDefaultNumberOfMapResults();
-        if (actualIndex < numberOfReducers - 1) {
-            return defaultNumberOfIntermediateResults;
+    public int getBatchSize(int batchIndex, int numberOfWorkers) {
+        int defaultBatchSize = this.getDefaultBatchSize(numberOfWorkers);
+        int chunksLeft = numberOfChunks - batchIndex * defaultBatchSize;
+        if (chunksLeft < 0) {
+            return 0;
         }
-        return numberOfChunks - (numberOfReducers - 1) * defaultNumberOfIntermediateResults;
+        return Math.min(chunksLeft, defaultBatchSize);
     }
 
-    public int getDefaultNumberOfMapResults() {
-        return (int) Math.ceil((double) this.numberOfChunks / this.numberOfReducers);
+    public int getDefaultBatchSize(int numberOfWorkers) {
+        return (int) Math.ceil((double) this.numberOfChunks / numberOfWorkers);
     }
 }

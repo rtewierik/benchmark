@@ -38,8 +38,11 @@ import io.openmessaging.benchmark.common.producer.MessageProducerImpl;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.tpch.model.TpcHMessage;
+import io.openmessaging.tpch.processing.SingleThreadTpcHStateProvider;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
+import io.openmessaging.tpch.processing.TpcHStateProvider;
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -56,7 +59,8 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final Logger log = LoggerFactory.getLogger(SnsSqsBenchmarkConsumer.class);
-    private static final WorkerStats stats = SnsSqsBenchmarkConfiguration.isTpcH ? new CentralWorkerStats() : new InstanceWorkerStats();
+    private static final WorkerStats stats =
+            SnsSqsBenchmarkConfiguration.isTpcH ? new CentralWorkerStats() : new InstanceWorkerStats();
     private static final TpcHMessageProcessor messageProcessor =
             new TpcHMessageProcessor(
                     SnsSqsBenchmarkConfiguration.snsUris.stream()
@@ -71,18 +75,21 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
                     .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
                     .build();
     private static final String sqsUri = SnsSqsBenchmarkConfiguration.sqsUri;
+    private static final TpcHStateProvider stateProvider = new SingleThreadTpcHStateProvider();
 
     static {
         if (!SnsSqsBenchmarkConfiguration.isTpcH) {
-            executor.submit(() -> {
-                while (true) {
-                    Thread.sleep(10000);
-                    PeriodStats periodStats = stats.toPeriodStats();
-                    CumulativeLatencies cumulativeLatencies = stats.toCumulativeLatencies();
-                    PeriodicMonitoring monitoring = new PeriodicMonitoring(periodStats, cumulativeLatencies);
-                    log.info(writer.writeValueAsString(monitoring));
-                }
-            });
+            executor.submit(
+                    () -> {
+                        while (true) {
+                            Thread.sleep(10000);
+                            PeriodStats periodStats = stats.toPeriodStats();
+                            CumulativeLatencies cumulativeLatencies = stats.toCumulativeLatencies();
+                            PeriodicMonitoring monitoring =
+                                    new PeriodicMonitoring(periodStats, cumulativeLatencies);
+                            log.info(writer.writeValueAsString(monitoring));
+                        }
+                    });
         }
     }
 
@@ -111,7 +118,7 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
                 }
                 String body = message.getBody();
                 TpcHMessage tpcHMessage = mapper.readValue(body, TpcHMessage.class);
-                String experimentId = messageProcessor.processTpcHMessage(tpcHMessage);
+                String experimentId = messageProcessor.processTpcHMessage(tpcHMessage, stateProvider);
                 long now = System.currentTimeMillis();
                 String sentTimestampStr = message.getAttributes().get("SentTimestamp");
                 long publishTimestamp = Long.parseLong(sentTimestampStr);
@@ -119,10 +126,11 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
                 stats.recordMessageReceived(
                         message.getBody().length(),
                         endToEndLatencyMicros,
+                        publishTimestamp,
+                        new Date().getTime(),
                         experimentId,
                         tpcHMessage.messageId,
                         true);
-                messageProcessor.processTpcHMessage(tpcHMessage);
                 this.deleteMessage(message.getReceiptHandle());
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -139,6 +147,8 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
             stats.recordMessageReceived(
                     message.getBody().length(),
                     endToEndLatencyMicros,
+                    publishTimestamp,
+                    new Date().getTime(),
                     "THROUGHPUT_SNS_SQS",
                     message.getMessageId(),
                     false);

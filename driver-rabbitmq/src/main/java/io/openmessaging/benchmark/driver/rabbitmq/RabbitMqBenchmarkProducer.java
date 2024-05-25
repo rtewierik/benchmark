@@ -18,6 +18,7 @@ import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.AlreadyClosedException;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ConfirmListener;
+import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import java.util.Collections;
 import java.util.Date;
@@ -54,12 +55,14 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
                     public void handleNack(long deliveryTag, boolean multiple) {
                         if (multiple) {
                             SortedSet<Long> treeHeadSet = ackSet.headSet(deliveryTag + 1);
+                            log.info("Nacking multiple. {}", treeHeadSet.size());
                             synchronized (ackSet) {
                                 for (Iterator<Long> iterator = treeHeadSet.iterator(); iterator.hasNext(); ) {
                                     long value = iterator.next();
                                     iterator.remove();
                                     CompletableFuture<Void> future = futureConcurrentHashMap.get(value);
                                     if (future != null) {
+                                        log.error("Message was negatively acknowledged!");
                                         future.completeExceptionally(
                                                 new RuntimeException("Message was negatively acknowledged"));
                                         futureConcurrentHashMap.remove(value);
@@ -71,9 +74,12 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
                         } else {
                             CompletableFuture<Void> future = futureConcurrentHashMap.get(deliveryTag);
                             if (future != null) {
+                                log.error("Message was negatively acknowledged by delivery tag!");
                                 future.completeExceptionally(
                                         new RuntimeException("Message was negatively acknowledged"));
                                 futureConcurrentHashMap.remove(deliveryTag);
+                            } else {
+                                log.info("Nacking single, not found. {}", deliveryTag);
                             }
                             ackSet.remove(deliveryTag);
                         }
@@ -83,10 +89,12 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
                     public void handleAck(long deliveryTag, boolean multiple) {
                         if (multiple) {
                             SortedSet<Long> treeHeadSet = ackSet.headSet(deliveryTag + 1);
+                            log.info("Acking multiple. {}", treeHeadSet.size());
                             synchronized (ackSet) {
                                 for (long value : treeHeadSet) {
                                     CompletableFuture<Void> future = futureConcurrentHashMap.get(value);
                                     if (future != null) {
+                                        log.info("Completing future...");
                                         future.complete(null);
                                         futureConcurrentHashMap.remove(value);
                                     }
@@ -96,8 +104,11 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
                         } else {
                             CompletableFuture<Void> future = futureConcurrentHashMap.get(deliveryTag);
                             if (future != null) {
+                                log.info("Completing future by delivery tag...");
                                 future.complete(null);
                                 futureConcurrentHashMap.remove(deliveryTag);
+                            } else {
+                                log.info("Nacking single, not found. {}", deliveryTag);
                             }
                             ackSet.remove(deliveryTag);
                         }
@@ -108,6 +119,9 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
 
     @Override
     public void close() throws Exception {
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Closing RabbitMQBenchmarkProducer...");
+        }
         try {
             channel.removeConfirmListener(listener);
             channel.close();
@@ -128,13 +142,29 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
         CompletableFuture<Void> future = new CompletableFuture<>();
         long msgId = channel.getNextPublishSeqNo();
         ackSet.add(msgId);
+        boolean isDebug = EnvironmentConfiguration.isDebug();
+        if (isDebug) {
+            if (futureConcurrentHashMap.containsKey(msgId)) {
+                log.info("Message ID {} is already present in future concurrent hash map!", msgId);
+            }
+        }
         futureConcurrentHashMap.putIfAbsent(msgId, future);
         try {
-            channel.basicPublish(exchange, key.orElse(""), props, payload);
+            if (isDebug) {
+                log.info("Attempting to publish message {} over channel", msgId);
+            }
+            channel.basicPublish(exchange, key.orElse(""), true, props, payload);
+            if (isDebug) {
+                log.info("Published message {} over channel successfully.", msgId);
+            }
         } catch (Exception e) {
+            log.error("Exception occurred while producing RabbitMQ message!", e);
             future.completeExceptionally(e);
         }
 
+        if (isDebug) {
+            log.info("Returning future!");
+        }
         return future;
     }
 }

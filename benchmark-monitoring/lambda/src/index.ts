@@ -16,6 +16,9 @@ interface Event {
   sendTimeNs: number
   nowNs: number
   endToEndLatencyMicros: number
+  timestamp: number
+  publishTimestamp: number
+  processTimestamp: number
   isTpcH: boolean
   isError: boolean
 }

@@ -1,0 +1,88 @@
+sudo bin/benchmark \
+> --drivers driver-redis/redis-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q6-1000-100.yaml,workloads/tpc-h-q6-100-10.yaml \
+> workloads/tpc-h-base-long.yaml
+09:23:32.351 [main] INFO Benchmark - Using default worker file workers.yaml!
+09:23:32.359 [main] INFO Benchmark - Reading workers list from workers.yaml
+09:23:32.409 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-redis/redis-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.84:8080", "http://10.0.0.215:8080", "http://10.0.0.43:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q6-1000-100.yaml", "workloads/tpc-h-q6-100-10.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+09:23:32.425 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+09:23:32.437 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q6-1000-100",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfReducers" : 100,
+  "defaultNumberOfMapResults" : 10
+}, {
+  "queryId" : "tpc-h-q6-100-10",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfReducers" : 10,
+  "defaultNumberOfMapResults" : 10
+} ]
+09:23:32.809 [main] INFO CentralWorkerStats - Central worker stats initialized
+09:23:33.077 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.84:8080]
+09:23:33.078 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.43:8080,http://10.0.0.215:8080
+09:23:33.080 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+09:23:33.499 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+09:23:33.544 [main] INFO WorkloadGenerator - Created 102 topics in 38.369826 ms
+09:23:33.968 [main] INFO WorkloadGenerator - Created 102 external consumers in 413.638427 ms
+09:23:33.972 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.ng.0001.euw1.cache.amazonaws.com:6379 with user null
+09:23:34.042 [main] INFO LocalWorker - Created 1 consumers in 74.066164 ms
+09:23:34.059 [main] INFO WorkloadGenerator - Created 102 producers in 15.675904 ms
+09:23:34.059 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+09:23:34.123 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 102, Received: 101, Expected: 0
+09:23:34.123 [main] INFO WorkloadGenerator - All consumers are ready!
+09:23:34.124 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-1000-100-2024-05-21-09-23-33 at 1716283414124
+09:27:07.772 [pool-2-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+09:27:14.908 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-1000-100-2024-05-21-09-23-33 at 1716283634908
+09:27:15.327 [main] INFO CentralWorkerStats - Central worker stats initialized
+09:27:15.332 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.84:8080]
+09:27:15.332 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.43:8080,http://10.0.0.215:8080
+09:27:15.333 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+09:27:15.545 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+09:27:15.549 [main] INFO WorkloadGenerator - Created 12 topics in 3.575884 ms
+09:27:15.596 [main] INFO WorkloadGenerator - Created 12 external consumers in 46.202885 ms
+09:27:15.596 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.ng.0001.euw1.cache.amazonaws.com:6379 with user null
+09:27:15.600 [main] INFO LocalWorker - Created 1 consumers in 4.161898 ms
+09:27:15.604 [main] INFO WorkloadGenerator - Created 12 producers in 3.084294 ms
+09:27:15.604 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+09:27:15.614 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 12, Received: 11, Expected: 0
+09:27:15.615 [main] INFO WorkloadGenerator - All consumers are ready!
+09:27:15.615 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-100-10-2024-05-21-09-27-15 at 1716283635615
+09:31:53.869 [pool-3-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+09:31:55.644 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-100-10-2024-05-21-09-27-15 at 1716283915644

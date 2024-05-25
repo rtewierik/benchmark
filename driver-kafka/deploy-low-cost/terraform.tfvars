@@ -5,7 +5,7 @@ ami             = "ami-0f0f1c02e5e4d9d9f" // RHEL-8
 
 instance_types = {
   "kafka"     = "i3en.2xlarge"
-  "zookeeper" = "i3en.xlarge"
+  "zookeeper" = "i3en.2xlarge"
   "client"    = "m5n.2xlarge"
 }
 

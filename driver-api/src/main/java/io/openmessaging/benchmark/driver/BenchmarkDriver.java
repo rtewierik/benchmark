@@ -102,7 +102,7 @@ public interface BenchmarkDriver extends AutoCloseable {
      * @return a consumer future
      */
     CompletableFuture<BenchmarkConsumer> createConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback);
+            String topic, String subscriptionName, ConsumerCallback consumerCallback) throws Exception;
 
     /**
      * Create a consumers for a given topic.
@@ -115,9 +115,14 @@ public interface BenchmarkDriver extends AutoCloseable {
         List<CompletableFuture<BenchmarkConsumer>> futures =
                 consumers.stream()
                         .map(
-                                ci ->
-                                        createConsumer(
-                                                ci.getTopic(), ci.getSubscriptionName(), ci.getConsumerCallback()))
+                                ci -> {
+                                    try {
+                                        return createConsumer(
+                                                ci.getTopic(), ci.getSubscriptionName(), ci.getConsumerCallback());
+                                    } catch (Exception e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                })
                         .filter(Objects::nonNull)
                         .collect(toList());
         return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))

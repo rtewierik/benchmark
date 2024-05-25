@@ -15,9 +15,10 @@ package io.openmessaging.benchmark.driver;
 
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public interface MessageProducer {
-    void sendMessage(
+    CompletableFuture<Void> sendMessage(
             BenchmarkProducer producer,
             Optional<String> key,
             byte[] payload,

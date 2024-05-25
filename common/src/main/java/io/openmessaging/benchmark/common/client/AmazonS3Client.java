@@ -41,6 +41,7 @@ public class AmazonS3Client {
         try {
             return this.s3Client.getObject(new GetObjectRequest(bucketName, key));
         } catch (Exception exception) {
+            log.error(String.format("Could not retrieve object %s from bucket %s!", key, bucketName));
             throw new IOException("Failed to read and CSV from S3: " + exception.getMessage(), exception);
         }
     }

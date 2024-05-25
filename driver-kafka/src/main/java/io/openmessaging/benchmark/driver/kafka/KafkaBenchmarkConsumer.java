@@ -71,7 +71,7 @@ public class KafkaBenchmarkConsumer implements BenchmarkConsumer {
 
                                     Map<TopicPartition, OffsetAndMetadata> offsetMap = new HashMap<>();
                                     for (ConsumerRecord<String, byte[]> record : records) {
-                                        callback.messageReceived(record.value(), record.timestamp());
+                                        callback.messageReceived(record.value(), record.timestamp(), this);
 
                                         offsetMap.put(
                                                 new TopicPartition(record.topic(), record.partition()),

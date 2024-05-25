@@ -20,16 +20,20 @@ public interface WorkerStats {
     void recordMessageReceived(
             long payloadLength,
             long endToEndLatencyMicros,
+            long publishTimestamp,
+            long processTimestamp,
             String experimentId,
             String messageId,
             boolean isTpcH)
             throws IOException;
 
+    @SuppressWarnings("checkstyle:ParameterNumber")
     void recordMessageProduced(
             long payloadLength,
             long intendedSendTimeNs,
             long sendTimeNs,
             long nowNs,
+            long timestamp,
             String experimentId,
             String messageId,
             boolean isTpcH,

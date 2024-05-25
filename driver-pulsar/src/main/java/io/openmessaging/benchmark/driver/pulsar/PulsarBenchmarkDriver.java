@@ -215,24 +215,35 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkConsumer> createConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback) {
+            String topic, String subscriptionName, ConsumerCallback consumerCallback) throws Exception {
         List<CompletableFuture<Consumer<ByteBuffer>>> futures = new ArrayList<>();
-        return client
-                .getPartitionsForTopic(topic)
-                .thenCompose(
-                        partitions -> {
-                            partitions.forEach(
-                                    p -> futures.add(createInternalConsumer(p, subscriptionName, consumerCallback)));
-                            return FutureUtil.waitForAll(futures);
-                        })
-                .thenApply(
-                        __ ->
-                                new PulsarBenchmarkConsumer(
-                                        futures.stream().map(CompletableFuture::join).collect(Collectors.toList())));
+        try (PulsarBenchmarkConsumer consumer = new PulsarBenchmarkConsumer()) {
+            return client
+                    .getPartitionsForTopic(topic)
+                    .thenCompose(
+                            partitions -> {
+                                partitions.forEach(
+                                        p ->
+                                                futures.add(
+                                                        createInternalConsumer(
+                                                                p, subscriptionName, consumerCallback, consumer)));
+                                return FutureUtil.waitForAll(futures);
+                            })
+                    .thenApply(
+                            __ -> {
+                                List<Consumer<ByteBuffer>> consumers =
+                                        futures.stream().map(CompletableFuture::join).collect(Collectors.toList());
+                                consumer.setConsumers(consumers);
+                                return consumer;
+                            });
+        }
     }
 
     CompletableFuture<Consumer<ByteBuffer>> createInternalConsumer(
-            String topic, String subscriptionName, ConsumerCallback consumerCallback) {
+            String topic,
+            String subscriptionName,
+            ConsumerCallback consumerCallback,
+            BenchmarkConsumer consumer) {
         return client
                 .newConsumer(Schema.BYTEBUFFER)
                 .priorityLevel(0)
@@ -240,7 +251,7 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
                 .messageListener(
                         (c, msg) -> {
                             try {
-                                consumerCallback.messageReceived(msg.getValue(), msg.getPublishTime());
+                                consumerCallback.messageReceived(msg.getValue(), msg.getPublishTime(), consumer);
                                 c.acknowledgeAsync(msg);
                             } catch (IOException e) {
                                 throw new RuntimeException(e);

@@ -35,9 +35,12 @@ import io.openmessaging.benchmark.common.producer.MessageProducerImpl;
 import io.openmessaging.benchmark.common.utils.UniformRateLimiter;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.tpch.model.TpcHMessage;
+import io.openmessaging.tpch.processing.SingleThreadTpcHStateProvider;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
+import io.openmessaging.tpch.processing.TpcHStateProvider;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -54,7 +57,8 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
     private static final Logger log = LoggerFactory.getLogger(S3BenchmarkConsumer.class);
-    private static final WorkerStats stats = S3BenchmarkConfiguration.isTpcH ? new CentralWorkerStats() : new InstanceWorkerStats();
+    private static final WorkerStats stats =
+            S3BenchmarkConfiguration.isTpcH ? new CentralWorkerStats() : new InstanceWorkerStats();
     private static final TpcHMessageProcessor messageProcessor =
             new TpcHMessageProcessor(
                     S3BenchmarkConfiguration.s3Uris.stream()
@@ -64,18 +68,21 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                     () -> {},
                     log);
     private static final AmazonS3Client s3Client = new AmazonS3Client();
+    private static final TpcHStateProvider stateProvider = new SingleThreadTpcHStateProvider();
 
     static {
         if (!S3BenchmarkConfiguration.isTpcH) {
-            executor.submit(() -> {
-                while (true) {
-                    Thread.sleep(10000);
-                    PeriodStats periodStats = stats.toPeriodStats();
-                    CumulativeLatencies cumulativeLatencies = stats.toCumulativeLatencies();
-                    PeriodicMonitoring monitoring = new PeriodicMonitoring(periodStats, cumulativeLatencies);
-                    log.info(writer.writeValueAsString(monitoring));
-                }
-            });
+            executor.submit(
+                    () -> {
+                        while (true) {
+                            Thread.sleep(10000);
+                            PeriodStats periodStats = stats.toPeriodStats();
+                            CumulativeLatencies cumulativeLatencies = stats.toCumulativeLatencies();
+                            PeriodicMonitoring monitoring =
+                                    new PeriodicMonitoring(periodStats, cumulativeLatencies);
+                            log.info(writer.writeValueAsString(monitoring));
+                        }
+                    });
         }
     }
 
@@ -103,12 +110,18 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                     TpcHMessage tpcHMessage = mapper.readValue(stream, TpcHMessage.class);
                     stream.close();
                     object.close();
-                    String experimentId = messageProcessor.processTpcHMessage(tpcHMessage);
+                    String experimentId = messageProcessor.processTpcHMessage(tpcHMessage, stateProvider);
                     long now = System.currentTimeMillis();
                     long publishTimestamp = record.getEventTime().getMillis();
                     long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
                     stats.recordMessageReceived(
-                            payloadLength, endToEndLatencyMicros, experimentId, tpcHMessage.messageId, true);
+                            payloadLength,
+                            endToEndLatencyMicros,
+                            publishTimestamp,
+                            new Date().getTime(),
+                            experimentId,
+                            tpcHMessage.messageId,
+                            true);
                     this.deleteMessage(record);
                 }
             } catch (IOException e) {
@@ -136,6 +149,8 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                     stats.recordMessageReceived(
                             payloadLength,
                             endToEndLatencyMicros,
+                            publishTimestamp,
+                            new Date().getTime(),
                             "THROUGHPUT_S3",
                             String.format("%s-%s", record.getEventName(), record.getEventTime().getMillis()),
                             false);
