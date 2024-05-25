@@ -187,15 +187,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         Timer timer = new Timer();
         AtomicInteger producerIndex = new AtomicInteger();
         List<BenchmarkDriver.ProducerInfo> producerInfo = producerAssignment.topics.stream()
-                .map(t -> {
-                    int index = producerIndex.getAndIncrement();
-                    if (producerAssignment.isTpcH) {
-                        if (index < TpcHConstants.REDUCE_PRODUCER_START_INDEX) {
-                            return null;
-                        }
-                    }
-                    return new BenchmarkDriver.ProducerInfo(index, t);
-                })
+                .map(t -> new BenchmarkDriver.ProducerInfo(producerIndex.getAndIncrement(), t))
                 .collect(toList());
         if (producerAssignment.isTpcH) {
             int processors = Runtime.getRuntime().availableProcessors();
@@ -206,6 +198,10 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 producerInfo.add(new BenchmarkDriver.ProducerInfo(producerIndex.getAndIncrement(), mapTopic1));
                 producerInfo.add(new BenchmarkDriver.ProducerInfo(producerIndex.getAndIncrement(), mapTopic2));
             }
+            for (int i = 0; i < TpcHConstants.REDUCE_DST_INDEX; i++) {
+                producers.add(null);
+            }
+            producerInfo.removeIf(p -> p.getId() < TpcHConstants.REDUCE_DST_INDEX);
         }
         producers.addAll(benchmarkDriver.createProducers(producerInfo).join());
 
@@ -258,8 +254,12 @@ public class LocalWorker implements Worker, ConsumerCallback {
     @Override
     public void probeProducers() throws IOException {
         producers.forEach(
-            producer ->
-                producer.sendAsync(Optional.of("key"), new byte[10]).thenRun(stats::recordMessageSent));
+            producer -> {
+                if (producer != null) {
+                    producer.sendAsync(Optional.of("key"), new byte[10]).thenRun(stats::recordMessageSent);
+                }
+            }
+        );
     }
 
     private void startLoadForTpcHProducers(ProducerWorkAssignment assignment) {
@@ -569,7 +569,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 log.info("Attempting to shut down producers...");
             }
             for (BenchmarkProducer producer : producers) {
-                producer.close();
+                if (producer != null) {
+                    producer.close();
+                }
             }
             producers.clear();
 
