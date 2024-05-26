@@ -184,9 +184,9 @@ public class PravegaBenchmarkDriver implements BenchmarkDriver {
         if (readerGroupManager != null) {
             readerGroupManager.close();
         }
-        if (streamManager != null) {
-            deleteTopics();
-            streamManager.close();
-        }
+//        if (streamManager != null) {
+//            deleteTopics();
+//            streamManager.close();
+//        }
     }
 }
