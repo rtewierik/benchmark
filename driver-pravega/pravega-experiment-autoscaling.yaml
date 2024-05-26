@@ -12,16 +12,18 @@
 # limitations under the License.
 #
 
-name: throughput-1kb-10
+name: Pravega
+driverClass: io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver
 
-topics: 10
-partitionsPerTopic: 1
-keyDistributor: "NO_KEY"
-messageSize: 1024
-payloadFile: "payload/payload-1Kb.data"
-subscriptionsPerTopic: 1
-consumerPerSubscription: 1
-producersPerTopic: 1
-producerRate: 1000000
-consumerBacklogSizeGB: 0
-testDurationMinutes: 2
+# Pravega client-specific configuration
+client:
+  controllerURI: tcp://localhost:9090
+  scopeName: examples
+
+writer:
+  enableConnectionPooling: True
+
+includeTimestampInEvent: True
+enableStreamAutoScaling: True
+kbytesPerSecond: 10000
+deleteStreams: False
