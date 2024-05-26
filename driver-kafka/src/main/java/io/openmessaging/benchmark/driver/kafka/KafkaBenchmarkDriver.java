@@ -31,9 +31,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.DeleteTopicsResult;
+import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -43,6 +48,7 @@ import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
+@Slf4j
 public class KafkaBenchmarkDriver implements BenchmarkDriver {
 
     private Config config;
@@ -149,6 +155,18 @@ public class KafkaBenchmarkDriver implements BenchmarkDriver {
         for (BenchmarkConsumer consumer : consumers) {
             consumer.close();
         }
+        try {
+            ListTopicsResult listTopics = admin.listTopics();
+            Set<String> topicNames = listTopics.names().get();
+            log.info("Preparing to delete topics...");
+            DeleteTopicsResult deleteTopicsResult = admin.deleteTopics(topicNames);
+            deleteTopicsResult.all().get();
+        } catch (Throwable ignored) {}
+        try {
+            ListTopicsResult listTopics = admin.listTopics();
+            Set<String> topicNames = listTopics.names().get();
+            log.info("Topics left over: {}", topicNames.size());
+        } catch (Throwable ignored) {}
         admin.close();
     }
 
