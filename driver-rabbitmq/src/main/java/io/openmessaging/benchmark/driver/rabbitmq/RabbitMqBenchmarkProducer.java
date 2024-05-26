@@ -62,7 +62,6 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
                                     iterator.remove();
                                     CompletableFuture<Void> future = futureConcurrentHashMap.get(value);
                                     if (future != null) {
-                                        log.error("Message was negatively acknowledged!");
                                         future.completeExceptionally(
                                                 new RuntimeException("Message was negatively acknowledged"));
                                         futureConcurrentHashMap.remove(value);
@@ -74,12 +73,9 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
                         } else {
                             CompletableFuture<Void> future = futureConcurrentHashMap.get(deliveryTag);
                             if (future != null) {
-                                log.error("Message was negatively acknowledged by delivery tag!");
                                 future.completeExceptionally(
                                         new RuntimeException("Message was negatively acknowledged"));
                                 futureConcurrentHashMap.remove(deliveryTag);
-                            } else {
-                                log.info("Nacking single, not found. {}", deliveryTag);
                             }
                             ackSet.remove(deliveryTag);
                         }
@@ -94,7 +90,6 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
                                 for (long value : treeHeadSet) {
                                     CompletableFuture<Void> future = futureConcurrentHashMap.get(value);
                                     if (future != null) {
-                                        log.info("Completing future...");
                                         future.complete(null);
                                         futureConcurrentHashMap.remove(value);
                                     }
@@ -104,11 +99,8 @@ public class RabbitMqBenchmarkProducer implements BenchmarkProducer {
                         } else {
                             CompletableFuture<Void> future = futureConcurrentHashMap.get(deliveryTag);
                             if (future != null) {
-                                log.info("Completing future by delivery tag...");
                                 future.complete(null);
                                 futureConcurrentHashMap.remove(deliveryTag);
-                            } else {
-                                log.info("Nacking single, not found. {}", deliveryTag);
                             }
                             ackSet.remove(deliveryTag);
                         }
