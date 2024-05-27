@@ -23,11 +23,13 @@
       assert:
         that:
           - tf_redis_primary_node_address is defined
+          - tf_redis_node_addresses is defined
         fail_msg: "tf_* variable usually defined in './tf_ansible_vars_file.yml' is missing"
     - name:  Benchmark - Tune kernel
       shell: tuned-adm profile latency-performance
     - set_fact:
         redisHost: "{{ tf_redis_primary_node_address }}"
+        redisNodes: "{{ tf_redis_node_addresses }}"
     - name: Benchmark - Install RPM packages
       yum: pkg={{ item }} state=latest
       with_items:

@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.kafka.clients.admin.AdminClient;
@@ -161,12 +160,14 @@ public class KafkaBenchmarkDriver implements BenchmarkDriver {
             log.info("Preparing to delete topics...");
             DeleteTopicsResult deleteTopicsResult = admin.deleteTopics(topicNames);
             deleteTopicsResult.all().get();
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
         try {
             ListTopicsResult listTopics = admin.listTopics();
             Set<String> topicNames = listTopics.names().get();
             log.info("Topics left over: {}", topicNames.size());
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
         admin.close();
     }
 

@@ -277,6 +277,32 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
             client.close();
         }
 
+        try {
+            List<String> tenants = adminClient.tenants().getTenants();
+            for (String tenant : tenants) {
+                List<String> namespaces = adminClient.namespaces().getNamespaces(tenant);
+                for (String namespace : namespaces) {
+                    List<String> topics = adminClient.topics().getList(namespace);
+                    for (String topic : topics) {
+                        adminClient.topics().delete(topic, true);
+                    }
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+        try {
+            List<String> topics = new ArrayList<>();
+            List<String> tenants = adminClient.tenants().getTenants();
+            for (String tenant : tenants) {
+                List<String> namespaces = adminClient.namespaces().getNamespaces(tenant);
+                for (String namespace : namespaces) {
+                    topics.addAll(adminClient.topics().getList(namespace));
+                }
+            }
+            log.info("Topics left over: {}", topics.size());
+        } catch (Throwable ignored) {
+        }
+
         if (adminClient != null) {
             adminClient.close();
         }

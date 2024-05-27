@@ -26,16 +26,24 @@ import io.openmessaging.benchmark.driver.ConsumerCallback;
 import io.openmessaging.benchmark.driver.redis.client.RedisClientConfig;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.params.ScanParams;
+import redis.clients.jedis.resps.ScanResult;
 
 public class RedisBenchmarkDriver implements BenchmarkDriver {
     JedisPool jedisPool;
+    JedisCluster jedisCluster;
     private RedisClientConfig clientConfig;
 
     @Override
@@ -56,16 +64,27 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkProducer> createProducer(final String topic) {
-        if (jedisPool == null) {
+        if (jedisPool == null && jedisCluster == null) {
             setupJedisConn();
         }
-        return CompletableFuture.completedFuture(new RedisBenchmarkProducer(jedisPool, topic));
+        return CompletableFuture.completedFuture(
+                new RedisBenchmarkProducer(jedisPool, jedisCluster, topic));
     }
 
     @Override
     public CompletableFuture<BenchmarkConsumer> createConsumer(
             final String topic, final String subscriptionName, final ConsumerCallback consumerCallback) {
         String consumerId = "consumer-" + getRandomString();
+        if (jedisCluster != null) {
+            try {
+                jedisCluster.xgroupCreate(topic, subscriptionName, null, true);
+            } catch (Exception e) {
+                log.info("Failed to create consumer instance.", e);
+            }
+            return CompletableFuture.completedFuture(
+                    new RedisBenchmarkConsumer(
+                            consumerId, topic, subscriptionName, jedisPool, jedisCluster, consumerCallback));
+        }
         if (jedisPool == null) {
             setupJedisConn();
         }
@@ -76,7 +95,7 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
         }
         return CompletableFuture.completedFuture(
                 new RedisBenchmarkConsumer(
-                        consumerId, topic, subscriptionName, jedisPool, consumerCallback));
+                        consumerId, topic, subscriptionName, jedisPool, null, consumerCallback));
     }
 
     private void setupJedisConn() {
@@ -88,6 +107,17 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
                 this.clientConfig.redisHost,
                 this.clientConfig.redisPort,
                 this.clientConfig.redisUser);
+        if (this.clientConfig.redisNodes != null && !this.clientConfig.redisNodes.isEmpty()) {
+            Set<HostAndPort> jedisClusterNodes = new HashSet<>();
+            for (String address : this.clientConfig.redisNodes) {
+                String[] parts = address.split(":");
+                String host = parts[0];
+                int port = Integer.parseInt(parts[1]);
+                HostAndPort hostAndPort = new HostAndPort(host, port);
+                jedisClusterNodes.add(hostAndPort);
+            }
+            jedisCluster = new JedisCluster(jedisClusterNodes);
+        }
         if (this.clientConfig.redisPass != null) {
             if (this.clientConfig.redisUser != null) {
                 jedisPool =
@@ -115,7 +145,64 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public void close() throws Exception {
+        if (this.jedisCluster != null) {
+            try {
+                String pattern = "stream:*";
+                String cursor = "0";
+                do {
+                    ScanResult<String> scanResult =
+                            jedisCluster.scan(cursor, new ScanParams().match(pattern));
+                    List<String> streamKeys = scanResult.getResult();
+                    cursor = scanResult.getCursor();
+
+                    for (String streamKey : streamKeys) {
+                        try {
+                            jedisCluster.del(streamKey);
+                        } catch (Exception e) {
+                            log.error("Error deleting stream " + streamKey + ": " + e.getMessage());
+                        }
+                    }
+                } while (!"0".equals(cursor));
+            } catch (Throwable ignored) {
+            }
+            try {
+                String pattern = "stream:*";
+                String cursor = "0";
+                ScanResult<String> scanResult = jedisCluster.scan(cursor, new ScanParams().match(pattern));
+                log.info("Streams left over: {}", scanResult.getResult().size());
+            } catch (Throwable ignored) {
+            }
+            this.jedisCluster.close();
+        }
         if (this.jedisPool != null) {
+            try {
+                Jedis jedis = this.jedisPool.getResource();
+                String pattern = "stream:*";
+                String cursor = "0";
+                do {
+                    ScanResult<String> scanResult = jedis.scan(cursor, new ScanParams().match(pattern));
+                    List<String> streamKeys = scanResult.getResult();
+                    cursor = scanResult.getCursor();
+
+                    for (String streamKey : streamKeys) {
+                        try {
+                            jedis.del(streamKey);
+                        } catch (Exception e) {
+                            log.error("Error deleting stream " + streamKey + ": " + e.getMessage());
+                        }
+                    }
+                } while (!"0".equals(cursor));
+            } catch (Throwable ignored) {
+            }
+            try {
+                Jedis jedis = this.jedisPool.getResource();
+                String pattern = "stream:*";
+                String cursor = "0";
+                ScanResult<String> scanResult = jedis.scan(cursor, new ScanParams().match(pattern));
+                log.info("Streams left over: {}", scanResult.getResult().size());
+            } catch (Throwable ignored) {
+            }
+
             this.jedisPool.close();
         }
     }
