@@ -173,7 +173,7 @@ public class WorkloadGenerator implements AutoCloseable {
             targetPublishRate = workload.producerRate;
         } else {
             // Producer rate is 0 and we need to discover the sustainable rate
-            targetPublishRate = 10000;
+            targetPublishRate = 2000000;
 
             if (!EnvironmentConfiguration.isCloudMonitoringEnabled()) {
                 executor.execute(

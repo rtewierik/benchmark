@@ -70,13 +70,18 @@ workloads/tpc-h-base-long.yaml
 
 sudo bin/benchmark \
 --drivers driver-rabbitmq/rabbitmq-experiment.yaml \
---tpc-h-files workloads/tpc-h-q6-1000-300.yaml \
+--tpc-h-files workloads/tpc-h-q6-10000-800.yaml \
 workloads/tpc-h-base-long.yaml
 
 sudo bin/benchmark \
 --drivers driver-rabbitmq/rabbitmq-experiment.yaml \
 --tpc-h-files workloads/tpc-h-q1-10000-300.yaml workloads/tpc-h-q1-10000-500.yaml workloads/tpc-h-q1-10000-800.yaml workloads/tpc-h-q1-10000-300.yaml workloads/tpc-h-q1-10000-500.yaml workloads/tpc-h-q1-10000-800.yaml workloads/tpc-h-q1-10000-300.yaml workloads/tpc-h-q1-10000-500.yaml workloads/tpc-h-q1-10000-800.yaml \
 workloads/tpc-h-base-long.yaml
+
+ALL
+sudo bin/benchmark \
+--drivers driver-rabbitmq/rabbitmq-experiment.yaml \
+workloads/throughput-100b-10.yaml workloads/throughput-100b-100.yaml workloads/throughput-100b-500.yaml workloads/throughput-100b-10.yaml workloads/throughput-100b-100.yaml workloads/throughput-100b-500.yaml workloads/throughput-100b-10.yaml workloads/throughput-100b-100.yaml workloads/throughput-100b-500.yaml workloads/throughput-1kb-10.yaml workloads/throughput-1kb-100.yaml workloads/throughput-1kb-500.yaml workloads/throughput-1kb-10.yaml workloads/throughput-1kb-100.yaml workloads/throughput-1kb-500.yaml workloads/throughput-1kb-10.yaml workloads/throughput-1kb-100.yaml workloads/throughput-1kb-500.yaml workloads/throughput-100b-10.yaml workloads/throughput-100b-100.yaml workloads/throughput-100b-500.yaml workloads/throughput-100b-10.yaml workloads/throughput-100b-100.yaml workloads/throughput-100b-500.yaml workloads/throughput-100b-10.yaml workloads/throughput-100b-100.yaml workloads/throughput-100b-500.yaml
 
 sudo bin/benchmark \
 --drivers driver-rabbitmq/rabbitmq-experiment.yaml \

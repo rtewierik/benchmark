@@ -20,9 +20,7 @@ instance_info=$(aws ec2 describe-instances \
   --output json)
 echo $instance_info
 
-cpu_util=()
-mem_util=()
-disk_util=()
+data=()
 
 # Loop through the instance info and retrieve metric data for each instance
 for info in $(echo "${instance_info}" | jq -c '.[]'); do
@@ -88,15 +86,157 @@ for info in $(echo "${instance_info}" | jq -c '.[]'); do
               "Period": 10,
               "Stat": "Average"
             }
+          },
+          {
+            "Id": "network_out",
+            "MetricStat": {
+              "Metric": {
+                "Namespace": "AWS/EC2",
+                "MetricName": "NetworkOut",
+                "Dimensions": [
+                  {
+                    "Name": "InstanceId",
+                    "Value": "'"$instance_id"'"
+                  }
+                ]
+              },
+              "Period": 10,
+              "Stat": "Average"
+            }
+          },
+          {
+            "Id": "network_in",
+            "MetricStat": {
+              "Metric": {
+                "Namespace": "AWS/EC2",
+                "MetricName": "NetworkIn",
+                "Dimensions": [
+                  {
+                    "Name": "InstanceId",
+                    "Value": "'"$instance_id"'"
+                  }
+                ]
+              },
+              "Period": 10,
+              "Stat": "Average"
+            }
+          },
+          {
+            "Id": "network_packets_out",
+            "MetricStat": {
+              "Metric": {
+                "Namespace": "AWS/EC2",
+                "MetricName": "NetworkPacketsOut",
+                "Dimensions": [
+                  {
+                    "Name": "InstanceId",
+                    "Value": "'"$instance_id"'"
+                  }
+                ]
+              },
+              "Period": 10,
+              "Stat": "Average"
+            }
+          },
+          {
+            "Id": "network_packets_in",
+            "MetricStat": {
+              "Metric": {
+                "Namespace": "AWS/EC2",
+                "MetricName": "NetworkPacketsIn",
+                "Dimensions": [
+                  {
+                    "Name": "InstanceId",
+                    "Value": "'"$instance_id"'"
+                  }
+                ]
+              },
+              "Period": 10,
+              "Stat": "Average"
+            }
+          },
+          {
+            "Id": "disk_write_bytes",
+            "MetricStat": {
+              "Metric": {
+                "Namespace": "AWS/EC2",
+                "MetricName": "DiskWriteBytes",
+                "Dimensions": [
+                  {
+                    "Name": "InstanceId",
+                    "Value": "'"$instance_id"'"
+                  }
+                ]
+              },
+              "Period": 10,
+              "Stat": "Average"
+            }
+          },
+          {
+            "Id": "disk_write_ops",
+            "MetricStat": {
+              "Metric": {
+                "Namespace": "AWS/EC2",
+                "MetricName": "DiskWriteOps",
+                "Dimensions": [
+                  {
+                    "Name": "InstanceId",
+                    "Value": "'"$instance_id"'"
+                  }
+                ]
+              },
+              "Period": 10,
+              "Stat": "Average"
+            }
+          },
+          {
+            "Id": "disk_read_bytes",
+            "MetricStat": {
+              "Metric": {
+                "Namespace": "AWS/EC2",
+                "MetricName": "DiskReadBytes",
+                "Dimensions": [
+                  {
+                    "Name": "InstanceId",
+                    "Value": "'"$instance_id"'"
+                  }
+                ]
+              },
+              "Period": 10,
+              "Stat": "Average"
+            }
+          },
+          {
+            "Id": "disk_read_ops",
+            "MetricStat": {
+              "Metric": {
+                "Namespace": "AWS/EC2",
+                "MetricName": "DiskReadOps",
+                "Dimensions": [
+                  {
+                    "Name": "InstanceId",
+                    "Value": "'"$instance_id"'"
+                  }
+                ]
+              },
+              "Period": 10,
+              "Stat": "Average"
+            }
           }
         ]' \
         --output json)
-      cpu_util+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[0].Timestamps'),\"tags\":$tags,\"values\":$(echo "${output}" | jq -r '.MetricDataResults[0].Values')}\n"
-      mem_util+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[1].Timestamps'),\"tags\":$tags,\"values\":$(echo "${output}" | jq -r '.MetricDataResults[1].Values')}\n"
-      disk_util+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[2].Timestamps'),\"tags\":$tags,\"values\":$(echo "${output}" | jq -r '.MetricDataResults[2].Values')}\n"
+      data+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[0].Timestamps'),\"tags\":$tags,\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[0].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[0].Values')}\n"
+      data+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[0].Timestamps'),\"tags\":$tags,\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[1].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[1].Values')}\n"
+      data+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[0].Timestamps'),\"tags\":$tags,\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[2].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[2].Values')}\n"
+      data+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[0].Timestamps'),\"tags\":$tags,\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[3].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[3].Values')}\n"
+      data+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[0].Timestamps'),\"tags\":$tags,\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[4].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[4].Values')}\n"
+      data+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[0].Timestamps'),\"tags\":$tags,\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[5].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[5].Values')}\n"
+      data+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[0].Timestamps'),\"tags\":$tags,\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[6].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[6].Values')}\n"
+      data+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[0].Timestamps'),\"tags\":$tags,\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[7].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[7].Values')}\n"
+      data+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[0].Timestamps'),\"tags\":$tags,\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[8].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[8].Values')}\n"
+      data+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[0].Timestamps'),\"tags\":$tags,\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[9].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[9].Values')}\n"
+      data+="{\"instanceId\":\"$instance_id\",\"timestamps\":$(echo "${output}" | jq -r '.MetricDataResults[0].Timestamps'),\"tags\":$tags,\"label\":\"$(echo "${output}" | jq -r '.MetricDataResults[10].Label')\",\"values\":$(echo "${output}" | jq -r '.MetricDataResults[10].Values')}\n"
     fi
   fi
 done
-echo $cpu_util > cpu_utilization.json
-echo $mem_util > memory_utilization.json
-echo $disk_util > disk_utilization.json
+echo "[${data%???}]" > ec2_metrics.json

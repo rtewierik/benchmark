@@ -39,27 +39,27 @@
         #pravegaSrcRemote: no
         pravegaContainerCount: "{{ segmentStoreCount|int * pravegaContainersPerSegmentStore|int }}"
 
-- name: Uninstall
-  hosts: ["!tier2"]
-  tags: ["uninstall"]
-  connection: ssh
-  become: true
-  tasks:
-    - name: Stop services
-      systemd:
-        name: "{{ item }}"
-        state: stopped
-        enabled: no
-      ignore_errors: yes
-      with_items:
-        - "benchmark-worker"
-        - "pravega-segmentstore"
-        - "pravega-controller"
-        - "bookkeeper"
-        - "zookeeper"
-    - name: Delete files on hosts
-      ansible.builtin.shell:
-        cmd: "rm -rf /opt/pravega /opt/zookeeper /opt/bookkeeper /opt/benchmark /mnt/journal/*"
+# - name: Uninstall
+#   hosts: ["!tier2"]
+#   tags: ["uninstall"]
+#   connection: ssh
+#   become: true
+#   tasks:
+#     - name: Stop services
+#       systemd:
+#         name: "{{ item }}"
+#         state: stopped
+#         enabled: no
+#       ignore_errors: yes
+#       with_items:
+#         - "benchmark-worker"
+#         - "pravega-segmentstore"
+#         - "pravega-controller"
+#         - "bookkeeper"
+#         - "zookeeper"
+#     - name: Delete files on hosts
+#       ansible.builtin.shell:
+#         cmd: "rm -rf /opt/pravega /opt/zookeeper /opt/bookkeeper /opt/benchmark /mnt/journal/*"
 
 - name: Common installation
   hosts: ["!tier2"]

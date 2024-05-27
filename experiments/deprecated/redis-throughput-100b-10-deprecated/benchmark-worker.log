@@ -1,0 +1,316 @@
+13:11:19.970 [main] INFO log - Logging initialized @4361ms to org.eclipse.jetty.util.log.Slf4jLog
+13:11:20.059 [main] INFO Server - jetty-9.4.42.v20210604; built: 2021-06-04T17:33:38.939Z; git: 5cd5e6d2375eeab146813b0de9f19eda6ab6e6cb; jvm 11.0.23+9-LTS
+13:11:20.090 [main] INFO ContextHandler - Started o.e.j.s.ServletContextHandler@ea27e34{/,null,AVAILABLE}
+13:11:20.107 [main] INFO AbstractConnector - Started ServerConnector@1095f122{HTTP/1.1, (http/1.1)}{0.0.0.0:8081}
+13:11:20.107 [main] INFO Server - Started @4502ms
+13:11:20.109 [main] INFO PrometheusMetricsProvider - Started Prometheus stats endpoint at 0.0.0.0:8081
+13:11:20.147 [main] INFO BenchmarkWorker - Starting benchmark with config: {
+  "httpPort" : 8080,
+  "statsPort" : 8081
+}
+13:11:20.192 [main] INFO Javalin - 
+ _________________________________________
+|        _                  _ _           |
+|       | | __ ___   ____ _| (_)_ __      |
+|    _  | |/ _` \ \ / / _` | | | '_ \     |
+|   | |_| | (_| |\ V / (_| | | | | | |    |
+|    \___/ \__,_| \_/ \__,_|_|_|_| |_|    |
+|_________________________________________|
+|                                         |
+|    https://javalin.io/documentation     |
+|_________________________________________|
+13:11:20.194 [main] INFO Javalin - Starting Javalin ...
+13:11:20.201 [main] INFO Server - jetty-9.4.42.v20210604; built: 2021-06-04T17:33:38.939Z; git: 5cd5e6d2375eeab146813b0de9f19eda6ab6e6cb; jvm 11.0.23+9-LTS
+13:11:20.214 [main] INFO session - DefaultSessionIdManager workerName=node0
+13:11:20.215 [main] INFO session - No SessionScavenger set, using defaults
+13:11:20.216 [main] INFO session - node0 Scavenging every 600000ms
+13:11:20.217 [main] INFO ContextHandler - Started i.j.e.j.@3122b117{/,null,AVAILABLE}
+13:11:20.217 [main] INFO ContextHandler - Started o.e.j.s.ServletContextHandler@29a23c3d{/,null,AVAILABLE}
+13:11:20.219 [main] INFO AbstractConnector - Started ServerConnector@faa3fed{HTTP/1.1, (http/1.1)}{0.0.0.0:8080}
+13:11:20.219 [main] INFO Server - Started @4614ms
+13:11:20.219 [main] INFO EmbeddedServer - Jetty is listening on: [http://localhost:8080]
+13:11:20.219 [main] INFO Javalin - Javalin has started \o/
+13:11:20.290 [main] INFO InstanceWorkerStats - Instance worker stats initialized.
+13:11:44.397 [main] INFO Benchmark - Using default worker file workers.yaml!
+13:11:44.405 [main] INFO Benchmark - Reading workers list from workers.yaml
+13:11:44.455 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-redis/redis-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.140:8080", "http://10.0.0.212:8080", "http://10.0.0.99:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : null,
+  "workloads" : [ "workloads/throughput-100b-10-max.yaml", "workloads/throughput-100b-100-max.yaml", "workloads/throughput-100b-500-max.yaml", "workloads/throughput-1kb-10-max.yaml", "workloads/throughput-1kb-100-max.yaml", "workloads/throughput-1kb-500-max.yaml", "workloads/throughput-10kb-10-max.yaml", "workloads/throughput-10kb-100-max.yaml", "workloads/throughput-10kb-500-max.yaml" ],
+  "output" : null
+}
+13:11:44.486 [main] INFO Benchmark - Workloads: {
+  "throughput-100b-10-max" : {
+    "name" : "throughput-100b-10",
+    "topics" : 10,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 100,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-100b.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 2,
+    "warmupDurationMinutes" : 1
+  },
+  "throughput-100b-100-max" : {
+    "name" : "throughput-100b-100",
+    "topics" : 100,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 100,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-100b.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 2,
+    "warmupDurationMinutes" : 1
+  },
+  "throughput-100b-500-max" : {
+    "name" : "throughput-100b-500",
+    "topics" : 500,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 100,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-100b.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 2,
+    "warmupDurationMinutes" : 1
+  },
+  "throughput-10kb-10-max" : {
+    "name" : "throughput-10kb-10",
+    "topics" : 10,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 10000,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-10kb.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 100000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 2,
+    "warmupDurationMinutes" : 1
+  },
+  "throughput-10kb-100-max" : {
+    "name" : "throughput-10kb-100",
+    "topics" : 100,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 10000,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-10kb.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 100000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 2,
+    "warmupDurationMinutes" : 1
+  },
+  "throughput-10kb-500-max" : {
+    "name" : "throughput-10kb-500",
+    "topics" : 500,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 10000,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-10kb.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 100000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 2,
+    "warmupDurationMinutes" : 1
+  },
+  "throughput-1kb-10-max" : {
+    "name" : "throughput-1kb-10",
+    "topics" : 10,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 1024,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-1Kb.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 1000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 2,
+    "warmupDurationMinutes" : 1
+  },
+  "throughput-1kb-100-max" : {
+    "name" : "throughput-1kb-100",
+    "topics" : 100,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 1024,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-1Kb.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 1000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 2,
+    "warmupDurationMinutes" : 1
+  },
+  "throughput-1kb-500-max" : {
+    "name" : "throughput-1kb-500",
+    "topics" : 500,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 1024,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-1Kb.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 1000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 2,
+    "warmupDurationMinutes" : 1
+  }
+}
+13:11:44.487 [main] INFO Benchmark - TPC-H arguments: [ null ]
+13:11:44.529 [main] INFO InstanceWorkerStats - Instance worker stats initialized.
+13:11:45.116 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.140:8080]
+13:11:45.117 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.99:8080,http://10.0.0.212:8080
+13:11:45.120 [main] INFO Benchmark - --------------- WORKLOAD : throughput-100b-10 --- DRIVER : Redis---------------
+13:11:45.736 [qtp235162442-24] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+13:11:45.743 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+13:11:45.756 [qtp235162442-29] INFO WorkerHandler - Received create topics request for topics: {
+  "numberOfTopics" : 10,
+  "numberOfPartitionsPerTopic" : 1
+}
+13:11:45.777 [qtp235162442-29] INFO LocalWorker - Created 10 topics in 20.133088 ms
+13:11:45.788 [main] INFO WorkloadGenerator - Created 10 topics in 37.753496 ms
+13:11:45.913 [main] INFO WorkloadGenerator - Created 10 consumers in 119.986424 ms
+13:11:45.923 [qtp235162442-28] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.ng.0001.euw1.cache.amazonaws.com:6379 with user null
+13:11:45.945 [qtp235162442-28] INFO LocalWorker - Created 10 producers in 24.630985 ms from {
+  "topics" : [ "redis-openmessaging-benchmark-0000008-EJC1M9A", "redis-openmessaging-benchmark-0000004-gvgM8yw", "redis-openmessaging-benchmark-0000000--IfJarg", "redis-openmessaging-benchmark-0000003-9Pd9G_M", "redis-openmessaging-benchmark-0000009-mq5aSwg", "redis-openmessaging-benchmark-0000005-9q0kK04", "redis-openmessaging-benchmark-0000007-dJa6oE8", "redis-openmessaging-benchmark-0000006-sMwE07o", "redis-openmessaging-benchmark-0000002-iB5yPI4", "redis-openmessaging-benchmark-0000001-2C4ktvA" ],
+  "producerIndex" : 0,
+  "isTpcH" : false
+}
+13:11:45.946 [main] INFO WorkloadGenerator - Created 10 producers in 32.370928 ms
+13:11:45.946 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+13:11:46.027 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 10, Received: 10, Expected: 10
+13:11:46.027 [main] INFO WorkloadGenerator - All consumers are ready!
+13:11:46.050 [qtp235162442-29] INFO WorkerHandler - Start load publish-rate: 1.0E7 msg/s -- payload-size: 100 -- producer index: 0
+13:11:46.079 [main] INFO WorkloadGenerator - ----- Starting warm-up traffic (1m) ------
+13:11:56.587 [main] INFO WorkloadGenerator - Pub rate 29780.1 msg/s /  2.8 MB/s | Pub err     0.0 err/s | Cons rate 29773.6 msg/s /  2.8 MB/s | Backlog:  0.1 K | Pub Latency (ms) avg:  0.3 - 50%:  0.2 - 99%:  0.5 - 99.9%:  0.6 - Max:  7.0 | Pub Delay Latency (us) avg: 5185548.6 - 50%: 5211871.0 - 99%: 9956223.0 - 99.9%: 10048191.0 - Max: 10057663.0
+13:12:06.959 [main] INFO WorkloadGenerator - Pub rate 30340.6 msg/s /  2.9 MB/s | Pub err     0.0 err/s | Cons rate 30339.4 msg/s /  2.9 MB/s | Backlog:  0.1 K | Pub Latency (ms) avg:  0.3 - 50%:  0.2 - 99%:  0.4 - 99.9%:  0.6 - Max: 16.6 | Pub Delay Latency (us) avg: 15305602.2 - 50%: 15304703.0 - 99%: 20417279.0 - 99.9%: 20516863.0 - Max: 20527231.0
+13:12:17.257 [main] INFO WorkloadGenerator - Pub rate 29814.6 msg/s /  2.8 MB/s | Pub err     0.0 err/s | Cons rate 29819.5 msg/s /  2.8 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.4 - 99.9%:  0.5 - Max: 11.5 | Pub Delay Latency (us) avg: 25707198.1 - 50%: 25714687.0 - 99%: 30755455.0 - 99.9%: 30850303.0 - Max: 30860415.0
+13:12:27.550 [main] INFO WorkloadGenerator - Pub rate 29501.7 msg/s /  2.8 MB/s | Pub err     0.0 err/s | Cons rate 29500.3 msg/s /  2.8 MB/s | Backlog:  0.1 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max: 16.7 | Pub Delay Latency (us) avg: 36100200.0 - 50%: 36213503.0 - 99%: 41028607.0 - 99.9%: 41117951.0 - Max: 41127935.0
+13:12:37.835 [main] INFO WorkloadGenerator - Pub rate 29079.3 msg/s /  2.8 MB/s | Pub err     0.0 err/s | Cons rate 29081.5 msg/s /  2.8 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max: 20.1 | Pub Delay Latency (us) avg: 46137822.7 - 50%: 46048511.0 - 99%: 51288063.0 - 99.9%: 51382271.0 - Max: 51392511.0
+13:12:48.130 [main] INFO WorkloadGenerator - Pub rate 30037.4 msg/s /  2.9 MB/s | Pub err     0.0 err/s | Cons rate 30036.6 msg/s /  2.9 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.4 - 99.9%:  0.5 - Max: 11.3 | Pub Delay Latency (us) avg: 56376374.8 - 50%: 56494335.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:12:48.571 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 95%:  0.4 - 99%:  0.5 - 99.9%:  0.6 - 99.99%:  3.3 - Max: 20.1 | Pub Delay (us)  avg: 30896298.6 - 50%: 30750207.0 - 95%: 58844927.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - 99.99%: 60000255.0 - Max: 60000255.0
+13:12:48.823 [main] INFO WorkloadGenerator - ----- Starting benchmark traffic (2m)------
+13:12:59.094 [main] INFO WorkloadGenerator - Pub rate 32840.2 msg/s /  3.1 MB/s | Pub err     0.0 err/s | Cons rate 32846.5 msg/s /  3.1 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.4 - 99.9%:  0.5 - Max: 16.5 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:13:09.405 [main] INFO WorkloadGenerator - Pub rate 30134.3 msg/s /  2.9 MB/s | Pub err     0.0 err/s | Cons rate 30120.4 msg/s /  2.9 MB/s | Backlog:  0.1 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.4 - 99.9%:  0.5 - Max:  8.1 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:13:19.685 [main] INFO WorkloadGenerator - Pub rate 30196.4 msg/s /  2.9 MB/s | Pub err     0.0 err/s | Cons rate 30204.2 msg/s /  2.9 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.4 - 99.9%:  0.5 - Max:  7.4 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:13:29.965 [main] INFO WorkloadGenerator - Pub rate 30319.3 msg/s /  2.9 MB/s | Pub err     0.0 err/s | Cons rate 30314.1 msg/s /  2.9 MB/s | Backlog:  0.1 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.4 - 99.9%:  0.5 - Max:  4.2 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:13:40.250 [main] INFO WorkloadGenerator - Pub rate 29576.4 msg/s /  2.8 MB/s | Pub err     0.0 err/s | Cons rate 29586.3 msg/s /  2.8 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.2 - 99%:  0.5 - 99.9%:  0.6 - Max: 19.2 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:13:50.520 [main] INFO WorkloadGenerator - Pub rate 30112.0 msg/s /  2.9 MB/s | Pub err     0.0 err/s | Cons rate 30103.1 msg/s /  2.9 MB/s | Backlog:  0.1 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.4 - 99.9%:  0.5 - Max: 10.2 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:14:00.811 [main] INFO WorkloadGenerator - Pub rate 30358.6 msg/s /  2.9 MB/s | Pub err     0.0 err/s | Cons rate 30370.8 msg/s /  2.9 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.2 - 99%:  0.4 - 99.9%:  0.5 - Max: 16.6 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:14:11.097 [main] INFO WorkloadGenerator - Pub rate 30250.7 msg/s /  2.9 MB/s | Pub err     0.0 err/s | Cons rate 30292.0 msg/s /  2.9 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.4 - 99.9%:  0.5 - Max: 15.2 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:14:21.322 [main] INFO WorkloadGenerator - Pub rate 30589.6 msg/s /  2.9 MB/s | Pub err     0.0 err/s | Cons rate 30543.5 msg/s /  2.9 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.2 - 99%:  0.4 - 99.9%:  0.5 - Max:  7.8 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:14:31.566 [main] INFO WorkloadGenerator - Pub rate 30493.9 msg/s /  2.9 MB/s | Pub err     0.0 err/s | Cons rate 30492.9 msg/s /  2.9 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.2 - 99%:  0.4 - 99.9%:  0.5 - Max:  4.3 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:14:41.819 [main] INFO WorkloadGenerator - Pub rate 28909.1 msg/s /  2.8 MB/s | Pub err     0.0 err/s | Cons rate 28910.6 msg/s /  2.8 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max: 12.5 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:14:52.036 [main] INFO WorkloadGenerator - Pub rate 29911.3 msg/s /  2.9 MB/s | Pub err     0.0 err/s | Cons rate 29909.6 msg/s /  2.9 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.4 - 99.9%:  0.5 - Max: 11.2 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:14:52.253 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 95%:  0.4 - 99%:  0.4 - 99.9%:  0.5 - 99.99%:  1.6 - Max: 19.2 | Pub Delay (us)  avg: 60000128.0 - 50%: 60000255.0 - 95%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - 99.99%: 60000255.0 - Max: 60000255.0
+13:14:52.285 [main] INFO WorkloadGenerator - ----- Completed run. Stopping worker and yielding results ------
+13:14:52.459 [qtp235162442-29] INFO RedisBenchmarkDriver - Streams left over: 0
+13:14:53.205 [main] INFO InstanceWorkerStats - Instance worker stats initialized.
+13:14:53.214 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.140:8080]
+13:14:53.214 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.99:8080,http://10.0.0.212:8080
+13:14:53.215 [main] INFO Benchmark - --------------- WORKLOAD : throughput-100b-100 --- DRIVER : Redis---------------
+13:14:53.538 [qtp235162442-29] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+13:14:53.540 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+13:14:53.542 [qtp235162442-24] INFO WorkerHandler - Received create topics request for topics: {
+  "numberOfTopics" : 100,
+  "numberOfPartitionsPerTopic" : 1
+}
+13:14:53.546 [qtp235162442-24] INFO LocalWorker - Created 100 topics in 3.082383 ms
+13:14:53.547 [main] INFO WorkloadGenerator - Created 100 topics in 6.044551 ms
+13:14:53.862 [main] INFO WorkloadGenerator - Created 100 consumers in 310.902668 ms
+13:14:53.865 [qtp235162442-29] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.ng.0001.euw1.cache.amazonaws.com:6379 with user null
+13:14:53.866 [qtp235162442-29] INFO LocalWorker - Created 100 producers in 1.707573 ms from {
+  "topics" : [ "redis-openmessaging-benchmark-0000073-WV-IIW8", "redis-openmessaging-benchmark-0000031-A4wXj8g", "redis-openmessaging-benchmark-0000027-p-GyRRs", "redis-openmessaging-benchmark-0000048-C35sJyk", "redis-openmessaging-benchmark-0000039-ZgIZeds", "redis-openmessaging-benchmark-0000056-qcB9UMo", "redis-openmessaging-benchmark-0000096-ZdwPOjM", "redis-openmessaging-benchmark-0000071-2_C_Rnw", "redis-openmessaging-benchmark-0000055-hAkagTs", "redis-openmessaging-benchmark-0000085-oeOkulU", "redis-openmessaging-benchmark-0000095-c-frrlM", "redis-openmessaging-benchmark-0000001-p_YTFZQ", "redis-openmessaging-benchmark-0000052-5TgSXX0", "redis-openmessaging-benchmark-0000054-vdYqHPQ", "redis-openmessaging-benchmark-0000092-3EkxbqM", "redis-openmessaging-benchmark-0000019-xKuoOlk", "redis-openmessaging-benchmark-0000036-Au8cJSU", "redis-openmessaging-benchmark-0000089-qvwO7YU", "redis-openmessaging-benchmark-0000007-uBhH_yM", "redis-openmessaging-benchmark-0000069-qFqWEU0", "redis-openmessaging-benchmark-0000072-7NUm92g", "redis-openmessaging-benchmark-0000018-kG5bjDI", "redis-openmessaging-benchmark-0000060-zVC809Y", "redis-openmessaging-benchmark-0000009-sWAsdEI", "redis-openmessaging-benchmark-0000091-etI2up0", "redis-openmessaging-benchmark-0000003-4_aav7s", "redis-openmessaging-benchmark-0000077-Ox7lF7I", "redis-openmessaging-benchmark-0000024-kmDk-sA", "redis-openmessaging-benchmark-0000074-fd1x400", "redis-openmessaging-benchmark-0000050-ZT1sgrY", "redis-openmessaging-benchmark-0000011-g9uz010", "redis-openmessaging-benchmark-0000013-pxMs5dg", "redis-openmessaging-benchmark-0000087-dKTp3gk", "redis-openmessaging-benchmark-0000016-FpzMqf8", "redis-openmessaging-benchmark-0000064-B7TySlg", "redis-openmessaging-benchmark-0000093-6xVGQXQ", "redis-openmessaging-benchmark-0000010-3av1F7k", "redis-openmessaging-benchmark-0000086-S8HD7gw", "redis-openmessaging-benchmark-0000004-PGiALM8", "redis-openmessaging-benchmark-0000076-2Y4wLKo", "redis-openmessaging-benchmark-0000030-eDDJHQc", "redis-openmessaging-benchmark-0000094-ww1Hrf8", "redis-openmessaging-benchmark-0000063-QKRNYGE", "redis-openmessaging-benchmark-0000042-Yyho4zM", "redis-openmessaging-benchmark-0000017-1zHnYJ8", "redis-openmessaging-benchmark-0000088-skGvzaA", "redis-openmessaging-benchmark-0000047-RnQT2b0", "redis-openmessaging-benchmark-0000012-ndX7z6U", "redis-openmessaging-benchmark-0000034-mliT2yo", "redis-openmessaging-benchmark-0000046-8BMTnaM", "redis-openmessaging-benchmark-0000014-7z4h-pY", "redis-openmessaging-benchmark-0000057-1GbD_vk", "redis-openmessaging-benchmark-0000029-VRbwGCU", "redis-openmessaging-benchmark-0000044-b89z_n4", "redis-openmessaging-benchmark-0000000-i0GhlbU", "redis-openmessaging-benchmark-0000043-lgFzoeU", "redis-openmessaging-benchmark-0000097-4ASitbw", "redis-openmessaging-benchmark-0000022-m_pTJXQ", "redis-openmessaging-benchmark-0000038-wqKUqZU", "redis-openmessaging-benchmark-0000083-ZBmI51Y", "redis-openmessaging-benchmark-0000026-cZWyK3Y", "redis-openmessaging-benchmark-0000006-fqtpG2g", "redis-openmessaging-benchmark-0000084-Dx2eMdA", "redis-openmessaging-benchmark-0000066-uWJWwP4", "redis-openmessaging-benchmark-0000021-UBOVkTU", "redis-openmessaging-benchmark-0000008-LKPZ0AM", "redis-openmessaging-benchmark-0000033-dReMCx8", "redis-openmessaging-benchmark-0000082-XpKAvCk", "redis-openmessaging-benchmark-0000062-H17Q7JA", "redis-openmessaging-benchmark-0000099-e6BM_b4", "redis-openmessaging-benchmark-0000078-zofUNPY", "redis-openmessaging-benchmark-0000059-WViZviM", "redis-openmessaging-benchmark-0000098-HBpqe2E", "redis-openmessaging-benchmark-0000079-93U6qBs", "redis-openmessaging-benchmark-0000081-OOSBFmA", "redis-openmessaging-benchmark-0000051-5ap0Jwc", "redis-openmessaging-benchmark-0000061-FwSLFSo", "redis-openmessaging-benchmark-0000075--CYGXj4", "redis-openmessaging-benchmark-0000080-YqhkYs4", "redis-openmessaging-benchmark-0000035-bXnSr1A", "redis-openmessaging-benchmark-0000068-0Wgegn4", "redis-openmessaging-benchmark-0000032-KcmUHpk", "redis-openmessaging-benchmark-0000020-4rCEA80", "redis-openmessaging-benchmark-0000025-CLY-hko", "redis-openmessaging-benchmark-0000002-f72A-KY", "redis-openmessaging-benchmark-0000040-pOIMciA", "redis-openmessaging-benchmark-0000045--BkGuvM", "redis-openmessaging-benchmark-0000070-Us3Os7k", "redis-openmessaging-benchmark-0000090-NROIhfk", "redis-openmessaging-benchmark-0000015-bTXh_hk", "redis-openmessaging-benchmark-0000037-B_wEdyU", "redis-openmessaging-benchmark-0000065-HnCflRc", "redis-openmessaging-benchmark-0000053-90saB4o", "redis-openmessaging-benchmark-0000023-epMKYPY", "redis-openmessaging-benchmark-0000067-Na9V1Oc", "redis-openmessaging-benchmark-0000049-CtIjRfk", "redis-openmessaging-benchmark-0000058-eShuQhg", "redis-openmessaging-benchmark-0000041-kG77Hjo", "redis-openmessaging-benchmark-0000005-SZ5x69I", "redis-openmessaging-benchmark-0000028-dw7Syvs" ],
+  "producerIndex" : 0,
+  "isTpcH" : false
+}
+13:14:53.868 [main] INFO WorkloadGenerator - Created 100 producers in 5.294891 ms
+13:14:53.868 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+13:14:53.918 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 100, Received: 100, Expected: 100
+13:14:53.918 [main] INFO WorkloadGenerator - All consumers are ready!
+13:14:53.920 [qtp235162442-24] INFO WorkerHandler - Start load publish-rate: 1.0E7 msg/s -- payload-size: 100 -- producer index: 0
+13:14:53.921 [main] INFO WorkloadGenerator - ----- Starting warm-up traffic (1m) ------
+13:15:04.190 [main] INFO WorkloadGenerator - Pub rate 27483.6 msg/s /  2.6 MB/s | Pub err     0.0 err/s | Cons rate 27493.1 msg/s /  2.6 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.7 - Max: 16.2 | Pub Delay Latency (us) avg: 5152294.2 - 50%: 5192095.0 - 99%: 9903743.0 - 99.9%: 9989567.0 - Max: 9999295.0
+13:15:14.414 [main] INFO WorkloadGenerator - Pub rate 26962.7 msg/s /  2.6 MB/s | Pub err     0.0 err/s | Cons rate 26962.7 msg/s /  2.6 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.7 - Max: 16.5 | Pub Delay Latency (us) avg: 15172228.7 - 50%: 15219263.0 - 99%: 20079615.0 - 99.9%: 20242303.0 - Max: 20257023.0
+13:15:24.647 [main] INFO WorkloadGenerator - Pub rate 27617.4 msg/s /  2.6 MB/s | Pub err     0.0 err/s | Cons rate 27615.4 msg/s /  2.6 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max: 13.4 | Pub Delay Latency (us) avg: 25481933.5 - 50%: 25489151.0 - 99%: 30359295.0 - 99.9%: 30447359.0 - Max: 30457087.0
+13:15:34.861 [main] INFO WorkloadGenerator - Pub rate 28085.5 msg/s /  2.7 MB/s | Pub err     0.0 err/s | Cons rate 28085.1 msg/s /  2.7 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max:  8.0 | Pub Delay Latency (us) avg: 35557384.2 - 50%: 35572991.0 - 99%: 40550655.0 - 99.9%: 40648447.0 - Max: 40659199.0
+13:15:45.091 [main] INFO WorkloadGenerator - Pub rate 28178.5 msg/s /  2.7 MB/s | Pub err     0.0 err/s | Cons rate 28178.5 msg/s /  2.7 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max:  6.1 | Pub Delay Latency (us) avg: 45789268.7 - 50%: 45808895.0 - 99%: 50743807.0 - 99.9%: 50836479.0 - Max: 50846463.0
+13:15:55.320 [main] INFO WorkloadGenerator - Pub rate 28250.2 msg/s /  2.7 MB/s | Pub err     0.0 err/s | Cons rate 28251.5 msg/s /  2.7 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.5 - Max:  5.4 | Pub Delay Latency (us) avg: 55895487.3 - 50%: 55968767.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:15:55.694 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 95%:  0.4 - 99%:  0.5 - 99.9%:  0.6 - 99.99%:  2.6 - Max: 16.5 | Pub Delay (us)  avg: 30930182.2 - 50%: 31103743.0 - 95%: 58245119.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - 99.99%: 60000255.0 - Max: 60000255.0
+13:15:55.815 [main] INFO WorkloadGenerator - ----- Starting benchmark traffic (2m)------
+13:16:06.038 [main] INFO WorkloadGenerator - Pub rate 28888.3 msg/s /  2.8 MB/s | Pub err     0.0 err/s | Cons rate 28889.3 msg/s /  2.8 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.7 - Max: 18.9 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:16:16.271 [main] INFO WorkloadGenerator - Pub rate 28216.0 msg/s /  2.7 MB/s | Pub err     0.0 err/s | Cons rate 28215.0 msg/s /  2.7 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max:  5.5 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:16:26.518 [main] INFO WorkloadGenerator - Pub rate 27973.3 msg/s /  2.7 MB/s | Pub err     0.0 err/s | Cons rate 27972.7 msg/s /  2.7 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max:  8.6 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:16:36.739 [main] INFO WorkloadGenerator - Pub rate 28055.5 msg/s /  2.7 MB/s | Pub err     0.0 err/s | Cons rate 28056.2 msg/s /  2.7 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.6 - Max:  6.1 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:16:46.967 [main] INFO WorkloadGenerator - Pub rate 28465.9 msg/s /  2.7 MB/s | Pub err     0.0 err/s | Cons rate 28464.0 msg/s /  2.7 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  0.3 - 50%:  0.3 - 99%:  0.5 - 99.9%:  0.5 - Max: 10.0 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+13:16:51.479 [qtp235162442-28] INFO RedisBenchmarkDriver - Streams left over: 0

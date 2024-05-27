@@ -1,0 +1,112 @@
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+- name: Kafka setup
+  hosts: all
+  connection: ssh
+  become: true
+  tasks:
+    - set_fact:
+        zookeeperServers: "{{ groups['zookeeper'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | map('regex_replace', '^(.*)$', '\\1:2181') | join(',') }}"
+        bootstrapServers: "{{ groups['kafka'] | map('extract', hostvars, ['private_ip']) | map('regex_replace', '^(.*)$', '\\1:9092') | join(',') }}"
+        kafkaVersion: "3.6.1"
+      tags: [client-code]
+
+- name: Setup Benchmark client
+  hosts: client
+  connection: ssh
+  become: true
+  tasks:
+    - file: path=/opt/benchmark state=absent
+      tags: [client-code]
+    - name: Copy benchmark code
+      unarchive:
+        src: ../../package/target/openmessaging-benchmark-0.0.1-SNAPSHOT-bin.tar.gz
+        dest: /opt
+      tags: [client-code]
+    - shell: mv /opt/openmessaging-benchmark-0.0.1-SNAPSHOT /opt/benchmark
+      tags: [client-code]
+    - shell: tuned-adm profile latency-performance
+
+    - name: Get list of driver config files
+      raw: ls -1 /opt/benchmark/driver-kafka/*.yaml
+      register: drivers_list
+      tags: [client-code]
+
+    - name: Configure Bootstrap Servers
+      lineinfile:
+         dest: '{{ item }}'
+         regexp: '^  bootstrap.servers='
+         line: '  bootstrap.servers={{ bootstrapServers }}'
+      with_items: '{{ drivers_list.stdout_lines }}'
+      tags: [client-code]
+
+    - name: Get list of jms driver config files
+      raw: ls -1 /opt/benchmark/driver-jms/kafka*.yaml
+      register: jms_drivers_list
+
+    - name: Configure JMS Bootstrap Servers
+      lineinfile:
+         dest: '{{ item }}'
+         regexp: '^  bootstrap.servers='
+         line: '  bootstrap.servers={{ bootstrapServers }}'
+      with_items: '{{ jms_drivers_list.stdout_lines }}'
+
+    - name: Configure JMS Connection Factory
+      ansible.builtin.replace:
+         dest: '{{ item }}'
+         regexp: 'localhost\:9092'
+         replace: '{{ bootstrapServers }}'
+      with_items: '{{ jms_drivers_list.stdout_lines }}'
+
+    - name: Configure memory
+      lineinfile:
+         dest: /opt/benchmark/bin/benchmark-worker
+         regexp: '^JVM_MEM='
+         line: 'JVM_MEM="-Djava.net.preferIPv4Stack=true -Xms26G -Xmx26G -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -XX:+ParallelRefProcEnabled -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=12 -XX:ConcGCThreads=12 -XX:+DisableExplicitGC -XX:-ResizePLAB"'
+      tags: [client-code]
+    - name: Configure memory
+      lineinfile:
+         dest: /opt/benchmark/bin/benchmark
+         regexp: '^JVM_MEM='
+         line: 'JVM_MEM="-Xmx4G"'
+      tags: [client-code]
+    - template:
+        src: "templates/workers.yaml"
+        dest: "/opt/benchmark/workers.yaml"
+      tags: [client-code]
+    - name: Install benchmark systemd service
+      template:
+        src: "templates/benchmark-worker.service"
+        dest: "/etc/systemd/system/benchmark-worker.service"
+      tags: [client-code]
+    - systemd:
+        state: restarted
+        daemon_reload: yes
+        name: "benchmark-worker"
+      tags: [client-code]
+
+- name:  Hosts addresses
+  hosts: localhost
+  become: false
+  tasks:
+    - debug:
+        msg: "Zookeeper servers {{ item }}"
+      with_items: "{{ groups['zookeeper'] }}"
+    - debug:
+        msg: "Kafka brokers {{ item }}"
+      with_items: "{{ groups['kafka'] }}"
+    - debug:
+        msg: "Benchmark clients {{ item }}"
+      with_items: "{{ groups['client'] }}"

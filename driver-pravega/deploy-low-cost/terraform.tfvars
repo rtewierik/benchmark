@@ -3,9 +3,9 @@ region          = "eu-west-1"
 ami             = "ami-06211bde2f9c725e5" // RHEL-7.9 eu-west-1
 
 instance_types = {
-  "controller" = "m5.2xlarge"
+  "controller" = "m5.large"
   "bookkeeper" = "i3en.2xlarge"
-  "zookeeper"  = "i3en.large"
+  "zookeeper"  = "i3en.xlarge"
   "client"     = "m5n.2xlarge"
 }
 

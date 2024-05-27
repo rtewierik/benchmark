@@ -50,6 +50,11 @@ sudo bin/benchmark \
 --tpc-h-files workloads/tpc-h-q1-1000-500.yaml,workloads/tpc-h-q1-100-50.yaml,workloads/tpc-h-q6-1000-500.yaml,workloads/tpc-h-q6-100-50.yaml,workloads/tpc-h-q1-1000-500.yaml,workloads/tpc-h-q1-100-50.yaml,workloads/tpc-h-q6-1000-500.yaml,workloads/tpc-h-q6-100-50.yaml,workloads/tpc-h-q1-1000-500.yaml,workloads/tpc-h-q1-100-50.yaml,workloads/tpc-h-q6-1000-500.yaml,workloads/tpc-h-q6-100-50.yaml \
 workloads/tpc-h-base-long.yaml
 
+ALL-MAX-SINGLE
+sudo bin/benchmark \
+--drivers driver-redis/redis-experiment.yaml \
+workloads/throughput-100b-10-max.yaml workloads/throughput-100b-100-max.yaml workloads/throughput-100b-500-max.yaml workloads/throughput-1kb-10-max.yaml workloads/throughput-1kb-100-max.yaml workloads/throughput-1kb-500-max.yaml workloads/throughput-10kb-10-max.yaml workloads/throughput-10kb-100-max.yaml workloads/throughput-10kb-500-max.yaml
+
 ## Additional manual steps to fix deployment of Redis
 
 **NOTE:** The current Terraform project creates default security groups to which the 0.0.0.0/0 inbound rule needs to be added for the Redis cluster to be reachable. A fix should be implemented.
