@@ -26,6 +26,9 @@ import io.openmessaging.benchmark.driver.ConsumerCallback;
 import io.openmessaging.benchmark.driver.redis.client.RedisClientConfig;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -33,6 +36,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.StreamEntryID;
+import redis.clients.jedis.params.ScanParams;
+import redis.clients.jedis.resps.ScanResult;
 
 public class RedisBenchmarkDriver implements BenchmarkDriver {
     JedisPool jedisPool;
@@ -116,6 +122,32 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
     @Override
     public void close() throws Exception {
         if (this.jedisPool != null) {
+            try {
+                Jedis jedis = this.jedisPool.getResource();
+                String pattern = "stream:*";
+                String cursor = "0";
+                do {
+                    ScanResult<String> scanResult = jedis.scan(cursor, new ScanParams().match(pattern));
+                    List<String> streamKeys = scanResult.getResult();
+                    cursor = scanResult.getCursor();
+
+                    for (String streamKey : streamKeys) {
+                        try {
+                            jedis.del(streamKey);
+                        } catch (Exception e) {
+                            log.error("Error deleting stream " + streamKey + ": " + e.getMessage());
+                        }
+                    }
+                } while (!"0".equals(cursor));
+            } catch (Throwable ignored) {}
+            try {
+                Jedis jedis = this.jedisPool.getResource();
+                String pattern = "stream:*";
+                String cursor = "0";
+                ScanResult<String> scanResult = jedis.scan(cursor, new ScanParams().match(pattern));
+                log.info("Streams left over: {}", scanResult.getResult().size());
+            } catch (Throwable ignored) {}
+
             this.jedisPool.close();
         }
     }

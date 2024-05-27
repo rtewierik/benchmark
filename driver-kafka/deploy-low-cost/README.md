@@ -168,7 +168,12 @@ workloads/tpc-h-base-long.yaml
 
 sudo bin/benchmark \
 --drivers driver-kafka/kafka-experiment.yaml \
---tpc-h-files workloads/tpc-h-q1-10000-300.yaml,workloads/tpc-h-q6-10000-300.yaml,workloads/tpc-h-q1-10000-500.yaml,workloads/tpc-h-q6-10000-500.yaml,workloads/tpc-h-q1-10000-800.yaml,workloads/tpc-h-q6-10000-800.yaml \
+--tpc-h-files workloads/tpc-h-q6-10000-500.yaml \
+workloads/tpc-h-base-long.yaml
+
+sudo bin/benchmark \
+--drivers driver-kafka/kafka-experiment.yaml \
+--tpc-h-files workloads/tpc-h-q6-10000-500.yaml,workloads/tpc-h-q1-10000-800.yaml,workloads/tpc-h-q6-10000-800.yaml \
 workloads/tpc-h-base-long.yaml
 
 ALL
@@ -180,6 +185,10 @@ ALL-MAX
 sudo bin/benchmark \
 --drivers driver-kafka/kafka-experiment.yaml \
 workloads/throughput-100b-10-max.yaml workloads/throughput-100b-100-max.yaml workloads/throughput-100b-500-max.yaml workloads/throughput-100b-10-max.yaml workloads/throughput-100b-100-max.yaml workloads/throughput-100b-500-max.yaml workloads/throughput-100b-10-max.yaml workloads/throughput-100b-100-max.yaml workloads/throughput-100b-500-max.yaml workloads/throughput-1kb-10-max.yaml workloads/throughput-1kb-100-max.yaml workloads/throughput-1kb-500-max.yaml workloads/throughput-1kb-10-max.yaml workloads/throughput-1kb-100-max.yaml workloads/throughput-1kb-500-max.yaml workloads/throughput-1kb-10-max.yaml workloads/throughput-1kb-100-max.yaml workloads/throughput-1kb-500-max.yaml workloads/throughput-10kb-10-max.yaml workloads/throughput-10kb-100-max.yaml workloads/throughput-10kb-500-max.yaml workloads/throughput-10kb-10-max.yaml workloads/throughput-10kb-100-max.yaml workloads/throughput-10kb-500-max.yaml workloads/throughput-10kb-10-max.yaml workloads/throughput-10kb-100-max.yaml workloads/throughput-10kb-500-max.yaml
+ALL-MAX-SINGLE
+sudo bin/benchmark \
+--drivers driver-kafka/kafka-experiment.yaml \
+workloads/throughput-100b-10-max.yaml workloads/throughput-100b-100-max.yaml workloads/throughput-100b-500-max.yaml workloads/throughput-1kb-10-max.yaml workloads/throughput-1kb-100-max.yaml workloads/throughput-1kb-500-max.yaml workloads/throughput-10kb-10-max.yaml workloads/throughput-10kb-100-max.yaml workloads/throughput-10kb-500-max.yaml
 ALL-MAX
 sudo bin/benchmark \
 --drivers driver-kafka/kafka-experiment.yaml \
