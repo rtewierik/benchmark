@@ -25,4 +25,5 @@ writer:
 
 includeTimestampInEvent: True
 enableStreamAutoScaling: False
-eventsPerSecond: 10000
+kbytesPerSecond: 1000000
+deleteStreams: False

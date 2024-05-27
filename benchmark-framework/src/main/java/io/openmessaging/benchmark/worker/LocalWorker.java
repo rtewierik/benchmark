@@ -116,6 +116,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
             : new InstanceWorkerStats(statsLogger);
         this.messageProducer = new MessageProducerImpl(new UniformRateLimiter(1.0), stats);
         this.tpcHMessageProcessor = new TpcHMessageProcessor(
+            () -> this.experimentId,
             this.producers,
             this.messageProducer,
             () -> testCompleted = true,
@@ -153,6 +154,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
             throw new RuntimeException(e);
         }
         this.tpcHMessageProcessor = new TpcHMessageProcessor(
+                () -> this.experimentId,
                 this.producers,
                 this.messageProducer,
                 () -> testCompleted = true,

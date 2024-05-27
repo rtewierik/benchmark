@@ -152,7 +152,7 @@ export class ServiceStack extends Stack {
     const table = new Table(this, 'BenchmarkMonitoringDynamoDbTable', {
       tableName: props.appName,
       pointInTimeRecovery: true,
-      encryption: TableEncryption.CUSTOMER_MANAGED,
+      encryption: TableEncryption.AWS_MANAGED,
       partitionKey: {
         name: 'transactionId',
         type: AttributeType.STRING,

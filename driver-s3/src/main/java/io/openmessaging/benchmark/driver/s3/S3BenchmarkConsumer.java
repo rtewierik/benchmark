@@ -59,8 +59,13 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
     private static final Logger log = LoggerFactory.getLogger(S3BenchmarkConsumer.class);
     private static final WorkerStats stats =
             S3BenchmarkConfiguration.isTpcH ? new CentralWorkerStats() : new InstanceWorkerStats();
+    private static final String experimentId =
+            S3BenchmarkConfiguration.isTpcH
+                    ? String.format("s3-tpc-h-QUERY_ID-%d", new Date().getTime())
+                    : String.format("s3-throughput-%d", new Date().getTime());
     private static final TpcHMessageProcessor messageProcessor =
             new TpcHMessageProcessor(
+                    () -> experimentId,
                     S3BenchmarkConfiguration.s3Uris.stream()
                             .map(S3BenchmarkS3Producer::new)
                             .collect(Collectors.toList()),
