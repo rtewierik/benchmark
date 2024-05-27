@@ -13,10 +13,14 @@
  */
 package io.openmessaging.benchmark.driver.redis.client;
 
+
+import java.util.List;
+
 public class RedisClientConfig {
     public String redisHost;
     public String redisUser;
     public String redisPass;
+    public List<String> redisNodes;
     public Integer redisPort;
     public Integer jedisPoolMaxTotal;
     public Integer jedisPoolMaxIdle;

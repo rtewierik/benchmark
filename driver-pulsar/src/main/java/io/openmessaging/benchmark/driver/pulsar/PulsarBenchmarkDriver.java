@@ -288,7 +288,8 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
                     }
                 }
             }
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
         try {
             List<String> topics = new ArrayList<>();
             List<String> tenants = adminClient.tenants().getTenants();
@@ -299,7 +300,8 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
                 }
             }
             log.info("Topics left over: {}", topics.size());
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
 
         if (adminClient != null) {
             adminClient.close();

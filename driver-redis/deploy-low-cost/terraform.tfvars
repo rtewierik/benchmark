@@ -4,14 +4,14 @@ az              = "eu-west-1a"
 ami             = "ami-0f0f1c02e5e4d9d9f" // RHEL-8
 
 instance_types = {
-  "client" = "m5n.2xlarge"
+  "client" = "t3.medium"
 }
 
 num_instances = {
-  "client" = 3
+  "client" = 2
 }
 
-node_type = "cache.r6g.2xlarge"
+node_type = "cache.t3.micro"
 num_cache_clusters = 3
 
 enable_cloud_monitoring = false

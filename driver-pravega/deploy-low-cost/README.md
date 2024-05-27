@@ -18,6 +18,7 @@ sudo bin/benchmark \
   --tpc-h-file workloads/tpc-h-default-2-reducers.yaml \
   workloads/simple-workload.yaml
 ```
+
 ALL-MAX
 sudo bin/benchmark \
 --drivers driver-pravega/pravega-experiment.yaml \
