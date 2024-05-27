@@ -15,26 +15,27 @@ package io.openmessaging.benchmark.driver.redis;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import io.lettuce.core.cluster.RedisClusterClient;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
+import io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.params.XAddParams;
 
 public class RedisBenchmarkProducer implements BenchmarkProducer {
     private final JedisPool pool;
-    private final JedisCluster cluster;
+    private final AsyncRedisClient cluster;
     private final String rmqTopic;
     private final XAddParams xaddParams;
 
     public RedisBenchmarkProducer(
-            final JedisPool pool, final JedisCluster cluster, final String rmqTopic) {
+            final JedisPool pool, final RedisClusterClient cluster, final String rmqTopic) {
         this.pool = pool;
-        this.cluster = cluster;
+        this.cluster = new AsyncRedisClient(cluster);
         this.rmqTopic = rmqTopic;
         this.xaddParams = redis.clients.jedis.params.XAddParams.xAddParams();
     }
@@ -50,13 +51,7 @@ public class RedisBenchmarkProducer implements BenchmarkProducer {
 
         CompletableFuture<Void> future = new CompletableFuture<>();
         if (cluster != null) {
-            try {
-                cluster.xadd(this.rmqTopic.getBytes(UTF_8), map1, this.xaddParams);
-                future.complete(null);
-            } catch (Exception e) {
-                future.completeExceptionally(e);
-            }
-            return future;
+            return cluster.xaddToStream(this.rmqTopic, map1);
         }
         try (Jedis jedis = this.pool.getResource()) {
             jedis.xadd(this.rmqTopic.getBytes(UTF_8), map1, this.xaddParams);
