@@ -55,6 +55,15 @@ sudo bin/benchmark \
 --drivers driver-redis/redis-experiment.yaml \
 workloads/throughput-100b-10-max.yaml workloads/throughput-100b-100-max.yaml workloads/throughput-100b-500-max.yaml workloads/throughput-1kb-10-max.yaml workloads/throughput-1kb-100-max.yaml workloads/throughput-1kb-500-max.yaml workloads/throughput-10kb-10-max.yaml workloads/throughput-10kb-100-max.yaml workloads/throughput-10kb-500-max.yaml
 
+
+sudo bin/benchmark \
+--drivers driver-redis/redis-experiment.yaml \
+workloads/throughput-100b-10-max.yaml workloads/throughput-100b-100-max.yaml workloads/throughput-100b-500-max.yaml workloads/throughput-1kb-10-max.yaml workloads/throughput-1kb-100-max.yaml workloads/throughput-1kb-500-max.yaml workloads/throughput-10kb-10-max.yaml workloads/throughput-10kb-100-max.yaml workloads/throughput-10kb-500-max.yaml
+
+sudo bin/benchmark \
+--drivers driver-redis/redis-experiment.yaml \
+workloads/throughput-10kb-500-max.yaml
+
 ## Additional manual steps to fix deployment of Redis
 
 **NOTE:** The current Terraform project creates default security groups to which the 0.0.0.0/0 inbound rule needs to be added for the Redis cluster to be reachable. A fix should be implemented.
