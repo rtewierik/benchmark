@@ -11,11 +11,11 @@
     "metrics_collected": {
       "disk": {
         "resources": ["/", "/tmp"],
-        "measurement": ["disk_used_percent"],
+        "measurement": [""],
         "ignore_file_system_types": ["sysfs", "devtmpfs"]
       },
       "mem": {
-        "measurement": ["mem_available_percent"]
+        "measurement": ["mem_used_percent", "mem_available_percent", "swap_used_percent"]
       }
     }
   }
