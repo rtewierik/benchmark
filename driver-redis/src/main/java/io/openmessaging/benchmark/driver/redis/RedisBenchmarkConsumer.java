@@ -16,6 +16,7 @@ package io.openmessaging.benchmark.driver.redis;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import io.lettuce.core.StreamMessage;
+import io.lettuce.core.cluster.api.async.RedisAdvancedClusterAsyncCommands;
 import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
@@ -51,17 +52,17 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
             final String topic,
             final String subscriptionName,
             final JedisPool pool,
-            final AsyncRedisClient cluster,
+            final RedisAdvancedClusterAsyncCommands<String, String> asyncCommands,
             ConsumerCallback consumerCallback) {
         this.pool = pool;
-        this.cluster = cluster;
+        this.cluster = asyncCommands != null ? new AsyncRedisClient(asyncCommands) : null;
         log.info("Created AsyncRedisClient in RedisBenchmarkConsumer.");
         this.topic = topic;
         this.subscriptionName = subscriptionName;
         this.consumerId = consumerId;
         this.executor = Executors.newSingleThreadExecutor();
         this.consumerCallback = consumerCallback;
-        Jedis jedis = cluster == null ? this.pool.getResource() : null;
+        Jedis jedis = asyncCommands == null ? this.pool.getResource() : null;
         log.info("Creating consumer task in RedisBenchmarkConsumer.");
 
         this.consumerTask =
@@ -71,7 +72,7 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
                                 try {
                                     Map<String, StreamEntryID> streamQuery =
                                             Collections.singletonMap(this.topic, StreamEntryID.UNRECEIVED_ENTRY);
-                                    if (cluster != null) {
+                                    if (asyncCommands != null) {
                                         List<StreamMessage<String, String>> range =
                                                 this.cluster
                                                         .xreadGroup(this.subscriptionName, this.consumerId, this.topic)
@@ -131,9 +132,6 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
         }
         if (pool != null) {
             pool.close();
-        }
-        if (cluster != null) {
-            cluster.close();
         }
     }
 
