@@ -414,6 +414,14 @@ public class LocalWorker implements Worker, ConsumerCallback {
             List<BenchmarkProducer> producers, KeyDistributor keyDistributor, List<byte[]> payloads) {
         ThreadLocalRandom r = ThreadLocalRandom.current();
         int payloadCount = payloads.size();
+        Optional<Integer> maxSize = payloads.stream()
+                .map(bytes -> bytes.length)
+                .max(Integer::compareTo);
+        log.info("Submitting throughput producers with maxSize {} and producer size {}", maxSize, producers.size());
+        boolean isSafeExperiment = maxSize.isPresent() && (maxSize.get() < 1000 || producers.size() < 200);
+        boolean isLargeExperiment = maxSize.isPresent() && maxSize.get() > 2000 && producers.size() >= 200;
+        int maxOutstandingMessages = isLargeExperiment ? 500 : (isSafeExperiment ? 10000 : 1000);
+        log.info("Using max outstanding messages {}", maxOutstandingMessages);
         executor.submit(
                 () -> {
                     try {
@@ -430,7 +438,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                                 this.experimentId,
                                                 null,
                                                 false);
-                                        if (currMessagesSent > 10000) {
+                                        if (currMessagesSent > maxOutstandingMessages) {
                                             messagesSent[0] = new AtomicInteger();
                                             try {
                                                 futureToAwait[0].get();
@@ -438,7 +446,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                                 throw new RuntimeException(e);
                                             }
                                         }
-                                        if (futureToAwait[0] == null || currMessagesSent > 10000) {
+                                        if (futureToAwait[0] == null || currMessagesSent > maxOutstandingMessages) {
                                             futureToAwait[0] = newFuture;
                                         }
                                     });
