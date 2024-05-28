@@ -174,6 +174,11 @@ resource "aws_elasticache_parameter_group" "redis_cluster_pg" {
     name  = "cluster-enabled"
     value = "yes"
   }
+  
+  parameter {
+    name  = "maxmemory-policy"
+    value = "allkeys-lru"
+  }
 }
 
 resource "aws_elasticache_replication_group" "redis" {
@@ -245,6 +250,8 @@ resource "aws_instance" "client" {
   tags = {
     Name = "redis_client_${count.index}"
   }
+
+  depends_on = [ aws_elasticache_replication_group.redis ]
 }
 
 # Export Terraform variable values to an Ansible var_file

@@ -15,51 +15,49 @@ package io.openmessaging.benchmark.driver.redis;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
+import io.lettuce.core.cluster.api.async.RedisAdvancedClusterAsyncCommands;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
+import io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.params.XAddParams;
 
 public class RedisBenchmarkProducer implements BenchmarkProducer {
     private final JedisPool pool;
-    private final JedisCluster cluster;
+    private final RedisAdvancedClusterAsyncCommands<String, String> asyncCommands;
+    private final AsyncRedisClient cluster;
     private final String rmqTopic;
     private final XAddParams xaddParams;
 
     public RedisBenchmarkProducer(
-            final JedisPool pool, final JedisCluster cluster, final String rmqTopic) {
+            final JedisPool pool, final StatefulRedisClusterConnection<String, String> conn, final String rmqTopic) {
         this.pool = pool;
-        this.cluster = cluster;
+        this.asyncCommands = conn.async();
+        this.cluster = new AsyncRedisClient(this.asyncCommands);
         this.rmqTopic = rmqTopic;
         this.xaddParams = redis.clients.jedis.params.XAddParams.xAddParams();
     }
 
     @Override
     public CompletableFuture<Void> sendAsync(final Optional<String> key, final byte[] payload) {
-        Map<byte[], byte[]> map1 = new HashMap<>();
-        map1.put("payload".getBytes(UTF_8), payload);
+        Map<String, String> data = new HashMap<>();
+        data.put("payload", new String(payload, UTF_8));
 
         if (key.isPresent()) {
-            map1.put("key".getBytes(UTF_8), key.toString().getBytes(UTF_8));
+            data.put("key", key.toString());
         }
 
-        CompletableFuture<Void> future = new CompletableFuture<>();
         if (cluster != null) {
-            try {
-                cluster.xadd(this.rmqTopic.getBytes(UTF_8), map1, this.xaddParams);
-                future.complete(null);
-            } catch (Exception e) {
-                future.completeExceptionally(e);
-            }
-            return future;
+            return this.asyncCommands.xadd(this.rmqTopic, data).toCompletableFuture().thenRun(() -> {});
         }
+        CompletableFuture<Void> future = new CompletableFuture<>();
         try (Jedis jedis = this.pool.getResource()) {
-            jedis.xadd(this.rmqTopic.getBytes(UTF_8), map1, this.xaddParams);
+            jedis.xadd(this.rmqTopic, data, this.xaddParams);
             future.complete(null);
         } catch (Exception e) {
             future.completeExceptionally(e);

@@ -60,6 +60,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
@@ -416,16 +417,31 @@ public class LocalWorker implements Worker, ConsumerCallback {
         executor.submit(
                 () -> {
                     try {
+                        final AtomicInteger[] messagesSent = {new AtomicInteger()};
+                        final CompletableFuture[] futureToAwait = new CompletableFuture[]{null};
                         while (!testCompleted) {
                             producers.forEach(
-                                    p ->
-                                            messageProducer.sendMessage(
-                                                    p,
-                                                    Optional.ofNullable(keyDistributor.next()),
-                                                    payloads.get(r.nextInt(payloadCount)),
-                                                    this.experimentId,
-                                                    null,
-                                                    false));
+                                    p -> {
+                                        Integer currMessagesSent = messagesSent[0].incrementAndGet();
+                                        CompletableFuture<Void> newFuture = messageProducer.sendMessage(
+                                                p,
+                                                Optional.ofNullable(keyDistributor.next()),
+                                                payloads.get(r.nextInt(payloadCount)),
+                                                this.experimentId,
+                                                null,
+                                                false);
+                                        if (currMessagesSent > 10000) {
+                                            messagesSent[0] = new AtomicInteger();
+                                            try {
+                                                futureToAwait[0].get();
+                                            } catch (InterruptedException | ExecutionException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        }
+                                        if (futureToAwait[0] == null || currMessagesSent > 10000) {
+                                            futureToAwait[0] = newFuture;
+                                        }
+                                    });
                         }
                     } catch (Throwable t) {
                         log.error("Got error", t);
