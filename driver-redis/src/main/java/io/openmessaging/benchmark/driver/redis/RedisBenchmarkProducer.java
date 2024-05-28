@@ -15,7 +15,6 @@ package io.openmessaging.benchmark.driver.redis;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import io.lettuce.core.cluster.RedisClusterClient;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient;
 import java.util.HashMap;
@@ -33,28 +32,28 @@ public class RedisBenchmarkProducer implements BenchmarkProducer {
     private final XAddParams xaddParams;
 
     public RedisBenchmarkProducer(
-            final JedisPool pool, final RedisClusterClient cluster, final String rmqTopic) {
+            final JedisPool pool, final AsyncRedisClient cluster, final String rmqTopic) {
         this.pool = pool;
-        this.cluster = new AsyncRedisClient(cluster);
+        this.cluster = cluster;
         this.rmqTopic = rmqTopic;
         this.xaddParams = redis.clients.jedis.params.XAddParams.xAddParams();
     }
 
     @Override
     public CompletableFuture<Void> sendAsync(final Optional<String> key, final byte[] payload) {
-        Map<byte[], byte[]> map1 = new HashMap<>();
-        map1.put("payload".getBytes(UTF_8), payload);
+        Map<String, String> data = new HashMap<>();
+        data.put("payload", new String(payload, UTF_8));
 
         if (key.isPresent()) {
-            map1.put("key".getBytes(UTF_8), key.toString().getBytes(UTF_8));
+            data.put("key", key.toString());
         }
 
         CompletableFuture<Void> future = new CompletableFuture<>();
         if (cluster != null) {
-            return cluster.xaddToStream(this.rmqTopic, map1);
+            return cluster.xaddToStream(this.rmqTopic, data);
         }
         try (Jedis jedis = this.pool.getResource()) {
-            jedis.xadd(this.rmqTopic.getBytes(UTF_8), map1, this.xaddParams);
+            jedis.xadd(this.rmqTopic, data, this.xaddParams);
             future.complete(null);
         } catch (Exception e) {
             future.completeExceptionally(e);
@@ -65,5 +64,8 @@ public class RedisBenchmarkProducer implements BenchmarkProducer {
     @Override
     public void close() throws Exception {
         // Close in Driver
+        if (cluster != null) {
+            cluster.close();
+        }
     }
 }

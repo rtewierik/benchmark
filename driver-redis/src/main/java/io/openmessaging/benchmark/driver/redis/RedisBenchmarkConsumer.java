@@ -16,7 +16,6 @@ package io.openmessaging.benchmark.driver.redis;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import io.lettuce.core.StreamMessage;
-import io.lettuce.core.cluster.RedisClusterClient;
 import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
@@ -52,16 +51,18 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
             final String topic,
             final String subscriptionName,
             final JedisPool pool,
-            final RedisClusterClient cluster,
+            final AsyncRedisClient cluster,
             ConsumerCallback consumerCallback) {
         this.pool = pool;
-        this.cluster = cluster != null ? new AsyncRedisClient(cluster) : null;
+        this.cluster = cluster;
+        log.info("Created AsyncRedisClient in RedisBenchmarkConsumer.");
         this.topic = topic;
         this.subscriptionName = subscriptionName;
         this.consumerId = consumerId;
         this.executor = Executors.newSingleThreadExecutor();
         this.consumerCallback = consumerCallback;
-        Jedis jedis = this.pool.getResource();
+        Jedis jedis = cluster == null ? this.pool.getResource() : null;
+        log.info("Creating consumer task in RedisBenchmarkConsumer.");
 
         this.consumerTask =
                 this.executor.submit(
@@ -128,7 +129,12 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Attempting to shut down pool...");
         }
-        pool.close();
+        if (pool != null) {
+            pool.close();
+        }
+        if (cluster != null) {
+            cluster.close();
+        }
     }
 
     private static final Logger log = LoggerFactory.getLogger(RedisBenchmarkDriver.class);

@@ -25,20 +25,30 @@ import io.lettuce.core.cluster.api.async.RedisAdvancedClusterAsyncCommands;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AsyncRedisClient implements AutoCloseable {
-    private final StatefulRedisClusterConnection<String, String> connection;
-    private final RedisAdvancedClusterAsyncCommands<String, String> asyncCommands;
+    private final RedisClusterClient client;
+    private StatefulRedisClusterConnection<String, String> connection;
+    public final RedisAdvancedClusterAsyncCommands<String, String> asyncCommands;
 
     public AsyncRedisClient(RedisClusterClient client) {
-        this.connection = client.connect();
+        this.client = client;
+        log.info("Attempting to create AsyncRedisClient.");
+        this.connection = this.client.connect();
+        log.info("Created connection for AsyncRedisClient.");
         this.asyncCommands = this.connection.async();
+        log.info("Created async commands for AsyncRedisClient.");
     }
 
-    public CompletableFuture<Void> xaddToStream(String topic, Map<byte[], byte[]> map1) {
+    public CompletableFuture<Void> xaddToStream(String topic, Map<String, String> data) {
         CompletableFuture<Void> future = new CompletableFuture<>();
+        if (connection.isOpen()) {
+            this.connection = client.connect();
+        }
         asyncCommands
-                .xadd(topic, map1)
+                .xadd(topic, data)
                 .thenAccept(response -> future.complete(null))
                 .exceptionally(
                         ex -> {
@@ -61,4 +71,6 @@ public class AsyncRedisClient implements AutoCloseable {
         this.asyncCommands.shutdown(ShutdownArgs.Builder.force());
         this.connection.close();
     }
+
+    private static final Logger log = LoggerFactory.getLogger(AsyncRedisClient.class);
 }

@@ -26,11 +26,11 @@ import io.lettuce.core.ScanCursor;
 import io.lettuce.core.XGroupCreateArgs;
 import io.lettuce.core.XReadArgs;
 import io.lettuce.core.cluster.RedisClusterClient;
-import io.lettuce.core.cluster.api.async.RedisAdvancedClusterAsyncCommands;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient;
 import io.openmessaging.benchmark.driver.redis.client.RedisClientConfig;
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +48,7 @@ import redis.clients.jedis.resps.ScanResult;
 
 public class RedisBenchmarkDriver implements BenchmarkDriver {
     JedisPool jedisPool;
-    private RedisClusterClient clusterClient;
+    private AsyncRedisClient clusterClient;
     private RedisClientConfig clientConfig;
 
     @Override
@@ -72,6 +72,8 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
         if (jedisPool == null && clusterClient == null) {
             setupJedisConn();
         }
+        log.info(
+                "Creating producer with Jedis pool {} and cluster client {}", jedisPool, clusterClient);
         return CompletableFuture.completedFuture(
                 new RedisBenchmarkProducer(jedisPool, clusterClient, topic));
     }
@@ -80,12 +82,14 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
     public CompletableFuture<BenchmarkConsumer> createConsumer(
             final String topic, final String subscriptionName, final ConsumerCallback consumerCallback) {
         String consumerId = "consumer-" + getRandomString();
+        if (jedisPool == null && clusterClient == null) {
+            setupJedisConn();
+        }
         if (clusterClient != null) {
             try {
-                RedisAdvancedClusterAsyncCommands<String, String> asyncCommands =
-                        clusterClient.connect().async();
                 XReadArgs.StreamOffset<String> offset = XReadArgs.StreamOffset.from(topic, "0");
-                return asyncCommands
+                return clusterClient
+                        .asyncCommands
                         .xgroupCreate(offset, subscriptionName, XGroupCreateArgs.Builder.mkstream(true))
                         .toCompletableFuture()
                         .thenApply(
@@ -104,9 +108,6 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
                 return future;
             }
         }
-        if (jedisPool == null) {
-            setupJedisConn();
-        }
         try (Jedis jedis = this.jedisPool.getResource()) {
             jedis.xgroupCreate(topic, subscriptionName, null, true);
         } catch (Exception e) {
@@ -118,9 +119,6 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
     }
 
     private void setupJedisConn() {
-        GenericObjectPoolConfig<Jedis> poolConfig = new GenericObjectPoolConfig<>();
-        poolConfig.setMaxTotal(this.clientConfig.jedisPoolMaxTotal);
-        poolConfig.setMaxIdle(this.clientConfig.jedisPoolMaxIdle);
         log.info(
                 "Attempting to connect to {}:{} with user {}",
                 this.clientConfig.redisHost,
@@ -135,8 +133,14 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
                 RedisURI redisUri = new RedisURI(host, port, RedisURI.DEFAULT_TIMEOUT_DURATION);
                 redisUris.add(redisUri);
             }
-            clusterClient = RedisClusterClient.create(redisUris);
+            RedisClusterClient clusterClient = RedisClusterClient.create(redisUris);
+            this.clusterClient = new AsyncRedisClient(clusterClient);
+            log.info("Created cluster client: {}", this.clusterClient);
+            return;
         }
+        GenericObjectPoolConfig<Jedis> poolConfig = new GenericObjectPoolConfig<>();
+        poolConfig.setMaxTotal(this.clientConfig.jedisPoolMaxTotal);
+        poolConfig.setMaxIdle(this.clientConfig.jedisPoolMaxIdle);
         if (this.clientConfig.redisPass != null) {
             if (this.clientConfig.redisUser != null) {
                 jedisPool =
@@ -165,20 +169,18 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
     @Override
     public void close() throws Exception {
         if (this.clusterClient != null) {
-            RedisAdvancedClusterAsyncCommands<String, String> asyncCommands =
-                    clusterClient.connect().async();
             try {
                 String pattern = "stream:*";
                 ScanCursor cursor = ScanCursor.INITIAL;
                 do {
                     KeyScanCursor<String> scanResult =
-                            asyncCommands.scan(cursor, new ScanArgs().match(pattern)).get();
+                            clusterClient.asyncCommands.scan(cursor, new ScanArgs().match(pattern)).get();
                     List<String> streamKeys = scanResult.getKeys();
                     cursor = ScanCursor.of(scanResult.getCursor());
 
                     for (String streamKey : streamKeys) {
                         try {
-                            asyncCommands.del(streamKey).get();
+                            clusterClient.asyncCommands.del(streamKey).get();
                         } catch (Exception e) {
                             log.error("Error deleting stream " + streamKey + ": " + e.getMessage());
                         }
@@ -190,7 +192,7 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
                 String pattern = "stream:*";
                 ScanCursor cursor = ScanCursor.INITIAL;
                 KeyScanCursor<String> scanResult =
-                        asyncCommands.scan(cursor, new ScanArgs().match(pattern)).get();
+                        clusterClient.asyncCommands.scan(cursor, new ScanArgs().match(pattern)).get();
                 log.info("Streams left over: {}", scanResult.getKeys().size());
             } catch (Throwable ignored) {
             }
