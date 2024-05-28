@@ -35,7 +35,9 @@ public class RedisBenchmarkProducer implements BenchmarkProducer {
     private final XAddParams xaddParams;
 
     public RedisBenchmarkProducer(
-            final JedisPool pool, final StatefulRedisClusterConnection<String, String> conn, final String rmqTopic) {
+            final JedisPool pool,
+            final StatefulRedisClusterConnection<String, String> conn,
+            final String rmqTopic) {
         this.pool = pool;
         this.asyncCommands = conn.async();
         this.cluster = new AsyncRedisClient(this.asyncCommands);

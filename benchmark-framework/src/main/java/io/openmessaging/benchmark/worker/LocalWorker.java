@@ -385,6 +385,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     private void startLoadForThroughputProducers(ProducerWorkAssignment producerWorkAssignment) {
+        int totalNumProducers = this.producers.size();
         int processors = Runtime.getRuntime().availableProcessors();
 
         updateMessageProducer(producerWorkAssignment.publishRate);
@@ -407,21 +408,28 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     submitThroughputProducersToExecutor(
                         producers,
                         KeyDistributor.build(producerWorkAssignment.keyDistributorType),
-                        producerWorkAssignment.payloadData));
+                        producerWorkAssignment.payloadData,
+                        totalNumProducers));
     }
 
     private void submitThroughputProducersToExecutor(
-            List<BenchmarkProducer> producers, KeyDistributor keyDistributor, List<byte[]> payloads) {
+            List<BenchmarkProducer> producers,
+            KeyDistributor keyDistributor,
+            List<byte[]> payloads,
+            int totalNumProducers
+    ) {
         ThreadLocalRandom r = ThreadLocalRandom.current();
         int payloadCount = payloads.size();
         Optional<Integer> maxSize = payloads.stream()
                 .map(bytes -> bytes.length)
                 .max(Integer::compareTo);
-        log.info("Submitting throughput producers with maxSize {} and producer size {}", maxSize, producers.size());
-        boolean isSafeExperiment = maxSize.isPresent() && (maxSize.get() < 1000 || producers.size() < 200);
-        boolean isLargeExperiment = maxSize.isPresent() && maxSize.get() > 2000 && producers.size() >= 200;
+        log.info("Submitting throughput producers with maxSize {} and producer size {}", maxSize, totalNumProducers);
+        boolean isSafeExperiment = maxSize.isPresent() && (maxSize.get() < 1000 || totalNumProducers < 200);
+        boolean isLargeExperiment = maxSize.isPresent() && maxSize.get() > 2000 && totalNumProducers >= 200;
         int maxOutstandingMessages = isLargeExperiment ? 500 : (isSafeExperiment ? 10000 : 1000);
         log.info("Using max outstanding messages {}", maxOutstandingMessages);
+        int ovrMaxOutstandingMessages = 10000;
+        log.info("Overriding max outstanding messages to {}", ovrMaxOutstandingMessages);
         executor.submit(
                 () -> {
                     try {
@@ -438,7 +446,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                                 this.experimentId,
                                                 null,
                                                 false);
-                                        if (currMessagesSent > maxOutstandingMessages) {
+                                        if (currMessagesSent > ovrMaxOutstandingMessages) {
                                             messagesSent[0] = new AtomicInteger();
                                             try {
                                                 futureToAwait[0].get();
@@ -446,7 +454,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                                 throw new RuntimeException(e);
                                             }
                                         }
-                                        if (futureToAwait[0] == null || currMessagesSent > maxOutstandingMessages) {
+                                        if (futureToAwait[0] == null || currMessagesSent > ovrMaxOutstandingMessages) {
                                             futureToAwait[0] = newFuture;
                                         }
                                     });
