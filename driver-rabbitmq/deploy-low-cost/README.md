@@ -99,6 +99,11 @@ sudo bin/benchmark \
 --drivers driver-rabbitmq/rabbitmq-experiment.yaml \
 workloads/max-rate-1-topic-10-partitions-10p-10c-1kb.yaml
 
+ALL-MAX-SINGLE
+sudo bin/benchmark \
+--drivers driver-rabbitmq/rabbitmq-experiment.yaml \
+workloads/throughput-100b-10-max.yaml workloads/throughput-100b-100-max.yaml workloads/throughput-100b-500-max.yaml workloads/throughput-1kb-10-max.yaml workloads/throughput-1kb-100-max.yaml workloads/throughput-1kb-500-max.yaml workloads/throughput-10kb-10-max.yaml workloads/throughput-10kb-100-max.yaml workloads/throughput-10kb-500-max.yaml
+
 ### Locations to configure memory in case of changing instance size
 
 * `deploy.yaml`requires modification of the `Configure memory` tasks.
