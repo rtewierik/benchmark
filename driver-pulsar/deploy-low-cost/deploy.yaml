@@ -54,7 +54,6 @@
         dev: '{{ item }}'
       with_items:
         - "{{ disk_dev[0] }}"
-        - "{{ disk_dev[1] }}"
     - name: Mount disks
       mount:
         path: "{{ item.path }}"
@@ -63,8 +62,7 @@
         opts: defaults,noatime,nodiscard
         state: mounted
       with_items:
-        - { path: "/mnt/zookeeper/logs", src: "{{ disk_dev[0] }}" }
-        - { path: "/mnt/zookeeper/data", src: "{{ disk_dev[1] }}" }
+        - { path: "/mnt/zookeeper/data", src: "{{ disk_dev[0] }}" }
 
 - name: Format and mount disks for Pulsar/BookKeeper hosts
   hosts: pulsar

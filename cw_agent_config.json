@@ -11,7 +11,7 @@
     "metrics_collected": {
       "disk": {
         "resources": ["/", "/tmp"],
-        "measurement": [""],
+        "measurement": ["disk_used_percent"],
         "ignore_file_system_types": ["sysfs", "devtmpfs"]
       },
       "mem": {
