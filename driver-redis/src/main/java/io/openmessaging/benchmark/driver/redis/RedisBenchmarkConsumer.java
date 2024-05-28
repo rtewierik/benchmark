@@ -56,14 +56,12 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
             ConsumerCallback consumerCallback) {
         this.pool = pool;
         this.cluster = asyncCommands != null ? new AsyncRedisClient(asyncCommands) : null;
-        log.info("Created AsyncRedisClient in RedisBenchmarkConsumer.");
         this.topic = topic;
         this.subscriptionName = subscriptionName;
         this.consumerId = consumerId;
         this.executor = Executors.newSingleThreadExecutor();
         this.consumerCallback = consumerCallback;
         Jedis jedis = asyncCommands == null ? this.pool.getResource() : null;
-        log.info("Creating consumer task in RedisBenchmarkConsumer.");
 
         this.consumerTask =
                 this.executor.submit(
