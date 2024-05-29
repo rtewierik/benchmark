@@ -1,0 +1,434 @@
+21:35:26.144 [main] INFO log - Logging initialized @1534ms to org.eclipse.jetty.util.log.Slf4jLog
+21:35:26.219 [main] INFO Server - jetty-9.4.42.v20210604; built: 2021-06-04T17:33:38.939Z; git: 5cd5e6d2375eeab146813b0de9f19eda6ab6e6cb; jvm 11.0.23+9-LTS
+21:35:26.249 [main] INFO ContextHandler - Started o.e.j.s.ServletContextHandler@4d098f9b{/,null,AVAILABLE}
+21:35:26.265 [main] INFO AbstractConnector - Started ServerConnector@698122b2{HTTP/1.1, (http/1.1)}{0.0.0.0:8081}
+21:35:26.266 [main] INFO Server - Started @1658ms
+21:35:26.267 [main] INFO PrometheusMetricsProvider - Started Prometheus stats endpoint at 0.0.0.0:8081
+21:35:26.306 [main] INFO BenchmarkWorker - Starting benchmark with config: {
+  "httpPort" : 8080,
+  "statsPort" : 8081
+}
+21:35:26.349 [main] INFO Javalin - 
+ _________________________________________
+|        _                  _ _           |
+|       | | __ ___   ____ _| (_)_ __      |
+|    _  | |/ _` \ \ / / _` | | | '_ \     |
+|   | |_| | (_| |\ V / (_| | | | | | |    |
+|    \___/ \__,_| \_/ \__,_|_|_|_| |_|    |
+|_________________________________________|
+|                                         |
+|    https://javalin.io/documentation     |
+|_________________________________________|
+21:35:26.352 [main] INFO Javalin - Starting Javalin ...
+21:35:26.358 [main] INFO Server - jetty-9.4.42.v20210604; built: 2021-06-04T17:33:38.939Z; git: 5cd5e6d2375eeab146813b0de9f19eda6ab6e6cb; jvm 11.0.23+9-LTS
+21:35:26.370 [main] INFO session - DefaultSessionIdManager workerName=node0
+21:35:26.370 [main] INFO session - No SessionScavenger set, using defaults
+21:35:26.372 [main] INFO session - node0 Scavenging every 600000ms
+21:35:26.373 [main] INFO ContextHandler - Started i.j.e.j.@2ef8a8c3{/,null,AVAILABLE}
+21:35:26.374 [main] INFO ContextHandler - Started o.e.j.s.ServletContextHandler@63fd4873{/,null,AVAILABLE}
+21:35:26.375 [main] INFO AbstractConnector - Started ServerConnector@7fe083b1{HTTP/1.1, (http/1.1)}{0.0.0.0:8080}
+21:35:26.375 [main] INFO Server - Started @1767ms
+21:35:26.375 [main] INFO EmbeddedServer - Jetty is listening on: [http://localhost:8080]
+21:35:26.375 [main] INFO Javalin - Javalin has started \o/
+21:35:26.407 [main] INFO InstanceWorkerStats - Instance worker stats initialized.
+21:36:17.749 [main] INFO Benchmark - Using default worker file workers.yaml!
+21:36:17.758 [main] INFO Benchmark - Reading workers list from workers.yaml
+21:36:17.816 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-pravega/pravega-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.96:8080", "http://10.0.0.232:8080", "http://10.0.0.118:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : null,
+  "workloads" : [ "workloads/throughput-100b-10-max.yaml" ],
+  "output" : null
+}
+21:36:17.836 [main] INFO Benchmark - Workloads: {
+  "throughput-100b-10-max" : {
+    "name" : "throughput-100b-10",
+    "topics" : 10,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 100,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-100b.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 2,
+    "warmupDurationMinutes" : 1
+  }
+}
+21:36:17.837 [main] INFO Benchmark - TPC-H arguments: [ null ]
+21:36:17.882 [main] INFO InstanceWorkerStats - Instance worker stats initialized.
+21:36:18.451 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.96:8080]
+21:36:18.451 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.118:8080,http://10.0.0.232:8080
+21:36:18.454 [main] INFO Benchmark - --------------- WORKLOAD : throughput-100b-10 --- DRIVER : Pravega---------------
+21:36:19.010 [qtp290096578-24] INFO LocalWorker - Driver: {
+  "name" : "Pravega",
+  "driverClass" : "io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver"
+}
+21:36:19.017 [qtp290096578-24] INFO PravegaBenchmarkDriver - Pravega driver configuration: {
+  "client" : {
+    "controllerURI" : "tcp://10.0.0.61:9090",
+    "scopeName" : "examples"
+  },
+  "writer" : {
+    "enableConnectionPooling" : true
+  },
+  "includeTimestampInEvent" : true,
+  "enableTransaction" : false,
+  "eventsPerTransaction" : 1,
+  "enableStreamAutoScaling" : false,
+  "eventsPerSecond" : -1,
+  "kbytesPerSecond" : 1000000,
+  "createScope" : true,
+  "deleteStreams" : true
+}
+21:36:19.220 [qtp290096578-24] INFO ControllerImpl - Controller client connecting to server at 10.0.0.61:9090
+21:36:19.227 [qtp290096578-24] INFO ControllerImpl - Controller client connecting to server at 10.0.0.61:9090
+21:36:19.232 [qtp290096578-24] INFO ControllerImpl - Controller client connecting to server at 10.0.0.61:9090
+21:36:19.258 [main] INFO LocalWorker - Driver: {
+  "name" : "Pravega",
+  "driverClass" : "io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver"
+}
+21:36:19.266 [main] INFO PravegaBenchmarkDriver - Pravega driver configuration: {
+  "client" : {
+    "controllerURI" : "tcp://10.0.0.61:9090",
+    "scopeName" : "examples"
+  },
+  "writer" : {
+    "enableConnectionPooling" : true
+  },
+  "includeTimestampInEvent" : true,
+  "enableTransaction" : false,
+  "eventsPerTransaction" : 1,
+  "enableStreamAutoScaling" : false,
+  "eventsPerSecond" : -1,
+  "kbytesPerSecond" : 1000000,
+  "createScope" : true,
+  "deleteStreams" : true
+}
+21:36:19.487 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.61:9090
+21:36:19.496 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.61:9090
+21:36:19.526 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.61:9090
+21:36:19.538 [qtp290096578-29] INFO WorkerHandler - Received create topics request for topics: {
+  "numberOfTopics" : 10,
+  "numberOfPartitionsPerTopic" : 1
+}
+21:36:19.543 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000000-HJowyFk, partitions=1
+21:36:19.544 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+21:36:19.553 [clientInternal-1-1] INFO ControllerImpl - [requestId=-829853320721744639] Tagging client request (createScope-examples).
+21:36:19.581 [clientInternal-1-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.61:9090]/{}]]
+21:36:19.961 [clientInternal-1-2] INFO ControllerImpl - [requestId=-829853320721744639] Scope created successfully: examples
+21:36:19.963 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000000-HJowyFk with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+21:36:19.965 [clientInternal-1-4] INFO ControllerImpl - [requestId=-39131333582904887] Tagging client request (createStream-examples-openmessaging-benchmark-0000000-HJowyFk).
+21:36:20.334 [clientInternal-1-5] INFO ControllerImpl - [requestId=-39131333582904887] Stream created successfully: openmessaging-benchmark-0000000-HJowyFk
+21:36:20.334 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000001-MCwCYyw, partitions=1
+21:36:20.335 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+21:36:20.335 [clientInternal-1-7] INFO ControllerImpl - [requestId=8459071127227490740] Tagging client request (createScope-examples).
+21:36:20.365 [clientInternal-1-8] WARN ControllerImpl - [requestId=8459071127227490740] Scope already exists: examples
+21:36:20.366 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000001-MCwCYyw with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+21:36:20.366 [clientInternal-1-3] INFO ControllerImpl - [requestId=-7874074789541987926] Tagging client request (createStream-examples-openmessaging-benchmark-0000001-MCwCYyw).
+21:36:20.602 [clientInternal-1-2] INFO ControllerImpl - [requestId=-7874074789541987926] Stream created successfully: openmessaging-benchmark-0000001-MCwCYyw
+21:36:20.602 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000002-shCih3U, partitions=1
+21:36:20.603 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+21:36:20.603 [clientInternal-1-6] INFO ControllerImpl - [requestId=-5498887629042427572] Tagging client request (createScope-examples).
+21:36:20.621 [clientInternal-1-5] WARN ControllerImpl - [requestId=-5498887629042427572] Scope already exists: examples
+21:36:20.622 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000002-shCih3U with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+21:36:20.623 [clientInternal-1-1] INFO ControllerImpl - [requestId=7736058238136303803] Tagging client request (createStream-examples-openmessaging-benchmark-0000002-shCih3U).
+21:36:20.840 [clientInternal-1-8] INFO ControllerImpl - [requestId=7736058238136303803] Stream created successfully: openmessaging-benchmark-0000002-shCih3U
+21:36:20.840 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000003-nHu8Crk, partitions=1
+21:36:20.841 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+21:36:20.841 [clientInternal-1-4] INFO ControllerImpl - [requestId=3635677059298784281] Tagging client request (createScope-examples).
+21:36:20.865 [clientInternal-1-2] WARN ControllerImpl - [requestId=3635677059298784281] Scope already exists: examples
+21:36:20.865 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000003-nHu8Crk with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+21:36:20.866 [clientInternal-1-7] INFO ControllerImpl - [requestId=-5223210046016898154] Tagging client request (createStream-examples-openmessaging-benchmark-0000003-nHu8Crk).
+21:36:21.081 [clientInternal-1-5] INFO ControllerImpl - [requestId=-5223210046016898154] Stream created successfully: openmessaging-benchmark-0000003-nHu8Crk
+21:36:21.081 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000004-v3iWY3A, partitions=1
+21:36:21.081 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+21:36:21.082 [clientInternal-1-3] INFO ControllerImpl - [requestId=4418749193072490498] Tagging client request (createScope-examples).
+21:36:21.117 [clientInternal-1-8] WARN ControllerImpl - [requestId=4418749193072490498] Scope already exists: examples
+21:36:21.117 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000004-v3iWY3A with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+21:36:21.118 [clientInternal-1-6] INFO ControllerImpl - [requestId=6982104387104843574] Tagging client request (createStream-examples-openmessaging-benchmark-0000004-v3iWY3A).
+21:36:21.303 [clientInternal-1-2] INFO ControllerImpl - [requestId=6982104387104843574] Stream created successfully: openmessaging-benchmark-0000004-v3iWY3A
+21:36:21.304 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000005-FolN2bE, partitions=1
+21:36:21.304 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+21:36:21.304 [clientInternal-1-1] INFO ControllerImpl - [requestId=7949630817006393565] Tagging client request (createScope-examples).
+21:36:21.319 [clientInternal-1-5] WARN ControllerImpl - [requestId=7949630817006393565] Scope already exists: examples
+21:36:21.320 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000005-FolN2bE with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+21:36:21.320 [clientInternal-1-4] INFO ControllerImpl - [requestId=-2083229592744141984] Tagging client request (createStream-examples-openmessaging-benchmark-0000005-FolN2bE).
+21:36:21.524 [clientInternal-1-8] INFO ControllerImpl - [requestId=-2083229592744141984] Stream created successfully: openmessaging-benchmark-0000005-FolN2bE
+21:36:21.524 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000006-qkRwiPw, partitions=1
+21:36:21.525 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+21:36:21.525 [clientInternal-1-7] INFO ControllerImpl - [requestId=-192483202944081408] Tagging client request (createScope-examples).
+21:36:21.538 [clientInternal-1-2] WARN ControllerImpl - [requestId=-192483202944081408] Scope already exists: examples
+21:36:21.539 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000006-qkRwiPw with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+21:36:21.539 [clientInternal-1-3] INFO ControllerImpl - [requestId=-4424048551413047200] Tagging client request (createStream-examples-openmessaging-benchmark-0000006-qkRwiPw).
+21:36:21.762 [clientInternal-1-5] INFO ControllerImpl - [requestId=-4424048551413047200] Stream created successfully: openmessaging-benchmark-0000006-qkRwiPw
+21:36:21.762 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000007-QNmn7DY, partitions=1
+21:36:21.762 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+21:36:21.763 [clientInternal-1-6] INFO ControllerImpl - [requestId=8551937477346370839] Tagging client request (createScope-examples).
+21:36:21.787 [clientInternal-1-8] WARN ControllerImpl - [requestId=8551937477346370839] Scope already exists: examples
+21:36:21.787 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000007-QNmn7DY with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+21:36:21.788 [clientInternal-1-1] INFO ControllerImpl - [requestId=4295301833705843704] Tagging client request (createStream-examples-openmessaging-benchmark-0000007-QNmn7DY).
+21:36:22.006 [clientInternal-1-2] INFO ControllerImpl - [requestId=4295301833705843704] Stream created successfully: openmessaging-benchmark-0000007-QNmn7DY
+21:36:22.007 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000008-Jp5LuhE, partitions=1
+21:36:22.007 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+21:36:22.007 [clientInternal-1-4] INFO ControllerImpl - [requestId=-7362157525778382281] Tagging client request (createScope-examples).
+21:36:22.019 [clientInternal-1-5] WARN ControllerImpl - [requestId=-7362157525778382281] Scope already exists: examples
+21:36:22.020 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000008-Jp5LuhE with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+21:36:22.021 [clientInternal-1-7] INFO ControllerImpl - [requestId=-6308070165627602539] Tagging client request (createStream-examples-openmessaging-benchmark-0000008-Jp5LuhE).
+21:36:22.256 [clientInternal-1-8] INFO ControllerImpl - [requestId=-6308070165627602539] Stream created successfully: openmessaging-benchmark-0000008-Jp5LuhE
+21:36:22.256 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000009-3O8qZ38, partitions=1
+21:36:22.256 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+21:36:22.257 [clientInternal-1-3] INFO ControllerImpl - [requestId=-6338719159020036813] Tagging client request (createScope-examples).
+21:36:22.270 [clientInternal-1-2] WARN ControllerImpl - [requestId=-6338719159020036813] Scope already exists: examples
+21:36:22.270 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000009-3O8qZ38 with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+21:36:22.271 [clientInternal-1-6] INFO ControllerImpl - [requestId=-8929077490576805436] Tagging client request (createStream-examples-openmessaging-benchmark-0000009-3O8qZ38).
+21:36:22.480 [clientInternal-1-5] INFO ControllerImpl - [requestId=-8929077490576805436] Stream created successfully: openmessaging-benchmark-0000009-3O8qZ38
+21:36:22.482 [qtp290096578-29] INFO LocalWorker - Created 10 topics in 2943.192124 ms
+21:36:22.491 [main] INFO WorkloadGenerator - Created 10 topics in 2959.723002 ms
+21:36:25.254 [main] INFO WorkloadGenerator - Created 10 consumers in 2761.880317 ms
+21:36:25.263 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000000-HJowyFk
+21:36:25.269 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: 547d2cd3-a0ad-4539-96b9-4f4cfa5b8269 for stream: openmessaging-benchmark-0000000-HJowyFk with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+21:36:25.275 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-HJowyFk)
+21:36:25.277 [clientInternal-3-1] INFO ControllerImpl - [requestId=-6947735072590627723] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000000-HJowyFk).
+21:36:25.278 [clientInternal-3-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.61:9090]/{}]]
+21:36:25.302 [clientInternal-3-4] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000000-HJowyFk/0.#epoch.0, writer de068d90-5d7e-47c9-8bdf-7e2bc17a7312
+21:36:25.302 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000005-FolN2bE
+21:36:25.302 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: 5f3b3bcc-5d6a-422b-9dd4-2b9b3a6f88e4 for stream: openmessaging-benchmark-0000005-FolN2bE with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+21:36:25.303 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000005-FolN2bE)
+21:36:25.303 [clientInternal-3-6] INFO ControllerImpl - [requestId=-3065957351371230837] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000005-FolN2bE).
+21:36:25.303 [clientInternal-3-5] INFO ControllerImpl - [requestId=5178595941092339053] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-HJowyFk/0.#epoch.0).
+21:36:25.306 [clientInternal-3-7] INFO ControllerImpl - [requestId=7219362106064840170] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000000-HJowyFk).
+21:36:25.312 [clientInternal-3-8] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.183:12345 for examples/openmessaging-benchmark-0000000-HJowyFk/0.#epoch.0, writerID: de068d90-5d7e-47c9-8bdf-7e2bc17a7312
+21:36:25.313 [clientInternal-3-4] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000005-FolN2bE/0.#epoch.0, writer 2028f24d-52e9-47b5-b6ce-74dcb1eb6b08
+21:36:25.313 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000004-v3iWY3A
+21:36:25.314 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: 8b1eaab4-1b28-483b-b51b-e7612ad1c34d for stream: openmessaging-benchmark-0000004-v3iWY3A with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+21:36:25.314 [clientInternal-3-4] INFO ControllerImpl - [requestId=792248172823453713] Tagging client request (getURI-examples/openmessaging-benchmark-0000005-FolN2bE/0.#epoch.0).
+21:36:25.314 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000004-v3iWY3A)
+21:36:25.314 [clientInternal-3-1] INFO ControllerImpl - [requestId=8968302038671358383] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000005-FolN2bE).
+21:36:25.314 [clientInternal-3-3] INFO ControllerImpl - [requestId=-8872012816764732534] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000004-v3iWY3A).
+21:36:25.325 [clientInternal-3-6] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.204:12345 for examples/openmessaging-benchmark-0000005-FolN2bE/0.#epoch.0, writerID: 2028f24d-52e9-47b5-b6ce-74dcb1eb6b08
+21:36:25.327 [clientInternal-3-8] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000004-v3iWY3A/0.#epoch.0, writer df816464-4690-4ac4-b558-4cd31f5c9d4a
+21:36:25.327 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000006-qkRwiPw
+21:36:25.327 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: 1af6d0ce-a9f0-4680-a26b-be69145141bc for stream: openmessaging-benchmark-0000006-qkRwiPw with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+21:36:25.328 [clientInternal-3-8] INFO ControllerImpl - [requestId=839324032755657333] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000004-v3iWY3A).
+21:36:25.328 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000006-qkRwiPw)
+21:36:25.328 [clientInternal-3-2] INFO ControllerImpl - [requestId=2171925127493778045] Tagging client request (getURI-examples/openmessaging-benchmark-0000004-v3iWY3A/0.#epoch.0).
+21:36:25.328 [clientInternal-3-6] INFO ControllerImpl - [requestId=-339829508086800685] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000006-qkRwiPw).
+21:36:25.334 [clientInternal-3-4] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.183:12345 for examples/openmessaging-benchmark-0000004-v3iWY3A/0.#epoch.0, writerID: df816464-4690-4ac4-b558-4cd31f5c9d4a
+21:36:25.341 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000001-MCwCYyw
+21:36:25.341 [clientInternal-3-3] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000006-qkRwiPw/0.#epoch.0, writer 157d3c76-6833-4427-bfef-7ffe924c446e
+21:36:25.341 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: b8e0e755-d65c-46cd-9527-3808e9c0c562 for stream: openmessaging-benchmark-0000001-MCwCYyw with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+21:36:25.342 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000001-MCwCYyw)
+21:36:25.342 [clientInternal-3-3] INFO ControllerImpl - [requestId=6697121156441093278] Tagging client request (getURI-examples/openmessaging-benchmark-0000006-qkRwiPw/0.#epoch.0).
+21:36:25.342 [clientInternal-3-6] INFO ControllerImpl - [requestId=-4665346988701414817] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000006-qkRwiPw).
+21:36:25.342 [clientInternal-3-4] INFO ControllerImpl - [requestId=2743458265973883567] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000001-MCwCYyw).
+21:36:25.349 [clientInternal-3-3] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.194:12345 for examples/openmessaging-benchmark-0000006-qkRwiPw/0.#epoch.0, writerID: 157d3c76-6833-4427-bfef-7ffe924c446e
+21:36:25.354 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000003-nHu8Crk
+21:36:25.354 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: c5bf6703-9018-4a7b-b2b5-7f6998debedb for stream: openmessaging-benchmark-0000003-nHu8Crk with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+21:36:25.354 [clientInternal-3-2] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000001-MCwCYyw/0.#epoch.0, writer 9b33bd39-f4ab-4c78-b733-a74085cfab4e
+21:36:25.354 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000003-nHu8Crk)
+21:36:25.355 [clientInternal-3-5] INFO ControllerImpl - [requestId=-4487257423763969615] Tagging client request (getURI-examples/openmessaging-benchmark-0000001-MCwCYyw/0.#epoch.0).
+21:36:25.356 [clientInternal-3-5] INFO ControllerImpl - [requestId=-2556679278691286259] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000003-nHu8Crk).
+21:36:25.357 [clientInternal-3-6] INFO ControllerImpl - [requestId=3844065865725531441] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000001-MCwCYyw).
+21:36:25.358 [clientInternal-3-5] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.204:12345 for examples/openmessaging-benchmark-0000001-MCwCYyw/0.#epoch.0, writerID: 9b33bd39-f4ab-4c78-b733-a74085cfab4e
+21:36:25.364 [clientInternal-3-4] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000003-nHu8Crk/0.#epoch.0, writer 2afb570e-6e91-46cc-8225-066be899dd13
+21:36:25.364 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000002-shCih3U
+21:36:25.365 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: f71cfcb8-12f0-48e4-a338-9717d97d1947 for stream: openmessaging-benchmark-0000002-shCih3U with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+21:36:25.365 [clientInternal-3-4] INFO ControllerImpl - [requestId=-3839230013786421279] Tagging client request (getURI-examples/openmessaging-benchmark-0000003-nHu8Crk/0.#epoch.0).
+21:36:25.365 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000002-shCih3U)
+21:36:25.366 [clientInternal-3-6] INFO ControllerImpl - [requestId=-9036359279486390445] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000003-nHu8Crk).
+21:36:25.366 [clientInternal-3-5] INFO ControllerImpl - [requestId=2007894300992598644] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000002-shCih3U).
+21:36:25.373 [clientInternal-3-5] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.204:12345 for examples/openmessaging-benchmark-0000003-nHu8Crk/0.#epoch.0, writerID: 2afb570e-6e91-46cc-8225-066be899dd13
+21:36:25.375 [clientInternal-3-5] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000002-shCih3U/0.#epoch.0, writer 8d366f51-a320-4326-aed1-f80aff938255
+21:36:25.375 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000007-QNmn7DY
+21:36:25.376 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: 696466d5-f03e-4a3c-93e2-8d04be86e6aa for stream: openmessaging-benchmark-0000007-QNmn7DY with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+21:36:25.376 [clientInternal-3-5] INFO ControllerImpl - [requestId=-3809619629598133752] Tagging client request (getURI-examples/openmessaging-benchmark-0000002-shCih3U/0.#epoch.0).
+21:36:25.376 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000007-QNmn7DY)
+21:36:25.377 [clientInternal-3-5] INFO ControllerImpl - [requestId=1573660568297308095] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000002-shCih3U).
+21:36:25.377 [clientInternal-3-6] INFO ControllerImpl - [requestId=6831488760344747895] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000007-QNmn7DY).
+21:36:25.380 [clientInternal-3-5] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.194:12345 for examples/openmessaging-benchmark-0000002-shCih3U/0.#epoch.0, writerID: 8d366f51-a320-4326-aed1-f80aff938255
+21:36:25.385 [clientInternal-3-6] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000007-QNmn7DY/0.#epoch.0, writer d684a3a7-265a-4876-99c2-807a62c3a5a6
+21:36:25.385 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000008-Jp5LuhE
+21:36:25.385 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: f3c3f791-e99a-42c6-9643-8858e78740d8 for stream: openmessaging-benchmark-0000008-Jp5LuhE with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+21:36:25.385 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000008-Jp5LuhE)
+21:36:25.385 [clientInternal-3-6] INFO ControllerImpl - [requestId=2862506589776202306] Tagging client request (getURI-examples/openmessaging-benchmark-0000007-QNmn7DY/0.#epoch.0).
+21:36:25.386 [clientInternal-3-6] INFO ControllerImpl - [requestId=-4207205722866595348] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000007-QNmn7DY).
+21:36:25.387 [clientInternal-3-6] INFO ControllerImpl - [requestId=240884414674310420] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000008-Jp5LuhE).
+21:36:25.389 [clientInternal-3-6] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.183:12345 for examples/openmessaging-benchmark-0000007-QNmn7DY/0.#epoch.0, writerID: d684a3a7-265a-4876-99c2-807a62c3a5a6
+21:36:25.394 [ClientSocketReaders-5] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+21:36:25.394 [ClientSocketReaders-4] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+21:36:25.394 [ClientSocketReaders-7] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+21:36:25.395 [ClientSocketReaders-6] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+21:36:25.396 [clientInternal-3-3] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000008-Jp5LuhE/0.#epoch.0, writer bab2b772-562d-4cf6-8e3c-d38c7de8fb53
+21:36:25.396 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000009-3O8qZ38
+21:36:25.396 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: 3bed2615-41e7-4b26-9d63-98a30f4f43d5 for stream: openmessaging-benchmark-0000009-3O8qZ38 with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+21:36:25.396 [clientInternal-3-3] INFO ControllerImpl - [requestId=-3781813297031793605] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000008-Jp5LuhE).
+21:36:25.396 [clientInternal-3-8] INFO ControllerImpl - [requestId=-470432739722123504] Tagging client request (getURI-examples/openmessaging-benchmark-0000008-Jp5LuhE/0.#epoch.0).
+21:36:25.396 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000009-3O8qZ38)
+21:36:25.397 [ClientSocketReaders-2] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+21:36:25.397 [clientInternal-3-3] INFO ControllerImpl - [requestId=6062795345100104282] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000009-3O8qZ38).
+21:36:25.398 [ClientSocketReaders-7] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=30064771072, segment=examples/openmessaging-benchmark-0000002-shCih3U/0.#epoch.0, writerId=8d366f51-a320-4326-aed1-f80aff938255, lastEventNumber=-9223372036854775808)
+21:36:25.399 [ClientSocketReaders-3] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+21:36:25.399 [ClientSocketReaders-5] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=21474836480, segment=examples/openmessaging-benchmark-0000001-MCwCYyw/0.#epoch.0, writerId=9b33bd39-f4ab-4c78-b733-a74085cfab4e, lastEventNumber=-9223372036854775808)
+21:36:25.399 [ClientSocketReaders-5] INFO SegmentOutputStreamImpl - Connection setup complete for writer 9b33bd39-f4ab-4c78-b733-a74085cfab4e
+21:36:25.399 [ClientSocketReaders-7] INFO SegmentOutputStreamImpl - Connection setup complete for writer 8d366f51-a320-4326-aed1-f80aff938255
+21:36:25.400 [ClientSocketReaders-6] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=25769803776, segment=examples/openmessaging-benchmark-0000003-nHu8Crk/0.#epoch.0, writerId=2afb570e-6e91-46cc-8225-066be899dd13, lastEventNumber=-9223372036854775808)
+21:36:25.400 [ClientSocketReaders-6] INFO SegmentOutputStreamImpl - Connection setup complete for writer 2afb570e-6e91-46cc-8225-066be899dd13
+21:36:25.401 [ClientSocketReaders-2] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=8589934592, segment=examples/openmessaging-benchmark-0000005-FolN2bE/0.#epoch.0, writerId=2028f24d-52e9-47b5-b6ce-74dcb1eb6b08, lastEventNumber=-9223372036854775808)
+21:36:25.401 [ClientSocketReaders-2] INFO SegmentOutputStreamImpl - Connection setup complete for writer 2028f24d-52e9-47b5-b6ce-74dcb1eb6b08
+21:36:25.402 [ClientSocketReaders-4] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=17179869184, segment=examples/openmessaging-benchmark-0000006-qkRwiPw/0.#epoch.0, writerId=157d3c76-6833-4427-bfef-7ffe924c446e, lastEventNumber=-9223372036854775808)
+21:36:25.402 [ClientSocketReaders-4] INFO SegmentOutputStreamImpl - Connection setup complete for writer 157d3c76-6833-4427-bfef-7ffe924c446e
+21:36:25.402 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=12884901888, segment=examples/openmessaging-benchmark-0000004-v3iWY3A/0.#epoch.0, writerId=df816464-4690-4ac4-b558-4cd31f5c9d4a, lastEventNumber=-9223372036854775808)
+21:36:25.402 [ClientSocketReaders-1] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+21:36:25.402 [clientInternal-3-5] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.183:12345 for examples/openmessaging-benchmark-0000008-Jp5LuhE/0.#epoch.0, writerID: bab2b772-562d-4cf6-8e3c-d38c7de8fb53
+21:36:25.403 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Connection setup complete for writer df816464-4690-4ac4-b558-4cd31f5c9d4a
+21:36:25.402 [ClientSocketReaders-8] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+21:36:25.406 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=4294967296, segment=examples/openmessaging-benchmark-0000000-HJowyFk/0.#epoch.0, writerId=de068d90-5d7e-47c9-8bdf-7e2bc17a7312, lastEventNumber=-9223372036854775808)
+21:36:25.406 [ClientSocketReaders-8] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=34359738368, segment=examples/openmessaging-benchmark-0000007-QNmn7DY/0.#epoch.0, writerId=d684a3a7-265a-4876-99c2-807a62c3a5a6, lastEventNumber=-9223372036854775808)
+21:36:25.406 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Connection setup complete for writer de068d90-5d7e-47c9-8bdf-7e2bc17a7312
+21:36:25.407 [ClientSocketReaders-8] INFO SegmentOutputStreamImpl - Connection setup complete for writer d684a3a7-265a-4876-99c2-807a62c3a5a6
+21:36:25.408 [clientInternal-3-1] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000009-3O8qZ38/0.#epoch.0, writer 929a9850-7390-461d-85e1-022949dc8e2e
+21:36:25.408 [clientInternal-3-1] INFO ControllerImpl - [requestId=7562610259352330949] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000009-3O8qZ38).
+21:36:25.408 [clientInternal-3-7] INFO ControllerImpl - [requestId=389548066921686589] Tagging client request (getURI-examples/openmessaging-benchmark-0000009-3O8qZ38/0.#epoch.0).
+21:36:25.411 [qtp290096578-28] INFO LocalWorker - Created 10 producers in 149.833497 ms from {
+  "topics" : [ "openmessaging-benchmark-0000000-HJowyFk", "openmessaging-benchmark-0000005-FolN2bE", "openmessaging-benchmark-0000004-v3iWY3A", "openmessaging-benchmark-0000006-qkRwiPw", "openmessaging-benchmark-0000001-MCwCYyw", "openmessaging-benchmark-0000003-nHu8Crk", "openmessaging-benchmark-0000002-shCih3U", "openmessaging-benchmark-0000007-QNmn7DY", "openmessaging-benchmark-0000008-Jp5LuhE", "openmessaging-benchmark-0000009-3O8qZ38" ],
+  "producerIndex" : 0,
+  "isTpcH" : false
+}
+21:36:25.411 [ClientSocketReaders-9] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+21:36:25.412 [main] INFO WorkloadGenerator - Created 10 producers in 157.702979 ms
+21:36:25.413 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+21:36:25.413 [clientInternal-3-2] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.194:12345 for examples/openmessaging-benchmark-0000009-3O8qZ38/0.#epoch.0, writerID: 929a9850-7390-461d-85e1-022949dc8e2e
+21:36:25.415 [ClientSocketReaders-9] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=38654705664, segment=examples/openmessaging-benchmark-0000008-Jp5LuhE/0.#epoch.0, writerId=bab2b772-562d-4cf6-8e3c-d38c7de8fb53, lastEventNumber=-9223372036854775808)
+21:36:25.415 [ClientSocketReaders-9] INFO SegmentOutputStreamImpl - Connection setup complete for writer bab2b772-562d-4cf6-8e3c-d38c7de8fb53
+21:36:25.415 [ClientSocketReaders-10] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+21:36:25.418 [ClientSocketReaders-10] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=42949672960, segment=examples/openmessaging-benchmark-0000009-3O8qZ38/0.#epoch.0, writerId=929a9850-7390-461d-85e1-022949dc8e2e, lastEventNumber=-9223372036854775808)
+21:36:25.418 [ClientSocketReaders-10] INFO SegmentOutputStreamImpl - Connection setup complete for writer 929a9850-7390-461d-85e1-022949dc8e2e
+21:36:25.432 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 5, Received: 0, Expected: 10
+21:36:27.436 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 10, Received: 10, Expected: 10
+21:36:27.436 [main] INFO WorkloadGenerator - All consumers are ready!
+21:36:27.457 [qtp290096578-28] INFO WorkerHandler - Start load publish-rate: 1.0E7 msg/s -- payload-size: 100 -- producer index: 0
+21:36:27.481 [qtp290096578-28] INFO LocalWorker - Submitting throughput producers with maxSize Optional[100] and producer size 10
+21:36:27.481 [qtp290096578-28] INFO LocalWorker - Using max outstanding messages 10000
+21:36:27.481 [qtp290096578-28] INFO LocalWorker - Overriding max outstanding messages to 10000
+21:36:27.482 [qtp290096578-28] INFO LocalWorker - Submitting throughput producers with maxSize Optional[100] and producer size 10
+21:36:27.483 [qtp290096578-28] INFO LocalWorker - Using max outstanding messages 10000
+21:36:27.483 [qtp290096578-28] INFO LocalWorker - Overriding max outstanding messages to 10000
+21:36:27.483 [qtp290096578-28] INFO LocalWorker - Submitting throughput producers with maxSize Optional[100] and producer size 10
+21:36:27.483 [qtp290096578-28] INFO LocalWorker - Using max outstanding messages 10000
+21:36:27.483 [qtp290096578-28] INFO LocalWorker - Overriding max outstanding messages to 10000
+21:36:27.484 [qtp290096578-28] INFO LocalWorker - Submitting throughput producers with maxSize Optional[100] and producer size 10
+21:36:27.484 [qtp290096578-28] INFO LocalWorker - Using max outstanding messages 10000
+21:36:27.484 [qtp290096578-28] INFO LocalWorker - Overriding max outstanding messages to 10000
+21:36:27.484 [qtp290096578-28] INFO LocalWorker - Submitting throughput producers with maxSize Optional[100] and producer size 10
+21:36:27.484 [qtp290096578-28] INFO LocalWorker - Using max outstanding messages 10000
+21:36:27.484 [qtp290096578-28] INFO LocalWorker - Overriding max outstanding messages to 10000
+21:36:27.485 [qtp290096578-28] INFO LocalWorker - Submitting throughput producers with maxSize Optional[100] and producer size 10
+21:36:27.485 [qtp290096578-28] INFO LocalWorker - Using max outstanding messages 10000
+21:36:27.485 [qtp290096578-28] INFO LocalWorker - Overriding max outstanding messages to 10000
+21:36:27.486 [qtp290096578-28] INFO LocalWorker - Submitting throughput producers with maxSize Optional[100] and producer size 10
+21:36:27.486 [qtp290096578-28] INFO LocalWorker - Using max outstanding messages 10000
+21:36:27.486 [qtp290096578-28] INFO LocalWorker - Overriding max outstanding messages to 10000
+21:36:27.490 [qtp290096578-28] INFO LocalWorker - Submitting throughput producers with maxSize Optional[100] and producer size 10
+21:36:27.490 [qtp290096578-28] INFO LocalWorker - Using max outstanding messages 10000
+21:36:27.491 [qtp290096578-28] INFO LocalWorker - Overriding max outstanding messages to 10000
+21:36:27.492 [main] INFO WorkloadGenerator - ----- Starting warm-up traffic (1m) ------
+21:36:38.610 [main] INFO WorkloadGenerator - Pub rate 1574083.6 msg/s / 150.1 MB/s | Pub err     0.0 err/s | Cons rate 1580050.1 msg/s / 150.7 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 31.2 - 50%: 33.0 - 99%: 101.5 - 99.9%: 193.1 - Max: 282.8 | Pub Delay Latency (us) avg: 5025213.4 - 50%: 5159103.0 - 99%: 8366335.0 - 99.9%: 8422079.0 - Max: 8432383.0
+21:36:49.374 [main] INFO WorkloadGenerator - Pub rate 1862369.9 msg/s / 177.6 MB/s | Pub err     0.0 err/s | Cons rate 1861231.2 msg/s / 177.5 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 38.5 - 50%: 38.9 - 99%: 113.7 - 99.9%: 131.2 - Max: 165.3 | Pub Delay Latency (us) avg: 13122219.7 - 50%: 13229055.0 - 99%: 17463807.0 - 99.9%: 17535359.0 - Max: 17562111.0
+21:37:00.016 [main] INFO WorkloadGenerator - Pub rate 1833100.0 msg/s / 174.8 MB/s | Pub err     0.0 err/s | Cons rate 1834587.0 msg/s / 175.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 42.1 - 50%: 41.8 - 99%: 104.7 - 99.9%: 154.1 - Max: 190.6 | Pub Delay Latency (us) avg: 21965146.3 - 50%: 21917311.0 - 99%: 26229631.0 - 99.9%: 26305663.0 - Max: 26314495.0
+21:37:10.534 [main] INFO WorkloadGenerator - Pub rate 1835378.3 msg/s / 175.0 MB/s | Pub err     0.0 err/s | Cons rate 1836329.5 msg/s / 175.1 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 43.3 - 50%: 41.6 - 99%: 97.4 - 99.9%: 124.5 - Max: 179.0 | Pub Delay Latency (us) avg: 30678983.3 - 50%: 30673151.0 - 99%: 34914559.0 - 99.9%: 34986751.0 - Max: 34999039.0
+21:37:21.131 [main] INFO WorkloadGenerator - Pub rate 1834577.1 msg/s / 175.0 MB/s | Pub err     0.0 err/s | Cons rate 1836108.0 msg/s / 175.1 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 42.6 - 50%: 42.1 - 99%: 82.9 - 99.9%: 104.1 - Max: 151.5 | Pub Delay Latency (us) avg: 39306404.0 - 50%: 39277567.0 - 99%: 43488255.0 - 99.9%: 43580927.0 - Max: 43588607.0
+21:37:31.593 [main] INFO WorkloadGenerator - Pub rate 1820278.0 msg/s / 173.6 MB/s | Pub err     0.0 err/s | Cons rate 1820530.1 msg/s / 173.6 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 41.4 - 50%: 41.5 - 99%: 82.9 - 99.9%: 100.0 - Max: 127.9 | Pub Delay Latency (us) avg: 47943426.1 - 50%: 47959807.0 - 99%: 52176639.0 - 99.9%: 52244735.0 - Max: 52257535.0
+21:37:32.816 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg: 40.0 - 50%: 40.6 - 95%: 55.8 - 99%: 95.9 - 99.9%: 150.8 - 99.99%: 200.5 - Max: 282.8 | Pub Delay (us)  avg: 26977690.1 - 50%: 26947839.0 - 95%: 50027263.0 - 99%: 52082175.0 - 99.9%: 52592639.0 - 99.99%: 52646655.0 - Max: 52651007.0
+21:37:33.389 [main] INFO WorkloadGenerator - ----- Starting benchmark traffic (2m)------
+21:37:43.890 [main] INFO WorkloadGenerator - Pub rate 2251367.8 msg/s / 214.7 MB/s | Pub err     0.0 err/s | Cons rate 2251028.3 msg/s / 214.7 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 39.6 - 50%: 39.6 - 99%: 79.2 - 99.9%: 101.7 - Max: 119.4 | Pub Delay Latency (us) avg: 57761009.8 - 50%: 58043903.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+21:37:54.579 [main] INFO WorkloadGenerator - Pub rate 1880115.4 msg/s / 179.3 MB/s | Pub err     0.0 err/s | Cons rate 1875778.3 msg/s / 178.9 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 33.7 - 50%: 33.7 - 99%: 79.5 - 99.9%: 100.2 - Max: 123.9 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+21:38:05.144 [main] INFO WorkloadGenerator - Pub rate 1885471.4 msg/s / 179.8 MB/s | Pub err     0.0 err/s | Cons rate 1888562.3 msg/s / 180.1 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 36.3 - 50%: 37.8 - 99%: 66.0 - 99.9%: 90.0 - Max: 125.7 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+21:38:15.704 [main] INFO WorkloadGenerator - Pub rate 1885651.5 msg/s / 179.8 MB/s | Pub err     0.0 err/s | Cons rate 1882090.0 msg/s / 179.5 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 34.0 - 50%: 35.0 - 99%: 79.1 - 99.9%: 100.6 - Max: 159.1 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+21:38:26.159 [main] INFO WorkloadGenerator - Pub rate 1922818.8 msg/s / 183.4 MB/s | Pub err     0.0 err/s | Cons rate 1924999.7 msg/s / 183.6 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 34.9 - 50%: 36.0 - 99%: 64.7 - 99.9%: 101.7 - Max: 158.3 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+21:38:36.648 [main] INFO WorkloadGenerator - Pub rate 1892613.8 msg/s / 180.5 MB/s | Pub err     0.0 err/s | Cons rate 1892845.0 msg/s / 180.5 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 36.1 - 50%: 37.8 - 99%: 80.3 - 99.9%: 120.7 - Max: 142.0 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+21:38:47.150 [main] INFO WorkloadGenerator - Pub rate 1923847.0 msg/s / 183.5 MB/s | Pub err     0.0 err/s | Cons rate 1921249.2 msg/s / 183.2 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 35.8 - 50%: 36.4 - 99%: 70.3 - 99.9%: 91.7 - Max: 121.1 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+21:38:57.715 [main] INFO WorkloadGenerator - Pub rate 1894729.0 msg/s / 180.7 MB/s | Pub err     0.0 err/s | Cons rate 1891491.9 msg/s / 180.4 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 35.5 - 50%: 36.3 - 99%: 74.5 - 99.9%: 102.5 - Max: 124.3 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+21:39:08.250 [main] INFO WorkloadGenerator - Pub rate 1894395.8 msg/s / 180.7 MB/s | Pub err     0.0 err/s | Cons rate 1899713.3 msg/s / 181.2 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 32.2 - 50%: 33.6 - 99%: 71.3 - 99.9%: 103.8 - Max: 149.2 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+21:39:18.858 [main] INFO WorkloadGenerator - Pub rate 1906019.5 msg/s / 181.8 MB/s | Pub err     0.0 err/s | Cons rate 1905008.7 msg/s / 181.7 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 36.2 - 50%: 37.8 - 99%: 67.2 - 99.9%: 94.6 - Max: 126.3 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+21:39:29.436 [main] INFO WorkloadGenerator - Pub rate 1891803.0 msg/s / 180.4 MB/s | Pub err     0.0 err/s | Cons rate 1893081.6 msg/s / 180.5 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 36.1 - 50%: 37.3 - 99%: 72.5 - 99.9%: 96.7 - Max: 115.2 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+21:39:39.931 [main] INFO WorkloadGenerator - Pub rate 1913077.5 msg/s / 182.4 MB/s | Pub err     0.0 err/s | Cons rate 1909216.7 msg/s / 182.1 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg: 34.3 - 50%: 35.9 - 99%: 67.7 - 99.9%: 114.1 - Max: 144.0 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+21:39:40.584 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg: 35.3 - 50%: 36.6 - 95%: 50.9 - 99%: 72.0 - 99.9%: 107.3 - 99.99%: 124.5 - Max: 159.1 | Pub Delay (us)  avg: 59823911.6 - 50%: 60000255.0 - 95%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - 99.99%: 60000255.0 - Max: 60000255.0
+21:39:40.774 [main] INFO WorkloadGenerator - ----- Completed run. Stopping worker and yielding results ------
+21:39:40.921 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+21:39:40.922 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+21:39:40.922 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+21:39:40.922 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+21:39:40.922 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+21:39:40.922 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+21:39:40.923 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+21:39:40.923 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+21:39:40.923 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+21:39:40.923 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+21:39:40.923 [qtp290096578-28] INFO PravegaBenchmarkDriver - close: clientConfig=ClientConfig(controllerURI=tcp://10.0.0.61:9090, credentials=null, trustStore=null, validateHostName=true, maxConnectionsPerSegmentStore=10, isDefaultMaxConnections=true, deriveTlsEnabledFromControllerURI=true, enableTlsToController=false, enableTlsToSegmentStore=false, metricListener=null)
+21:39:40.924 [qtp290096578-28] INFO ConnectionPoolImpl - Shutting down connection pool
+21:39:40.924 [qtp290096578-28] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+21:39:40.926 [ClientSocketReaders-1] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+21:39:40.927 [ClientSocketReaders-3] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+21:39:40.927 [ClientSocketReaders-8] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+21:39:40.927 [ClientSocketReaders-9] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+21:39:40.928 [ClientSocketReaders-4] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+21:39:40.928 [ClientSocketReaders-7] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+21:39:40.928 [ClientSocketReaders-10] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+21:39:40.928 [ClientSocketReaders-2] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+21:39:40.929 [ClientSocketReaders-5] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+21:39:40.929 [ClientSocketReaders-6] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+21:39:40.935 [qtp290096578-28] INFO ConnectionPoolImpl - Shutting down connection pool
+21:39:40.935 [qtp290096578-28] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+21:39:45.965 [main] INFO PravegaBenchmarkDriver - close: clientConfig=ClientConfig(controllerURI=tcp://10.0.0.61:9090, credentials=null, trustStore=null, validateHostName=true, maxConnectionsPerSegmentStore=10, isDefaultMaxConnections=true, deriveTlsEnabledFromControllerURI=true, enableTlsToController=false, enableTlsToSegmentStore=false, metricListener=null)
+21:39:45.968 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+21:39:45.968 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+21:39:45.973 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+21:39:45.974 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
