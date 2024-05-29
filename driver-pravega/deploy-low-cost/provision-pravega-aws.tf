@@ -239,6 +239,10 @@ resource "aws_instance" "bookkeeper" {
 
   iam_instance_profile = aws_iam_instance_profile.pravega_ec2_instance_profile.name
 
+  root_block_device {
+    volume_size = 50
+  }
+
   instance_market_options {
     market_type = "spot"
     spot_options {
