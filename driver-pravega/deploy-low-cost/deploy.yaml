@@ -387,7 +387,7 @@
       lineinfile:
          dest: /opt/benchmark/bin/benchmark-worker
          regexp: '^JVM_MEM='
-         line: 'JVM_MEM="-Xms5G -Xmx5G -XX:MaxDirectMemorySize=21g -XX:+UseG1GC -XX:MaxGCPauseMillis=10 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=12 -XX:ConcGCThreads=12 -XX:G1NewSizePercent=50 -XX:+DisableExplicitGC -XX:-ResizePLAB -XX:+PerfDisableSharedMem -XX:+AlwaysPreTouch -XX:-UseBiasedLocking"'
+         line: 'JVM_MEM="-Xms10G -Xmx10G -XX:MaxDirectMemorySize=16g -XX:+UseG1GC -XX:MaxGCPauseMillis=10 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=16 -XX:ConcGCThreads=16 -XX:G1NewSizePercent=50 -XX:+DisableExplicitGC -XX:-ResizePLAB -XX:+PerfDisableSharedMem -XX:+AlwaysPreTouch -XX:-UseBiasedLocking"'
     - name: Configure memory
       lineinfile:
          dest: /opt/benchmark/bin/benchmark
