@@ -1,0 +1,640 @@
+10:58:55.261 [main] INFO log - Logging initialized @1496ms to org.eclipse.jetty.util.log.Slf4jLog
+10:58:55.349 [main] INFO Server - jetty-9.4.42.v20210604; built: 2021-06-04T17:33:38.939Z; git: 5cd5e6d2375eeab146813b0de9f19eda6ab6e6cb; jvm 11.0.23+9-LTS
+10:58:55.382 [main] INFO ContextHandler - Started o.e.j.s.ServletContextHandler@4d098f9b{/,null,AVAILABLE}
+10:58:55.399 [main] INFO AbstractConnector - Started ServerConnector@698122b2{HTTP/1.1, (http/1.1)}{0.0.0.0:8081}
+10:58:55.399 [main] INFO Server - Started @1638ms
+10:58:55.401 [main] INFO PrometheusMetricsProvider - Started Prometheus stats endpoint at 0.0.0.0:8081
+10:58:55.441 [main] INFO BenchmarkWorker - Starting benchmark with config: {
+  "httpPort" : 8080,
+  "statsPort" : 8081
+}
+10:58:55.486 [main] INFO Javalin - 
+ _________________________________________
+|        _                  _ _           |
+|       | | __ ___   ____ _| (_)_ __      |
+|    _  | |/ _` \ \ / / _` | | | '_ \     |
+|   | |_| | (_| |\ V / (_| | | | | | |    |
+|    \___/ \__,_| \_/ \__,_|_|_|_| |_|    |
+|_________________________________________|
+|                                         |
+|    https://javalin.io/documentation     |
+|_________________________________________|
+10:58:55.488 [main] INFO Javalin - Starting Javalin ...
+10:58:55.495 [main] INFO Server - jetty-9.4.42.v20210604; built: 2021-06-04T17:33:38.939Z; git: 5cd5e6d2375eeab146813b0de9f19eda6ab6e6cb; jvm 11.0.23+9-LTS
+10:58:55.508 [main] INFO session - DefaultSessionIdManager workerName=node0
+10:58:55.508 [main] INFO session - No SessionScavenger set, using defaults
+10:58:55.509 [main] INFO session - node0 Scavenging every 600000ms
+10:58:55.511 [main] INFO ContextHandler - Started i.j.e.j.@2ef8a8c3{/,null,AVAILABLE}
+10:58:55.511 [main] INFO ContextHandler - Started o.e.j.s.ServletContextHandler@63fd4873{/,null,AVAILABLE}
+10:58:55.515 [main] INFO AbstractConnector - Started ServerConnector@7fe083b1{HTTP/1.1, (http/1.1)}{0.0.0.0:8080}
+10:58:55.515 [main] INFO Server - Started @1754ms
+10:58:55.515 [main] INFO EmbeddedServer - Jetty is listening on: [http://localhost:8080]
+10:58:55.515 [main] INFO Javalin - Javalin has started \o/
+10:58:55.548 [main] INFO InstanceWorkerStats - Instance worker stats initialized.
+10:59:52.369 [main] INFO Benchmark - Using default worker file workers.yaml!
+10:59:52.378 [main] INFO Benchmark - Reading workers list from workers.yaml
+10:59:52.432 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-pravega/pravega-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.112:8080", "http://10.0.0.91:8080", "http://10.0.0.62:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : null,
+  "workloads" : [ "workloads/throughput-10kb-10-max.yaml" ],
+  "output" : null
+}
+10:59:52.465 [main] INFO Benchmark - Workloads: {
+  "throughput-10kb-10-max" : {
+    "name" : "throughput-10kb-10",
+    "topics" : 10,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 10000,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "payload/payload-10kb.data",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 100000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 2,
+    "warmupDurationMinutes" : 1
+  }
+}
+10:59:52.466 [main] INFO Benchmark - TPC-H arguments: [ null ]
+10:59:52.512 [main] INFO InstanceWorkerStats - Instance worker stats initialized.
+10:59:53.075 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.112:8080]
+10:59:53.075 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.62:8080,http://10.0.0.91:8080
+10:59:53.078 [main] INFO Benchmark - --------------- WORKLOAD : throughput-10kb-10 --- DRIVER : Pravega---------------
+10:59:53.639 [qtp290096578-24] INFO LocalWorker - Driver: {
+  "name" : "Pravega",
+  "driverClass" : "io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver"
+}
+10:59:53.647 [qtp290096578-24] INFO PravegaBenchmarkDriver - Pravega driver configuration: {
+  "client" : {
+    "controllerURI" : "tcp://10.0.0.237:9090",
+    "scopeName" : "examples"
+  },
+  "writer" : {
+    "enableConnectionPooling" : true
+  },
+  "includeTimestampInEvent" : true,
+  "enableTransaction" : false,
+  "eventsPerTransaction" : 1,
+  "enableStreamAutoScaling" : false,
+  "eventsPerSecond" : -1,
+  "kbytesPerSecond" : 1000000,
+  "createScope" : true,
+  "deleteStreams" : true
+}
+10:59:53.856 [qtp290096578-24] INFO ControllerImpl - Controller client connecting to server at 10.0.0.237:9090
+10:59:53.863 [qtp290096578-24] INFO ControllerImpl - Controller client connecting to server at 10.0.0.237:9090
+10:59:53.869 [qtp290096578-24] INFO ControllerImpl - Controller client connecting to server at 10.0.0.237:9090
+10:59:53.911 [main] INFO LocalWorker - Driver: {
+  "name" : "Pravega",
+  "driverClass" : "io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver"
+}
+10:59:53.918 [main] INFO PravegaBenchmarkDriver - Pravega driver configuration: {
+  "client" : {
+    "controllerURI" : "tcp://10.0.0.237:9090",
+    "scopeName" : "examples"
+  },
+  "writer" : {
+    "enableConnectionPooling" : true
+  },
+  "includeTimestampInEvent" : true,
+  "enableTransaction" : false,
+  "eventsPerTransaction" : 1,
+  "enableStreamAutoScaling" : false,
+  "eventsPerSecond" : -1,
+  "kbytesPerSecond" : 1000000,
+  "createScope" : true,
+  "deleteStreams" : true
+}
+10:59:54.151 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.237:9090
+10:59:54.160 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.237:9090
+10:59:54.167 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.237:9090
+10:59:54.180 [qtp290096578-29] INFO WorkerHandler - Received create topics request for topics: {
+  "numberOfTopics" : 10,
+  "numberOfPartitionsPerTopic" : 1
+}
+10:59:54.186 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000000-on4nrUE, partitions=1
+10:59:54.187 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+10:59:54.197 [clientInternal-1-1] INFO ControllerImpl - [requestId=3732934318164481651] Tagging client request (createScope-examples).
+10:59:54.224 [clientInternal-1-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.237:9090]/{}]]
+10:59:54.691 [clientInternal-1-2] INFO ControllerImpl - [requestId=3732934318164481651] Scope created successfully: examples
+10:59:54.693 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000000-on4nrUE with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+10:59:54.695 [clientInternal-1-4] INFO ControllerImpl - [requestId=-5310414813066595635] Tagging client request (createStream-examples-openmessaging-benchmark-0000000-on4nrUE).
+10:59:54.954 [clientInternal-1-5] INFO ControllerImpl - [requestId=-5310414813066595635] Stream created successfully: openmessaging-benchmark-0000000-on4nrUE
+10:59:54.954 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000001-VYdzVK0, partitions=1
+10:59:54.955 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+10:59:54.955 [clientInternal-1-7] INFO ControllerImpl - [requestId=-3253373095093541701] Tagging client request (createScope-examples).
+10:59:54.987 [clientInternal-1-8] WARN ControllerImpl - [requestId=-3253373095093541701] Scope already exists: examples
+10:59:54.987 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000001-VYdzVK0 with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+10:59:54.988 [clientInternal-1-3] INFO ControllerImpl - [requestId=-3805920146967768580] Tagging client request (createStream-examples-openmessaging-benchmark-0000001-VYdzVK0).
+10:59:55.195 [clientInternal-1-2] INFO ControllerImpl - [requestId=-3805920146967768580] Stream created successfully: openmessaging-benchmark-0000001-VYdzVK0
+10:59:55.195 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000002-e5UMops, partitions=1
+10:59:55.195 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+10:59:55.195 [clientInternal-1-6] INFO ControllerImpl - [requestId=15119593057394643] Tagging client request (createScope-examples).
+10:59:55.212 [clientInternal-1-5] WARN ControllerImpl - [requestId=15119593057394643] Scope already exists: examples
+10:59:55.212 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000002-e5UMops with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+10:59:55.213 [clientInternal-1-1] INFO ControllerImpl - [requestId=3120321425698794182] Tagging client request (createStream-examples-openmessaging-benchmark-0000002-e5UMops).
+10:59:55.432 [clientInternal-1-8] INFO ControllerImpl - [requestId=3120321425698794182] Stream created successfully: openmessaging-benchmark-0000002-e5UMops
+10:59:55.433 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000003-TWHqxI, partitions=1
+10:59:55.433 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+10:59:55.433 [clientInternal-1-4] INFO ControllerImpl - [requestId=-6397089378143353236] Tagging client request (createScope-examples).
+10:59:55.452 [clientInternal-1-2] WARN ControllerImpl - [requestId=-6397089378143353236] Scope already exists: examples
+10:59:55.452 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000003-TWHqxI with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+10:59:55.453 [clientInternal-1-7] INFO ControllerImpl - [requestId=-5989488354757484574] Tagging client request (createStream-examples-openmessaging-benchmark-0000003-TWHqxI).
+10:59:55.670 [clientInternal-1-5] INFO ControllerImpl - [requestId=-5989488354757484574] Stream created successfully: openmessaging-benchmark-0000003-TWHqxI
+10:59:55.670 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000004-wtocCBs, partitions=1
+10:59:55.671 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+10:59:55.671 [clientInternal-1-3] INFO ControllerImpl - [requestId=-1467540977848912745] Tagging client request (createScope-examples).
+10:59:55.687 [clientInternal-1-8] WARN ControllerImpl - [requestId=-1467540977848912745] Scope already exists: examples
+10:59:55.687 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000004-wtocCBs with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+10:59:55.688 [clientInternal-1-6] INFO ControllerImpl - [requestId=-5446769687803815785] Tagging client request (createStream-examples-openmessaging-benchmark-0000004-wtocCBs).
+10:59:55.917 [clientInternal-1-2] INFO ControllerImpl - [requestId=-5446769687803815785] Stream created successfully: openmessaging-benchmark-0000004-wtocCBs
+10:59:55.917 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000005-q8T721Y, partitions=1
+10:59:55.918 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+10:59:55.918 [clientInternal-1-1] INFO ControllerImpl - [requestId=1695889028597781112] Tagging client request (createScope-examples).
+10:59:55.933 [clientInternal-1-5] WARN ControllerImpl - [requestId=1695889028597781112] Scope already exists: examples
+10:59:55.934 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000005-q8T721Y with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+10:59:55.934 [clientInternal-1-4] INFO ControllerImpl - [requestId=7335332434810400914] Tagging client request (createStream-examples-openmessaging-benchmark-0000005-q8T721Y).
+10:59:56.145 [clientInternal-1-8] INFO ControllerImpl - [requestId=7335332434810400914] Stream created successfully: openmessaging-benchmark-0000005-q8T721Y
+10:59:56.145 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000006-EmJoH2A, partitions=1
+10:59:56.146 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+10:59:56.146 [clientInternal-1-7] INFO ControllerImpl - [requestId=3144428050340231736] Tagging client request (createScope-examples).
+10:59:56.161 [clientInternal-1-2] WARN ControllerImpl - [requestId=3144428050340231736] Scope already exists: examples
+10:59:56.162 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000006-EmJoH2A with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+10:59:56.162 [clientInternal-1-3] INFO ControllerImpl - [requestId=6111435324668104954] Tagging client request (createStream-examples-openmessaging-benchmark-0000006-EmJoH2A).
+10:59:56.379 [clientInternal-1-5] INFO ControllerImpl - [requestId=6111435324668104954] Stream created successfully: openmessaging-benchmark-0000006-EmJoH2A
+10:59:56.379 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000007-7FMP-u0, partitions=1
+10:59:56.380 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+10:59:56.380 [clientInternal-1-6] INFO ControllerImpl - [requestId=-6792301105566611136] Tagging client request (createScope-examples).
+10:59:56.396 [clientInternal-1-8] WARN ControllerImpl - [requestId=-6792301105566611136] Scope already exists: examples
+10:59:56.397 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000007-7FMP-u0 with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+10:59:56.397 [clientInternal-1-1] INFO ControllerImpl - [requestId=-3203889742166964543] Tagging client request (createStream-examples-openmessaging-benchmark-0000007-7FMP-u0).
+10:59:56.606 [clientInternal-1-2] INFO ControllerImpl - [requestId=-3203889742166964543] Stream created successfully: openmessaging-benchmark-0000007-7FMP-u0
+10:59:56.606 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000008-U0iB-ZI, partitions=1
+10:59:56.607 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+10:59:56.607 [clientInternal-1-4] INFO ControllerImpl - [requestId=8359107081007878307] Tagging client request (createScope-examples).
+10:59:56.622 [clientInternal-1-5] WARN ControllerImpl - [requestId=8359107081007878307] Scope already exists: examples
+10:59:56.622 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000008-U0iB-ZI with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+10:59:56.623 [clientInternal-1-7] INFO ControllerImpl - [requestId=5357882730968836669] Tagging client request (createStream-examples-openmessaging-benchmark-0000008-U0iB-ZI).
+10:59:56.829 [clientInternal-1-8] INFO ControllerImpl - [requestId=5357882730968836669] Stream created successfully: openmessaging-benchmark-0000008-U0iB-ZI
+10:59:56.829 [qtp290096578-29] INFO PravegaBenchmarkDriver - createTopic: topic=openmessaging-benchmark-0000009-7XF388, partitions=1
+10:59:56.829 [qtp290096578-29] INFO StreamManagerImpl - Creating scope: examples
+10:59:56.830 [clientInternal-1-3] INFO ControllerImpl - [requestId=-107697113360148261] Tagging client request (createScope-examples).
+10:59:56.845 [clientInternal-1-2] WARN ControllerImpl - [requestId=-107697113360148261] Scope already exists: examples
+10:59:56.845 [qtp290096578-29] INFO StreamManagerImpl - Creating scope/stream: examples/openmessaging-benchmark-0000009-7XF388 with configuration: scalingPolicy = ScalingPolicy(scaleType=FIXED_NUM_SEGMENTS, targetRate=0, scaleFactor=0, minNumSegments=1)
+retentionPolicy = null
+timestampAggregationTimeout = 0
+tags = []
+rolloverSizeBytes = 0
+10:59:56.846 [clientInternal-1-6] INFO ControllerImpl - [requestId=8916563507415231478] Tagging client request (createStream-examples-openmessaging-benchmark-0000009-7XF388).
+10:59:57.057 [clientInternal-1-5] INFO ControllerImpl - [requestId=8916563507415231478] Stream created successfully: openmessaging-benchmark-0000009-7XF388
+10:59:57.058 [qtp290096578-29] INFO LocalWorker - Created 10 topics in 2877.02791 ms
+10:59:57.067 [main] INFO WorkloadGenerator - Created 10 topics in 2894.391675 ms
+10:59:59.887 [main] INFO WorkloadGenerator - Created 10 consumers in 2817.606705 ms
+10:59:59.895 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000005-q8T721Y
+10:59:59.901 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: 8bf26586-27bf-46f3-8cca-1b30e993fec0 for stream: openmessaging-benchmark-0000005-q8T721Y with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+10:59:59.908 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000005-q8T721Y)
+10:59:59.909 [clientInternal-3-1] INFO ControllerImpl - [requestId=8967337013453522377] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000005-q8T721Y).
+10:59:59.911 [clientInternal-3-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.237:9090]/{}]]
+10:59:59.935 [clientInternal-3-4] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000005-q8T721Y/0.#epoch.0, writer b7aaaf3d-2f52-4728-9163-97f57617bf4a
+10:59:59.935 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000001-VYdzVK0
+10:59:59.936 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: ac8488df-876d-476f-87ff-7548b992fab2 for stream: openmessaging-benchmark-0000001-VYdzVK0 with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+10:59:59.936 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000001-VYdzVK0)
+10:59:59.936 [clientInternal-3-5] INFO ControllerImpl - [requestId=3251915871879721608] Tagging client request (getURI-examples/openmessaging-benchmark-0000005-q8T721Y/0.#epoch.0).
+10:59:59.936 [clientInternal-3-6] INFO ControllerImpl - [requestId=2300949574497841860] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000001-VYdzVK0).
+10:59:59.938 [clientInternal-3-7] INFO ControllerImpl - [requestId=-843803973620004873] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000005-q8T721Y).
+10:59:59.948 [clientInternal-3-8] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.46:12345 for examples/openmessaging-benchmark-0000005-q8T721Y/0.#epoch.0, writerID: b7aaaf3d-2f52-4728-9163-97f57617bf4a
+10:59:59.953 [clientInternal-3-7] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writer 0fef5b17-6784-494a-b016-9635e4f06da5
+10:59:59.953 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000002-e5UMops
+10:59:59.953 [clientInternal-3-6] INFO ControllerImpl - [requestId=8705324843951672311] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000001-VYdzVK0).
+10:59:59.953 [clientInternal-3-3] INFO ControllerImpl - [requestId=451337269109610571] Tagging client request (getURI-examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0).
+10:59:59.954 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: 2d6f8f4c-6a35-432b-addb-d3468304b03f for stream: openmessaging-benchmark-0000002-e5UMops with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+10:59:59.955 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000002-e5UMops)
+10:59:59.955 [clientInternal-3-2] INFO ControllerImpl - [requestId=6653813511751219753] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000002-e5UMops).
+10:59:59.962 [clientInternal-3-7] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writerID: 0fef5b17-6784-494a-b016-9635e4f06da5
+10:59:59.969 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000009-7XF388
+10:59:59.969 [clientInternal-3-4] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writer 306440ca-269c-494a-82fd-2a640233274d
+10:59:59.970 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: 73a75d9f-452e-4c96-8050-d3c0aaf45cca for stream: openmessaging-benchmark-0000009-7XF388 with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+10:59:59.970 [clientInternal-3-5] INFO ControllerImpl - [requestId=-3617855959457899711] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000002-e5UMops).
+10:59:59.970 [clientInternal-3-2] INFO ControllerImpl - [requestId=-4041015031876917892] Tagging client request (getURI-examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0).
+10:59:59.970 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000009-7XF388)
+10:59:59.970 [clientInternal-3-8] INFO ControllerImpl - [requestId=-5302956803377598936] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000009-7XF388).
+10:59:59.979 [clientInternal-3-4] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writerID: 306440ca-269c-494a-82fd-2a640233274d
+10:59:59.982 [clientInternal-3-3] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000009-7XF388/0.#epoch.0, writer d205842e-5dcd-4004-be3f-cbb5f8fbb2f3
+10:59:59.983 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000000-on4nrUE
+10:59:59.983 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: 0fd57712-9f2e-4131-99d9-0b441cef3dc2 for stream: openmessaging-benchmark-0000000-on4nrUE with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+10:59:59.983 [clientInternal-3-4] INFO ControllerImpl - [requestId=3157021291690092508] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000009-7XF388).
+10:59:59.983 [clientInternal-3-5] INFO ControllerImpl - [requestId=-4783564836056495097] Tagging client request (getURI-examples/openmessaging-benchmark-0000009-7XF388/0.#epoch.0).
+10:59:59.983 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-on4nrUE)
+10:59:59.984 [clientInternal-3-5] INFO ControllerImpl - [requestId=1602186838905351218] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000000-on4nrUE).
+10:59:59.993 [clientInternal-3-8] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.239:12345 for examples/openmessaging-benchmark-0000009-7XF388/0.#epoch.0, writerID: d205842e-5dcd-4004-be3f-cbb5f8fbb2f3
+10:59:59.996 [clientInternal-3-5] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+10:59:59.996 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000004-wtocCBs
+10:59:59.996 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: 4c8e0faf-bd78-46fb-9f5c-b4bf81ad0a20 for stream: openmessaging-benchmark-0000004-wtocCBs with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+10:59:59.996 [clientInternal-3-5] INFO ControllerImpl - [requestId=-6247091806260472913] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000000-on4nrUE).
+10:59:59.996 [clientInternal-3-4] INFO ControllerImpl - [requestId=-776263447209511022] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0).
+10:59:59.996 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000004-wtocCBs)
+10:59:59.997 [clientInternal-3-8] INFO ControllerImpl - [requestId=7438193441405237609] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000004-wtocCBs).
+11:00:00.009 [clientInternal-3-8] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writerID: 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:00:00.012 [clientInternal-3-5] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000004-wtocCBs/0.#epoch.0, writer f1cab8f7-0b5e-4420-ac1b-ee8d49e8c3a2
+11:00:00.012 [clientInternal-3-5] INFO ControllerImpl - [requestId=4211858692151334616] Tagging client request (getURI-examples/openmessaging-benchmark-0000004-wtocCBs/0.#epoch.0).
+11:00:00.013 [clientInternal-3-4] INFO ControllerImpl - [requestId=-3638464399393209855] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000004-wtocCBs).
+11:00:00.012 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000006-EmJoH2A
+11:00:00.014 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: 27a6c43c-0fe2-40ab-a49a-c01e6efc30d1 for stream: openmessaging-benchmark-0000006-EmJoH2A with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+11:00:00.014 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000006-EmJoH2A)
+11:00:00.015 [clientInternal-3-8] INFO ControllerImpl - [requestId=-3896234343929423387] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000006-EmJoH2A).
+11:00:00.022 [clientInternal-3-8] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.239:12345 for examples/openmessaging-benchmark-0000004-wtocCBs/0.#epoch.0, writerID: f1cab8f7-0b5e-4420-ac1b-ee8d49e8c3a2
+11:00:00.026 [clientInternal-3-5] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000006-EmJoH2A/0.#epoch.0, writer 5f2afb7f-8005-4f45-9031-cb3ca7fea937
+11:00:00.027 [clientInternal-3-5] INFO ControllerImpl - [requestId=-5994210992966899806] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000006-EmJoH2A).
+11:00:00.027 [clientInternal-3-8] INFO ControllerImpl - [requestId=-7189178892811362040] Tagging client request (getURI-examples/openmessaging-benchmark-0000006-EmJoH2A/0.#epoch.0).
+11:00:00.026 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000003-TWHqxI
+11:00:00.028 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: 546824ff-ec23-4f06-bb8f-645d2873c64e for stream: openmessaging-benchmark-0000003-TWHqxI with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+11:00:00.028 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000003-TWHqxI)
+11:00:00.029 [clientInternal-3-5] INFO ControllerImpl - [requestId=-8277108218990266091] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000003-TWHqxI).
+11:00:00.037 [ClientSocketReaders-3] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+11:00:00.037 [ClientSocketReaders-2] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+11:00:00.037 [ClientSocketReaders-1] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+11:00:00.037 [ClientSocketReaders-5] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+11:00:00.037 [ClientSocketReaders-4] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+11:00:00.039 [ClientSocketReaders-6] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+11:00:00.039 [clientInternal-3-5] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.46:12345 for examples/openmessaging-benchmark-0000006-EmJoH2A/0.#epoch.0, writerID: 5f2afb7f-8005-4f45-9031-cb3ca7fea937
+11:00:00.040 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=4294967296, segment=examples/openmessaging-benchmark-0000005-q8T721Y/0.#epoch.0, writerId=b7aaaf3d-2f52-4728-9163-97f57617bf4a, lastEventNumber=-9223372036854775808)
+11:00:00.040 [ClientSocketReaders-4] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=17179869184, segment=examples/openmessaging-benchmark-0000009-7XF388/0.#epoch.0, writerId=d205842e-5dcd-4004-be3f-cbb5f8fbb2f3, lastEventNumber=-9223372036854775808)
+11:00:00.040 [ClientSocketReaders-2] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writerId=0fef5b17-6784-494a-b016-9635e4f06da5, lastEventNumber=-9223372036854775808)
+11:00:00.041 [ClientSocketReaders-5] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writerId=62570c1f-12bd-47f2-a4a9-139fd5c618fa, lastEventNumber=-9223372036854775808)
+11:00:00.041 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000008-U0iB-ZI
+11:00:00.041 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: 56b973d4-66e8-41da-bff4-926f64e1209f for stream: openmessaging-benchmark-0000008-U0iB-ZI with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+11:00:00.042 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000008-U0iB-ZI)
+11:00:00.042 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Connection setup complete for writer b7aaaf3d-2f52-4728-9163-97f57617bf4a
+11:00:00.042 [ClientSocketReaders-4] INFO SegmentOutputStreamImpl - Connection setup complete for writer d205842e-5dcd-4004-be3f-cbb5f8fbb2f3
+11:00:00.042 [ClientSocketReaders-5] INFO SegmentOutputStreamImpl - Connection setup complete for writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:00:00.042 [ClientSocketReaders-2] INFO SegmentOutputStreamImpl - Connection setup complete for writer 0fef5b17-6784-494a-b016-9635e4f06da5
+11:00:00.042 [clientInternal-3-2] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000003-TWHqxI/0.#epoch.0, writer 003a241e-aa3f-4541-8ce7-8976da9fc257
+11:00:00.042 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writerId=306440ca-269c-494a-82fd-2a640233274d, lastEventNumber=-9223372036854775808)
+11:00:00.043 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Connection setup complete for writer 306440ca-269c-494a-82fd-2a640233274d
+11:00:00.043 [clientInternal-3-2] INFO ControllerImpl - [requestId=-1988868031403278494] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000008-U0iB-ZI).
+11:00:00.043 [clientInternal-3-3] INFO ControllerImpl - [requestId=-1878952595484225997] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000003-TWHqxI).
+11:00:00.043 [clientInternal-3-4] INFO ControllerImpl - [requestId=3417725875493568692] Tagging client request (getURI-examples/openmessaging-benchmark-0000003-TWHqxI/0.#epoch.0).
+11:00:00.046 [ClientSocketReaders-7] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+11:00:00.046 [ClientSocketReaders-6] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=25769803776, segment=examples/openmessaging-benchmark-0000004-wtocCBs/0.#epoch.0, writerId=f1cab8f7-0b5e-4420-ac1b-ee8d49e8c3a2, lastEventNumber=-9223372036854775808)
+11:00:00.046 [ClientSocketReaders-6] INFO SegmentOutputStreamImpl - Connection setup complete for writer f1cab8f7-0b5e-4420-ac1b-ee8d49e8c3a2
+11:00:00.048 [clientInternal-3-3] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.46:12345 for examples/openmessaging-benchmark-0000003-TWHqxI/0.#epoch.0, writerID: 003a241e-aa3f-4541-8ce7-8976da9fc257
+11:00:00.049 [ClientSocketReaders-7] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=30064771072, segment=examples/openmessaging-benchmark-0000006-EmJoH2A/0.#epoch.0, writerId=5f2afb7f-8005-4f45-9031-cb3ca7fea937, lastEventNumber=-9223372036854775808)
+11:00:00.050 [ClientSocketReaders-7] INFO SegmentOutputStreamImpl - Connection setup complete for writer 5f2afb7f-8005-4f45-9031-cb3ca7fea937
+11:00:00.050 [ClientSocketReaders-8] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+11:00:00.054 [ClientSocketReaders-8] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=34359738368, segment=examples/openmessaging-benchmark-0000003-TWHqxI/0.#epoch.0, writerId=003a241e-aa3f-4541-8ce7-8976da9fc257, lastEventNumber=-9223372036854775808)
+11:00:00.054 [ClientSocketReaders-8] INFO SegmentOutputStreamImpl - Connection setup complete for writer 003a241e-aa3f-4541-8ce7-8976da9fc257
+11:00:00.058 [clientInternal-3-5] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000008-U0iB-ZI/0.#epoch.0, writer d2d791e7-b94d-43d6-8178-f53ab71d3e62
+11:00:00.058 [qtp290096578-28] INFO PravegaBenchmarkProducer - PravegaBenchmarkProducer: BEGIN: streamName=openmessaging-benchmark-0000007-7FMP-u0
+11:00:00.058 [qtp290096578-28] INFO ClientFactoryImpl - Creating writer: ff822626-c247-44e9-91c1-51269870a94a for stream: openmessaging-benchmark-0000007-7FMP-u0 with configuration: EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=10, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false)
+11:00:00.058 [clientInternal-3-3] INFO ControllerImpl - [requestId=5984380377815287634] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000008-U0iB-ZI).
+11:00:00.058 [clientInternal-3-2] INFO ControllerImpl - [requestId=-23579491455860543] Tagging client request (getURI-examples/openmessaging-benchmark-0000008-U0iB-ZI/0.#epoch.0).
+11:00:00.058 [qtp290096578-28] INFO SegmentSelector - Refreshing segments for stream StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000007-7FMP-u0)
+11:00:00.059 [clientInternal-3-6] INFO ControllerImpl - [requestId=5342424008993088505] Tagging client request (getCurrentSegments-examples-openmessaging-benchmark-0000007-7FMP-u0).
+11:00:00.066 [clientInternal-3-5] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000008-U0iB-ZI/0.#epoch.0, writerID: d2d791e7-b94d-43d6-8178-f53ab71d3e62
+11:00:00.068 [ClientSocketReaders-9] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+11:00:00.069 [clientInternal-3-2] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000007-7FMP-u0/0.#epoch.0, writer fed1f582-a388-4897-8454-14e298890cf0
+11:00:00.070 [clientInternal-3-3] INFO ControllerImpl - [requestId=-462688258076169267] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000007-7FMP-u0).
+11:00:00.070 [clientInternal-3-6] INFO ControllerImpl - [requestId=-4988667496465903647] Tagging client request (getURI-examples/openmessaging-benchmark-0000007-7FMP-u0/0.#epoch.0).
+11:00:00.072 [ClientSocketReaders-9] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=38654705664, segment=examples/openmessaging-benchmark-0000008-U0iB-ZI/0.#epoch.0, writerId=d2d791e7-b94d-43d6-8178-f53ab71d3e62, lastEventNumber=-9223372036854775808)
+11:00:00.072 [ClientSocketReaders-9] INFO SegmentOutputStreamImpl - Connection setup complete for writer d2d791e7-b94d-43d6-8178-f53ab71d3e62
+11:00:00.073 [qtp290096578-28] INFO LocalWorker - Created 10 producers in 179.794742 ms from {
+  "topics" : [ "openmessaging-benchmark-0000005-q8T721Y", "openmessaging-benchmark-0000001-VYdzVK0", "openmessaging-benchmark-0000002-e5UMops", "openmessaging-benchmark-0000009-7XF38_8", "openmessaging-benchmark-0000000-on4nrUE", "openmessaging-benchmark-0000004-wtocCBs", "openmessaging-benchmark-0000006-EmJoH2A", "openmessaging-benchmark-0000003-TWHqx_I", "openmessaging-benchmark-0000008-U0iB-ZI", "openmessaging-benchmark-0000007-7FMP-u0" ],
+  "producerIndex" : 0,
+  "isTpcH" : false
+}
+11:00:00.075 [main] INFO WorkloadGenerator - Created 10 producers in 187.324112 ms
+11:00:00.075 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+11:00:00.076 [clientInternal-3-3] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.46:12345 for examples/openmessaging-benchmark-0000007-7FMP-u0/0.#epoch.0, writerID: fed1f582-a388-4897-8454-14e298890cf0
+11:00:00.078 [ClientSocketReaders-10] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+11:00:00.082 [ClientSocketReaders-10] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=42949672960, segment=examples/openmessaging-benchmark-0000007-7FMP-u0/0.#epoch.0, writerId=fed1f582-a388-4897-8454-14e298890cf0, lastEventNumber=-9223372036854775808)
+11:00:00.082 [ClientSocketReaders-10] INFO SegmentOutputStreamImpl - Connection setup complete for writer fed1f582-a388-4897-8454-14e298890cf0
+11:00:00.099 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 8, Received: 2, Expected: 10
+11:00:02.103 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 10, Received: 10, Expected: 10
+11:00:02.103 [main] INFO WorkloadGenerator - All consumers are ready!
+11:00:02.127 [qtp290096578-28] INFO WorkerHandler - Start load publish-rate: 100000.0 msg/s -- payload-size: 10000 -- producer index: 0
+11:00:02.150 [qtp290096578-28] INFO LocalWorker - Submitting throughput producers with maxSize Optional[10000] and producer size 10
+11:00:02.150 [qtp290096578-28] INFO LocalWorker - Using max outstanding messages 10000
+11:00:02.150 [qtp290096578-28] INFO LocalWorker - Overriding max outstanding messages to 10000
+11:00:02.152 [qtp290096578-28] INFO LocalWorker - Submitting throughput producers with maxSize Optional[10000] and producer size 10
+11:00:02.152 [qtp290096578-28] INFO LocalWorker - Using max outstanding messages 10000
+11:00:02.152 [qtp290096578-28] INFO LocalWorker - Overriding max outstanding messages to 10000
+11:00:02.152 [qtp290096578-28] INFO LocalWorker - Submitting throughput producers with maxSize Optional[10000] and producer size 10
+11:00:02.152 [qtp290096578-28] INFO LocalWorker - Using max outstanding messages 10000
+11:00:02.152 [qtp290096578-28] INFO LocalWorker - Overriding max outstanding messages to 10000
+11:00:02.153 [qtp290096578-28] INFO LocalWorker - Submitting throughput producers with maxSize Optional[10000] and producer size 10
+11:00:02.153 [qtp290096578-28] INFO LocalWorker - Using max outstanding messages 10000
+11:00:02.153 [qtp290096578-28] INFO LocalWorker - Overriding max outstanding messages to 10000
+11:00:02.154 [qtp290096578-28] INFO LocalWorker - Submitting throughput producers with maxSize Optional[10000] and producer size 10
+11:00:02.154 [qtp290096578-28] INFO LocalWorker - Using max outstanding messages 10000
+11:00:02.154 [qtp290096578-28] INFO LocalWorker - Overriding max outstanding messages to 10000
+11:00:02.164 [qtp290096578-28] INFO LocalWorker - Submitting throughput producers with maxSize Optional[10000] and producer size 10
+11:00:02.164 [qtp290096578-28] INFO LocalWorker - Using max outstanding messages 10000
+11:00:02.165 [qtp290096578-28] INFO LocalWorker - Overriding max outstanding messages to 10000
+11:00:02.169 [qtp290096578-28] INFO LocalWorker - Submitting throughput producers with maxSize Optional[10000] and producer size 10
+11:00:02.169 [qtp290096578-28] INFO LocalWorker - Using max outstanding messages 10000
+11:00:02.169 [qtp290096578-28] INFO LocalWorker - Overriding max outstanding messages to 10000
+11:00:02.181 [qtp290096578-28] INFO LocalWorker - Submitting throughput producers with maxSize Optional[10000] and producer size 10
+11:00:02.181 [qtp290096578-28] INFO LocalWorker - Using max outstanding messages 10000
+11:00:02.182 [qtp290096578-28] INFO LocalWorker - Overriding max outstanding messages to 10000
+11:00:02.192 [main] INFO WorkloadGenerator - ----- Starting warm-up traffic (1m) ------
+11:00:12.667 [main] INFO WorkloadGenerator - Pub rate 33046.9 msg/s / 315.2 MB/s | Pub err     0.0 err/s | Cons rate 26847.6 msg/s / 256.0 MB/s | Backlog: 62.0 K | Pub Latency (ms) avg: 1574.8 - 50%: 1612.6 - 99%: 3140.4 - 99.9%: 3734.0 - Max: 3854.9 | Pub Delay Latency (us) avg: 1578193.6 - 50%: 823031.0 - 99%: 4965663.0 - 99.9%: 5244095.0 - Max: 5539615.0
+11:00:22.917 [main] INFO WorkloadGenerator - Pub rate 32149.3 msg/s / 306.6 MB/s | Pub err     0.0 err/s | Cons rate 33316.7 msg/s / 317.7 MB/s | Backlog: 49.7 K | Pub Latency (ms) avg: 1844.5 - 50%: 1827.1 - 99%: 4275.9 - 99.9%: 5114.9 - Max: 5125.3 | Pub Delay Latency (us) avg: 8126979.1 - 50%: 8061951.0 - 99%: 12233983.0 - 99.9%: 12967551.0 - Max: 13156671.0
+11:00:33.149 [main] INFO WorkloadGenerator - Pub rate 32877.2 msg/s / 313.5 MB/s | Pub err     0.0 err/s | Cons rate 18695.6 msg/s / 178.3 MB/s | Backlog: 194.9 K | Pub Latency (ms) avg: 2090.1 - 50%: 1956.8 - 99%: 4311.9 - 99.9%: 4753.3 - Max: 5912.8 | Pub Delay Latency (us) avg: 15222806.8 - 50%: 15038591.0 - 99%: 18717567.0 - 99.9%: 19200639.0 - Max: 19202687.0
+11:00:43.360 [main] INFO WorkloadGenerator - Pub rate 32059.8 msg/s / 305.7 MB/s | Pub err     0.0 err/s | Cons rate 33658.6 msg/s / 321.0 MB/s | Backlog: 178.5 K | Pub Latency (ms) avg: 1902.2 - 50%: 1746.0 - 99%: 4435.5 - 99.9%: 4544.0 - Max: 4547.3 | Pub Delay Latency (us) avg: 22325210.8 - 50%: 21987199.0 - 99%: 26139647.0 - 99.9%: 26146815.0 - Max: 26149119.0
+11:00:53.616 [main] INFO WorkloadGenerator - Pub rate 32671.9 msg/s / 311.6 MB/s | Pub err     0.0 err/s | Cons rate 36371.4 msg/s / 346.9 MB/s | Backlog: 140.7 K | Pub Latency (ms) avg: 1850.1 - 50%: 1568.0 - 99%: 5098.0 - 99.9%: 6091.3 - Max: 6440.7 | Pub Delay Latency (us) avg: 29418273.0 - 50%: 29607679.0 - 99%: 33278079.0 - 99.9%: 33331455.0 - Max: 33440895.0
+11:01:03.850 [main] INFO WorkloadGenerator - Pub rate 32331.7 msg/s / 308.3 MB/s | Pub err     0.0 err/s | Cons rate 27610.5 msg/s / 263.3 MB/s | Backlog: 189.1 K | Pub Latency (ms) avg: 2075.3 - 50%: 1736.7 - 99%: 6430.5 - 99.9%: 6851.6 - Max: 6853.2 | Pub Delay Latency (us) avg: 36413440.4 - 50%: 36577791.0 - 99%: 40197631.0 - 99.9%: 40397823.0 - Max: 40406527.0
+11:01:04.198 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg: 1888.2 - 50%: 1741.9 - 95%: 3585.4 - 99%: 4680.9 - 99.9%: 6762.4 - 99.99%: 6852.2 - Max: 6853.2 | Pub Delay (us)  avg: 18875128.3 - 50%: 18677631.0 - 95%: 38301439.0 - 99%: 39827455.0 - 99.9%: 40303359.0 - 99.99%: 40406015.0 - Max: 40425983.0
+11:01:04.443 [main] INFO WorkloadGenerator - ----- Starting benchmark traffic (2m)------
+11:01:14.635 [main] INFO WorkloadGenerator - Pub rate 33814.4 msg/s / 322.5 MB/s | Pub err     0.0 err/s | Cons rate 36174.2 msg/s / 345.0 MB/s | Backlog: 165.5 K | Pub Latency (ms) avg: 2067.0 - 50%: 1940.6 - 99%: 4667.0 - 99.9%: 6362.4 - Max: 6472.9 | Pub Delay Latency (us) avg: 43597706.7 - 50%: 43558399.0 - 99%: 47005439.0 - 99.9%: 47713279.0 - Max: 47715071.0
+11:01:24.848 [main] INFO WorkloadGenerator - Pub rate 31479.0 msg/s / 300.2 MB/s | Pub err     0.0 err/s | Cons rate 26261.3 msg/s / 250.4 MB/s | Backlog: 218.9 K | Pub Latency (ms) avg: 1925.2 - 50%: 1886.3 - 99%: 4399.7 - 99.9%: 4440.9 - Max: 4611.2 | Pub Delay Latency (us) avg: 50571582.9 - 50%: 50746879.0 - 99%: 54370303.0 - 99.9%: 54672383.0 - Max: 54684415.0
+11:01:34.064 [ClientSocketReaders-5] INFO TcpClientConnection - Closing TcpClientConnection.Reader because end of input reached.
+11:01:34.065 [local-worker-2-5] WARN TcpClientConnection - Error writing to connection: java.net.SocketException: Broken pipe (Write failed)
+11:01:34.066 [ClientSocketReaders-5] WARN SegmentOutputStreamImpl - Failing connection for writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa with exception io.pravega.shared.protocol.netty.ConnectionFailedException: Connection dropped for writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:01:34.066 [ClientSocketReaders-5] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: Connection dropped for writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa for connection io.pravega.client.connection.impl.FlowClientConnection@344a597b on writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa. SetupCompleted: true, Closed: false
+11:01:34.066 [ClientSocketReaders-5] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0 on writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa failed due to: Connection dropped for writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:01:34.067 [clientInternal-3-5] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:01:34.067 [clientInternal-3-5] INFO ControllerImpl - [requestId=6196361335204213207] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0).
+11:01:34.066 [local-worker-2-5] WARN SegmentOutputStreamImpl - Failed writing event through writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa due to: 
+io.pravega.shared.protocol.netty.ConnectionFailedException: java.net.SocketException: Broken pipe (Write failed)
+	at io.pravega.client.connection.impl.TcpClientConnection.send(TcpClientConnection.java:310) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	at io.pravega.client.connection.impl.FlowClientConnection.send(FlowClientConnection.java:54) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	at io.pravega.client.segment.impl.SegmentOutputStreamImpl.write(SegmentOutputStreamImpl.java:510) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	at io.pravega.client.stream.impl.EventStreamWriterImpl.writeEventInternal(EventStreamWriterImpl.java:143) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	at io.pravega.client.stream.impl.EventStreamWriterImpl.writeEvent(EventStreamWriterImpl.java:123) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	at io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkProducer.writeEvent(PravegaBenchmarkProducer.java:65) ~[io.openmessaging.benchmark-driver-pravega-0.0.1-SNAPSHOT.jar:?]
+	at io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkProducer.sendAsync(PravegaBenchmarkProducer.java:59) ~[io.openmessaging.benchmark-driver-pravega-0.0.1-SNAPSHOT.jar:?]
+	at io.openmessaging.benchmark.common.producer.MessageProducerImpl.sendMessage(MessageProducerImpl.java:58) ~[io.openmessaging.benchmark-common-0.0.1-SNAPSHOT.jar:?]
+	at io.openmessaging.benchmark.worker.LocalWorker.lambda$submitThroughputProducersToExecutor$15(LocalWorker.java:442) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.ArrayList.forEach(ArrayList.java:1541) ~[?:?]
+	at io.openmessaging.benchmark.worker.LocalWorker.lambda$submitThroughputProducersToExecutor$16(LocalWorker.java:439) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) [io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+Caused by: java.net.SocketException: Broken pipe (Write failed)
+	at java.net.SocketOutputStream.socketWrite0(Native Method) ~[?:?]
+	at java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:110) ~[?:?]
+	at java.net.SocketOutputStream.write(SocketOutputStream.java:150) ~[?:?]
+	at io.netty.buffer.UnpooledHeapByteBuf.getBytes(UnpooledHeapByteBuf.java:196) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.pravega.client.connection.impl.CommandEncoder.flushBuffer(CommandEncoder.java:270) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	at io.pravega.client.connection.impl.CommandEncoder.write(CommandEncoder.java:260) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	at io.pravega.client.connection.impl.TcpClientConnection.send(TcpClientConnection.java:306) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	... 16 more
+11:01:34.075 [clientInternal-3-4] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writerID: 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:01:34.086 [ClientSocketReaders-11] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+11:01:34.087 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Failing connection for writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa with exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.087 [ClientSocketReaders-11] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, correctHost=, serverStackTrace=) for connection io.pravega.client.connection.impl.FlowClientConnection@459e2345 on writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa. SetupCompleted: false, Closed: false
+11:01:34.087 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0 on writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa failed due to: WireCommands.WrongHost(type=WRONG_HOST, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.089 [clientInternal-3-2] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:01:34.090 [clientInternal-3-1] INFO ControllerImpl - [requestId=-358535560225153415] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0).
+11:01:34.095 [clientInternal-3-4] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writerID: 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:01:34.100 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Failing connection for writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa with exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.100 [ClientSocketReaders-11] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, correctHost=, serverStackTrace=) for connection io.pravega.client.connection.impl.FlowClientConnection@a64dfbd on writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa. SetupCompleted: false, Closed: false
+11:01:34.100 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0 on writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa failed due to: WireCommands.WrongHost(type=WRONG_HOST, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.110 [clientInternal-3-5] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:01:34.111 [clientInternal-3-6] INFO ControllerImpl - [requestId=5989385903231814199] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0).
+11:01:34.116 [clientInternal-3-6] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writerID: 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:01:34.127 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Failing connection for writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa with exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.128 [ClientSocketReaders-11] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, correctHost=, serverStackTrace=) for connection io.pravega.client.connection.impl.FlowClientConnection@3e5441bf on writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa. SetupCompleted: false, Closed: false
+11:01:34.128 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0 on writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa failed due to: WireCommands.WrongHost(type=WRONG_HOST, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.135 [local-worker-2-3] WARN TcpClientConnection - Error writing to connection: java.net.SocketException: Broken pipe (Write failed)
+11:01:34.135 [ClientSocketReaders-3] WARN TcpClientConnection - Error in reading from socket.
+java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(SocketInputStream.java:186) ~[?:?]
+	at java.net.SocketInputStream.read(SocketInputStream.java:140) ~[?:?]
+	at java.net.SocketInputStream.read(SocketInputStream.java:126) ~[?:?]
+	at io.pravega.client.connection.impl.IoBuffer.getBuffOfSize(IoBuffer.java:67) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	at io.pravega.client.connection.impl.TcpClientConnection$ConnectionReader.readCommand(TcpClientConnection.java:157) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	at io.pravega.client.connection.impl.TcpClientConnection$ConnectionReader.run(TcpClientConnection.java:123) [io.pravega-pravega-client-0.12.0.jar:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+11:01:34.136 [ClientSocketReaders-2] INFO TcpClientConnection - Closing TcpClientConnection.Reader because end of input reached.
+11:01:34.137 [ClientSocketReaders-2] WARN SegmentOutputStreamImpl - Failing connection for writer 0fef5b17-6784-494a-b016-9635e4f06da5 with exception io.pravega.shared.protocol.netty.ConnectionFailedException: Connection dropped for writer 0fef5b17-6784-494a-b016-9635e4f06da5
+11:01:34.137 [ClientSocketReaders-2] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: Connection dropped for writer 0fef5b17-6784-494a-b016-9635e4f06da5 for connection io.pravega.client.connection.impl.FlowClientConnection@203d87cd on writer 0fef5b17-6784-494a-b016-9635e4f06da5. SetupCompleted: true, Closed: false
+11:01:34.137 [ClientSocketReaders-2] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0 on writer 0fef5b17-6784-494a-b016-9635e4f06da5 failed due to: Connection dropped for writer 0fef5b17-6784-494a-b016-9635e4f06da5
+11:01:34.137 [local-worker-2-3] WARN SegmentOutputStreamImpl - Failing connection for writer 306440ca-269c-494a-82fd-2a640233274d with exception io.pravega.shared.protocol.netty.ConnectionFailedException: Connection dropped for writer 306440ca-269c-494a-82fd-2a640233274d
+11:01:34.137 [clientInternal-3-2] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writer 0fef5b17-6784-494a-b016-9635e4f06da5
+11:01:34.138 [clientInternal-3-6] INFO ControllerImpl - [requestId=2932573880149721685] Tagging client request (getURI-examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0).
+11:01:34.137 [local-worker-2-3] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: Connection dropped for writer 306440ca-269c-494a-82fd-2a640233274d for connection io.pravega.client.connection.impl.FlowClientConnection@673887ed on writer 306440ca-269c-494a-82fd-2a640233274d. SetupCompleted: true, Closed: false
+11:01:34.139 [local-worker-2-3] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0 on writer 306440ca-269c-494a-82fd-2a640233274d failed due to: Connection dropped for writer 306440ca-269c-494a-82fd-2a640233274d
+11:01:34.139 [clientInternal-3-1] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writer 306440ca-269c-494a-82fd-2a640233274d
+11:01:34.139 [clientInternal-3-8] INFO ControllerImpl - [requestId=-1389651579320392060] Tagging client request (getURI-examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0).
+11:01:34.139 [local-worker-2-3] WARN SegmentOutputStreamImpl - Failed writing event through writer 306440ca-269c-494a-82fd-2a640233274d due to: 
+io.pravega.shared.protocol.netty.ConnectionFailedException: java.net.SocketException: Broken pipe (Write failed)
+	at io.pravega.client.connection.impl.TcpClientConnection.send(TcpClientConnection.java:310) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	at io.pravega.client.connection.impl.FlowClientConnection.send(FlowClientConnection.java:54) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	at io.pravega.client.segment.impl.SegmentOutputStreamImpl.write(SegmentOutputStreamImpl.java:510) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	at io.pravega.client.stream.impl.EventStreamWriterImpl.writeEventInternal(EventStreamWriterImpl.java:143) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	at io.pravega.client.stream.impl.EventStreamWriterImpl.writeEvent(EventStreamWriterImpl.java:123) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	at io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkProducer.writeEvent(PravegaBenchmarkProducer.java:65) ~[io.openmessaging.benchmark-driver-pravega-0.0.1-SNAPSHOT.jar:?]
+	at io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkProducer.sendAsync(PravegaBenchmarkProducer.java:59) ~[io.openmessaging.benchmark-driver-pravega-0.0.1-SNAPSHOT.jar:?]
+	at io.openmessaging.benchmark.common.producer.MessageProducerImpl.sendMessage(MessageProducerImpl.java:58) ~[io.openmessaging.benchmark-common-0.0.1-SNAPSHOT.jar:?]
+	at io.openmessaging.benchmark.worker.LocalWorker.lambda$submitThroughputProducersToExecutor$15(LocalWorker.java:442) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.ArrayList.forEach(ArrayList.java:1541) ~[?:?]
+	at io.openmessaging.benchmark.worker.LocalWorker.lambda$submitThroughputProducersToExecutor$16(LocalWorker.java:439) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) [io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+Caused by: java.net.SocketException: Broken pipe (Write failed)
+	at java.net.SocketOutputStream.socketWrite0(Native Method) ~[?:?]
+	at java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:110) ~[?:?]
+	at java.net.SocketOutputStream.write(SocketOutputStream.java:150) ~[?:?]
+	at io.netty.buffer.UnpooledHeapByteBuf.getBytes(UnpooledHeapByteBuf.java:196) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.pravega.client.connection.impl.CommandEncoder.flushBuffer(CommandEncoder.java:270) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	at io.pravega.client.connection.impl.CommandEncoder.write(CommandEncoder.java:260) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	at io.pravega.client.connection.impl.TcpClientConnection.send(TcpClientConnection.java:306) ~[io.pravega-pravega-client-0.12.0.jar:?]
+	... 16 more
+11:01:34.145 [clientInternal-3-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writerID: 0fef5b17-6784-494a-b016-9635e4f06da5
+11:01:34.147 [clientInternal-3-2] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writerID: 306440ca-269c-494a-82fd-2a640233274d
+11:01:34.150 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Failing connection for writer 0fef5b17-6784-494a-b016-9635e4f06da5 with exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.150 [ClientSocketReaders-11] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, correctHost=, serverStackTrace=) for connection io.pravega.client.connection.impl.FlowClientConnection@3ba45616 on writer 0fef5b17-6784-494a-b016-9635e4f06da5. SetupCompleted: false, Closed: false
+11:01:34.150 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0 on writer 0fef5b17-6784-494a-b016-9635e4f06da5 failed due to: WireCommands.WrongHost(type=WRONG_HOST, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.151 [clientInternal-3-2] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writer 0fef5b17-6784-494a-b016-9635e4f06da5
+11:01:34.152 [clientInternal-3-4] INFO ControllerImpl - [requestId=3995664877918190187] Tagging client request (getURI-examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0).
+11:01:34.153 [ClientSocketReaders-12] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+11:01:34.153 [ClientSocketReaders-12] WARN SegmentOutputStreamImpl - Failing connection for writer 306440ca-269c-494a-82fd-2a640233274d with exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.153 [ClientSocketReaders-12] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, correctHost=, serverStackTrace=) for connection io.pravega.client.connection.impl.FlowClientConnection@2b03fc5a on writer 306440ca-269c-494a-82fd-2a640233274d. SetupCompleted: false, Closed: false
+11:01:34.153 [ClientSocketReaders-12] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0 on writer 306440ca-269c-494a-82fd-2a640233274d failed due to: WireCommands.WrongHost(type=WRONG_HOST, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.155 [clientInternal-3-6] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writer 306440ca-269c-494a-82fd-2a640233274d
+11:01:34.155 [clientInternal-3-4] INFO ControllerImpl - [requestId=-9131812005169855117] Tagging client request (getURI-examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0).
+11:01:34.156 [clientInternal-3-6] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writerID: 0fef5b17-6784-494a-b016-9635e4f06da5
+11:01:34.157 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Failing connection for writer 0fef5b17-6784-494a-b016-9635e4f06da5 with exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.158 [ClientSocketReaders-11] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, correctHost=, serverStackTrace=) for connection io.pravega.client.connection.impl.FlowClientConnection@6a4b20f2 on writer 0fef5b17-6784-494a-b016-9635e4f06da5. SetupCompleted: false, Closed: false
+11:01:34.158 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0 on writer 0fef5b17-6784-494a-b016-9635e4f06da5 failed due to: WireCommands.WrongHost(type=WRONG_HOST, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.159 [clientInternal-3-6] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writerID: 306440ca-269c-494a-82fd-2a640233274d
+11:01:34.165 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Failing connection for writer 306440ca-269c-494a-82fd-2a640233274d with exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.165 [ClientSocketReaders-11] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, correctHost=, serverStackTrace=) for connection io.pravega.client.connection.impl.FlowClientConnection@768ecdbd on writer 306440ca-269c-494a-82fd-2a640233274d. SetupCompleted: false, Closed: false
+11:01:34.165 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0 on writer 306440ca-269c-494a-82fd-2a640233274d failed due to: WireCommands.WrongHost(type=WRONG_HOST, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.168 [clientInternal-3-6] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writer 0fef5b17-6784-494a-b016-9635e4f06da5
+11:01:34.168 [clientInternal-3-2] INFO ControllerImpl - [requestId=1043409903197083721] Tagging client request (getURI-examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0).
+11:01:34.172 [clientInternal-3-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writerID: 0fef5b17-6784-494a-b016-9635e4f06da5
+11:01:34.176 [clientInternal-3-2] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writer 306440ca-269c-494a-82fd-2a640233274d
+11:01:34.176 [clientInternal-3-6] INFO ControllerImpl - [requestId=-5105316862505210142] Tagging client request (getURI-examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0).
+11:01:34.179 [clientInternal-3-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writerID: 306440ca-269c-494a-82fd-2a640233274d
+11:01:34.180 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Failing connection for writer 0fef5b17-6784-494a-b016-9635e4f06da5 with exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.180 [ClientSocketReaders-11] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, correctHost=, serverStackTrace=) for connection io.pravega.client.connection.impl.FlowClientConnection@6f83219c on writer 0fef5b17-6784-494a-b016-9635e4f06da5. SetupCompleted: false, Closed: false
+11:01:34.180 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0 on writer 0fef5b17-6784-494a-b016-9635e4f06da5 failed due to: WireCommands.WrongHost(type=WRONG_HOST, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.184 [ClientSocketReaders-12] WARN SegmentOutputStreamImpl - Failing connection for writer 306440ca-269c-494a-82fd-2a640233274d with exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.184 [ClientSocketReaders-12] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, correctHost=, serverStackTrace=) for connection io.pravega.client.connection.impl.FlowClientConnection@21fb972a on writer 306440ca-269c-494a-82fd-2a640233274d. SetupCompleted: false, Closed: false
+11:01:34.184 [ClientSocketReaders-12] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0 on writer 306440ca-269c-494a-82fd-2a640233274d failed due to: WireCommands.WrongHost(type=WRONG_HOST, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.228 [clientInternal-3-8] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:01:34.229 [clientInternal-3-4] INFO ControllerImpl - [requestId=5050391085814380311] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0).
+11:01:34.233 [clientInternal-3-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writerID: 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:01:34.238 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Failing connection for writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa with exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.238 [ClientSocketReaders-11] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, correctHost=, serverStackTrace=) for connection io.pravega.client.connection.impl.FlowClientConnection@5d7ad9f5 on writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa. SetupCompleted: false, Closed: false
+11:01:34.238 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0 on writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa failed due to: WireCommands.WrongHost(type=WRONG_HOST, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.281 [clientInternal-3-5] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writer 0fef5b17-6784-494a-b016-9635e4f06da5
+11:01:34.281 [clientInternal-3-6] INFO ControllerImpl - [requestId=-8329146610975287543] Tagging client request (getURI-examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0).
+11:01:34.285 [clientInternal-3-6] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writer 306440ca-269c-494a-82fd-2a640233274d
+11:01:34.285 [clientInternal-3-8] INFO ControllerImpl - [requestId=8251745862959625195] Tagging client request (getURI-examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0).
+11:01:34.285 [clientInternal-3-5] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writerID: 0fef5b17-6784-494a-b016-9635e4f06da5
+11:01:34.288 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Failing connection for writer 0fef5b17-6784-494a-b016-9635e4f06da5 with exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.288 [ClientSocketReaders-11] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, correctHost=, serverStackTrace=) for connection io.pravega.client.connection.impl.FlowClientConnection@6e053e18 on writer 0fef5b17-6784-494a-b016-9635e4f06da5. SetupCompleted: false, Closed: false
+11:01:34.288 [clientInternal-3-6] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writerID: 306440ca-269c-494a-82fd-2a640233274d
+11:01:34.288 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0 on writer 0fef5b17-6784-494a-b016-9635e4f06da5 failed due to: WireCommands.WrongHost(type=WRONG_HOST, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.289 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Failing connection for writer 306440ca-269c-494a-82fd-2a640233274d with exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:34.289 [ClientSocketReaders-11] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, correctHost=, serverStackTrace=) for connection io.pravega.client.connection.impl.FlowClientConnection@6e66e540 on writer 306440ca-269c-494a-82fd-2a640233274d. SetupCompleted: false, Closed: false
+11:01:34.289 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0 on writer 306440ca-269c-494a-82fd-2a640233274d failed due to: WireCommands.WrongHost(type=WRONG_HOST, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:35.085 [main] INFO WorkloadGenerator - Pub rate 32617.7 msg/s / 311.1 MB/s | Pub err     0.0 err/s | Cons rate 18074.2 msg/s / 172.4 MB/s | Backlog: 367.4 K | Pub Latency (ms) avg: 1972.0 - 50%: 1728.4 - 99%: 5619.4 - 99.9%: 6651.5 - Max: 6654.7 | Pub Delay Latency (us) avg: 57319973.9 - 50%: 57384703.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+11:01:35.239 [clientInternal-3-1] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:01:35.239 [clientInternal-3-6] INFO ControllerImpl - [requestId=-9178269319407714066] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0).
+11:01:35.244 [clientInternal-3-6] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writerID: 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:01:35.249 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Failing connection for writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa with exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:35.249 [ClientSocketReaders-11] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, correctHost=, serverStackTrace=) for connection io.pravega.client.connection.impl.FlowClientConnection@181fa6d1 on writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa. SetupCompleted: false, Closed: false
+11:01:35.249 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0 on writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa failed due to: WireCommands.WrongHost(type=WRONG_HOST, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:35.288 [clientInternal-3-6] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writer 0fef5b17-6784-494a-b016-9635e4f06da5
+11:01:35.289 [clientInternal-3-8] INFO ControllerImpl - [requestId=-1623097070176888997] Tagging client request (getURI-examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0).
+11:01:35.289 [clientInternal-3-3] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writer 306440ca-269c-494a-82fd-2a640233274d
+11:01:35.290 [clientInternal-3-1] INFO ControllerImpl - [requestId=-7550895404047690722] Tagging client request (getURI-examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0).
+11:01:35.293 [clientInternal-3-6] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writerID: 0fef5b17-6784-494a-b016-9635e4f06da5
+11:01:35.294 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Failing connection for writer 0fef5b17-6784-494a-b016-9635e4f06da5 with exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:35.294 [ClientSocketReaders-11] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, correctHost=, serverStackTrace=) for connection io.pravega.client.connection.impl.FlowClientConnection@13a17156 on writer 0fef5b17-6784-494a-b016-9635e4f06da5. SetupCompleted: false, Closed: false
+11:01:35.294 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0 on writer 0fef5b17-6784-494a-b016-9635e4f06da5 failed due to: WireCommands.WrongHost(type=WRONG_HOST, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:35.294 [clientInternal-3-8] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writerID: 306440ca-269c-494a-82fd-2a640233274d
+11:01:35.295 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Failing connection for writer 306440ca-269c-494a-82fd-2a640233274d with exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:35.295 [ClientSocketReaders-11] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: WireCommands.WrongHost(type=WRONG_HOST, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, correctHost=, serverStackTrace=) for connection io.pravega.client.connection.impl.FlowClientConnection@549368c4 on writer 306440ca-269c-494a-82fd-2a640233274d. SetupCompleted: false, Closed: false
+11:01:35.295 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0 on writer 306440ca-269c-494a-82fd-2a640233274d failed due to: WireCommands.WrongHost(type=WRONG_HOST, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, correctHost=, serverStackTrace=)
+11:01:45.250 [clientInternal-3-4] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:01:45.250 [clientInternal-3-6] INFO ControllerImpl - [requestId=1028654378135487571] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0).
+11:01:45.254 [clientInternal-3-2] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writerID: 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:01:45.258 [ClientSocketReaders-11] INFO TcpClientConnection - Closing TcpClientConnection.Reader because end of input reached.
+11:01:45.258 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Failing connection for writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa with exception io.pravega.shared.protocol.netty.ConnectionFailedException: Connection dropped for writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:01:45.258 [ClientSocketReaders-11] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: Connection dropped for writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa for connection io.pravega.client.connection.impl.FlowClientConnection@d86cbf3 on writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa. SetupCompleted: false, Closed: false
+11:01:45.258 [ClientSocketReaders-11] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0 on writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa failed due to: Connection dropped for writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:01:45.294 [clientInternal-3-2] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writer 0fef5b17-6784-494a-b016-9635e4f06da5
+11:01:45.295 [clientInternal-3-7] INFO ControllerImpl - [requestId=4282048059880724889] Tagging client request (getURI-examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0).
+11:01:45.296 [clientInternal-3-1] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writer 306440ca-269c-494a-82fd-2a640233274d
+11:01:45.296 [clientInternal-3-3] INFO ControllerImpl - [requestId=-605914599094255575] Tagging client request (getURI-examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0).
+11:01:45.298 [clientInternal-3-3] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writerID: 0fef5b17-6784-494a-b016-9635e4f06da5
+11:01:45.299 [clientInternal-3-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writerID: 306440ca-269c-494a-82fd-2a640233274d
+11:01:45.311 [ClientSocketReaders-12] INFO TcpClientConnection - Closing TcpClientConnection.Reader because end of input reached.
+11:01:45.311 [ClientSocketReaders-12] WARN SegmentOutputStreamImpl - Failing connection for writer 0fef5b17-6784-494a-b016-9635e4f06da5 with exception io.pravega.shared.protocol.netty.ConnectionFailedException: Connection dropped for writer 0fef5b17-6784-494a-b016-9635e4f06da5
+11:01:45.311 [ClientSocketReaders-12] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: Connection dropped for writer 0fef5b17-6784-494a-b016-9635e4f06da5 for connection io.pravega.client.connection.impl.FlowClientConnection@64f91d71 on writer 0fef5b17-6784-494a-b016-9635e4f06da5. SetupCompleted: false, Closed: false
+11:01:45.311 [ClientSocketReaders-12] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0 on writer 0fef5b17-6784-494a-b016-9635e4f06da5 failed due to: Connection dropped for writer 0fef5b17-6784-494a-b016-9635e4f06da5
+11:01:45.312 [ClientSocketReaders-13] INFO TcpClientConnection - Closing TcpClientConnection.Reader because end of input reached.
+11:01:45.312 [ClientSocketReaders-13] WARN SegmentOutputStreamImpl - Failing connection for writer 306440ca-269c-494a-82fd-2a640233274d with exception io.pravega.shared.protocol.netty.ConnectionFailedException: Connection dropped for writer 306440ca-269c-494a-82fd-2a640233274d
+11:01:45.312 [ClientSocketReaders-13] INFO SegmentOutputStreamImpl - Handling exception io.pravega.shared.protocol.netty.ConnectionFailedException: Connection dropped for writer 306440ca-269c-494a-82fd-2a640233274d for connection io.pravega.client.connection.impl.FlowClientConnection@7603eee3 on writer 306440ca-269c-494a-82fd-2a640233274d. SetupCompleted: false, Closed: false
+11:01:45.312 [ClientSocketReaders-13] WARN SegmentOutputStreamImpl - Connection for segment examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0 on writer 306440ca-269c-494a-82fd-2a640233274d failed due to: Connection dropped for writer 306440ca-269c-494a-82fd-2a640233274d
+11:01:45.327 [main] INFO WorkloadGenerator - Pub rate 31969.7 msg/s / 304.9 MB/s | Pub err     0.0 err/s | Cons rate 27109.3 msg/s / 258.5 MB/s | Backlog: 417.2 K | Pub Latency (ms) avg: 1274.0 - 50%: 1204.3 - 99%: 2605.1 - 99.9%: 3288.1 - Max: 3511.2 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+11:01:55.545 [main] INFO WorkloadGenerator - Pub rate 33399.4 msg/s / 318.5 MB/s | Pub err     0.0 err/s | Cons rate 28525.1 msg/s / 272.0 MB/s | Backlog: 467.1 K | Pub Latency (ms) avg: 1462.6 - 50%: 1241.7 - 99%: 4414.6 - 99.9%: 4748.0 - Max: 4797.2 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+11:02:05.259 [clientInternal-3-6] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writer 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:02:05.259 [clientInternal-3-1] INFO ControllerImpl - [requestId=-6019958060078869491] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0).
+11:02:05.264 [clientInternal-3-3] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writerID: 62570c1f-12bd-47f2-a4a9-139fd5c618fa
+11:02:05.269 [ClientSocketReaders-14] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+11:02:05.270 [ClientSocketReaders-14] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=21474836480, segment=examples/openmessaging-benchmark-0000000-on4nrUE/0.#epoch.0, writerId=62570c1f-12bd-47f2-a4a9-139fd5c618fa, lastEventNumber=263329)
+11:02:05.312 [clientInternal-3-7] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writer 0fef5b17-6784-494a-b016-9635e4f06da5
+11:02:05.313 [clientInternal-3-2] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writer 306440ca-269c-494a-82fd-2a640233274d
+11:02:05.313 [clientInternal-3-5] INFO ControllerImpl - [requestId=-5966685884256638994] Tagging client request (getURI-examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0).
+11:02:05.313 [clientInternal-3-2] INFO ControllerImpl - [requestId=5178964702631208775] Tagging client request (getURI-examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0).
+11:02:05.319 [clientInternal-3-7] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writerID: 306440ca-269c-494a-82fd-2a640233274d
+11:02:05.319 [clientInternal-3-2] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.147:12345 for examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writerID: 0fef5b17-6784-494a-b016-9635e4f06da5
+11:02:05.325 [ClientSocketReaders-15] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+11:02:05.326 [ClientSocketReaders-15] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=12884901888, segment=examples/openmessaging-benchmark-0000002-e5UMops/0.#epoch.0, writerId=306440ca-269c-494a-82fd-2a640233274d, lastEventNumber=262937)
+11:02:05.331 [ClientSocketReaders-16] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+11:02:05.333 [ClientSocketReaders-16] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=8589934592, segment=examples/openmessaging-benchmark-0000001-VYdzVK0/0.#epoch.0, writerId=0fef5b17-6784-494a-b016-9635e4f06da5, lastEventNumber=209863)
+11:02:05.801 [main] INFO WorkloadGenerator - Pub rate 32286.0 msg/s / 307.9 MB/s | Pub err     0.0 err/s | Cons rate 25928.2 msg/s / 247.3 MB/s | Backlog: 532.1 K | Pub Latency (ms) avg: 1446.3 - 50%: 1306.0 - 99%: 3624.7 - 99.9%: 32836.7 - Max: 32893.2 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+11:02:16.033 [main] INFO WorkloadGenerator - Pub rate 28742.2 msg/s / 274.1 MB/s | Pub err     0.0 err/s | Cons rate 20317.5 msg/s / 193.8 MB/s | Backlog: 618.5 K | Pub Latency (ms) avg: 4516.3 - 50%: 1612.9 - 99%: 36728.8 - 99.9%: 37064.7 - Max: 37094.1 | Pub Delay Latency (us) avg: 59999891.9 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+11:02:26.283 [main] INFO WorkloadGenerator - Pub rate 34662.4 msg/s / 330.6 MB/s | Pub err     0.0 err/s | Cons rate 27079.4 msg/s / 258.2 MB/s | Backlog: 696.2 K | Pub Latency (ms) avg: 1703.3 - 50%: 1249.0 - 99%: 5315.1 - 99.9%: 6435.0 - Max: 6685.6 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+11:02:36.511 [main] INFO WorkloadGenerator - Pub rate 31446.0 msg/s / 299.9 MB/s | Pub err     0.0 err/s | Cons rate 28987.3 msg/s / 276.4 MB/s | Backlog: 721.3 K | Pub Latency (ms) avg: 2175.5 - 50%: 1556.8 - 99%: 8573.5 - 99.9%: 9134.3 - Max: 9176.7 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+11:02:46.746 [main] INFO WorkloadGenerator - Pub rate 32158.0 msg/s / 306.7 MB/s | Pub err     0.0 err/s | Cons rate 24773.1 msg/s / 236.3 MB/s | Backlog: 796.9 K | Pub Latency (ms) avg: 1918.1 - 50%: 1734.6 - 99%: 5765.6 - 99.9%: 6737.2 - Max: 6828.4 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+11:02:56.971 [main] INFO WorkloadGenerator - Pub rate 33963.9 msg/s / 323.9 MB/s | Pub err     0.0 err/s | Cons rate 28202.0 msg/s / 269.0 MB/s | Backlog: 855.8 K | Pub Latency (ms) avg: 1935.1 - 50%: 1953.8 - 99%: 3625.2 - 99.9%: 4981.1 - Max: 4986.0 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+11:03:07.216 [main] INFO WorkloadGenerator - Pub rate 30291.4 msg/s / 288.9 MB/s | Pub err     0.0 err/s | Cons rate 33721.5 msg/s / 321.6 MB/s | Backlog: 820.8 K | Pub Latency (ms) avg: 1974.5 - 50%: 1798.2 - 99%: 4625.2 - 99.9%: 5228.4 - Max: 5313.0 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+11:03:07.509 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg: 2004.9 - 50%: 1587.2 - 95%: 3862.0 - 99%: 6588.4 - 99.9%: 36715.5 - 99.99%: 37064.2 - Max: 37094.1 | Pub Delay (us)  avg: 57654096.7 - 50%: 60000255.0 - 95%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - 99.99%: 60000255.0 - Max: 60000255.0
+11:03:07.616 [main] INFO WorkloadGenerator - ----- Completed run. Stopping worker and yielding results ------
+11:03:07.760 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+11:03:08.169 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+11:03:08.757 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+11:03:08.757 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+11:03:08.757 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+11:03:08.758 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+11:03:08.945 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+11:03:08.945 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+11:03:08.946 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+11:03:08.946 [qtp290096578-28] INFO Pinger - Closing Pinger periodic task
+11:03:08.946 [qtp290096578-28] INFO PravegaBenchmarkDriver - close: clientConfig=ClientConfig(controllerURI=tcp://10.0.0.237:9090, credentials=null, trustStore=null, validateHostName=true, maxConnectionsPerSegmentStore=10, isDefaultMaxConnections=true, deriveTlsEnabledFromControllerURI=true, enableTlsToController=false, enableTlsToSegmentStore=false, metricListener=null)
+11:03:08.947 [qtp290096578-28] INFO ConnectionPoolImpl - Shutting down connection pool
+11:03:08.947 [qtp290096578-28] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+11:03:08.950 [ClientSocketReaders-9] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+11:03:08.950 [ClientSocketReaders-14] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+11:03:08.951 [ClientSocketReaders-15] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+11:03:08.951 [ClientSocketReaders-16] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+11:03:08.951 [ClientSocketReaders-1] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+11:03:08.951 [ClientSocketReaders-7] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+11:03:08.951 [ClientSocketReaders-8] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+11:03:08.952 [ClientSocketReaders-10] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+11:03:08.952 [ClientSocketReaders-4] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+11:03:08.952 [ClientSocketReaders-6] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+11:03:08.958 [qtp290096578-28] INFO ConnectionPoolImpl - Shutting down connection pool
+11:03:08.958 [qtp290096578-28] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+11:03:11.218 [main] INFO PravegaBenchmarkDriver - close: clientConfig=ClientConfig(controllerURI=tcp://10.0.0.237:9090, credentials=null, trustStore=null, validateHostName=true, maxConnectionsPerSegmentStore=10, isDefaultMaxConnections=true, deriveTlsEnabledFromControllerURI=true, enableTlsToController=false, enableTlsToSegmentStore=false, metricListener=null)
+11:03:11.220 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+11:03:11.221 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+11:03:11.227 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+11:03:11.227 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory

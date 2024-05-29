@@ -52,7 +52,7 @@ workloads/throughput-1kb-10-max.yaml workloads/throughput-1kb-100-max.yaml workl
 ALL-MAX-SINGLE
 sudo bin/benchmark \
 --drivers driver-pravega/pravega-experiment.yaml \
-workloads/throughput-10kb-100-max.yaml workloads/throughput-100b-10-max.yaml workloads/throughput-100b-100-max.yaml workloads/throughput-100b-500-max.yaml workloads/throughput-1kb-10-max.yaml workloads/throughput-1kb-100-max.yaml workloads/throughput-1kb-500-max.yaml workloads/throughput-10kb-500-max.yaml
+workloads/throughput-10kb-10-max.yaml workloads/throughput-100b-10-max.yaml workloads/throughput-100b-100-max.yaml workloads/throughput-100b-500-max.yaml workloads/throughput-1kb-10-max.yaml workloads/throughput-1kb-100-max.yaml workloads/throughput-1kb-500-max.yaml workloads/throughput-10kb-10-max.yaml workloads/throughput-10kb-100-max.yaml workloads/throughput-10kb-500-max.yaml
 
 sudo bin/benchmark \
 --drivers driver-pravega/pravega-experiment.yaml \
