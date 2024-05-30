@@ -1,0 +1,1314 @@
+sudo bin/benchmark \
+> --drivers driver-rabbitmq/rabbitmq-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q6-100-10.yaml \
+> workloads/tpc-h-base-long.yaml
+00:04:21.319 [main] INFO Benchmark - Using default worker file workers.yaml!
+00:04:21.327 [main] INFO Benchmark - Reading workers list from workers.yaml
+00:04:21.375 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-rabbitmq/rabbitmq-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.53:8080", "http://10.0.0.201:8080", "http://10.0.0.14:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q6-100-10.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+00:04:21.391 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+00:04:21.401 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q6-100-10",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 10
+} ]
+00:04:21.745 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:04:21.991 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:04:21.991 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:04:21.994 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:04:22.340 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:04:22.359 [main] INFO WorkloadGenerator - Created 17 topics in 9.705332 ms
+00:04:22.849 [main] INFO WorkloadGenerator - Created 17 external consumers in 483.875866 ms
+00:04:23.045 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:04:23.047 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:04:23.048 [main] INFO LocalWorker - Created 1 consumers in 198.776707 ms
+00:04:23.666 [main] INFO WorkloadGenerator - Created 17 producers in 617.604661 ms
+00:04:23.666 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:04:23.692 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 81, Received: 28, Expected: 0
+00:04:23.693 [main] INFO WorkloadGenerator - All consumers are ready!
+00:04:23.693 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q6-100-10-2024-05-30-00-04-22 at 1717027463693
+00:05:02.993 [pool-3-thread-6] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+00:05:03.730 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q6-100-10-2024-05-30-00-04-22 at 1717027503730
+
+
+
+sudo bin/benchmark \
+> --drivers driver-rabbitmq/rabbitmq-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-1000-100.yaml,workloads/tpc-h-q1-100-10.yaml,workloads/tpc-h-q6-1000-100.yaml,workloads/tpc-h-q6-100-10.yaml \
+> workloads/tpc-h-base-long.yaml
+00:05:11.009 [main] INFO Benchmark - Using default worker file workers.yaml!
+00:05:11.017 [main] INFO Benchmark - Reading workers list from workers.yaml
+00:05:11.065 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-rabbitmq/rabbitmq-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.53:8080", "http://10.0.0.201:8080", "http://10.0.0.14:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-1000-100.yaml", "workloads/tpc-h-q1-100-10.yaml", "workloads/tpc-h-q6-1000-100.yaml", "workloads/tpc-h-q6-100-10.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+00:05:11.080 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+00:05:11.091 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-1000-100",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 100
+}, {
+  "queryId" : "tpc-h-q1-100-10",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 10
+}, {
+  "queryId" : "tpc-h-q6-1000-100",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 100
+}, {
+  "queryId" : "tpc-h-q6-100-10",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 10
+} ]
+00:05:11.432 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:05:11.678 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:05:11.678 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:05:11.680 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:05:12.028 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:05:12.050 [main] INFO WorkloadGenerator - Created 107 topics in 12.52528 ms
+00:05:14.037 [main] INFO WorkloadGenerator - Created 107 external consumers in 1978.591976 ms
+00:05:14.229 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:05:14.231 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:05:14.232 [main] INFO LocalWorker - Created 1 consumers in 194.272278 ms
+00:05:16.684 [main] INFO WorkloadGenerator - Created 107 producers in 2451.454097 ms
+00:05:16.684 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:05:16.695 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 11, Received: 28, Expected: 0
+00:05:16.695 [main] INFO WorkloadGenerator - All consumers are ready!
+00:05:16.695 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q1-1000-100-2024-05-30-00-05-12 at 1717027516695
+00:05:49.875 [pool-3-thread-9] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+00:05:56.713 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q1-1000-100-2024-05-30-00-05-12 at 1717027556713
+00:05:57.192 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:05:57.197 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:05:57.197 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:05:57.198 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:05:57.413 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:05:57.416 [main] INFO WorkloadGenerator - Created 17 topics in 2.610834 ms
+00:05:58.128 [main] INFO WorkloadGenerator - Created 17 external consumers in 711.244046 ms
+00:05:58.245 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:05:58.245 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:05:58.245 [main] INFO LocalWorker - Created 1 consumers in 116.711013 ms
+00:05:58.858 [main] INFO WorkloadGenerator - Created 17 producers in 612.933544 ms
+00:05:58.858 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:05:58.864 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 45, Received: 21, Expected: 0
+00:05:58.865 [main] INFO WorkloadGenerator - All consumers are ready!
+00:05:58.865 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q1-100-10-2024-05-30-00-05-57 at 1717027558865
+00:06:47.711 [pool-6-thread-7] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.13274,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880073,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":26,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612946,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":26,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+00:06:48.880 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q1-100-10-2024-05-30-00-05-57 at 1717027608880
+00:06:49.311 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:06:49.323 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:06:49.323 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:06:49.324 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:06:49.541 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:06:49.545 [main] INFO WorkloadGenerator - Created 107 topics in 3.424092 ms
+00:06:51.511 [main] INFO WorkloadGenerator - Created 107 external consumers in 1963.382589 ms
+00:06:51.627 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:06:51.628 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:06:51.628 [main] INFO LocalWorker - Created 1 consumers in 116.356132 ms
+00:06:54.069 [main] INFO WorkloadGenerator - Created 107 producers in 2441.311708 ms
+00:06:54.069 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:06:54.075 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 4, Received: 30, Expected: 0
+00:06:54.076 [main] INFO WorkloadGenerator - All consumers are ready!
+00:06:54.076 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q6-1000-100-2024-05-30-00-06-49 at 1717027614076
+00:07:21.353 [pool-9-thread-9] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+00:07:24.079 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q6-1000-100-2024-05-30-00-06-49 at 1717027644079
+00:07:24.548 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:07:24.552 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:07:24.553 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:07:24.553 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:07:24.763 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:07:24.765 [main] INFO WorkloadGenerator - Created 17 topics in 2.04911 ms
+00:07:25.235 [main] INFO WorkloadGenerator - Created 17 external consumers in 468.633736 ms
+00:07:25.361 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:07:25.362 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:07:25.362 [main] INFO LocalWorker - Created 1 consumers in 127.038415 ms
+00:07:25.974 [main] INFO WorkloadGenerator - Created 17 producers in 612.48357 ms
+00:07:25.975 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:07:25.979 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 47, Received: 21, Expected: 0
+00:07:25.980 [main] INFO WorkloadGenerator - All consumers are ready!
+00:07:25.980 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q6-100-10-2024-05-30-00-07-24 at 1717027645980
+00:08:03.920 [pool-12-thread-6] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+00:08:05.984 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q6-100-10-2024-05-30-00-07-24 at 1717027685984
+
+
+
+sudo bin/benchmark \
+> --drivers driver-rabbitmq/rabbitmq-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-1000-300.yaml,workloads/tpc-h-q1-100-30.yaml,workloads/tpc-h-q6-1000-300.yaml,workloads/tpc-h-q6-100-30.yaml \
+> workloads/tpc-h-base-long.yaml
+00:08:16.412 [main] INFO Benchmark - Using default worker file workers.yaml!
+00:08:16.419 [main] INFO Benchmark - Reading workers list from workers.yaml
+00:08:16.466 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-rabbitmq/rabbitmq-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.53:8080", "http://10.0.0.201:8080", "http://10.0.0.14:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-1000-300.yaml", "workloads/tpc-h-q1-100-30.yaml", "workloads/tpc-h-q6-1000-300.yaml", "workloads/tpc-h-q6-100-30.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+00:08:16.481 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+00:08:16.492 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-1000-300",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 300
+}, {
+  "queryId" : "tpc-h-q1-100-30",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 30
+}, {
+  "queryId" : "tpc-h-q6-1000-300",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 300
+}, {
+  "queryId" : "tpc-h-q6-100-30",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 30
+} ]
+00:08:16.822 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:08:17.071 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:08:17.072 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:08:17.074 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:08:17.416 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:08:17.440 [main] INFO WorkloadGenerator - Created 307 topics in 14.737107 ms
+00:08:22.878 [main] INFO WorkloadGenerator - Created 307 external consumers in 5417.591066 ms
+00:08:23.077 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:08:23.079 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:08:23.080 [main] INFO LocalWorker - Created 1 consumers in 200.970284 ms
+00:08:29.589 [main] INFO WorkloadGenerator - Created 307 producers in 6509.366302 ms
+00:08:29.590 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:08:29.613 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 227, Received: 45, Expected: 0
+00:08:29.613 [main] INFO WorkloadGenerator - All consumers are ready!
+00:08:29.613 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q1-1000-300-2024-05-30-00-08-17 at 1717027709613
+00:09:01.500 [pool-3-thread-8] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+00:09:09.634 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q1-1000-300-2024-05-30-00-08-17 at 1717027749634
+00:09:10.199 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:09:10.204 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:09:10.204 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:09:10.205 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:09:10.419 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:09:10.422 [main] INFO WorkloadGenerator - Created 37 topics in 2.478675 ms
+00:09:11.836 [main] INFO WorkloadGenerator - Created 37 external consumers in 1413.137132 ms
+00:09:11.953 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:09:11.953 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:09:11.953 [main] INFO LocalWorker - Created 1 consumers in 116.887229 ms
+00:09:12.973 [main] INFO WorkloadGenerator - Created 37 producers in 1018.936237 ms
+00:09:12.973 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:09:12.981 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 24, Received: 29, Expected: 0
+00:09:12.981 [main] INFO WorkloadGenerator - All consumers are ready!
+00:09:12.981 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q1-100-30-2024-05-30-00-09-10 at 1717027752981
+00:10:00.441 [pool-6-thread-5] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132740,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880077,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":26,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612940,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":26,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+00:10:02.998 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q1-100-30-2024-05-30-00-09-10 at 1717027802998
+00:10:03.439 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:10:03.450 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:10:03.450 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:10:03.451 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:10:03.667 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:10:03.672 [main] INFO WorkloadGenerator - Created 307 topics in 4.015579 ms
+00:10:09.036 [main] INFO WorkloadGenerator - Created 307 external consumers in 5358.800419 ms
+00:10:09.153 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:10:09.153 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:10:09.153 [main] INFO LocalWorker - Created 1 consumers in 116.38924 ms
+00:10:15.653 [main] INFO WorkloadGenerator - Created 307 producers in 6499.884258 ms
+00:10:15.653 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:10:15.659 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 3, Received: 16, Expected: 0
+00:10:15.659 [main] INFO WorkloadGenerator - All consumers are ready!
+00:10:15.659 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q6-1000-300-2024-05-30-00-10-03 at 1717027815659
+00:10:44.001 [pool-9-thread-8] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+00:10:45.662 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q6-1000-300-2024-05-30-00-10-03 at 1717027845662
+00:10:46.209 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:10:46.214 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:10:46.214 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:10:46.214 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:10:46.423 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:10:46.426 [main] INFO WorkloadGenerator - Created 37 topics in 2.346982 ms
+00:10:47.370 [main] INFO WorkloadGenerator - Created 37 external consumers in 943.604484 ms
+00:10:47.488 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:10:47.489 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:10:47.489 [main] INFO LocalWorker - Created 1 consumers in 118.10208 ms
+00:10:48.506 [main] INFO WorkloadGenerator - Created 37 producers in 1017.430169 ms
+00:10:48.507 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:10:48.511 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 6, Received: 24, Expected: 0
+00:10:48.511 [main] INFO WorkloadGenerator - All consumers are ready!
+00:10:48.511 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q6-100-30-2024-05-30-00-10-46 at 1717027848511
+00:11:27.375 [pool-12-thread-5] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+00:11:28.518 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q6-100-30-2024-05-30-00-10-46 at 1717027888518
+
+
+sudo bin/benchmark \
+> --drivers driver-rabbitmq/rabbitmq-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-1000-500.yaml,workloads/tpc-h-q1-100-50.yaml,workloads/tpc-h-q6-1000-500.yaml,workloads/tpc-h-q6-100-50.yaml \
+> workloads/tpc-h-base-long.yaml
+00:11:53.845 [main] INFO Benchmark - Using default worker file workers.yaml!
+00:11:53.852 [main] INFO Benchmark - Reading workers list from workers.yaml
+00:11:53.900 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-rabbitmq/rabbitmq-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.53:8080", "http://10.0.0.201:8080", "http://10.0.0.14:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-1000-500.yaml", "workloads/tpc-h-q1-100-50.yaml", "workloads/tpc-h-q6-1000-500.yaml", "workloads/tpc-h-q6-100-50.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+00:11:53.915 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+00:11:53.926 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-1000-500",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 500
+}, {
+  "queryId" : "tpc-h-q1-100-50",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 50
+}, {
+  "queryId" : "tpc-h-q6-1000-500",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 500
+}, {
+  "queryId" : "tpc-h-q6-100-50",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 50
+} ]
+00:11:54.257 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:11:54.500 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:11:54.500 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:11:54.503 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:11:54.850 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:11:54.874 [main] INFO WorkloadGenerator - Created 507 topics in 15.11914 ms
+00:12:03.359 [main] INFO WorkloadGenerator - Created 507 external consumers in 8463.249704 ms
+00:12:03.552 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:12:03.554 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:12:03.555 [main] INFO LocalWorker - Created 1 consumers in 196.431819 ms
+00:12:14.143 [main] INFO WorkloadGenerator - Created 507 producers in 10586.866958 ms
+00:12:14.143 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:12:14.155 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 22, Expected: 0
+00:12:14.155 [main] INFO WorkloadGenerator - All consumers are ready!
+00:12:14.156 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q1-1000-500-2024-05-30-00-11-54 at 1717027934156
+00:12:45.982 [pool-3-thread-3] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+00:12:54.176 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q1-1000-500-2024-05-30-00-11-54 at 1717027974176
+00:12:54.837 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:12:54.843 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:12:54.843 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:12:54.844 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:12:55.059 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:12:55.062 [main] INFO WorkloadGenerator - Created 57 topics in 2.099471 ms
+00:12:56.280 [main] INFO WorkloadGenerator - Created 57 external consumers in 1217.499265 ms
+00:12:56.398 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:12:56.398 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:12:56.398 [main] INFO LocalWorker - Created 1 consumers in 117.692047 ms
+00:12:57.823 [main] INFO WorkloadGenerator - Created 57 producers in 1424.499158 ms
+00:12:57.823 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:12:57.843 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 2, Received: 27, Expected: 0
+00:12:57.843 [main] INFO WorkloadGenerator - All consumers are ready!
+00:12:57.843 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q1-100-50-2024-05-30-00-12-55 at 1717027977843
+00:13:44.314 [pool-6-thread-7] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132737,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880071,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612946,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+00:13:47.854 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q1-100-50-2024-05-30-00-12-55 at 1717028027854
+00:13:48.301 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:13:48.313 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:13:48.314 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:13:48.314 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:13:48.531 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:13:48.538 [main] INFO WorkloadGenerator - Created 507 topics in 6.440823 ms
+00:13:57.004 [main] INFO WorkloadGenerator - Created 507 external consumers in 8459.41291 ms
+00:13:57.121 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:13:57.121 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:13:57.121 [main] INFO LocalWorker - Created 1 consumers in 117.625543 ms
+00:14:07.681 [main] INFO WorkloadGenerator - Created 507 producers in 10559.862269 ms
+00:14:07.682 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:14:07.689 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 3, Received: 22, Expected: 0
+00:14:07.689 [main] INFO WorkloadGenerator - All consumers are ready!
+00:14:07.689 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q6-1000-500-2024-05-30-00-13-48 at 1717028047689
+00:14:35.334 [pool-9-thread-8] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+00:14:37.693 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q6-1000-500-2024-05-30-00-13-48 at 1717028077693
+00:14:38.329 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:14:38.334 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:14:38.334 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:14:38.334 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:14:38.544 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:14:38.547 [main] INFO WorkloadGenerator - Created 57 topics in 2.589276 ms
+00:14:39.767 [main] INFO WorkloadGenerator - Created 57 external consumers in 1219.37436 ms
+00:14:39.884 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:14:39.884 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:14:39.885 [main] INFO LocalWorker - Created 1 consumers in 116.975028 ms
+00:14:41.309 [main] INFO WorkloadGenerator - Created 57 producers in 1424.222927 ms
+00:14:41.309 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:14:41.314 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 1, Received: 27, Expected: 0
+00:14:41.314 [main] INFO WorkloadGenerator - All consumers are ready!
+00:14:41.314 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q6-100-50-2024-05-30-00-14-38 at 1717028081314
+00:15:19.005 [pool-12-thread-6] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+00:15:21.323 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q6-100-50-2024-05-30-00-14-38 at 1717028121323
+
+
+
+sudo bin/benchmark \
+> --drivers driver-rabbitmq/rabbitmq-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-10000-300.yaml workloads/tpc-h-q1-10000-500.yaml workloads/tpc-h-q1-10000-800.yaml workloads/tpc-h-q6-10000-300.yaml workloads/tpc-h-q6-10000-500.yaml workloads/tpc-h-q6-10000-800.yaml \
+> workloads/tpc-h-base-long.yaml
+00:20:08.590 [main] INFO Benchmark - Using default worker file workers.yaml!
+00:20:08.600 [main] INFO Benchmark - Reading workers list from workers.yaml
+00:20:08.648 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-rabbitmq/rabbitmq-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.53:8080", "http://10.0.0.201:8080", "http://10.0.0.14:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-10000-300.yaml" ],
+  "workloads" : [ "workloads/tpc-h-q1-10000-500.yaml", "workloads/tpc-h-q1-10000-800.yaml", "workloads/tpc-h-q6-10000-300.yaml", "workloads/tpc-h-q6-10000-500.yaml", "workloads/tpc-h-q6-10000-800.yaml", "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+00:20:08.671 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  },
+  "tpc-h-q1-10000-500" : {
+    "name" : null,
+    "topics" : 0,
+    "partitionsPerTopic" : 0,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : null,
+    "subscriptionsPerTopic" : 0,
+    "producersPerTopic" : 0,
+    "consumerPerSubscription" : 0,
+    "producerRate" : 0,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 0,
+    "warmupDurationMinutes" : 1
+  },
+  "tpc-h-q1-10000-800" : {
+    "name" : null,
+    "topics" : 0,
+    "partitionsPerTopic" : 0,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : null,
+    "subscriptionsPerTopic" : 0,
+    "producersPerTopic" : 0,
+    "consumerPerSubscription" : 0,
+    "producerRate" : 0,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 0,
+    "warmupDurationMinutes" : 1
+  },
+  "tpc-h-q6-10000-300" : {
+    "name" : null,
+    "topics" : 0,
+    "partitionsPerTopic" : 0,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : null,
+    "subscriptionsPerTopic" : 0,
+    "producersPerTopic" : 0,
+    "consumerPerSubscription" : 0,
+    "producerRate" : 0,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 0,
+    "warmupDurationMinutes" : 1
+  },
+  "tpc-h-q6-10000-500" : {
+    "name" : null,
+    "topics" : 0,
+    "partitionsPerTopic" : 0,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : null,
+    "subscriptionsPerTopic" : 0,
+    "producersPerTopic" : 0,
+    "consumerPerSubscription" : 0,
+    "producerRate" : 0,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 0,
+    "warmupDurationMinutes" : 1
+  },
+  "tpc-h-q6-10000-800" : {
+    "name" : null,
+    "topics" : 0,
+    "partitionsPerTopic" : 0,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : null,
+    "subscriptionsPerTopic" : 0,
+    "producersPerTopic" : 0,
+    "consumerPerSubscription" : 0,
+    "producerRate" : 0,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 0,
+    "warmupDurationMinutes" : 1
+  }
+}
+00:20:08.683 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-10000-300",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 300
+} ]
+00:20:09.035 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:20:09.267 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:20:09.267 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:20:09.269 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:20:09.616 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:20:09.637 [main] INFO WorkloadGenerator - Created 307 topics in 11.088275 ms
+00:20:14.935 [main] INFO WorkloadGenerator - Created 307 external consumers in 5277.193412 ms
+00:20:15.129 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:20:15.130 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:20:15.131 [main] INFO LocalWorker - Created 1 consumers in 196.575783 ms
+00:20:21.639 [main] INFO WorkloadGenerator - Created 307 producers in 6506.968964 ms
+00:20:21.639 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:20:21.660 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 6, Received: 29, Expected: 0
+00:20:21.660 [main] INFO WorkloadGenerator - All consumers are ready!
+00:20:21.661 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q1-10000-300-2024-05-30-00-20-09 at 1717028421661
+00:21:16.758 [pool-3-thread-4] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+00:21:21.678 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q1-10000-300-2024-05-30-00-20-09 at 1717028481678
+00:21:22.248 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:21:22.253 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:21:22.253 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:21:22.254 [main] INFO Benchmark - --------------- WORKLOAD : null --- DRIVER : RabbitMQ---------------
+00:21:22.471 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:21:22.475 [AsyncHttpClient-12-1] ERROR HttpWorkerClient - Failed to do HTTP post request to http://10.0.0.53:8080/create-topics -- code: 500
+00:21:22.475 [main] ERROR HttpWorkerClient - Exception occurred while creating topics
+java.util.concurrent.CompletionException: java.lang.IllegalArgumentException
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:314) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:319) ~[?:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:645) ~[?:?]
+	at java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506) ~[?:?]
+	at java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2079) ~[?:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.loadContent(NettyResponseFuture.java:222) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.done(NettyResponseFuture.java:257) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.finishUpdate(AsyncHttpClientHandler.java:241) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleChunk(HttpHandler.java:113) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleRead(HttpHandler.java:142) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.channelRead(AsyncHttpClientHandler.java:78) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:324) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:296) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at java.lang.Thread.run(Thread.java:829) ~[?:?]
+Caused by: java.lang.IllegalArgumentException
+	at com.google.common.base.Preconditions.checkArgument(Preconditions.java:128) ~[com.google.guava-guava-29.0-jre.jar:?]
+	at io.openmessaging.benchmark.worker.HttpWorkerClient.lambda$post$2(HttpWorkerClient.java:285) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:642) ~[?:?]
+	... 35 more
+00:21:22.481 [main] ERROR Benchmark - Failed to run the workload 'null' for driver 'driver-rabbitmq/rabbitmq-experiment.yaml'
+java.util.concurrent.CompletionException: java.lang.IllegalArgumentException
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:314) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:319) ~[?:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:645) ~[?:?]
+	at java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506) ~[?:?]
+	at java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2079) ~[?:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.loadContent(NettyResponseFuture.java:222) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.done(NettyResponseFuture.java:257) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.finishUpdate(AsyncHttpClientHandler.java:241) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleChunk(HttpHandler.java:113) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleRead(HttpHandler.java:142) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.channelRead(AsyncHttpClientHandler.java:78) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:324) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:296) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at java.lang.Thread.run(Thread.java:829) ~[?:?]
+Caused by: java.lang.IllegalArgumentException
+	at com.google.common.base.Preconditions.checkArgument(Preconditions.java:128) ~[com.google.guava-guava-29.0-jre.jar:?]
+	at io.openmessaging.benchmark.worker.HttpWorkerClient.lambda$post$2(HttpWorkerClient.java:285) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:642) ~[?:?]
+	... 35 more
+00:21:22.684 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:21:22.699 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:21:22.699 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:21:22.700 [main] INFO Benchmark - --------------- WORKLOAD : null --- DRIVER : RabbitMQ---------------
+00:21:22.913 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:21:22.917 [AsyncHttpClient-20-1] ERROR HttpWorkerClient - Failed to do HTTP post request to http://10.0.0.53:8080/create-topics -- code: 500
+00:21:22.918 [main] ERROR HttpWorkerClient - Exception occurred while creating topics
+java.util.concurrent.CompletionException: java.lang.IllegalArgumentException
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:314) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:319) ~[?:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:645) ~[?:?]
+	at java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506) ~[?:?]
+	at java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2079) ~[?:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.loadContent(NettyResponseFuture.java:222) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.done(NettyResponseFuture.java:257) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.finishUpdate(AsyncHttpClientHandler.java:241) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleChunk(HttpHandler.java:113) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleRead(HttpHandler.java:142) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.channelRead(AsyncHttpClientHandler.java:78) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:324) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:296) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at java.lang.Thread.run(Thread.java:829) ~[?:?]
+Caused by: java.lang.IllegalArgumentException
+	at com.google.common.base.Preconditions.checkArgument(Preconditions.java:128) ~[com.google.guava-guava-29.0-jre.jar:?]
+	at io.openmessaging.benchmark.worker.HttpWorkerClient.lambda$post$2(HttpWorkerClient.java:285) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:642) ~[?:?]
+	... 35 more
+00:21:22.919 [main] ERROR Benchmark - Failed to run the workload 'null' for driver 'driver-rabbitmq/rabbitmq-experiment.yaml'
+java.util.concurrent.CompletionException: java.lang.IllegalArgumentException
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:314) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:319) ~[?:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:645) ~[?:?]
+	at java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506) ~[?:?]
+	at java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2079) ~[?:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.loadContent(NettyResponseFuture.java:222) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.done(NettyResponseFuture.java:257) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.finishUpdate(AsyncHttpClientHandler.java:241) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleChunk(HttpHandler.java:113) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleRead(HttpHandler.java:142) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.channelRead(AsyncHttpClientHandler.java:78) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:324) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:296) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at java.lang.Thread.run(Thread.java:829) ~[?:?]
+Caused by: java.lang.IllegalArgumentException
+	at com.google.common.base.Preconditions.checkArgument(Preconditions.java:128) ~[com.google.guava-guava-29.0-jre.jar:?]
+	at io.openmessaging.benchmark.worker.HttpWorkerClient.lambda$post$2(HttpWorkerClient.java:285) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:642) ~[?:?]
+	... 35 more
+00:21:23.122 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:21:23.126 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:21:23.126 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:21:23.127 [main] INFO Benchmark - --------------- WORKLOAD : null --- DRIVER : RabbitMQ---------------
+00:21:23.341 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:21:23.345 [AsyncHttpClient-28-1] ERROR HttpWorkerClient - Failed to do HTTP post request to http://10.0.0.53:8080/create-topics -- code: 500
+00:21:23.346 [main] ERROR HttpWorkerClient - Exception occurred while creating topics
+java.util.concurrent.CompletionException: java.lang.IllegalArgumentException
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:314) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:319) ~[?:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:645) ~[?:?]
+	at java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506) ~[?:?]
+	at java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2079) ~[?:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.loadContent(NettyResponseFuture.java:222) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.done(NettyResponseFuture.java:257) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.finishUpdate(AsyncHttpClientHandler.java:241) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleChunk(HttpHandler.java:113) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleRead(HttpHandler.java:142) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.channelRead(AsyncHttpClientHandler.java:78) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:324) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:296) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at java.lang.Thread.run(Thread.java:829) ~[?:?]
+Caused by: java.lang.IllegalArgumentException
+	at com.google.common.base.Preconditions.checkArgument(Preconditions.java:128) ~[com.google.guava-guava-29.0-jre.jar:?]
+	at io.openmessaging.benchmark.worker.HttpWorkerClient.lambda$post$2(HttpWorkerClient.java:285) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:642) ~[?:?]
+	... 35 more
+00:21:23.347 [main] ERROR Benchmark - Failed to run the workload 'null' for driver 'driver-rabbitmq/rabbitmq-experiment.yaml'
+java.util.concurrent.CompletionException: java.lang.IllegalArgumentException
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:314) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:319) ~[?:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:645) ~[?:?]
+	at java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506) ~[?:?]
+	at java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2079) ~[?:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.loadContent(NettyResponseFuture.java:222) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.done(NettyResponseFuture.java:257) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.finishUpdate(AsyncHttpClientHandler.java:241) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleChunk(HttpHandler.java:113) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleRead(HttpHandler.java:142) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.channelRead(AsyncHttpClientHandler.java:78) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:324) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:296) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at java.lang.Thread.run(Thread.java:829) ~[?:?]
+Caused by: java.lang.IllegalArgumentException
+	at com.google.common.base.Preconditions.checkArgument(Preconditions.java:128) ~[com.google.guava-guava-29.0-jre.jar:?]
+	at io.openmessaging.benchmark.worker.HttpWorkerClient.lambda$post$2(HttpWorkerClient.java:285) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:642) ~[?:?]
+	... 35 more
+00:21:23.550 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:21:23.555 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:21:23.555 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:21:23.556 [main] INFO Benchmark - --------------- WORKLOAD : null --- DRIVER : RabbitMQ---------------
+00:21:23.767 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:21:23.771 [AsyncHttpClient-36-1] ERROR HttpWorkerClient - Failed to do HTTP post request to http://10.0.0.53:8080/create-topics -- code: 500
+00:21:23.771 [main] ERROR HttpWorkerClient - Exception occurred while creating topics
+java.util.concurrent.CompletionException: java.lang.IllegalArgumentException
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:314) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:319) ~[?:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:645) ~[?:?]
+	at java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506) ~[?:?]
+	at java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2079) ~[?:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.loadContent(NettyResponseFuture.java:222) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.done(NettyResponseFuture.java:257) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.finishUpdate(AsyncHttpClientHandler.java:241) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleChunk(HttpHandler.java:113) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleRead(HttpHandler.java:142) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.channelRead(AsyncHttpClientHandler.java:78) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:324) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:296) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at java.lang.Thread.run(Thread.java:829) ~[?:?]
+Caused by: java.lang.IllegalArgumentException
+	at com.google.common.base.Preconditions.checkArgument(Preconditions.java:128) ~[com.google.guava-guava-29.0-jre.jar:?]
+	at io.openmessaging.benchmark.worker.HttpWorkerClient.lambda$post$2(HttpWorkerClient.java:285) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:642) ~[?:?]
+	... 35 more
+00:21:23.773 [main] ERROR Benchmark - Failed to run the workload 'null' for driver 'driver-rabbitmq/rabbitmq-experiment.yaml'
+java.util.concurrent.CompletionException: java.lang.IllegalArgumentException
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:314) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:319) ~[?:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:645) ~[?:?]
+	at java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506) ~[?:?]
+	at java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2079) ~[?:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.loadContent(NettyResponseFuture.java:222) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.done(NettyResponseFuture.java:257) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.finishUpdate(AsyncHttpClientHandler.java:241) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleChunk(HttpHandler.java:113) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleRead(HttpHandler.java:142) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.channelRead(AsyncHttpClientHandler.java:78) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:324) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:296) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at java.lang.Thread.run(Thread.java:829) ~[?:?]
+Caused by: java.lang.IllegalArgumentException
+	at com.google.common.base.Preconditions.checkArgument(Preconditions.java:128) ~[com.google.guava-guava-29.0-jre.jar:?]
+	at io.openmessaging.benchmark.worker.HttpWorkerClient.lambda$post$2(HttpWorkerClient.java:285) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:642) ~[?:?]
+	... 35 more
+00:21:23.975 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:21:23.991 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:21:23.991 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:21:23.991 [main] INFO Benchmark - --------------- WORKLOAD : null --- DRIVER : RabbitMQ---------------
+00:21:24.200 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:21:24.204 [AsyncHttpClient-44-1] ERROR HttpWorkerClient - Failed to do HTTP post request to http://10.0.0.53:8080/create-topics -- code: 500
+00:21:24.204 [main] ERROR HttpWorkerClient - Exception occurred while creating topics
+java.util.concurrent.CompletionException: java.lang.IllegalArgumentException
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:314) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:319) ~[?:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:645) ~[?:?]
+	at java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506) ~[?:?]
+	at java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2079) ~[?:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.loadContent(NettyResponseFuture.java:222) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.done(NettyResponseFuture.java:257) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.finishUpdate(AsyncHttpClientHandler.java:241) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleChunk(HttpHandler.java:113) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleRead(HttpHandler.java:142) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.channelRead(AsyncHttpClientHandler.java:78) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:324) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:296) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at java.lang.Thread.run(Thread.java:829) ~[?:?]
+Caused by: java.lang.IllegalArgumentException
+	at com.google.common.base.Preconditions.checkArgument(Preconditions.java:128) ~[com.google.guava-guava-29.0-jre.jar:?]
+	at io.openmessaging.benchmark.worker.HttpWorkerClient.lambda$post$2(HttpWorkerClient.java:285) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:642) ~[?:?]
+	... 35 more
+00:21:24.205 [main] ERROR Benchmark - Failed to run the workload 'null' for driver 'driver-rabbitmq/rabbitmq-experiment.yaml'
+java.util.concurrent.CompletionException: java.lang.IllegalArgumentException
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:314) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:319) ~[?:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:645) ~[?:?]
+	at java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506) ~[?:?]
+	at java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2079) ~[?:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.loadContent(NettyResponseFuture.java:222) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.NettyResponseFuture.done(NettyResponseFuture.java:257) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.finishUpdate(AsyncHttpClientHandler.java:241) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleChunk(HttpHandler.java:113) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.HttpHandler.handleRead(HttpHandler.java:142) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at org.asynchttpclient.netty.handler.AsyncHttpClientHandler.channelRead(AsyncHttpClientHandler.java:78) ~[org.asynchttpclient-async-http-client-2.12.3.jar:?]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:324) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:296) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[io.netty-netty-all-4.1.65.Final.jar:4.1.65.Final]
+	at java.lang.Thread.run(Thread.java:829) ~[?:?]
+Caused by: java.lang.IllegalArgumentException
+	at com.google.common.base.Preconditions.checkArgument(Preconditions.java:128) ~[com.google.guava-guava-29.0-jre.jar:?]
+	at io.openmessaging.benchmark.worker.HttpWorkerClient.lambda$post$2(HttpWorkerClient.java:285) ~[io.openmessaging.benchmark-benchmark-framework-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:642) ~[?:?]
+	... 35 more
+
+
+
+sudo bin/benchmark \
+> --drivers driver-rabbitmq/rabbitmq-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-10000-500.yaml,workloads/tpc-h-q1-10000-800.yaml,workloads/tpc-h-q6-10000-300.yaml,workloads/tpc-h-q6-10000-500.yaml,workloads/tpc-h-q6-10000-800.yaml \
+> workloads/tpc-h-base-long.yaml
+00:22:08.857 [main] INFO Benchmark - Using default worker file workers.yaml!
+00:22:08.868 [main] INFO Benchmark - Reading workers list from workers.yaml
+00:22:08.918 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-rabbitmq/rabbitmq-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.53:8080", "http://10.0.0.201:8080", "http://10.0.0.14:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-10000-500.yaml", "workloads/tpc-h-q1-10000-800.yaml", "workloads/tpc-h-q6-10000-300.yaml", "workloads/tpc-h-q6-10000-500.yaml", "workloads/tpc-h-q6-10000-800.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+00:22:08.934 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+00:22:08.948 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-10000-500",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 500
+}, {
+  "queryId" : "tpc-h-q1-10000-800",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 800
+}, {
+  "queryId" : "tpc-h-q6-10000-300",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 300
+}, {
+  "queryId" : "tpc-h-q6-10000-500",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 500
+}, {
+  "queryId" : "tpc-h-q6-10000-800",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 800
+} ]
+00:22:09.345 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:22:09.584 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:22:09.585 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:22:09.588 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:22:09.926 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:22:09.947 [main] INFO WorkloadGenerator - Created 507 topics in 11.972642 ms
+00:22:18.430 [main] INFO WorkloadGenerator - Created 507 external consumers in 8460.502408 ms
+00:22:18.628 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:22:18.630 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:22:18.631 [main] INFO LocalWorker - Created 1 consumers in 200.436472 ms
+00:22:29.198 [main] INFO WorkloadGenerator - Created 507 producers in 10567.00282 ms
+00:22:29.199 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:22:29.211 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 1, Received: 12, Expected: 0
+00:22:29.211 [main] INFO WorkloadGenerator - All consumers are ready!
+00:22:29.211 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q1-10000-500-2024-05-30-00-22-09 at 1717028549211
+00:23:22.473 [pool-3-thread-7] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+00:23:29.230 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q1-10000-500-2024-05-30-00-22-09 at 1717028609229
+00:23:29.878 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:23:29.882 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:23:29.882 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:23:29.884 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:23:30.097 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:23:30.105 [main] INFO WorkloadGenerator - Created 807 topics in 6.694167 ms
+00:23:50.104 [main] INFO WorkloadGenerator - Created 807 external consumers in 19988.426369 ms
+00:23:50.222 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:23:50.223 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:23:50.223 [main] INFO LocalWorker - Created 1 consumers in 118.384944 ms
+00:24:06.879 [main] INFO WorkloadGenerator - Created 807 producers in 16656.145942 ms
+00:24:06.879 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:24:06.890 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 7, Received: 24, Expected: 0
+00:24:06.890 [main] INFO WorkloadGenerator - All consumers are ready!
+00:24:06.890 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q1-10000-800-2024-05-30-00-23-30 at 1717028646890
+00:24:55.284 [pool-6-thread-9] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+00:24:56.893 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q1-10000-800-2024-05-30-00-23-30 at 1717028696893
+00:24:57.668 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:24:57.681 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:24:57.681 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:24:57.682 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:24:57.897 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:24:57.901 [main] INFO WorkloadGenerator - Created 307 topics in 3.686444 ms
+00:25:03.277 [main] INFO WorkloadGenerator - Created 307 external consumers in 5374.014935 ms
+00:25:03.395 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:25:03.395 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:25:03.396 [main] INFO LocalWorker - Created 1 consumers in 118.267698 ms
+00:25:09.892 [main] INFO WorkloadGenerator - Created 307 producers in 6496.040099 ms
+00:25:09.892 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:25:09.898 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 2, Received: 22, Expected: 0
+00:25:09.898 [main] INFO WorkloadGenerator - All consumers are ready!
+00:25:09.898 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q6-10000-300-2024-05-30-00-24-57 at 1717028709898
+00:25:47.935 [pool-9-thread-4] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+00:25:49.901 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q6-10000-300-2024-05-30-00-24-57 at 1717028749901
+00:25:50.453 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:25:50.458 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:25:50.458 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:25:50.459 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:25:50.667 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:25:50.672 [main] INFO WorkloadGenerator - Created 507 topics in 4.562582 ms
+00:25:59.217 [main] INFO WorkloadGenerator - Created 507 external consumers in 8543.165205 ms
+00:25:59.334 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:25:59.334 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:25:59.335 [main] INFO LocalWorker - Created 1 consumers in 117.477086 ms
+00:26:09.889 [main] INFO WorkloadGenerator - Created 507 producers in 10554.653977 ms
+00:26:09.890 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:26:09.898 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 0, Received: 22, Expected: 0
+00:26:09.898 [main] INFO WorkloadGenerator - All consumers are ready!
+00:26:09.898 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q6-10000-500-2024-05-30-00-25-50 at 1717028769898
+00:26:46.652 [pool-12-thread-9] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+00:26:49.902 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q6-10000-500-2024-05-30-00-25-50 at 1717028809902
+00:26:50.530 [main] INFO CentralWorkerStats - Central worker stats initialized
+00:26:50.535 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080]
+00:26:50.535 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.53:8080,http://10.0.0.201:8080,http://10.0.0.14:8080
+00:26:50.535 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : RabbitMQ---------------
+00:26:50.743 [main] INFO LocalWorker - Driver: {
+  "name" : "RabbitMQ",
+  "driverClass" : "io.openmessaging.benchmark.driver.rabbitmq.RabbitMqBenchmarkDriver"
+}
+00:26:50.749 [main] INFO WorkloadGenerator - Created 807 topics in 5.301219 ms
+00:27:04.142 [main] INFO WorkloadGenerator - Created 807 external consumers in 13391.355843 ms
+00:27:04.260 [main] INFO RabbitMqBenchmarkDriver - Successfully created producer through resource creator
+00:27:04.261 [main] INFO ResourceCreator - Created 1/1 resources using ResourceCreator
+00:27:04.261 [main] INFO LocalWorker - Created 1 consumers in 117.979138 ms
+00:27:20.918 [main] INFO WorkloadGenerator - Created 807 producers in 16656.946389 ms
+00:27:20.918 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:27:20.925 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 2, Received: 18, Expected: 0
+00:27:20.926 [main] INFO WorkloadGenerator - All consumers are ready!
+00:27:20.926 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark RabbitMQ-tpc-h-tpc-h-q6-10000-800-2024-05-30-00-26-50 at 1717028840926
+00:27:58.231 [pool-15-thread-9] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+00:28:00.931 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark RabbitMQ-tpc-h-tpc-h-q6-10000-800-2024-05-30-00-26-50 at 1717028880931
