@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Semaphore;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,7 @@ public class TpcHMessageProcessor {
     private final List<BenchmarkProducer> producers;
     private volatile MessageProducer messageProducer;
     private final Runnable onTestCompleted;
+    private final Semaphore semaphore = new Semaphore(1);
     private final Logger log;
     private static final AmazonS3Client s3Client = new AmazonS3Client();
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
@@ -111,7 +113,8 @@ public class TpcHMessageProcessor {
         }
     }
 
-    private String processConsumerAssignment(TpcHConsumerAssignment assignment, TpcHStateProvider stateProvider) {
+    private String processConsumerAssignment(
+            TpcHConsumerAssignment assignment, TpcHStateProvider stateProvider) {
         String s3Uri = assignment.sourceDataS3Uri;
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Applying map to chunk \"{}\"...", s3Uri);
@@ -119,7 +122,8 @@ public class TpcHMessageProcessor {
         Set<String> processedMapMessageIds = stateProvider.getProcessedMapMessageIds();
         String mapMessageId = String.format("%s-%s", assignment.queryId, assignment.sourceDataS3Uri);
         if (processedMapMessageIds.contains(mapMessageId)) {
-            log.warn("Ignored consumer assignment with map message ID {} due to duplicity!", mapMessageId);
+            log.warn(
+                    "Ignored consumer assignment with map message ID {} due to duplicity!", mapMessageId);
             return assignment.queryId;
         } else {
             processedMapMessageIds.add(mapMessageId);
@@ -219,29 +223,37 @@ public class TpcHMessageProcessor {
         } else {
             processedReducedResults.put(batchId, null);
         }
-        TpcHIntermediateResult existingReducedResult;
-        if (!collectedReducedResults.containsKey(reducedResult.queryId)) {
-            collectedReducedResults.put(reducedResult.queryId, reducedResult);
-            existingReducedResult = reducedResult;
-        } else {
-            existingReducedResult = collectedReducedResults.get(reducedResult.queryId);
-            existingReducedResult.aggregateReducedResult(reducedResult);
-        }
-        if (EnvironmentConfiguration.isDebug()) {
-            log.info(
-                    "Detected reduced result: {}\n\n{}",
-                    writer.writeValueAsString(reducedResult),
-                    writer.writeValueAsString(existingReducedResult));
-        }
-        if (existingReducedResult.numberOfAggregatedResults.intValue()
-                == reducedResult.numberOfChunks.intValue()) {
-            TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
-            log.info("[RESULT] TPC-H query result: {}", writer.writeValueAsString(result));
-            stateProvider.getProcessedIntermediateResults().clear();
-            processedReducedResults.clear();
-            stateProvider.getCollectedIntermediateResults().clear();
-            collectedReducedResults.clear();
-            onTestCompleted.run();
+
+        try {
+            semaphore.acquire();
+            TpcHIntermediateResult existingReducedResult;
+            if (!collectedReducedResults.containsKey(reducedResult.queryId)) {
+                collectedReducedResults.put(reducedResult.queryId, reducedResult);
+                existingReducedResult = reducedResult;
+            } else {
+                existingReducedResult = collectedReducedResults.get(reducedResult.queryId);
+                existingReducedResult.aggregateReducedResult(reducedResult);
+            }
+            if (EnvironmentConfiguration.isDebug()) {
+                log.info(
+                        "Detected reduced result: {}\n\n{}",
+                        writer.writeValueAsString(reducedResult),
+                        writer.writeValueAsString(existingReducedResult));
+            }
+            if (existingReducedResult.numberOfAggregatedResults.intValue()
+                    == reducedResult.numberOfChunks.intValue()) {
+                TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
+                log.info("[RESULT] TPC-H query result: {}", writer.writeValueAsString(result));
+                stateProvider.getProcessedIntermediateResults().clear();
+                processedReducedResults.clear();
+                stateProvider.getCollectedIntermediateResults().clear();
+                collectedReducedResults.clear();
+                onTestCompleted.run();
+            }
+        } catch (Throwable ignored) {
+
+        } finally {
+            semaphore.release();
         }
         return queryId;
     }

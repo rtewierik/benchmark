@@ -54,7 +54,7 @@ public class WorkerHandler {
     private final Worker localWorker;
 
     public WorkerHandler(Javalin app, StatsLogger statsLogger) {
-        this.localWorker = new LocalWorker(statsLogger);
+        this.localWorker = new LocalWorker(statsLogger, "worker-handler");
 
         app.post(INITIALIZE_DRIVER, this::handleInitializeDriver);
         app.post(CREATE_TOPICS, this::handleCreateTopics);

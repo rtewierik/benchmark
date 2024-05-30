@@ -51,6 +51,6 @@ public class ConsumerAssignment {
 
     public ConsumerAssignment withConsumerIndex(Integer consumerIndex) {
         return new ConsumerAssignment(
-                this.topicsSubscriptions, this.experimentId, consumerIndex, this.isTpcH);
+                new ArrayList<>(this.topicsSubscriptions), this.experimentId, consumerIndex, this.isTpcH);
     }
 }

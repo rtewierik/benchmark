@@ -92,7 +92,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private volatile MessageProducerImpl messageProducer;
     private final Map<BenchmarkConsumer, TpcHStateProvider> stateProviders = new HashMap<>();
     private TpcHMessageProcessor tpcHMessageProcessor;
-    private CommandHandler commandHandler = new CommandHandler(1024);
+    private CommandHandler commandHandler;
     private final StatsLogger statsLogger;
     private final WorkerStats stats;
     private boolean testCompleted = false;
@@ -102,10 +102,11 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
 
     public LocalWorker() {
-        this(NullStatsLogger.INSTANCE);
+        this(NullStatsLogger.INSTANCE, "local-worker");
     }
 
-    public LocalWorker(StatsLogger statsLogger) {
+    public LocalWorker(StatsLogger statsLogger, String poolName) {
+        commandHandler = new CommandHandler(poolName);
         this.statsLogger = statsLogger;
         this.stats = EnvironmentConfiguration.isCloudMonitoringEnabled()
             ? new CentralWorkerStats(statsLogger)
@@ -285,7 +286,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         );
         commandHandler.close();
         log.info("Setting command handler with capacity {}", tpcHAssignment.producerNumberOfCommands);
-        commandHandler = new CommandHandler(tpcHAssignment.producerNumberOfCommands);
+        commandHandler = new CommandHandler(tpcHAssignment.producerNumberOfCommands, "tpc-h-local-worker", processors);
         IntStream.range(0, processors).forEach(index ->
                 submitTpcHProducersToExecutor(
                         assignment,
