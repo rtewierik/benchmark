@@ -29,11 +29,11 @@ public class CommandHandler {
     public CommandHandler(String poolName) {
         this.executorService =
                 new ThreadPoolExecutor(
-                        0, // Core pool size
+                        1, // Core pool size
                         1, // Maximum pool size
-                        60L,
+                        120L,
                         TimeUnit.SECONDS, // Keep-alive time for idle threads
-                        new ArrayBlockingQueue<>(10), // Bounded queue for tasks
+                        new ArrayBlockingQueue<>(1), // Bounded queue for tasks
                         new DefaultThreadFactory(poolName),
                         new ThreadPoolExecutor.AbortPolicy() // Rejected execution policy
                 );

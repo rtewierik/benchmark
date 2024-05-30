@@ -102,11 +102,15 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
 
     public LocalWorker() {
-        this(NullStatsLogger.INSTANCE, "local-worker");
+        this(NullStatsLogger.INSTANCE, "local-worker", -1);
     }
 
-    public LocalWorker(StatsLogger statsLogger, String poolName) {
-        commandHandler = new CommandHandler(poolName);
+    public LocalWorker(StatsLogger statsLogger, String poolName, Integer defaultThreadsCapacity) {
+        if (defaultThreadsCapacity < 0) {
+            commandHandler = new CommandHandler(poolName);
+        } else {
+            commandHandler = new CommandHandler(-1, poolName, defaultThreadsCapacity);
+        }
         this.statsLogger = statsLogger;
         this.stats = EnvironmentConfiguration.isCloudMonitoringEnabled()
             ? new CentralWorkerStats(statsLogger)
