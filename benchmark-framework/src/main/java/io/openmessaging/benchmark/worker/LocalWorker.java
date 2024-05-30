@@ -278,9 +278,18 @@ public class LocalWorker implements Worker, ConsumerCallback {
         updateMessageProducer(assignment.publishRate);
 
         Integer startIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.tpcHArguments.numberOfWorkers;
+
+        TpcHProducerAssignment tpcHAssignment = new TpcHProducerAssignment(
+                assignment.tpcHArguments,
+                assignment.producerIndex
+        );
+        commandHandler.close();
+        log.info("Setting command handler with capacity {}", tpcHAssignment.producerNumberOfCommands);
+        commandHandler = new CommandHandler(tpcHAssignment.producerNumberOfCommands);
         IntStream.range(0, processors).forEach(index ->
                 submitTpcHProducersToExecutor(
                         assignment,
+                        tpcHAssignment,
                         processors,
                         producers,
                         startIndex + (index * 2),
@@ -303,18 +312,12 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     private void submitTpcHProducersToExecutor(
             ProducerWorkAssignment producerWorkAssignment,
+            TpcHProducerAssignment assignment,
             Integer numProcessors,
             List<BenchmarkProducer> producers,
             Integer producerStartIndex,
             Integer processorProducerIndex
     ) {
-        // Initialise executor here with producerNumberOfCommands
-        TpcHProducerAssignment assignment = new TpcHProducerAssignment(
-                producerWorkAssignment.tpcHArguments,
-                producerWorkAssignment.producerIndex
-        );
-        commandHandler.close();
-        commandHandler = new CommandHandler(assignment.producerNumberOfCommands);
         commandHandler.handleCommand(
                 () -> {
                     KeyDistributor keyDistributor = KeyDistributor.build(producerWorkAssignment.keyDistributorType);
@@ -384,13 +387,13 @@ public class LocalWorker implements Worker, ConsumerCallback {
                             producerWorkAssignment.producerIndex,
                             processorProducerIndex,
                             messagesSent);
-                    while (!testCompleted) {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
+//                    while (!testCompleted) {
+//                        try {
+//                            Thread.sleep(1000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
                 });
     }
 

@@ -41,6 +41,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +89,7 @@ public class TpcHMessageProcessor {
                 case ConsumerAssignment:
                     TpcHConsumerAssignment assignment =
                             mapper.readValue(message.message, TpcHConsumerAssignment.class);
-                    return processConsumerAssignment(assignment);
+                    return processConsumerAssignment(assignment, stateProvider);
                 case IntermediateResult:
                     TpcHIntermediateResult intermediateResult =
                             mapper.readValue(message.message, TpcHIntermediateResult.class);
@@ -110,10 +111,18 @@ public class TpcHMessageProcessor {
         }
     }
 
-    private String processConsumerAssignment(TpcHConsumerAssignment assignment) {
+    private String processConsumerAssignment(TpcHConsumerAssignment assignment, TpcHStateProvider stateProvider) {
         String s3Uri = assignment.sourceDataS3Uri;
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Applying map to chunk \"{}\"...", s3Uri);
+        }
+        Set<String> processedMapMessageIds = stateProvider.getProcessedMapMessageIds();
+        String mapMessageId = String.format("%s-%s", assignment.queryId, assignment.sourceDataS3Uri);
+        if (processedMapMessageIds.contains(mapMessageId)) {
+            log.warn("Ignored consumer assignment with map message ID {} due to duplicity!", mapMessageId);
+            return assignment.queryId;
+        } else {
+            processedMapMessageIds.add(mapMessageId);
         }
         try (S3Object object = s3Client.readFileFromS3(s3Uri)) {
             InputStream stream = object.getObjectContent();

@@ -16,11 +16,14 @@ package io.openmessaging.tpch.processing;
 
 import io.openmessaging.tpch.model.TpcHIntermediateResult;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class SingleThreadTpcHStateProvider implements TpcHStateProvider {
     private final Map<String, TpcHIntermediateResult> collectedIntermediateResults = new HashMap<>();
     private final Map<String, TpcHIntermediateResult> collectedReducedResults = new HashMap<>();
+    private final Set<String> processedMapMessageIds = new HashSet<>();
     private final Map<String, Void> processedIntermediateResults = new HashMap<>();
     private final Map<String, Void> processedReducedResults = new HashMap<>();
 
@@ -32,6 +35,11 @@ public class SingleThreadTpcHStateProvider implements TpcHStateProvider {
     @Override
     public Map<String, TpcHIntermediateResult> getCollectedReducedResults() {
         return collectedReducedResults;
+    }
+
+    @Override
+    public Set<String> getProcessedMapMessageIds() {
+        return processedMapMessageIds;
     }
 
     @Override

@@ -16,11 +16,13 @@ package io.openmessaging.tpch.processing;
 
 import io.openmessaging.tpch.model.TpcHIntermediateResult;
 import java.util.Map;
+import java.util.Set;
 
 public interface TpcHStateProvider {
     Map<String, TpcHIntermediateResult> getCollectedIntermediateResults();
 
     Map<String, TpcHIntermediateResult> getCollectedReducedResults();
+    Set<String> getProcessedMapMessageIds();
 
     Map<String, Void> getProcessedIntermediateResults();
 

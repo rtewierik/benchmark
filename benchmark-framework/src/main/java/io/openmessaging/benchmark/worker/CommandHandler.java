@@ -15,11 +15,14 @@ package io.openmessaging.benchmark.worker;
 
 
 import io.netty.util.concurrent.DefaultThreadFactory;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class CommandHandler {
 
     private final ExecutorService executorService;
@@ -38,6 +41,7 @@ public class CommandHandler {
     }
 
     public void handleCommand(Runnable command) {
+        log.info("Adding runnable.");
         executorService.submit(command);
     }
 
