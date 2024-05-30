@@ -31,7 +31,7 @@ public class CommandHandler {
         this.executorService =
                 new ThreadPoolExecutor(
                         Runtime.getRuntime().availableProcessors(), // Core pool size
-                        numConsumers, // Maximum pool size
+                        256, // Maximum pool size
                         0L,
                         TimeUnit.MILLISECONDS, // Keep-alive time for idle threads
                         new ArrayBlockingQueue<>(10000), // Bounded queue for tasks
@@ -41,7 +41,6 @@ public class CommandHandler {
     }
 
     public void handleCommand(Runnable command) {
-        log.info("Adding runnable.");
         executorService.submit(command);
     }
 

@@ -383,7 +383,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     log.info("[TpcHBenchmark] Launched {} completable futures. Awaiting...", messagesSent);
                     CompletableFuture<Void> allOf = CompletableFuture.allOf(futures);
                     allOf.join();
-                    log.info("[TpcHBenchmark] Finished TPC-H producer {}-{} after sending {} messages. Sleeping...",
+                    log.info("[TpcHBenchmark] Finished TPC-H producer {}-{} after sending {} messages. Shutting down.",
                             producerWorkAssignment.producerIndex,
                             processorProducerIndex,
                             messagesSent);
