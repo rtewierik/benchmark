@@ -103,5 +103,6 @@ workloads/tpc-h-base-long.yaml
 Run the command `sh ../../extract_metrics.sh pravega-benchmark-ruben-te-wierik`.
 
 ## Insights gained
+
 Many if not all of the cloud-agnostic drivers rely on direct memory as well as JVM-based memory (read: heap), and the direct memory limits are not specified for all of the processes.
 For example, the Bookkeeper host runs two processes: the bookkeeper and the Pravega Segment Store. The Pravega Segment Store uses 6 GB of JVM memory and 24 GB of direct memory for byte buffers. THe i3en.2xlarge instance has 64 GB of memory in total of which 2-4 GB should be left to the operating system, so another 30 GB is allocated elsewhere, IMPLICITLY. The Bookkeeper process uses this memory, likely also for byte buffers, to persist data. The Pravega Segment Store cache is likely used for both read and writes initially, and the system aims to use this cache up to 90% after which cache entries are evicted and written to disk through Bookkeeper.

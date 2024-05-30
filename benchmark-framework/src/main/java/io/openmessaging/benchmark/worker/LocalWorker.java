@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Preconditions;
-import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.DriverConfiguration;
 import io.openmessaging.benchmark.common.ObjectMappers;
 import io.openmessaging.benchmark.common.key.distribution.KeyDistributor;
@@ -50,7 +49,6 @@ import io.openmessaging.benchmark.worker.commands.TopicsInfo;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -61,8 +59,6 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -96,8 +92,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private volatile MessageProducerImpl messageProducer;
     private final Map<BenchmarkConsumer, TpcHStateProvider> stateProviders = new HashMap<>();
     private TpcHMessageProcessor tpcHMessageProcessor;
-    private final ExecutorService executor =
-            Executors.newCachedThreadPool(new DefaultThreadFactory("local-worker"));
+    private CommandHandler commandHandler = new CommandHandler(1024);
     private final StatsLogger statsLogger;
     private final WorkerStats stats;
     private boolean testCompleted = false;
@@ -223,6 +218,18 @@ public class LocalWorker implements Worker, ConsumerCallback {
         }
         if (this.isTpcH && assignment.topicsSubscriptions.size() > TpcHConstants.REDUCE_DST_INDEX) {
             assignment.topicsSubscriptions.remove(TpcHConstants.REDUCE_DST_INDEX);
+            if (assignment.consumerIndex != 2) {
+                assignment.topicsSubscriptions.remove(5);
+                assignment.topicsSubscriptions.remove(4);
+            }
+            if (assignment.consumerIndex != 1) {
+                assignment.topicsSubscriptions.remove(3);
+                assignment.topicsSubscriptions.remove(2);
+            }
+            if (assignment.consumerIndex != 0) {
+                assignment.topicsSubscriptions.remove(1);
+                assignment.topicsSubscriptions.remove(0);
+            }
         }
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Creating consumers: {}", writer.writeValueAsString(assignment));
@@ -301,12 +308,15 @@ public class LocalWorker implements Worker, ConsumerCallback {
             Integer producerStartIndex,
             Integer processorProducerIndex
     ) {
-        executor.submit(
+        // Initialise executor here with producerNumberOfCommands
+        TpcHProducerAssignment assignment = new TpcHProducerAssignment(
+                producerWorkAssignment.tpcHArguments,
+                producerWorkAssignment.producerIndex
+        );
+        commandHandler.close();
+        commandHandler = new CommandHandler(assignment.producerNumberOfCommands);
+        commandHandler.handleCommand(
                 () -> {
-                    TpcHProducerAssignment assignment = new TpcHProducerAssignment(
-                            producerWorkAssignment.tpcHArguments,
-                            producerWorkAssignment.producerIndex
-                    );
                     KeyDistributor keyDistributor = KeyDistributor.build(producerWorkAssignment.keyDistributorType);
                     Integer defaultProcessorNumberOfCommands = getDefaultProcessorNumberOfCommands(
                             assignment.producerNumberOfCommands,
@@ -430,7 +440,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         log.info("Using max outstanding messages {}", maxOutstandingMessages);
         int ovrMaxOutstandingMessages = 10000;
         log.info("Overriding max outstanding messages to {}", ovrMaxOutstandingMessages);
-        executor.submit(
+        commandHandler.handleCommand(
                 () -> {
                     try {
                         final AtomicInteger[] messagesSent = {new AtomicInteger()};
@@ -507,9 +517,16 @@ public class LocalWorker implements Worker, ConsumerCallback {
     @Override
     public void messageReceived(byte[] data, long publishTimestamp, BenchmarkConsumer consumer) throws IOException {
         if (this.isTpcH && data.length != 10) {
-            TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
-            String queryId = handleTpcHMessage(message, consumer);
-            internalMessageReceived(data.length, publishTimestamp, queryId, message.messageId);
+            commandHandler.handleCommand(() -> {
+                try {
+                    TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
+                    String queryId = handleTpcHMessage(message, consumer);
+                    internalMessageReceived(data.length, publishTimestamp, queryId, message.messageId);
+                } catch (IOException exception) {
+                    log.error("Exception occurred while handling command", exception);
+                    throw new RuntimeException(exception);
+                }
+            });
         } else {
             internalMessageReceived(data.length, publishTimestamp, this.experimentId, null);
         }
@@ -532,9 +549,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 TpcHMessage message = mapper.readValue(byteArray, TpcHMessage.class);
                 String queryId = handleTpcHMessage(message, consumer);
                 internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
-            } catch (Throwable t) {
-                String message = new String(byteArray, StandardCharsets.UTF_8);
-                log.error("Error occurred while parsing message to TPC-H message: {}", message);
+            } catch (IOException exception) {
+                log.error("Exception occurred while handling command", exception);
+                throw new RuntimeException(exception);
             }
         } else {
             internalMessageReceived(length, publishTimestamp, this.experimentId, null);
@@ -638,7 +655,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public void close() throws Exception {
-        executor.shutdown();
+        commandHandler.close();
     }
 
     private static final ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();

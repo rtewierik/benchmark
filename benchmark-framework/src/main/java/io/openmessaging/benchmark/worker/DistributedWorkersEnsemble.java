@@ -240,7 +240,7 @@ public class DistributedWorkersEnsemble implements Worker {
         TopicSubscription resultSubscription = subscriptions.get(TpcHConstants.REDUCE_DST_INDEX);
         List<List<TopicSubscription>> reduceSubscriptionsPerConsumer =
                 ListPartition.partitionList(distributableConsumerSubscriptions, workers.size());
-        Map<Worker, ConsumerAssignment> topicsPerConsumerMap = Maps.newHashMap();
+        Map<Integer, ConsumerAssignment> topicsPerConsumerMap = Maps.newHashMap();
         int i = 0;
         for (List<TopicSubscription> reduceSubscriptions : reduceSubscriptionsPerConsumer) {
             ConsumerAssignment individualAssignment = new ConsumerAssignment(assignment);
@@ -252,7 +252,7 @@ public class DistributedWorkersEnsemble implements Worker {
             individualAssignment.topicsSubscriptions.add(mapSubscription6);
             individualAssignment.topicsSubscriptions.add(resultSubscription);
             individualAssignment.topicsSubscriptions.addAll(reduceSubscriptions);
-            topicsPerConsumerMap.put(workers.get(i++), individualAssignment);
+            topicsPerConsumerMap.put(i++, individualAssignment);
         }
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Topics per consumer map: {}", writer.writeValueAsString(topicsPerConsumerMap));
@@ -261,7 +261,10 @@ public class DistributedWorkersEnsemble implements Worker {
                 .forEach(
                         e -> {
                             try {
-                                e.getKey().createConsumers(e.getValue());
+                                Integer consumerIndex = e.getKey();
+                                ConsumerAssignment consumerAssignment =
+                                        e.getValue().withConsumerIndex(consumerIndex);
+                                workers.get(consumerIndex).createConsumers(consumerAssignment);
                             } catch (IOException ex) {
                                 throw new RuntimeException(ex);
                             }
