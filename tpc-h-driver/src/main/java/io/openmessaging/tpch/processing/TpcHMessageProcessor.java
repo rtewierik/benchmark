@@ -14,14 +14,12 @@
 package io.openmessaging.tpch.processing;
 
 
-import com.amazonaws.services.s3.model.S3Object;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.common.ObjectMappers;
-import io.openmessaging.benchmark.common.client.AmazonS3Client;
 import io.openmessaging.benchmark.common.key.distribution.KeyDistributor;
 import io.openmessaging.benchmark.common.key.distribution.KeyDistributorType;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
@@ -37,14 +35,20 @@ import io.openmessaging.tpch.model.TpcHMessageType;
 import io.openmessaging.tpch.model.TpcHQueryResult;
 import io.openmessaging.tpch.model.TpcHRow;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import software.amazon.awssdk.core.BytesWrapper;
+import software.amazon.awssdk.core.async.AsyncResponseTransformer;
+import software.amazon.awssdk.services.s3.S3AsyncClient;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
 public class TpcHMessageProcessor {
     private final Supplier<String> getExperimentId;
@@ -52,7 +56,7 @@ public class TpcHMessageProcessor {
     private volatile MessageProducer messageProducer;
     private final Runnable onTestCompleted;
     private final Logger log;
-    private static final AmazonS3Client s3Client = new AmazonS3Client();
+    private static final S3AsyncClient s3AsyncClient = S3AsyncClient.builder().build();
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
     private static final ObjectWriter writer = new ObjectMapper().writer();
     private static final ObjectMapper mapper =
@@ -76,8 +80,8 @@ public class TpcHMessageProcessor {
         this.messageProducer = messageProducer;
     }
 
-    public String processTpcHMessage(TpcHMessage message, TpcHStateProvider stateProvider)
-            throws IOException {
+    public CompletableFuture<String> processTpcHMessage(
+            TpcHMessage message, TpcHStateProvider stateProvider) throws IOException {
         if (EnvironmentConfiguration.isDebug()) {
             log.info(
                     "Processing TPC-H message: {} {}",
@@ -107,8 +111,16 @@ public class TpcHMessageProcessor {
         }
     }
 
-    private String processConsumerAssignment(
-            TpcHConsumerAssignment assignment, TpcHStateProvider stateProvider) {
+    public static GetObjectRequest parseS3Uri(String s3Uri) throws URISyntaxException {
+        URI uri = new URI(s3Uri);
+        String bucketName = uri.getHost();
+        String key = uri.getPath().substring(1);
+        return GetObjectRequest.builder().bucket(bucketName).key(key).build();
+    }
+
+    private CompletableFuture<String> processConsumerAssignment(
+            TpcHConsumerAssignment assignment, TpcHStateProvider stateProvider)
+            throws URISyntaxException {
         String s3Uri = assignment.sourceDataS3Uri;
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Applying map to chunk \"{}\"...", s3Uri);
@@ -118,45 +130,58 @@ public class TpcHMessageProcessor {
         if (processedMapMessageIds.contains(mapMessageId)) {
             log.warn(
                     "Ignored consumer assignment with map message ID {} due to duplicity!", mapMessageId);
-            return assignment.queryId;
+            return CompletableFuture.completedFuture(assignment.queryId);
         } else {
             processedMapMessageIds.add(mapMessageId);
         }
-        try (S3Object object = s3Client.readFileFromS3(s3Uri)) {
-            InputStream stream = object.getObjectContent();
-            List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
-            stream.close();
-            object.close();
-            TpcHIntermediateResult result =
-                    TpcHAlgorithm.applyQueryToChunk(chunkData, assignment.query, assignment);
-            int producerIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.producerIndex;
-            BenchmarkProducer producer = this.producers.get(producerIndex);
-            KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
-            TpcHMessage message =
-                    new TpcHMessage(
-                            TpcHMessageType.IntermediateResult, messageWriter.writeValueAsString(result));
-            String key = keyDistributor.next();
-            Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
-            String serializedMessage = messageWriter.writeValueAsString(message);
-            if (EnvironmentConfiguration.isDebug()) {
-                log.info("Sending consumer assignment: {}", serializedMessage);
-            }
-            String experimentId = getExperimentId.get();
-            String queryId = assignment.queryId;
-            this.messageProducer.sendMessage(
-                    producer,
-                    optionalKey,
-                    messageWriter.writeValueAsBytes(message),
-                    experimentId == null ? queryId : experimentId.replace("QUERY_ID", queryId),
-                    message.messageId,
-                    true);
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
-        return assignment.queryId;
+        GetObjectRequest getObjectRequest = parseS3Uri(s3Uri);
+        return s3AsyncClient
+                .getObject(getObjectRequest, AsyncResponseTransformer.toBytes())
+                .thenApply(BytesWrapper::asInputStream)
+                .thenApply(
+                        stream -> {
+                            try {
+                                List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
+                                stream.close();
+                                TpcHIntermediateResult result =
+                                        TpcHAlgorithm.applyQueryToChunk(chunkData, assignment.query, assignment);
+                                int producerIndex =
+                                        TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.producerIndex;
+                                BenchmarkProducer producer = this.producers.get(producerIndex);
+                                KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
+                                TpcHMessage message =
+                                        new TpcHMessage(
+                                                TpcHMessageType.IntermediateResult,
+                                                messageWriter.writeValueAsString(result));
+                                String key = keyDistributor.next();
+                                Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
+                                String serializedMessage = messageWriter.writeValueAsString(message);
+                                if (EnvironmentConfiguration.isDebug()) {
+                                    log.info("Sending consumer assignment: {}", serializedMessage);
+                                }
+                                String experimentId = getExperimentId.get();
+                                String queryId = assignment.queryId;
+                                this.messageProducer.sendMessage(
+                                        producer,
+                                        optionalKey,
+                                        messageWriter.writeValueAsBytes(message),
+                                        experimentId == null ? queryId : experimentId.replace("QUERY_ID", queryId),
+                                        message.messageId,
+                                        true);
+                                return queryId;
+                            } catch (IOException e) {
+                                log.error("Error occurred while transforming retrieved file.", e);
+                                throw new RuntimeException(e);
+                            }
+                        })
+                .exceptionally(
+                        throwable -> {
+                            log.error("Error occurred while retrieving file from S3.", throwable);
+                            return null;
+                        });
     }
 
-    private String processIntermediateResult(
+    private CompletableFuture<String> processIntermediateResult(
             TpcHIntermediateResult intermediateResult, TpcHStateProvider stateProvider)
             throws IOException {
         String queryId = intermediateResult.queryId;
@@ -168,7 +193,7 @@ public class TpcHMessageProcessor {
                 stateProvider.getCollectedIntermediateResults();
         if (processedIntermediateResults.containsKey(chunkId)) {
             log.warn("Ignored intermediate result with chunk ID {} due to duplicity!", chunkId);
-            return queryId;
+            return CompletableFuture.completedFuture(queryId);
         } else {
             processedIntermediateResults.put(chunkId, null);
         }
@@ -192,19 +217,24 @@ public class TpcHMessageProcessor {
                 log.info("Sending reduced result: {}", reducedResult);
             }
             String experimentId = getExperimentId.get();
-            this.messageProducer.sendMessage(
-                    producer,
-                    optionalKey,
-                    messageWriter.writeValueAsBytes(message),
-                    experimentId == null ? queryId : experimentId.replace("QUERY_ID", queryId),
-                    message.messageId,
-                    true);
-            collectedIntermediateResults.remove(batchId);
+            return this.messageProducer
+                    .sendMessage(
+                            producer,
+                            optionalKey,
+                            messageWriter.writeValueAsBytes(message),
+                            experimentId == null ? queryId : experimentId.replace("QUERY_ID", queryId),
+                            message.messageId,
+                            true)
+                    .thenApply(
+                            (f) -> {
+                                collectedIntermediateResults.remove(batchId);
+                                return queryId;
+                            });
         }
-        return queryId;
+        return CompletableFuture.completedFuture(queryId);
     }
 
-    private String processReducedResult(
+    private CompletableFuture<String> processReducedResult(
             TpcHIntermediateResult reducedResult, TpcHStateProvider stateProvider) throws IOException {
         String queryId = reducedResult.queryId;
         String batchId = reducedResult.batchId;
@@ -213,7 +243,7 @@ public class TpcHMessageProcessor {
                 stateProvider.getCollectedReducedResults();
         if (processedReducedResults.containsKey(batchId)) {
             log.warn("Ignored reduced result with batch ID {} due to duplicity!", batchId);
-            return queryId;
+            return CompletableFuture.completedFuture(queryId);
         } else {
             processedReducedResults.put(batchId, null);
         }
@@ -245,7 +275,7 @@ public class TpcHMessageProcessor {
             collectedReducedResults.clear();
             onTestCompleted.run();
         }
-        return queryId;
+        return CompletableFuture.completedFuture(queryId);
     }
 
     private String getChunkId(TpcHIntermediateResult result) {

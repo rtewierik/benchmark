@@ -41,6 +41,7 @@ import io.openmessaging.tpch.processing.TpcHStateProvider;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -115,7 +116,8 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                     TpcHMessage tpcHMessage = mapper.readValue(stream, TpcHMessage.class);
                     stream.close();
                     object.close();
-                    String experimentId = messageProcessor.processTpcHMessage(tpcHMessage, stateProvider);
+                    String experimentId =
+                            messageProcessor.processTpcHMessage(tpcHMessage, stateProvider).get();
                     long now = System.currentTimeMillis();
                     long publishTimestamp = record.getEventTime().getMillis();
                     long endToEndLatencyMicros = TimeUnit.MILLISECONDS.toMicros(now - publishTimestamp);
@@ -128,6 +130,8 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
                             tpcHMessage.messageId,
                             true);
                     this.deleteMessage(record);
+                } catch (ExecutionException | InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

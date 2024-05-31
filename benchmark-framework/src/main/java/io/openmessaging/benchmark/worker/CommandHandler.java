@@ -25,7 +25,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,12 +39,14 @@ public class CommandHandler {
         this.executorService =
                 new ThreadPoolExecutor(
                         // Always one, and only one, thread required.
-                        1, 1, 60L, TimeUnit.SECONDS,
+                        1,
+                        1,
+                        60L,
+                        TimeUnit.SECONDS,
                         // The results reducer does not receive more than 1.000 reduced results.
                         new ArrayBlockingQueue<>(50000),
                         new DefaultThreadFactory(poolName),
-                        new ThreadPoolExecutor.AbortPolicy()
-                );
+                        new ThreadPoolExecutor.AbortPolicy());
     }
 
     public CommandHandler(Integer numConsumers, String poolName) {
@@ -67,36 +68,38 @@ public class CommandHandler {
         log.info("Number of commands submitted: {}", latest);
     }
 
-    public void submitTaskWithTimeoutAndRetry(ScheduledExecutorService scheduler,
-                                             Runnable task,
-                                             long timeout,
-                                             TimeUnit timeUnit,
-                                             int maxRetries) {
+    public void submitTaskWithTimeoutAndRetry(
+            ScheduledExecutorService scheduler,
+            Runnable task,
+            long timeout,
+            TimeUnit timeUnit,
+            int maxRetries) {
         final AtomicInteger retries = new AtomicInteger(0);
 
-        Runnable taskWrapper = new Runnable() {
-            @SneakyThrows
-            @Override
-            public void run() {
-                Future<?> future = executorService.submit(task);
+        Runnable taskWrapper =
+                new Runnable() {
+                    @SneakyThrows
+                    @Override
+                    public void run() {
+                        Future<?> future = executorService.submit(task);
 
-                try {
-                    // Wait for the task to complete within the timeout
-                    future.get(timeout, timeUnit);
-                } catch (TimeoutException e) {
-                    future.cancel(true);
-                    if (retries.incrementAndGet() <= maxRetries) {
-                        System.out.println("Task timed out, retrying... (" + retries.get() + ")");
-                        scheduler.schedule(this, 1, TimeUnit.SECONDS);
-                    } else {
-                        System.out.println("Task failed after max retries");
+                        try {
+                            // Wait for the task to complete within the timeout
+                            future.get(timeout, timeUnit);
+                        } catch (TimeoutException e) {
+                            future.cancel(true);
+                            if (retries.incrementAndGet() <= maxRetries) {
+                                System.out.println("Task timed out, retrying... (" + retries.get() + ")");
+                                scheduler.schedule(this, 1, TimeUnit.SECONDS);
+                            } else {
+                                System.out.println("Task failed after max retries");
+                            }
+                        } catch (InterruptedException | ExecutionException e) {
+                            future.cancel(true);
+                            System.out.println("Task execution failed: " + e.getMessage());
+                        }
                     }
-                } catch (InterruptedException | ExecutionException e) {
-                    future.cancel(true);
-                    System.out.println("Task execution failed: " + e.getMessage());
-                }
-            }
-        };
+                };
 
         // Submit the initial task
         scheduler.submit(taskWrapper);
