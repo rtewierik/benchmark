@@ -31,8 +31,8 @@ public class TpcHProducerAssignment {
         this.sourceDataS3FolderUri = arguments.sourceDataS3FolderUri;
         this.commandsPerBatch = arguments.getDefaultBatchSize(arguments.numberOfWorkers);
         // HARDCODED - should be called chunks
-        this.producerNumberOfCommands = arguments.getBatchSize(producerIndex, 3);
-        this.defaultProducerNumberOfCommands = arguments.getDefaultBatchSize(3);
+        this.producerNumberOfCommands = arguments.getBatchSize(producerIndex, 1);
+        this.defaultProducerNumberOfCommands = arguments.getDefaultBatchSize(1);
         this.numberOfChunks = arguments.numberOfChunks;
     }
 

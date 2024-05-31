@@ -21,7 +21,7 @@ public class TpcHConsumerAssignment {
     public final String queryId;
     public final String batchId;
     public final Integer chunkIndex;
-    public final Integer producerIndex;
+    public final Integer batchIndex;
     public final Integer numberOfMapResults;
     public final Integer numberOfChunks;
     public final String sourceDataS3Uri;
@@ -32,7 +32,7 @@ public class TpcHConsumerAssignment {
             @JsonProperty("queryId") String queryId,
             @JsonProperty("batchId") String batchId,
             @JsonProperty("chunkIndex") Integer chunkIndex,
-            @JsonProperty("producerIndex") Integer producerIndex,
+            @JsonProperty("batchIndex") Integer batchIndex,
             @JsonProperty("numberOfMapResults") Integer numberOfMapResults,
             @JsonProperty("numberOfChunks") Integer numberOfChunks,
             @JsonProperty("sourceDataS3Uri") String sourceDataS3Uri) {
@@ -40,7 +40,7 @@ public class TpcHConsumerAssignment {
         this.queryId = queryId;
         this.batchId = batchId;
         this.chunkIndex = chunkIndex;
-        this.producerIndex = producerIndex;
+        this.batchIndex = batchIndex;
         this.numberOfMapResults = numberOfMapResults;
         this.numberOfChunks = numberOfChunks;
         this.sourceDataS3Uri = sourceDataS3Uri;

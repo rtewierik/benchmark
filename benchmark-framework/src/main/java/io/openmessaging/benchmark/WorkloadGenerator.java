@@ -108,7 +108,7 @@ public class WorkloadGenerator implements AutoCloseable {
          * 1 topic to send aggregated intermediate results to.
          * x topics to send intermediate results to;
          */
-        int numberOfTopics = 3 + 1 + this.arguments.numberOfWorkers;
+        int numberOfTopics = 1 + 1 + this.arguments.numberOfWorkers;
         List<String> topics =
                 worker.createTopics(new TopicsInfo(numberOfTopics, workload.partitionsPerTopic));
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
@@ -387,8 +387,6 @@ public class WorkloadGenerator implements AutoCloseable {
         orchestratorConsumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
 
         addMapSubscription(consumerAssignment, topics, 0);
-        addMapSubscription(consumerAssignment, topics, 1);
-        addMapSubscription(consumerAssignment, topics, 2);
 
         for (int i = 0; i < this.arguments.numberOfWorkers; i++) {
             int sourceIndex = TpcHConstants.REDUCE_SRC_START_INDEX + i;
@@ -429,6 +427,9 @@ public class WorkloadGenerator implements AutoCloseable {
 
     private void createTpcHProducers(List<String> topics) throws IOException {
         ProducerAssignment producerAssignment = new ProducerAssignment();
+        for (int i = 0; i < 8; i++) {
+            producerAssignment.topics.add(topics.get(TpcHConstants.MAP_CMD_START_INDEX));
+        }
         producerAssignment.topics.addAll(topics);
         producerAssignment.isTpcH = true;
         Timer timer = new Timer();

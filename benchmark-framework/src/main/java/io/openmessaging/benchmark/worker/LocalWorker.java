@@ -92,7 +92,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private volatile MessageProducerImpl messageProducer;
     private final Map<BenchmarkConsumer, TpcHStateProvider> stateProviders = new HashMap<>();
     private TpcHMessageProcessor tpcHMessageProcessor;
-    private CommandHandler commandHandler;
+    private final CommandHandler commandHandler;
     private final StatsLogger statsLogger;
     private final WorkerStats stats;
     private boolean testCompleted = false;
@@ -245,8 +245,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public void startLoad(ProducerWorkAssignment producerWorkAssignment) {
-        commandHandler.close();
-        commandHandler = new CommandHandler(Runtime.getRuntime().availableProcessors(), "local-worker");
         if (producerWorkAssignment.tpcHArguments == null) {
             startLoadForThroughputProducers(producerWorkAssignment);
         } else {
@@ -318,8 +316,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     Integer producerStart = producerWorkAssignment.producerIndex
                             * assignment.defaultProducerNumberOfCommands;
                     String folderUri = assignment.sourceDataS3FolderUri;
-                    Integer messagesSent = 0;
-                    CompletableFuture<Void>[] futures = new CompletableFuture[processorNumberOfCommands];
                     for (int commandIdx = 1; commandIdx <= processorNumberOfCommands; commandIdx++) {
                         try {
                             Integer chunkIndex = producerStart
@@ -351,7 +347,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                             Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
 
                             BenchmarkProducer producer = producers.get(TpcHConstants.MAP_CMD_START_INDEX);
-                            CompletableFuture<Void> future = messageProducer.sendMessage(
+                            messageProducer.sendMessage(
                                     producer,
                                     optionalKey,
                                     messageWriter.writeValueAsBytes(message),
@@ -359,19 +355,17 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                     message.messageId,
                                     true
                             );
-                            futures[commandIdx - 1] = future;
-                            messagesSent++;
                         } catch (Throwable t) {
                             log.error("Got error", t);
                         }
                     }
-                    log.info("[TpcHBenchmark] Launched {} completable futures. Awaiting...", messagesSent);
-                    CompletableFuture<Void> allOf = CompletableFuture.allOf(futures);
-                    allOf.join();
-                    log.info("[TpcHBenchmark] Finished TPC-H producer {}-{} after sending {} messages. Shutting down.",
-                            producerWorkAssignment.producerIndex,
-                            processorProducerIndex,
-                            messagesSent);
+//                    log.info("[TpcHBenchmark] Launched {} completable futures. Awaiting...", messagesSent);
+//                    CompletableFuture<Void> allOf = CompletableFuture.allOf(futures);
+//                    allOf.join();
+//                    log.info("[TpcHBenchmark] Finished TPC-H producer {}-{}, sent {} messages. Shutting down.",
+//                            producerWorkAssignment.producerIndex,
+//                            processorProducerIndex,
+//                            messagesSent);
 //                    while (!testCompleted) {
 //                        try {
 //                            Thread.sleep(1000);
@@ -508,15 +502,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
             try {
                 TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
                 int size = data.length;
-                commandHandler.handleCommand(() -> {
-                    try {
-                        String queryId = handleTpcHMessage(message, consumer);
-                        internalMessageReceived(size, publishTimestamp, queryId, message.messageId);
-                    } catch (IOException exception) {
-                        log.error("Exception occurred while handling command", exception);
-                        throw new RuntimeException(exception);
-                    }
-                });
+                String queryId = handleTpcHMessage(message, consumer);
+                internalMessageReceived(size, publishTimestamp, queryId, message.messageId);
             } catch (Throwable t) {
                 TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
                 log.error("Exception occurred while handling command or {}", writer.writeValueAsString(message), t);
@@ -541,15 +528,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 byte[] byteArray = new byte[length];
                 data.get(byteArray);
                 TpcHMessage message = mapper.readValue(byteArray, TpcHMessage.class);
-                commandHandler.handleCommand(() -> {
-                    try {
-                        String queryId = handleTpcHMessage(message, consumer);
-                        internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
-                    } catch (IOException exception) {
-                        log.error("Exception occurred while handling command", exception);
-                        throw new RuntimeException(exception);
-                    }
-                });
+                String queryId = handleTpcHMessage(message, consumer);
+                internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
             } catch (Throwable t) {
                 byte[] byteArray = new byte[length];
                 data.get(byteArray);

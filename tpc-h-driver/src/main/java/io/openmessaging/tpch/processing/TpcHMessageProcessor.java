@@ -133,7 +133,7 @@ public class TpcHMessageProcessor {
             object.close();
             TpcHIntermediateResult result =
                     TpcHAlgorithm.applyQueryToChunk(chunkData, assignment.query, assignment);
-            int producerIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.producerIndex;
+            int producerIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.batchIndex;
             BenchmarkProducer producer = this.producers.get(producerIndex);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
             TpcHMessage message =
@@ -221,7 +221,6 @@ public class TpcHMessageProcessor {
         } else {
             processedReducedResults.put(batchId, null);
         }
-
         TpcHIntermediateResult existingReducedResult;
         if (!collectedReducedResults.containsKey(reducedResult.queryId)) {
             collectedReducedResults.put(reducedResult.queryId, reducedResult);

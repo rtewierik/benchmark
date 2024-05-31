@@ -233,7 +233,7 @@ public class DistributedWorkersEnsemble implements Worker {
                         subscriptions.subList(TpcHConstants.REDUCE_SRC_START_INDEX, subscriptions.size()));
         TopicSubscription resultSubscription = subscriptions.get(TpcHConstants.REDUCE_DST_INDEX);
         List<List<TopicSubscription>> reduceSubscriptionsPerConsumer =
-                ListPartition.partitionList(distributableConsumerSubscriptions, workers.size());
+                ListPartition.partitionList(distributableConsumerSubscriptions, consumerWorkers.size());
         Map<Integer, ConsumerAssignment> topicsPerConsumerMap = Maps.newHashMap();
         int i = 0;
         for (List<TopicSubscription> reduceSubscriptions : reduceSubscriptionsPerConsumer) {
@@ -314,7 +314,7 @@ public class DistributedWorkersEnsemble implements Worker {
     }
 
     private void createTpcHProducers(ProducerAssignment producerAssignment) {
-        numberOfUsedProducerWorkers = workers.size();
+        numberOfUsedProducerWorkers = producerWorkers.size();
         IntStream.range(0, numberOfUsedProducerWorkers)
                 .parallel()
                 .forEach(
