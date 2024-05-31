@@ -19,34 +19,36 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CommandHandler {
 
     private final ExecutorService executorService;
+    private final AtomicInteger numCommandsSubmitted = new AtomicInteger();
 
     public CommandHandler(String poolName) {
         this.executorService =
                 new ThreadPoolExecutor(
-                        1, // Core pool size
-                        1, // Maximum pool size
-                        120L,
-                        TimeUnit.SECONDS, // Keep-alive time for idle threads
-                        new ArrayBlockingQueue<>(1), // Bounded queue for tasks
+                        // Always one, and only one, thread required.
+                        1, 1, 60L, TimeUnit.SECONDS,
+                        // The results reducer does not receive more than 1.000 reduced results.
+                        new ArrayBlockingQueue<>(10000),
                         new DefaultThreadFactory(poolName),
-                        new ThreadPoolExecutor.AbortPolicy() // Rejected execution policy
+                        new ThreadPoolExecutor.AbortPolicy()
                 );
     }
 
-    public CommandHandler(int numConsumers, String poolName, Integer defaultThreadCapacity) {
+    public CommandHandler(Integer numConsumers, String poolName) {
         this.executorService =
                 new ThreadPoolExecutor(
-                        defaultThreadCapacity, // Core pool size
-                        256, // Maximum pool size
-                        0L,
-                        TimeUnit.MILLISECONDS, // Keep-alive time for idle threads
-                        new ArrayBlockingQueue<>(10000), // Bounded queue for tasks
+                        numConsumers,
+                        numConsumers, // Maximum pool size
+                        60L,
+                        TimeUnit.SECONDS, // Keep-alive time for idle threads
+                        new ArrayBlockingQueue<>(50000), // Bounded queue for tasks
                         new DefaultThreadFactory(poolName),
                         new ThreadPoolExecutor.AbortPolicy() // Rejected execution policy
                         );
@@ -54,9 +56,12 @@ public class CommandHandler {
 
     public void handleCommand(Runnable command) {
         executorService.submit(command);
+        Integer latest = numCommandsSubmitted.incrementAndGet();
+        log.info("Number of commands submitted: {}", latest);
     }
 
     public void close() {
+        log.info("Shutting down executor service...");
         executorService.shutdown();
         try {
             if (!executorService.awaitTermination(20, TimeUnit.SECONDS)) {

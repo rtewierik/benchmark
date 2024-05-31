@@ -42,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Semaphore;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +51,6 @@ public class TpcHMessageProcessor {
     private final List<BenchmarkProducer> producers;
     private volatile MessageProducer messageProducer;
     private final Runnable onTestCompleted;
-    private final Semaphore semaphore = new Semaphore(1);
     private final Logger log;
     private static final AmazonS3Client s3Client = new AmazonS3Client();
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
@@ -224,36 +222,32 @@ public class TpcHMessageProcessor {
             processedReducedResults.put(batchId, null);
         }
 
-        try {
-            semaphore.acquire();
-            TpcHIntermediateResult existingReducedResult;
-            if (!collectedReducedResults.containsKey(reducedResult.queryId)) {
-                collectedReducedResults.put(reducedResult.queryId, reducedResult);
-                existingReducedResult = reducedResult;
-            } else {
-                existingReducedResult = collectedReducedResults.get(reducedResult.queryId);
-                existingReducedResult.aggregateReducedResult(reducedResult);
-            }
-            if (EnvironmentConfiguration.isDebug()) {
-                log.info(
-                        "Detected reduced result: {}\n\n{}",
-                        writer.writeValueAsString(reducedResult),
-                        writer.writeValueAsString(existingReducedResult));
-            }
-            if (existingReducedResult.numberOfAggregatedResults.intValue()
-                    == reducedResult.numberOfChunks.intValue()) {
-                TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
-                log.info("[RESULT] TPC-H query result: {}", writer.writeValueAsString(result));
-                stateProvider.getProcessedIntermediateResults().clear();
-                processedReducedResults.clear();
-                stateProvider.getCollectedIntermediateResults().clear();
-                collectedReducedResults.clear();
-                onTestCompleted.run();
-            }
-        } catch (Throwable ignored) {
-
-        } finally {
-            semaphore.release();
+        TpcHIntermediateResult existingReducedResult;
+        if (!collectedReducedResults.containsKey(reducedResult.queryId)) {
+            collectedReducedResults.put(reducedResult.queryId, reducedResult);
+            existingReducedResult = reducedResult;
+        } else {
+            existingReducedResult = collectedReducedResults.get(reducedResult.queryId);
+            existingReducedResult.aggregateReducedResult(reducedResult);
+        }
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info(
+                    "Detected reduced result: {}\n\n{}",
+                    writer.writeValueAsString(reducedResult),
+                    writer.writeValueAsString(existingReducedResult));
+        }
+        if (existingReducedResult.numberOfAggregatedResults % 1000 < 50) {
+            log.info("TPC-H progress: {}", existingReducedResult.numberOfAggregatedResults);
+        }
+        if (existingReducedResult.numberOfAggregatedResults.intValue()
+                == reducedResult.numberOfChunks.intValue()) {
+            TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
+            log.info("[RESULT] TPC-H query result: {}", writer.writeValueAsString(result));
+            stateProvider.getProcessedIntermediateResults().clear();
+            processedReducedResults.clear();
+            stateProvider.getCollectedIntermediateResults().clear();
+            collectedReducedResults.clear();
+            onTestCompleted.run();
         }
         return queryId;
     }

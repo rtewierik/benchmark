@@ -108,7 +108,7 @@ public class WorkloadGenerator implements AutoCloseable {
          * 1 topic to send aggregated intermediate results to.
          * x topics to send intermediate results to;
          */
-        int numberOfTopics = 6 + 1 + this.arguments.numberOfWorkers;
+        int numberOfTopics = 3 + 1 + this.arguments.numberOfWorkers;
         List<String> topics =
                 worker.createTopics(new TopicsInfo(numberOfTopics, workload.partitionsPerTopic));
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
@@ -126,6 +126,7 @@ public class WorkloadGenerator implements AutoCloseable {
                     internalConsumerAssignment.topicsSubscriptions.size(),
                     timer.elapsedMillis());
         }
+
         createTpcHProducers(topics);
 
         ensureTopicsAreReady();
@@ -377,19 +378,17 @@ public class WorkloadGenerator implements AutoCloseable {
         ConsumerAssignment consumerAssignment = new ConsumerAssignment(experimentId, true);
         ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment(experimentId, true);
 
-        addMapSubscription(consumerAssignment, topics, 0);
-        addMapSubscription(consumerAssignment, topics, 1);
-        addMapSubscription(consumerAssignment, topics, 2);
-        addMapSubscription(consumerAssignment, topics, 3);
-        addMapSubscription(consumerAssignment, topics, 4);
-        addMapSubscription(consumerAssignment, topics, 5);
-
         TopicSubscription orchestratorSubscription =
                 new TopicSubscription(
                         topics.get(TpcHConstants.REDUCE_DST_INDEX),
                         generateSubscriptionName(TpcHConstants.REDUCE_DST_INDEX));
+
         consumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
         orchestratorConsumerAssignment.topicsSubscriptions.add(orchestratorSubscription);
+
+        addMapSubscription(consumerAssignment, topics, 0);
+        addMapSubscription(consumerAssignment, topics, 1);
+        addMapSubscription(consumerAssignment, topics, 2);
 
         for (int i = 0; i < this.arguments.numberOfWorkers; i++) {
             int sourceIndex = TpcHConstants.REDUCE_SRC_START_INDEX + i;
