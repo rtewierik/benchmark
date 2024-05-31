@@ -61,8 +61,8 @@ public class MessageProducerImpl implements MessageProducer {
                             try {
                                 recordResult(
                                         length, intendedSendTime, sendTime, experimentId, messageId, isTpcH, null);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
+                            } catch (Throwable e) {
+                                log.error("Observed error in producer impl", e);
                             }
                         })
                 .exceptionally(
@@ -70,7 +70,8 @@ public class MessageProducerImpl implements MessageProducer {
                             try {
                                 return recordResult(
                                         length, intendedSendTime, sendTime, experimentId, messageId, isTpcH, t);
-                            } catch (IOException e) {
+                            } catch (Throwable e) {
+                                log.error("Observed error in producer impl", e);
                                 throw new RuntimeException(e);
                             }
                         });

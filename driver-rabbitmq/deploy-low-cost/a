@@ -1,0 +1,1086 @@
+07:20:10.718 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-184-34 34
+07:20:10.718 [local-worker] INFO LocalWorker - TPC-H progress: 34
+07:20:10.718 [local-worker] INFO LocalWorker - New reduced result 34
+07:20:10.718 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:10.719 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 7
+07:20:10.719 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-37-34 34
+07:20:10.720 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:10.720 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 8
+07:20:10.720 [local-worker] INFO LocalWorker - New reduced result 68
+07:20:10.720 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:10.721 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 9
+07:20:10.721 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-25-34 34
+07:20:10.721 [local-worker] INFO LocalWorker - New reduced result 102
+07:20:10.721 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:10.722 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 10
+07:20:10.722 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-1-34 34
+07:20:10.722 [local-worker] INFO LocalWorker - New reduced result 136
+07:20:10.722 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:10.723 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 11
+07:20:10.723 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-172-34 34
+07:20:10.723 [local-worker] INFO LocalWorker - New reduced result 170
+07:20:10.724 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:10.724 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-148-34 34
+07:20:10.724 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 12
+07:20:10.724 [local-worker] INFO LocalWorker - New reduced result 204
+07:20:10.725 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:10.725 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 13
+07:20:10.725 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-160-34 34
+07:20:10.725 [local-worker] INFO LocalWorker - New reduced result 238
+07:20:10.726 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.726 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-13-34 34
+07:20:10.727 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 14
+07:20:10.727 [local-worker] INFO LocalWorker - New reduced result 272
+07:20:10.727 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.727 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 15
+07:20:10.728 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-136-34 34
+07:20:10.728 [local-worker] INFO LocalWorker - New reduced result 306
+07:20:10.728 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.729 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 16
+07:20:10.729 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:10.730 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 17
+07:20:10.730 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-283-34 34
+07:20:10.731 [local-worker] INFO LocalWorker - New reduced result 340
+07:20:10.731 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:10.731 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 18
+07:20:10.732 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-271-34 34
+07:20:10.732 [local-worker] INFO LocalWorker - New reduced result 374
+07:20:10.733 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-124-34 34
+07:20:10.733 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.733 [local-worker] INFO LocalWorker - New reduced result 408
+07:20:10.733 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 19
+07:20:10.734 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.734 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-100-34 34
+07:20:10.734 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 20
+07:20:10.735 [local-worker] INFO LocalWorker - New reduced result 442
+07:20:10.736 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-112-34 34
+07:20:10.736 [local-worker] INFO LocalWorker - New reduced result 476
+07:20:10.737 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:10.737 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-259-34 34
+07:20:10.737 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 21
+07:20:10.737 [local-worker] INFO LocalWorker - New reduced result 510
+07:20:10.738 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:10.738 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 22
+07:20:10.739 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:10.739 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 23
+07:20:10.739 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-247-34 34
+07:20:10.739 [local-worker] INFO LocalWorker - New reduced result 544
+07:20:10.740 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:10.740 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 24
+07:20:10.740 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-223-34 34
+07:20:10.741 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:10.741 [local-worker] INFO LocalWorker - New reduced result 578
+07:20:10.741 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 25
+07:20:10.742 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:10.742 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-88-34 34
+07:20:10.742 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 26
+07:20:10.742 [local-worker] INFO LocalWorker - New reduced result 612
+07:20:10.743 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.743 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-235-34 34
+07:20:10.743 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 27
+07:20:10.743 [local-worker] INFO LocalWorker - New reduced result 646
+07:20:10.745 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:10.745 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 28
+07:20:10.745 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-76-34 34
+07:20:10.745 [local-worker] INFO LocalWorker - New reduced result 680
+07:20:10.745 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:10.746 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 29
+07:20:10.746 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-52-34 34
+07:20:10.746 [local-worker] INFO LocalWorker - New reduced result 714
+07:20:10.746 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:10.747 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 30
+07:20:10.747 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:10.748 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 31
+07:20:10.748 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-187-34 34
+07:20:10.748 [local-worker] INFO LocalWorker - New reduced result 748
+07:20:10.748 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:10.749 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 32
+07:20:10.749 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-211-34 34
+07:20:10.749 [local-worker] INFO LocalWorker - New reduced result 782
+07:20:10.750 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:10.750 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 33
+07:20:10.750 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-40-34 34
+07:20:10.750 [local-worker] INFO LocalWorker - New reduced result 816
+07:20:10.751 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:10.751 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 34
+07:20:10.752 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:10.752 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-151-34 34
+07:20:10.752 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 35
+07:20:10.752 [local-worker] INFO LocalWorker - New reduced result 850
+07:20:10.752 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:10.753 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 36
+07:20:10.753 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-64-34 34
+07:20:10.753 [local-worker] INFO LocalWorker - New reduced result 884
+07:20:10.753 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:10.753 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 37
+07:20:10.754 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:10.754 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-163-34 34
+07:20:10.754 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 38
+07:20:10.754 [local-worker] INFO LocalWorker - New reduced result 918
+07:20:10.755 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:10.755 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 39
+07:20:10.755 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-4-34 34
+07:20:10.756 [local-worker] INFO LocalWorker - New reduced result 952
+07:20:10.758 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-28-34 34
+07:20:10.758 [local-worker] INFO LocalWorker - New reduced result 986
+07:20:10.759 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-175-34 34
+07:20:10.759 [local-worker] INFO LocalWorker - TPC-H progress: 1020
+07:20:10.760 [local-worker] INFO LocalWorker - New reduced result 1020
+07:20:10.762 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-139-34 34
+07:20:10.762 [local-worker] INFO LocalWorker - New reduced result 1054
+07:20:10.759 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.763 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 40
+07:20:10.763 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.764 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-199-34 34
+07:20:10.764 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 41
+07:20:10.764 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.764 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 42
+07:20:10.765 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.765 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 43
+07:20:10.766 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.766 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 44
+07:20:10.766 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.767 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 45
+07:20:10.767 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.767 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 46
+07:20:10.768 [local-worker] INFO LocalWorker - New reduced result 1088
+07:20:10.768 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.768 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 47
+07:20:10.768 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-274-34 34
+07:20:10.768 [local-worker] INFO LocalWorker - New reduced result 1122
+07:20:10.769 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.769 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 48
+07:20:10.769 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-262-34 34
+07:20:10.769 [local-worker] INFO LocalWorker - New reduced result 1156
+07:20:10.770 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.770 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 49
+07:20:10.770 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-115-34 34
+07:20:10.770 [local-worker] INFO LocalWorker - New reduced result 1190
+07:20:10.771 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.771 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 50
+07:20:10.771 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-16-34 34
+07:20:10.771 [local-worker] INFO LocalWorker - New reduced result 1224
+07:20:10.771 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.772 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 51
+07:20:10.772 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.772 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-103-34 34
+07:20:10.772 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 52
+07:20:10.772 [local-worker] INFO LocalWorker - New reduced result 1258
+07:20:10.773 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.773 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 53
+07:20:10.773 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-127-34 34
+07:20:10.773 [local-worker] INFO LocalWorker - New reduced result 1292
+07:20:10.774 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.774 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 54
+07:20:10.774 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-226-34 34
+07:20:10.774 [local-worker] INFO LocalWorker - New reduced result 1326
+07:20:10.775 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.775 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 55
+07:20:10.775 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-91-34 34
+07:20:10.775 [local-worker] INFO LocalWorker - New reduced result 1360
+07:20:10.775 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.776 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 56
+07:20:10.776 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.776 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-79-34 34
+07:20:10.776 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 57
+07:20:10.776 [local-worker] INFO LocalWorker - New reduced result 1394
+07:20:10.777 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.777 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 58
+07:20:10.777 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-238-34 34
+07:20:10.777 [local-worker] INFO LocalWorker - New reduced result 1428
+07:20:10.778 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:10.778 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 59
+07:20:10.778 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-250-34 34
+07:20:10.778 [local-worker] INFO LocalWorker - New reduced result 1462
+07:20:10.778 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:10.779 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 60
+07:20:10.779 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-286-34 34
+07:20:10.779 [local-worker] INFO LocalWorker - New reduced result 1496
+07:20:10.779 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:10.780 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 61
+07:20:10.780 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-55-34 34
+07:20:10.780 [local-worker] INFO LocalWorker - New reduced result 1530
+07:20:10.780 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:10.780 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 62
+07:20:10.781 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-7-34 34
+07:20:10.781 [local-worker] INFO LocalWorker - New reduced result 1564
+07:20:10.781 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:10.781 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 63
+07:20:10.782 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:10.782 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-190-34 34
+07:20:10.782 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 64
+07:20:10.782 [local-worker] INFO LocalWorker - New reduced result 1598
+07:20:10.782 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:10.783 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 65
+07:20:10.783 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-31-34 34
+07:20:10.783 [local-worker] INFO LocalWorker - New reduced result 1632
+07:20:10.784 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-43-34 34
+07:20:10.784 [local-worker] INFO LocalWorker - New reduced result 1666
+07:20:10.785 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.785 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-67-34 34
+07:20:10.785 [local-worker] INFO LocalWorker - New reduced result 1700
+07:20:10.786 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-202-34 34
+07:20:10.787 [local-worker] INFO LocalWorker - New reduced result 1734
+07:20:10.787 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-154-34 34
+07:20:10.788 [local-worker] INFO LocalWorker - New reduced result 1768
+07:20:10.788 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-214-34 34
+07:20:10.789 [local-worker] INFO LocalWorker - New reduced result 1802
+07:20:10.790 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-169-34 34
+07:20:10.790 [local-worker] INFO LocalWorker - New reduced result 1836
+07:20:10.785 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 66
+07:20:10.791 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-277-34 34
+07:20:10.791 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.791 [local-worker] INFO LocalWorker - New reduced result 1870
+07:20:10.792 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 67
+07:20:10.792 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-142-34 34
+07:20:10.793 [local-worker] INFO LocalWorker - New reduced result 1904
+07:20:10.793 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-289-34 34
+07:20:10.794 [local-worker] INFO LocalWorker - New reduced result 1938
+07:20:10.795 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-118-34 34
+07:20:10.795 [local-worker] INFO LocalWorker - New reduced result 1972
+07:20:10.796 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-253-34 34
+07:20:10.796 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.796 [local-worker] INFO LocalWorker - TPC-H progress: 2006
+07:20:10.796 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 68
+07:20:10.796 [local-worker] INFO LocalWorker - New reduced result 2006
+07:20:10.797 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.797 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 69
+07:20:10.797 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-178-34 34
+07:20:10.797 [local-worker] INFO LocalWorker - TPC-H progress: 2040
+07:20:10.798 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.798 [local-worker] INFO LocalWorker - New reduced result 2040
+07:20:10.798 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 70
+07:20:10.798 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.799 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 71
+07:20:10.799 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-19-34 34
+07:20:10.799 [local-worker] INFO LocalWorker - New reduced result 2074
+07:20:10.799 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.799 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 72
+07:20:10.800 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-265-34 34
+07:20:10.800 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.800 [local-worker] INFO LocalWorker - New reduced result 2108
+07:20:10.800 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 73
+07:20:10.801 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.802 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-229-34 34
+07:20:10.802 [local-worker] INFO LocalWorker - New reduced result 2142
+07:20:10.802 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-82-34 34
+07:20:10.803 [local-worker] INFO LocalWorker - New reduced result 2176
+07:20:10.803 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-58-34 34
+07:20:10.804 [local-worker] INFO LocalWorker - New reduced result 2210
+07:20:10.804 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-241-34 34
+07:20:10.804 [local-worker] INFO LocalWorker - New reduced result 2244
+07:20:10.805 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 74
+07:20:10.806 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.806 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 75
+07:20:10.806 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.807 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 76
+07:20:10.807 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.807 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 77
+07:20:10.808 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-94-34 34
+07:20:10.809 [local-worker] INFO LocalWorker - New reduced result 2278
+07:20:10.808 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.809 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 78
+07:20:10.810 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.810 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 79
+07:20:10.811 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.811 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 80
+07:20:10.812 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.812 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 81
+07:20:10.813 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.813 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 82
+07:20:10.813 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.814 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 83
+07:20:10.814 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:10.815 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 84
+07:20:10.811 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-145-34 34
+07:20:10.815 [local-worker] INFO LocalWorker - New reduced result 2312
+07:20:10.816 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-10-34 34
+07:20:10.816 [local-worker] INFO LocalWorker - New reduced result 2346
+07:20:10.817 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-205-34 34
+07:20:10.817 [local-worker] INFO LocalWorker - New reduced result 2380
+07:20:10.818 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-70-34 34
+07:20:10.818 [local-worker] INFO LocalWorker - New reduced result 2414
+07:20:10.819 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-181-34 34
+07:20:10.819 [local-worker] INFO LocalWorker - New reduced result 2448
+07:20:10.819 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-106-34 34
+07:20:10.820 [local-worker] INFO LocalWorker - New reduced result 2482
+07:20:10.820 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-193-34 34
+07:20:10.821 [local-worker] INFO LocalWorker - New reduced result 2516
+07:20:10.821 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-34-34 34
+07:20:10.821 [local-worker] INFO LocalWorker - New reduced result 2550
+07:20:10.822 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-208-34 34
+07:20:10.822 [local-worker] INFO LocalWorker - New reduced result 2584
+07:20:10.823 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-217-34 34
+07:20:10.823 [local-worker] INFO LocalWorker - New reduced result 2618
+07:20:10.823 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-133-34 34
+07:20:10.824 [local-worker] INFO LocalWorker - New reduced result 2652
+07:20:10.824 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-121-34 34
+07:20:10.824 [local-worker] INFO LocalWorker - New reduced result 2686
+07:20:10.825 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-196-34 34
+07:20:10.825 [local-worker] INFO LocalWorker - New reduced result 2720
+07:20:10.826 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-109-34 34
+07:20:10.826 [local-worker] INFO LocalWorker - New reduced result 2754
+07:20:10.827 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-157-34 34
+07:20:10.827 [local-worker] INFO LocalWorker - New reduced result 2788
+07:20:10.827 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-46-34 34
+07:20:10.827 [local-worker] INFO LocalWorker - New reduced result 2822
+07:20:10.828 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-256-34 34
+07:20:10.828 [local-worker] INFO LocalWorker - New reduced result 2856
+07:20:10.948 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:10.949 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 85
+07:20:10.949 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-61-34 34
+07:20:10.949 [local-worker] INFO LocalWorker - New reduced result 2890
+07:20:11.345 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:11.345 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 86
+07:20:11.345 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-280-34 34
+07:20:11.345 [local-worker] INFO LocalWorker - New reduced result 2924
+07:20:11.402 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:11.402 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 87
+07:20:11.402 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-22-34 34
+07:20:11.402 [local-worker] INFO LocalWorker - New reduced result 2958
+07:20:11.684 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:11.685 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 88
+07:20:11.685 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-85-34 34
+07:20:11.685 [local-worker] INFO LocalWorker - New reduced result 2992
+07:20:12.038 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:12.038 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 89
+07:20:12.038 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-49-34 34
+07:20:12.039 [local-worker] INFO LocalWorker - TPC-H progress: 3026
+07:20:12.039 [local-worker] INFO LocalWorker - New reduced result 3026
+07:20:12.139 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.139 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-73-34 34
+07:20:12.139 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 90
+07:20:12.140 [local-worker] INFO LocalWorker - New reduced result 3060
+07:20:12.359 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:12.359 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-97-34 34
+07:20:12.360 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 91
+07:20:12.360 [local-worker] INFO LocalWorker - New reduced result 3094
+07:20:12.506 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.506 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 92
+07:20:12.506 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-292-34 34
+07:20:12.507 [local-worker] INFO LocalWorker - New reduced result 3128
+07:20:12.618 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:12.619 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 93
+07:20:12.619 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-0-34 34
+07:20:12.619 [local-worker] INFO LocalWorker - New reduced result 3162
+07:20:12.631 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:12.631 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 94
+07:20:12.632 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-282-34 34
+07:20:12.632 [local-worker] INFO LocalWorker - New reduced result 3196
+07:20:12.638 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:12.638 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 95
+07:20:12.639 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-270-34 34
+07:20:12.639 [local-worker] INFO LocalWorker - New reduced result 3230
+07:20:12.643 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:12.643 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 96
+07:20:12.643 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-99-34 34
+07:20:12.643 [local-worker] INFO LocalWorker - New reduced result 3264
+07:20:12.645 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:12.645 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 97
+07:20:12.646 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-123-34 34
+07:20:12.646 [local-worker] INFO LocalWorker - New reduced result 3298
+07:20:12.646 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.646 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 98
+07:20:12.646 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.647 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 99
+07:20:12.647 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-135-34 34
+07:20:12.647 [local-worker] INFO LocalWorker - New reduced result 3332
+07:20:12.648 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-111-34 34
+07:20:12.648 [local-worker] INFO LocalWorker - New reduced result 3366
+07:20:12.653 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:12.653 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 100
+07:20:12.653 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-246-34 34
+07:20:12.654 [local-worker] INFO LocalWorker - New reduced result 3400
+07:20:12.657 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.657 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 101
+07:20:12.657 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-258-34 34
+07:20:12.658 [local-worker] INFO LocalWorker - New reduced result 3434
+07:20:12.666 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:12.667 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 102
+07:20:12.667 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-87-34 34
+07:20:12.667 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:12.667 [local-worker] INFO LocalWorker - New reduced result 3468
+07:20:12.667 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 103
+07:20:12.667 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-222-34 34
+07:20:12.668 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:12.668 [local-worker] INFO LocalWorker - New reduced result 3502
+07:20:12.668 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 104
+07:20:12.668 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-75-34 34
+07:20:12.668 [local-worker] INFO LocalWorker - New reduced result 3536
+07:20:12.668 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:12.668 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 105
+07:20:12.669 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-234-34 34
+07:20:12.669 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:12.669 [local-worker] INFO LocalWorker - New reduced result 3570
+07:20:12.669 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 106
+07:20:12.669 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-210-34 34
+07:20:12.669 [local-worker] INFO LocalWorker - New reduced result 3604
+07:20:12.673 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:12.673 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 107
+07:20:12.673 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-63-34 34
+07:20:12.673 [local-worker] INFO LocalWorker - New reduced result 3638
+07:20:12.682 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.682 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 108
+07:20:12.682 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-186-34 34
+07:20:12.682 [local-worker] INFO LocalWorker - New reduced result 3672
+07:20:12.683 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.683 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 109
+07:20:12.683 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-198-34 34
+07:20:12.683 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.683 [local-worker] INFO LocalWorker - New reduced result 3706
+07:20:12.683 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 110
+07:20:12.683 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-51-34 34
+07:20:12.684 [local-worker] INFO LocalWorker - New reduced result 3740
+07:20:12.688 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.688 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 111
+07:20:12.688 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-39-34 34
+07:20:12.689 [local-worker] INFO LocalWorker - New reduced result 3774
+07:20:12.693 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:12.693 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 112
+07:20:12.695 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:12.695 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 113
+07:20:12.696 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-138-34 34
+07:20:12.696 [local-worker] INFO LocalWorker - New reduced result 3808
+07:20:12.696 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:12.696 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 114
+07:20:12.696 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-150-34 34
+07:20:12.696 [local-worker] INFO LocalWorker - New reduced result 3842
+07:20:12.697 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:12.697 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 115
+07:20:12.697 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-3-34 34
+07:20:12.697 [local-worker] INFO LocalWorker - New reduced result 3876
+07:20:12.697 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-162-34 34
+07:20:12.698 [local-worker] INFO LocalWorker - New reduced result 3910
+07:20:12.702 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:12.702 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 116
+07:20:12.702 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-27-34 34
+07:20:12.702 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:12.702 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 117
+07:20:12.703 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:12.703 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 118
+07:20:12.702 [local-worker] INFO LocalWorker - New reduced result 3944
+07:20:12.703 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-285-34 34
+07:20:12.703 [local-worker] INFO LocalWorker - New reduced result 3978
+07:20:12.704 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-174-34 34
+07:20:12.704 [local-worker] INFO LocalWorker - TPC-H progress: 4012
+07:20:12.704 [local-worker] INFO LocalWorker - New reduced result 4012
+07:20:12.706 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:12.706 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 119
+07:20:12.706 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-15-34 34
+07:20:12.706 [local-worker] INFO LocalWorker - TPC-H progress: 4046
+07:20:12.706 [local-worker] INFO LocalWorker - New reduced result 4046
+07:20:12.711 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.711 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 120
+07:20:12.711 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-102-34 34
+07:20:12.711 [local-worker] INFO LocalWorker - New reduced result 4080
+07:20:12.716 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.716 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 121
+07:20:12.718 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-273-34 34
+07:20:12.719 [local-worker] INFO LocalWorker - New reduced result 4114
+07:20:12.727 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:12.727 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 122
+07:20:12.727 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-165-34 34
+07:20:12.727 [local-worker] INFO LocalWorker - New reduced result 4148
+07:20:12.727 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:12.728 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 123
+07:20:12.728 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:12.728 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-126-34 34
+07:20:12.728 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 124
+07:20:12.728 [local-worker] INFO LocalWorker - New reduced result 4182
+07:20:12.728 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:12.728 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 125
+07:20:12.728 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-249-34 34
+07:20:12.728 [local-worker] INFO LocalWorker - New reduced result 4216
+07:20:12.728 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:12.728 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 126
+07:20:12.729 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-237-34 34
+07:20:12.729 [local-worker] INFO LocalWorker - New reduced result 4250
+07:20:12.729 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-225-34 34
+07:20:12.729 [local-worker] INFO LocalWorker - New reduced result 4284
+07:20:12.738 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:12.738 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 127
+07:20:12.739 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-66-34 34
+07:20:12.739 [local-worker] INFO LocalWorker - New reduced result 4318
+07:20:12.742 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:12.742 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 128
+07:20:12.744 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-54-34 34
+07:20:12.744 [local-worker] INFO LocalWorker - New reduced result 4352
+07:20:12.753 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:12.753 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 129
+07:20:12.753 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:12.753 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 130
+07:20:12.754 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:12.754 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 131
+07:20:12.754 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-189-34 34
+07:20:12.754 [local-worker] INFO LocalWorker - New reduced result 4386
+07:20:12.755 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-42-34 34
+07:20:12.755 [local-worker] INFO LocalWorker - New reduced result 4420
+07:20:12.755 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-177-34 34
+07:20:12.755 [local-worker] INFO LocalWorker - New reduced result 4454
+07:20:12.756 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:12.756 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 132
+07:20:12.756 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-201-34 34
+07:20:12.756 [local-worker] INFO LocalWorker - New reduced result 4488
+07:20:12.760 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.760 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 133
+07:20:12.760 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-213-34 34
+07:20:12.760 [local-worker] INFO LocalWorker - New reduced result 4522
+07:20:12.761 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.761 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 134
+07:20:12.761 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-153-34 34
+07:20:12.761 [local-worker] INFO LocalWorker - New reduced result 4556
+07:20:12.761 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.762 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 135
+07:20:12.762 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-30-34 34
+07:20:12.762 [local-worker] INFO LocalWorker - New reduced result 4590
+07:20:12.768 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:12.768 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 136
+07:20:12.768 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-141-34 34
+07:20:12.769 [local-worker] INFO LocalWorker - New reduced result 4624
+07:20:12.769 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:12.769 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 137
+07:20:12.769 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-276-34 34
+07:20:12.769 [local-worker] INFO LocalWorker - New reduced result 4658
+07:20:12.771 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:12.771 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 138
+07:20:12.771 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:12.771 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 139
+07:20:12.772 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:12.772 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 140
+07:20:12.772 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:12.772 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 141
+07:20:12.773 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:12.773 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 142
+07:20:12.773 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-168-34 34
+07:20:12.773 [local-worker] INFO LocalWorker - New reduced result 4692
+07:20:12.774 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-288-34 34
+07:20:12.774 [local-worker] INFO LocalWorker - New reduced result 4726
+07:20:12.774 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-105-34 34
+07:20:12.774 [local-worker] INFO LocalWorker - New reduced result 4760
+07:20:12.774 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-117-34 34
+07:20:12.775 [local-worker] INFO LocalWorker - New reduced result 4794
+07:20:12.775 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-264-34 34
+07:20:12.775 [local-worker] INFO LocalWorker - New reduced result 4828
+07:20:12.779 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:12.779 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 143
+07:20:12.779 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:12.779 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 144
+07:20:12.780 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-129-34 34
+07:20:12.780 [local-worker] INFO LocalWorker - New reduced result 4862
+07:20:12.781 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-228-34 34
+07:20:12.781 [local-worker] INFO LocalWorker - New reduced result 4896
+07:20:12.781 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-18-34 34
+07:20:12.781 [local-worker] INFO LocalWorker - New reduced result 4930
+07:20:12.781 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:12.782 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 145
+07:20:12.782 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.782 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 146
+07:20:12.782 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.782 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 147
+07:20:12.782 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-192-34 34
+07:20:12.783 [local-worker] INFO LocalWorker - New reduced result 4964
+07:20:12.783 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.783 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 148
+07:20:12.783 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-180-34 34
+07:20:12.783 [local-worker] INFO LocalWorker - New reduced result 4998
+07:20:12.783 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-240-34 34
+07:20:12.784 [local-worker] INFO LocalWorker - TPC-H progress: 5032
+07:20:12.784 [local-worker] INFO LocalWorker - New reduced result 5032
+07:20:12.784 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.784 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 149
+07:20:12.784 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-93-34 34
+07:20:12.784 [local-worker] INFO LocalWorker - New reduced result 5066
+07:20:12.785 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:12.785 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 150
+07:20:12.785 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-81-34 34
+07:20:12.785 [local-worker] INFO LocalWorker - New reduced result 5100
+07:20:12.790 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:12.790 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 151
+07:20:12.790 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:12.790 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 152
+07:20:12.790 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:12.790 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 153
+07:20:12.791 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-33-34 34
+07:20:12.791 [local-worker] INFO LocalWorker - New reduced result 5134
+07:20:12.791 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-45-34 34
+07:20:12.791 [local-worker] INFO LocalWorker - New reduced result 5168
+07:20:12.792 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-9-34 34
+07:20:12.792 [local-worker] INFO LocalWorker - New reduced result 5202
+07:20:12.798 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.798 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 154
+07:20:12.798 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-57-34 34
+07:20:12.799 [local-worker] INFO LocalWorker - New reduced result 5236
+07:20:12.799 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.799 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 155
+07:20:12.799 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-69-34 34
+07:20:12.799 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.799 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 156
+07:20:12.799 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.799 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 157
+07:20:12.800 [local-worker] INFO LocalWorker - New reduced result 5270
+07:20:12.800 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-204-34 34
+07:20:12.800 [local-worker] INFO LocalWorker - New reduced result 5304
+07:20:12.800 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-216-34 34
+07:20:12.801 [local-worker] INFO LocalWorker - New reduced result 5338
+07:20:12.808 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.808 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 158
+07:20:12.808 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.808 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 159
+07:20:12.808 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.809 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 160
+07:20:12.809 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.809 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 161
+07:20:12.809 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.809 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 162
+07:20:12.809 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.809 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 163
+07:20:12.810 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.810 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 164
+07:20:12.810 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.809 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-147-34 34
+07:20:12.810 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 165
+07:20:12.810 [local-worker] INFO LocalWorker - New reduced result 5372
+07:20:12.810 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.810 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 166
+07:20:12.810 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-120-34 34
+07:20:12.811 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.811 [local-worker] INFO LocalWorker - New reduced result 5406
+07:20:12.811 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 167
+07:20:12.811 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.811 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-171-34 34
+07:20:12.811 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 168
+07:20:12.811 [local-worker] INFO LocalWorker - New reduced result 5440
+07:20:12.811 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-183-34 34
+07:20:12.811 [local-worker] INFO LocalWorker - New reduced result 5474
+07:20:12.812 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-207-34 34
+07:20:12.812 [local-worker] INFO LocalWorker - New reduced result 5508
+07:20:12.812 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:12.812 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-21-34 34
+07:20:12.812 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 169
+07:20:12.812 [local-worker] INFO LocalWorker - New reduced result 5542
+07:20:12.812 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-159-34 34
+07:20:12.813 [local-worker] INFO LocalWorker - New reduced result 5576
+07:20:12.813 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-255-34 34
+07:20:12.813 [local-worker] INFO LocalWorker - New reduced result 5610
+07:20:12.813 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-291-34 34
+07:20:12.813 [local-worker] INFO LocalWorker - New reduced result 5644
+07:20:12.814 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-84-34 34
+07:20:12.814 [local-worker] INFO LocalWorker - New reduced result 5678
+07:20:12.814 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-12-34 34
+07:20:12.814 [local-worker] INFO LocalWorker - New reduced result 5712
+07:20:12.814 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-60-34 34
+07:20:12.814 [local-worker] INFO LocalWorker - New reduced result 5746
+07:20:12.816 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:12.816 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 170
+07:20:12.817 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:12.817 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 171
+07:20:12.817 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:12.817 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 172
+07:20:12.817 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:12.817 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 173
+07:20:12.818 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:12.818 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 174
+07:20:12.818 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-108-34 34
+07:20:12.818 [local-worker] INFO LocalWorker - New reduced result 5780
+07:20:12.818 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-96-34 34
+07:20:12.819 [local-worker] INFO LocalWorker - New reduced result 5814
+07:20:12.819 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-36-34 34
+07:20:12.819 [local-worker] INFO LocalWorker - New reduced result 5848
+07:20:12.819 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-72-34 34
+07:20:12.819 [local-worker] INFO LocalWorker - New reduced result 5882
+07:20:12.820 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-267-34 34
+07:20:12.820 [local-worker] INFO LocalWorker - New reduced result 5916
+07:20:12.821 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:12.821 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 175
+07:20:12.821 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-231-34 34
+07:20:12.821 [local-worker] INFO LocalWorker - New reduced result 5950
+07:20:12.824 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.824 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 176
+07:20:12.824 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-243-34 34
+07:20:12.824 [local-worker] INFO LocalWorker - New reduced result 5984
+07:20:12.824 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.824 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 177
+07:20:12.824 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-219-34 34
+07:20:12.824 [local-worker] INFO LocalWorker - TPC-H progress: 6018
+07:20:12.824 [local-worker] INFO LocalWorker - New reduced result 6018
+07:20:12.824 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:12.825 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 178
+07:20:12.825 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-195-34 34
+07:20:12.825 [local-worker] INFO LocalWorker - New reduced result 6052
+07:20:12.828 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:12.829 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 179
+07:20:12.829 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-48-34 34
+07:20:12.829 [local-worker] INFO LocalWorker - New reduced result 6086
+07:20:13.560 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:13.560 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 180
+07:20:13.561 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-268-34 34
+07:20:13.561 [local-worker] INFO LocalWorker - New reduced result 6120
+07:20:13.568 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:13.568 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 181
+07:20:13.568 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-220-34 34
+07:20:13.568 [local-worker] INFO LocalWorker - New reduced result 6154
+07:20:13.855 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:13.855 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 182
+07:20:13.855 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-232-34 34
+07:20:13.855 [local-worker] INFO LocalWorker - New reduced result 6188
+07:20:14.105 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:14.106 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 183
+07:20:14.106 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-244-34 34
+07:20:14.106 [local-worker] INFO LocalWorker - New reduced result 6222
+07:20:14.317 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:14.317 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 184
+07:20:14.317 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-233-34 34
+07:20:14.317 [local-worker] INFO LocalWorker - New reduced result 6256
+07:20:14.319 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:14.319 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 185
+07:20:14.319 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-86-34 34
+07:20:14.319 [local-worker] INFO LocalWorker - New reduced result 6290
+07:20:14.319 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:14.319 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 186
+07:20:14.320 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-74-34 34
+07:20:14.320 [local-worker] INFO LocalWorker - New reduced result 6324
+07:20:14.321 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:14.321 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-221-34 34
+07:20:14.321 [local-worker] INFO LocalWorker - New reduced result 6358
+07:20:14.321 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 187
+07:20:14.322 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:14.322 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 188
+07:20:14.322 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-294-4 4
+07:20:14.322 [local-worker] INFO LocalWorker - New reduced result 6362
+07:20:14.323 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:14.323 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 189
+07:20:14.323 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-209-34 34
+07:20:14.323 [local-worker] INFO LocalWorker - New reduced result 6396
+07:20:14.323 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:14.323 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 190
+07:20:14.323 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-62-34 34
+07:20:14.323 [local-worker] INFO LocalWorker - New reduced result 6430
+07:20:14.331 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:14.331 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 191
+07:20:14.331 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-185-34 34
+07:20:14.331 [local-worker] INFO LocalWorker - New reduced result 6464
+07:20:14.334 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:14.334 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 192
+07:20:14.334 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-197-34 34
+07:20:14.334 [local-worker] INFO LocalWorker - New reduced result 6498
+07:20:14.335 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:14.335 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 193
+07:20:14.335 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-50-34 34
+07:20:14.336 [local-worker] INFO LocalWorker - New reduced result 6532
+07:20:14.339 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:14.339 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 194
+07:20:14.339 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-26-34 34
+07:20:14.339 [local-worker] INFO LocalWorker - New reduced result 6566
+07:20:14.340 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:14.340 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 195
+07:20:14.340 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-38-34 34
+07:20:14.340 [local-worker] INFO LocalWorker - New reduced result 6600
+07:20:14.341 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:14.341 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 196
+07:20:14.341 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-173-34 34
+07:20:14.341 [local-worker] INFO LocalWorker - New reduced result 6634
+07:20:14.342 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:14.342 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 197
+07:20:14.342 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-2-34 34
+07:20:14.342 [local-worker] INFO LocalWorker - New reduced result 6668
+07:20:14.343 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:14.343 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 198
+07:20:14.343 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-161-34 34
+07:20:14.343 [local-worker] INFO LocalWorker - New reduced result 6702
+07:20:14.344 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:14.344 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 199
+07:20:14.344 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-149-34 34
+07:20:14.344 [local-worker] INFO LocalWorker - New reduced result 6736
+07:20:14.345 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:14.345 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 200
+07:20:14.345 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-137-34 34
+07:20:14.345 [local-worker] INFO LocalWorker - New reduced result 6770
+07:20:14.345 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:14.345 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 201
+07:20:14.346 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-284-34 34
+07:20:14.346 [local-worker] INFO LocalWorker - New reduced result 6804
+07:20:14.346 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:14.346 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 202
+07:20:14.346 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-14-34 34
+07:20:14.346 [local-worker] INFO LocalWorker - New reduced result 6838
+07:20:14.347 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:14.347 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 203
+07:20:14.347 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-101-34 34
+07:20:14.347 [local-worker] INFO LocalWorker - New reduced result 6872
+07:20:14.349 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:14.349 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 204
+07:20:14.349 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-125-34 34
+07:20:14.349 [local-worker] INFO LocalWorker - New reduced result 6906
+07:20:14.349 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:14.349 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 205
+07:20:14.349 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-272-34 34
+07:20:14.349 [local-worker] INFO LocalWorker - New reduced result 6940
+07:20:14.351 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:14.351 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 206
+07:20:14.351 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-113-34 34
+07:20:14.351 [local-worker] INFO LocalWorker - New reduced result 6974
+07:20:14.352 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:14.352 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 207
+07:20:14.352 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-260-34 34
+07:20:14.352 [local-worker] INFO LocalWorker - TPC-H progress: 7008
+07:20:14.352 [local-worker] INFO LocalWorker - New reduced result 7008
+07:20:14.352 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:14.353 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-248-34 34
+07:20:14.353 [local-worker] INFO LocalWorker - TPC-H progress: 7042
+07:20:14.353 [local-worker] INFO LocalWorker - New reduced result 7042
+07:20:14.353 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 208
+07:20:14.353 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:14.353 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 209
+07:20:14.353 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-224-34 34
+07:20:14.353 [local-worker] INFO LocalWorker - New reduced result 7076
+07:20:14.354 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:14.354 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 210
+07:20:14.354 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-77-34 34
+07:20:14.355 [local-worker] INFO LocalWorker - New reduced result 7110
+07:20:14.355 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:14.355 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 211
+07:20:14.355 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-89-34 34
+07:20:14.355 [local-worker] INFO LocalWorker - New reduced result 7144
+07:20:14.357 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:14.357 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 212
+07:20:14.357 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-65-34 34
+07:20:14.357 [local-worker] INFO LocalWorker - New reduced result 7178
+07:20:14.358 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:14.358 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 213
+07:20:14.358 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-53-34 34
+07:20:14.358 [local-worker] INFO LocalWorker - New reduced result 7212
+07:20:14.364 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:14.364 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 214
+07:20:14.365 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-188-34 34
+07:20:14.365 [local-worker] INFO LocalWorker - New reduced result 7246
+07:20:14.365 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:14.366 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 215
+07:20:14.366 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-200-34 34
+07:20:14.366 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:14.366 [local-worker] INFO LocalWorker - New reduced result 7280
+07:20:14.366 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 216
+07:20:14.366 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-176-34 34
+07:20:14.366 [local-worker] INFO LocalWorker - New reduced result 7314
+07:20:14.366 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:14.366 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 217
+07:20:14.366 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-212-34 34
+07:20:14.366 [local-worker] INFO LocalWorker - New reduced result 7348
+07:20:14.366 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:14.367 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 218
+07:20:14.367 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-152-34 34
+07:20:14.367 [local-worker] INFO LocalWorker - New reduced result 7382
+07:20:14.367 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:14.367 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 219
+07:20:14.368 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-29-34 34
+07:20:14.368 [local-worker] INFO LocalWorker - New reduced result 7416
+07:20:14.370 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:14.370 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 220
+07:20:14.370 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-140-34 34
+07:20:14.370 [local-worker] INFO LocalWorker - New reduced result 7450
+07:20:14.371 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:14.371 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 221
+07:20:14.371 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-287-34 34
+07:20:14.371 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:14.371 [local-worker] INFO LocalWorker - New reduced result 7484
+07:20:14.371 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 222
+07:20:14.371 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-167-34 34
+07:20:14.371 [local-worker] INFO LocalWorker - New reduced result 7518
+07:20:14.373 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:14.373 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 223
+07:20:14.373 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-116-34 34
+07:20:14.373 [local-worker] INFO LocalWorker - New reduced result 7552
+07:20:14.373 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:14.373 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 224
+07:20:14.373 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-104-34 34
+07:20:14.373 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:14.373 [local-worker] INFO LocalWorker - New reduced result 7586
+07:20:14.373 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 225
+07:20:14.373 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-275-34 34
+07:20:14.373 [local-worker] INFO LocalWorker - New reduced result 7620
+07:20:14.373 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:14.373 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 226
+07:20:14.374 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-41-34 34
+07:20:14.374 [local-worker] INFO LocalWorker - New reduced result 7654
+07:20:14.374 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:14.374 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 227
+07:20:14.374 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-17-34 34
+07:20:14.374 [local-worker] INFO LocalWorker - New reduced result 7688
+07:20:14.374 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:14.374 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 228
+07:20:14.374 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-128-34 34
+07:20:14.374 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:14.374 [local-worker] INFO LocalWorker - New reduced result 7722
+07:20:14.374 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 229
+07:20:14.374 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-263-34 34
+07:20:14.374 [local-worker] INFO LocalWorker - New reduced result 7756
+07:20:14.375 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:14.375 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 230
+07:20:14.375 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-80-34 34
+07:20:14.375 [local-worker] INFO LocalWorker - New reduced result 7790
+07:20:14.375 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:14.375 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 231
+07:20:14.375 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-251-34 34
+07:20:14.375 [local-worker] INFO LocalWorker - New reduced result 7824
+07:20:14.376 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:14.376 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 232
+07:20:14.376 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-227-34 34
+07:20:14.377 [local-worker] INFO LocalWorker - New reduced result 7858
+07:20:14.378 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:14.378 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 233
+07:20:14.378 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-56-34 34
+07:20:14.378 [local-worker] INFO LocalWorker - New reduced result 7892
+07:20:14.379 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:14.379 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 234
+07:20:14.379 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-239-34 34
+07:20:14.379 [local-worker] INFO LocalWorker - New reduced result 7926
+07:20:14.380 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:14.380 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 235
+07:20:14.380 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-179-34 34
+07:20:14.380 [local-worker] INFO LocalWorker - New reduced result 7960
+07:20:14.380 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:14.380 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 236
+07:20:14.380 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-8-34 34
+07:20:14.380 [local-worker] INFO LocalWorker - New reduced result 7994
+07:20:14.380 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:14.380 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 237
+07:20:14.380 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-191-34 34
+07:20:14.381 [local-worker] INFO LocalWorker - TPC-H progress: 8028
+07:20:14.381 [local-worker] INFO LocalWorker - New reduced result 8028
+07:20:14.384 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:14.384 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 238
+07:20:14.384 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-44-34 34
+07:20:14.384 [local-worker] INFO LocalWorker - New reduced result 8062
+07:20:14.386 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:14.386 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-215-34 34
+07:20:14.386 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 239
+07:20:14.387 [local-worker] INFO LocalWorker - New reduced result 8096
+07:20:14.387 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:14.387 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 240
+07:20:14.387 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-203-34 34
+07:20:14.387 [local-worker] INFO LocalWorker - New reduced result 8130
+07:20:14.389 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:14.389 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 241
+07:20:14.390 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-131-34 34
+07:20:14.390 [local-worker] INFO LocalWorker - New reduced result 8164
+07:20:14.390 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:14.390 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 242
+07:20:14.390 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-119-34 34
+07:20:14.390 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:14.390 [local-worker] INFO LocalWorker - New reduced result 8198
+07:20:14.390 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 243
+07:20:14.391 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-155-34 34
+07:20:14.391 [local-worker] INFO LocalWorker - New reduced result 8232
+07:20:14.392 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:14.392 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 244
+07:20:14.392 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-278-34 34
+07:20:14.392 [local-worker] INFO LocalWorker - New reduced result 8266
+07:20:14.394 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:14.394 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 245
+07:20:14.394 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-254-34 34
+07:20:14.394 [local-worker] INFO LocalWorker - New reduced result 8300
+07:20:14.395 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:14.395 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 246
+07:20:14.395 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-143-34 34
+07:20:14.395 [local-worker] INFO LocalWorker - New reduced result 8334
+07:20:14.395 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:14.395 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 247
+07:20:14.395 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-290-34 34
+07:20:14.395 [local-worker] INFO LocalWorker - New reduced result 8368
+07:20:14.397 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:14.397 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 248
+07:20:14.397 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-20-34 34
+07:20:14.397 [local-worker] INFO LocalWorker - New reduced result 8402
+07:20:14.397 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:14.397 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 249
+07:20:14.397 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-170-34 34
+07:20:14.397 [local-worker] INFO LocalWorker - New reduced result 8436
+07:20:14.399 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:14.399 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 250
+07:20:14.399 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-266-34 34
+07:20:14.399 [local-worker] INFO LocalWorker - New reduced result 8470
+07:20:14.401 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:14.401 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 251
+07:20:14.401 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-59-34 34
+07:20:14.401 [local-worker] INFO LocalWorker - New reduced result 8504
+07:20:14.401 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:14.402 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 252
+07:20:14.402 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-83-34 34
+07:20:14.402 [local-worker] INFO LocalWorker - New reduced result 8538
+07:20:14.403 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:14.403 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 253
+07:20:14.403 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-95-34 34
+07:20:14.403 [local-worker] INFO LocalWorker - New reduced result 8572
+07:20:14.404 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:14.404 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 254
+07:20:14.404 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-107-34 34
+07:20:14.404 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:14.404 [local-worker] INFO LocalWorker - New reduced result 8606
+07:20:14.404 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 255
+07:20:14.404 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:14.404 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 256
+07:20:14.404 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-182-34 34
+07:20:14.404 [local-worker] INFO LocalWorker - New reduced result 8640
+07:20:14.404 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-158-34 34
+07:20:14.404 [local-worker] INFO LocalWorker - New reduced result 8674
+07:20:14.405 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:14.405 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 257
+07:20:14.405 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-194-34 34
+07:20:14.405 [local-worker] INFO LocalWorker - New reduced result 8708
+07:20:14.405 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:14.405 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 258
+07:20:14.405 [pool-3-thread-6] INFO CommandHandler - ==== COUNTS ====
+07:20:14.405 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-11-34 34
+07:20:14.405 [pool-3-thread-6] INFO CommandHandler - byteMessageReceived: 259
+07:20:14.405 [local-worker] INFO LocalWorker - New reduced result 8742
+07:20:14.405 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-35-34 34
+07:20:14.405 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:14.405 [local-worker] INFO LocalWorker - New reduced result 8776
+07:20:14.405 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 260
+07:20:14.406 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-218-34 34
+07:20:14.406 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:14.406 [local-worker] INFO LocalWorker - New reduced result 8810
+07:20:14.406 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 261
+07:20:14.406 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-242-34 34
+07:20:14.406 [local-worker] INFO LocalWorker - New reduced result 8844
+07:20:14.406 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:14.406 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 262
+07:20:14.406 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-47-34 34
+07:20:14.407 [local-worker] INFO LocalWorker - New reduced result 8878
+07:20:14.407 [pool-3-thread-3] INFO CommandHandler - ==== COUNTS ====
+07:20:14.407 [pool-3-thread-3] INFO CommandHandler - byteMessageReceived: 263
+07:20:14.407 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-122-34 34
+07:20:14.407 [local-worker] INFO LocalWorker - New reduced result 8912
+07:20:14.407 [pool-3-thread-8] INFO CommandHandler - ==== COUNTS ====
+07:20:14.407 [pool-3-thread-8] INFO CommandHandler - byteMessageReceived: 264
+07:20:14.407 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-110-34 34
+07:20:14.408 [local-worker] INFO LocalWorker - New reduced result 8946
+07:20:14.408 [pool-3-thread-4] INFO CommandHandler - ==== COUNTS ====
+07:20:14.408 [pool-3-thread-4] INFO CommandHandler - byteMessageReceived: 265
+07:20:14.408 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-257-34 34
+07:20:14.408 [local-worker] INFO LocalWorker - New reduced result 8980
+07:20:14.410 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:14.410 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 266
+07:20:14.410 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-98-34 34
+07:20:14.410 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:14.410 [local-worker] INFO LocalWorker - TPC-H progress: 9014
+07:20:14.410 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 267
+07:20:14.410 [local-worker] INFO LocalWorker - New reduced result 9014
+07:20:14.410 [pool-3-thread-10] INFO CommandHandler - ==== COUNTS ====
+07:20:14.410 [pool-3-thread-10] INFO CommandHandler - byteMessageReceived: 268
+07:20:14.410 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-23-34 34
+07:20:14.410 [local-worker] INFO LocalWorker - TPC-H progress: 9048
+07:20:14.410 [local-worker] INFO LocalWorker - New reduced result 9048
+07:20:14.410 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-281-34 34
+07:20:14.411 [local-worker] INFO LocalWorker - New reduced result 9082
+07:20:14.411 [pool-3-thread-5] INFO CommandHandler - ==== COUNTS ====
+07:20:14.411 [pool-3-thread-5] INFO CommandHandler - byteMessageReceived: 269
+07:20:14.411 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-71-34 34
+07:20:14.412 [local-worker] INFO LocalWorker - New reduced result 9116
+07:20:14.412 [pool-3-thread-9] INFO CommandHandler - ==== COUNTS ====
+07:20:14.412 [pool-3-thread-9] INFO CommandHandler - byteMessageReceived: 270
+07:20:14.412 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-134-34 34
+07:20:14.412 [local-worker] INFO LocalWorker - New reduced result 9150
+07:20:14.413 [pool-3-thread-7] INFO CommandHandler - ==== COUNTS ====
+07:20:14.414 [pool-3-thread-7] INFO CommandHandler - byteMessageReceived: 271
+07:20:14.414 [local-worker] INFO LocalWorker - Received reduced result tpc-h-q6-10000-300-2024-05-31-07-19-20 tpc-h-q6-10000-300-2024-05-31-07-19-20-batch-245-34 34
+07:20:14.414 [local-worker] INFO LocalWorker - New reduced result 9184

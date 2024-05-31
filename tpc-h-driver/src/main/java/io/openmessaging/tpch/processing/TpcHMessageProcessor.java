@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Semaphore;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,7 @@ public class TpcHMessageProcessor {
     private final List<BenchmarkProducer> producers;
     private volatile MessageProducer messageProducer;
     private final Runnable onTestCompleted;
+    private final Semaphore semaphore = new Semaphore(1);
     private final Logger log;
     private static final AmazonS3Client s3Client = new AmazonS3Client();
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
@@ -170,12 +172,12 @@ public class TpcHMessageProcessor {
                 stateProvider.getProcessedIntermediateResults();
         Map<String, TpcHIntermediateResult> collectedIntermediateResults =
                 stateProvider.getCollectedIntermediateResults();
-        if (processedIntermediateResults.containsKey(chunkId)) {
-            log.warn("Ignored intermediate result with chunk ID {} due to duplicity!", chunkId);
-            return queryId;
-        } else {
-            processedIntermediateResults.put(chunkId, null);
-        }
+//        if (processedIntermediateResults.containsKey(chunkId)) {
+//            log.warn("Ignored intermediate result with chunk ID {} due to duplicity!", chunkId);
+//            return queryId;
+//        } else {
+//            processedIntermediateResults.put(chunkId, null);
+//        }
         TpcHIntermediateResult existingIntermediateResult;
         if (!collectedIntermediateResults.containsKey(batchId)) {
             collectedIntermediateResults.put(batchId, intermediateResult);
@@ -215,39 +217,49 @@ public class TpcHMessageProcessor {
         Map<String, Void> processedReducedResults = stateProvider.getProcessedReducedResults();
         Map<String, TpcHIntermediateResult> collectedReducedResults =
                 stateProvider.getCollectedReducedResults();
-        if (processedReducedResults.containsKey(batchId)) {
-            log.warn("Ignored reduced result with batch ID {} due to duplicity!", batchId);
-            return queryId;
-        } else {
-            processedReducedResults.put(batchId, null);
-        }
+//        if (processedReducedResults.containsKey(batchId)) {
+//            log.warn("Ignored reduced result with batch ID {} due to duplicity!", batchId);
+//            return queryId;
+//        } else {
+//            processedReducedResults.put(batchId, null);
+//        }
 
-        TpcHIntermediateResult existingReducedResult;
-        if (!collectedReducedResults.containsKey(reducedResult.queryId)) {
-            collectedReducedResults.put(reducedResult.queryId, reducedResult);
-            existingReducedResult = reducedResult;
-        } else {
-            existingReducedResult = collectedReducedResults.get(reducedResult.queryId);
-            existingReducedResult.aggregateReducedResult(reducedResult);
-        }
-        if (EnvironmentConfiguration.isDebug()) {
-            log.info(
-                    "Detected reduced result: {}\n\n{}",
-                    writer.writeValueAsString(reducedResult),
-                    writer.writeValueAsString(existingReducedResult));
-        }
-        if (existingReducedResult.numberOfAggregatedResults % 1000 < 50) {
-            log.info("TPC-H progress: {}", existingReducedResult.numberOfAggregatedResults);
-        }
-        if (existingReducedResult.numberOfAggregatedResults.intValue()
-                == reducedResult.numberOfChunks.intValue()) {
-            TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
-            log.info("[RESULT] TPC-H query result: {}", writer.writeValueAsString(result));
-            stateProvider.getProcessedIntermediateResults().clear();
-            processedReducedResults.clear();
-            stateProvider.getCollectedIntermediateResults().clear();
-            collectedReducedResults.clear();
-            onTestCompleted.run();
+        log.info("Received reduced result {} {} {}",
+                reducedResult.queryId, reducedResult.batchId, reducedResult.numberOfAggregatedResults);
+
+        try {
+            TpcHIntermediateResult existingReducedResult;
+            if (!collectedReducedResults.containsKey(reducedResult.queryId)) {
+                collectedReducedResults.put(reducedResult.queryId, reducedResult);
+                existingReducedResult = reducedResult;
+            } else {
+                existingReducedResult = collectedReducedResults.get(reducedResult.queryId);
+                existingReducedResult.aggregateReducedResult(reducedResult);
+            }
+            if (EnvironmentConfiguration.isDebug()) {
+                log.info(
+                        "Detected reduced result: {}\n\n{}",
+                        writer.writeValueAsString(reducedResult),
+                        writer.writeValueAsString(existingReducedResult));
+            }
+            if (existingReducedResult.numberOfAggregatedResults % 1000 < 50) {
+                log.info("TPC-H progress: {}", existingReducedResult.numberOfAggregatedResults);
+            }
+            log.info("New reduced result {}", existingReducedResult.numberOfAggregatedResults);
+            if (existingReducedResult.numberOfAggregatedResults.intValue()
+                    == reducedResult.numberOfChunks.intValue()) {
+                TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
+                log.info("[RESULT] TPC-H query result: {}", writer.writeValueAsString(result));
+                stateProvider.getProcessedIntermediateResults().clear();
+                processedReducedResults.clear();
+                stateProvider.getCollectedIntermediateResults().clear();
+                collectedReducedResults.clear();
+                onTestCompleted.run();
+            }
+        } catch (Throwable t) {
+            log.error("Error requesting semaphore!", t);
+        } finally {
+            semaphore.release();
         }
         return queryId;
     }
