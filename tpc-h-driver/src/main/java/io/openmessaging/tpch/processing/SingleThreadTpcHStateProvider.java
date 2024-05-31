@@ -19,13 +19,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class SingleThreadTpcHStateProvider implements TpcHStateProvider {
-    private final Map<String, TpcHIntermediateResult> collectedIntermediateResults = new HashMap<>();
-    private final Map<String, TpcHIntermediateResult> collectedReducedResults = new HashMap<>();
-    private final Set<String> processedMapMessageIds = new HashSet<>();
-    private final Map<String, Void> processedIntermediateResults = new HashMap<>();
-    private final Map<String, Void> processedReducedResults = new HashMap<>();
+    private final Map<String, TpcHIntermediateResult> collectedIntermediateResults = new ConcurrentHashMap<>();
+    private final Map<String, TpcHIntermediateResult> collectedReducedResults = new ConcurrentHashMap<>();
+    private final Set<String> processedMapMessageIds = new ConcurrentSkipListSet<>();
+    private final Map<String, Void> processedIntermediateResults = new ConcurrentHashMap<>();
+    private final Map<String, Void> processedReducedResults = new ConcurrentHashMap<>();
 
     @Override
     public Map<String, TpcHIntermediateResult> getCollectedIntermediateResults() {

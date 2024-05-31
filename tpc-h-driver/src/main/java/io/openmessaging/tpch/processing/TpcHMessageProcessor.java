@@ -42,11 +42,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Semaphore;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.core.BytesWrapper;
 import software.amazon.awssdk.core.async.AsyncResponseTransformer;
+import software.amazon.awssdk.core.internal.http.loader.DefaultSdkAsyncHttpClientBuilder;
+import software.amazon.awssdk.http.nio.netty.NettyNioAsyncHttpClient;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
@@ -56,12 +60,19 @@ public class TpcHMessageProcessor {
     private volatile MessageProducer messageProducer;
     private final Runnable onTestCompleted;
     private final Logger log;
-    private static final S3AsyncClient s3AsyncClient = S3AsyncClient.builder().build();
+    private static final S3AsyncClient s3AsyncClient = S3AsyncClient
+            .builder()
+            .httpClientBuilder(NettyNioAsyncHttpClient.builder()
+                    .maxConcurrency(16)
+                    .maxPendingConnectionAcquires(1000))
+            .httpClientBuilder(new DefaultSdkAsyncHttpClientBuilder())
+            .build();
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
     private static final ObjectWriter writer = new ObjectMapper().writer();
     private static final ObjectMapper mapper =
             new ObjectMapper(new YAMLFactory())
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private static final Map<String, Semaphore> semaphores = new ConcurrentHashMap<>();
 
     public TpcHMessageProcessor(
             Supplier<String> getExperimentId,
@@ -197,13 +208,24 @@ public class TpcHMessageProcessor {
         } else {
             processedIntermediateResults.put(chunkId, null);
         }
+        if (!semaphores.containsKey(batchId)) {
+            semaphores.put(batchId, new Semaphore(1));
+        }
+        Semaphore semaphore = semaphores.get(batchId);
         TpcHIntermediateResult existingIntermediateResult;
-        if (!collectedIntermediateResults.containsKey(batchId)) {
-            collectedIntermediateResults.put(batchId, intermediateResult);
-            existingIntermediateResult = intermediateResult;
-        } else {
-            existingIntermediateResult = collectedIntermediateResults.get(batchId);
-            existingIntermediateResult.aggregateIntermediateResult(intermediateResult);
+        try {
+            semaphore.acquire();
+            if (!collectedIntermediateResults.containsKey(batchId)) {
+                collectedIntermediateResults.put(batchId, intermediateResult);
+                existingIntermediateResult = intermediateResult;
+            } else {
+                existingIntermediateResult = collectedIntermediateResults.get(batchId);
+                existingIntermediateResult.aggregateIntermediateResult(intermediateResult);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            semaphore.release();
         }
         if (existingIntermediateResult.numberOfAggregatedResults.intValue()
                 == intermediateResult.numberOfMapResults.intValue()) {
@@ -248,13 +270,24 @@ public class TpcHMessageProcessor {
             processedReducedResults.put(batchId, null);
         }
 
+        if (!semaphores.containsKey(batchId)) {
+            semaphores.put(batchId, new Semaphore(1));
+        }
+        Semaphore semaphore = semaphores.get(queryId);
         TpcHIntermediateResult existingReducedResult;
-        if (!collectedReducedResults.containsKey(reducedResult.queryId)) {
-            collectedReducedResults.put(reducedResult.queryId, reducedResult);
-            existingReducedResult = reducedResult;
-        } else {
-            existingReducedResult = collectedReducedResults.get(reducedResult.queryId);
-            existingReducedResult.aggregateReducedResult(reducedResult);
+        try {
+            semaphore.acquire();
+            if (!collectedReducedResults.containsKey(reducedResult.queryId)) {
+                collectedReducedResults.put(reducedResult.queryId, reducedResult);
+                existingReducedResult = reducedResult;
+            } else {
+                existingReducedResult = collectedReducedResults.get(reducedResult.queryId);
+                existingReducedResult.aggregateReducedResult(reducedResult);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            semaphore.release();
         }
         if (EnvironmentConfiguration.isDebug()) {
             log.info(

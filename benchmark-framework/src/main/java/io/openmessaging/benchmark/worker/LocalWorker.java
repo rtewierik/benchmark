@@ -515,23 +515,16 @@ public class LocalWorker implements Worker, ConsumerCallback {
     public void messageReceived(byte[] data, long publishTimestamp, BenchmarkConsumer consumer) throws IOException {
         if (this.isTpcH && data.length != 10) {
             try {
-                commandHandler.handleCommand(() -> {
+                TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
+                int size = data.length;
+                handleTpcHMessage(message, consumer).thenApply((queryId) -> {
                     try {
-                        TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
-                        int size = data.length;
-                        handleTpcHMessage(message, consumer).thenApply((queryId) -> {
-                            try {
-                                internalMessageReceived(size, publishTimestamp, queryId, message.messageId);
-                            } catch (IOException e) {
-                                log.error("Internal message received resulted in an error.", e);
-                                throw new RuntimeException(e);
-                            }
-                            return null;
-                        });
+                        internalMessageReceived(size, publishTimestamp, queryId, message.messageId);
                     } catch (IOException e) {
-                        log.error("Exception occurred in message received.", e);
+                        log.error("Internal message received resulted in an error.", e);
                         throw new RuntimeException(e);
                     }
+                    return null;
                 });
             } catch (Throwable t) {
                 TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
@@ -554,24 +547,17 @@ public class LocalWorker implements Worker, ConsumerCallback {
         int length = data.remaining();
         if (this.isTpcH && length != 10) {
             try {
-                commandHandler.handleCommand(() -> {
+                byte[] byteArray = new byte[length];
+                data.get(byteArray);
+                TpcHMessage message = mapper.readValue(byteArray, TpcHMessage.class);
+                handleTpcHMessage(message, consumer).thenApply((queryId) -> {
                     try {
-                    byte[] byteArray = new byte[length];
-                    data.get(byteArray);
-                    TpcHMessage message = mapper.readValue(byteArray, TpcHMessage.class);
-                    handleTpcHMessage(message, consumer).thenApply((queryId) -> {
-                        try {
-                            internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
-                        } catch (IOException e) {
-                            log.error("Internal message received resulted in an error.", e);
-                            throw new RuntimeException(e);
-                        }
-                        return null;
-                    });
+                        internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
                     } catch (IOException e) {
-                        log.error("Exception occurred in message received byte buffer.", e);
+                        log.error("Internal message received resulted in an error.", e);
                         throw new RuntimeException(e);
                     }
+                    return null;
                 });
             } catch (Throwable t) {
                 byte[] byteArray = new byte[length];
