@@ -512,6 +512,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     }
 
     @Override
+    // This function is called in a fire-and-forget manner, many times for the same reducer.
     public void messageReceived(byte[] data, long publishTimestamp, BenchmarkConsumer consumer) throws IOException {
         if (this.isTpcH && data.length != 10) {
             try {
@@ -546,9 +547,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
     public void messageReceived(ByteBuffer data, long publishTimestamp, BenchmarkConsumer consumer) throws IOException {
         int length = data.remaining();
         if (this.isTpcH && length != 10) {
+            byte[] byteArray = new byte[length];
+            data.get(byteArray);
             try {
-                byte[] byteArray = new byte[length];
-                data.get(byteArray);
                 TpcHMessage message = mapper.readValue(byteArray, TpcHMessage.class);
                 handleTpcHMessage(message, consumer).thenApply((queryId) -> {
                     try {
@@ -560,8 +561,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     return null;
                 });
             } catch (Throwable t) {
-                byte[] byteArray = new byte[length];
-                data.get(byteArray);
                 TpcHMessage message = mapper.readValue(byteArray, TpcHMessage.class);
                 log.error("Exception occurred while handling command {}", writer.writeValueAsString(message), t);
             }

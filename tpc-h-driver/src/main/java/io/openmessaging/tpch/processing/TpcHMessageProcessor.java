@@ -35,6 +35,7 @@ import io.openmessaging.tpch.model.TpcHMessageType;
 import io.openmessaging.tpch.model.TpcHQueryResult;
 import io.openmessaging.tpch.model.TpcHRow;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
@@ -65,9 +66,9 @@ public class TpcHMessageProcessor {
             S3AsyncClient.builder()
                     .httpClientBuilder(
                             NettyNioAsyncHttpClient.builder()
-                                    .maxConcurrency(256)
-                                    .maxPendingConnectionAcquires(10000)
-                                    .connectionAcquisitionTimeout(Duration.ofSeconds(15)))
+                                    .maxConcurrency(2048)
+                                    .maxPendingConnectionAcquires(15000)
+                                    .connectionAcquisitionTimeout(Duration.ofSeconds(30)))
                     .build();
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
     private static final ObjectWriter writer = new ObjectMapper().writer();
@@ -131,6 +132,28 @@ public class TpcHMessageProcessor {
         return GetObjectRequest.builder().bucket(bucketName).key(key).build();
     }
 
+    private CompletableFuture<InputStream> getStreamFromS3(GetObjectRequest getObjectRequest) {
+        try {
+            int numRetries = 0;
+            while (numRetries < 5) {
+                try {
+                    return s3AsyncClient
+                            .getObject(getObjectRequest, AsyncResponseTransformer.toBytes())
+                            .thenApply(BytesWrapper::asInputStream);
+                } catch (Throwable t) {
+                    log.error("[Try {}] Error occurred while retrieving object from S3.", numRetries);
+                    numRetries++;
+                }
+            }
+        } catch (Exception exception) {
+            log.error(String.format("Could not retrieve object %s from bucket %s!",
+                    getObjectRequest.key(), getObjectRequest.bucket()));
+        }
+        return s3AsyncClient
+                .getObject(getObjectRequest, AsyncResponseTransformer.toBytes())
+                .thenApply(BytesWrapper::asInputStream);
+    }
+
     private CompletableFuture<String> processConsumerAssignment(
             TpcHConsumerAssignment assignment, TpcHStateProvider stateProvider)
             throws URISyntaxException {
@@ -148,9 +171,7 @@ public class TpcHMessageProcessor {
             processedMapMessageIds.add(mapMessageId);
         }
         GetObjectRequest getObjectRequest = parseS3Uri(s3Uri);
-        return s3AsyncClient
-                .getObject(getObjectRequest, AsyncResponseTransformer.toBytes())
-                .thenApply(BytesWrapper::asInputStream)
+        return getStreamFromS3(getObjectRequest)
                 .thenApply(
                         stream -> {
                             try {
@@ -216,7 +237,7 @@ public class TpcHMessageProcessor {
 
         TpcHIntermediateResult existingIntermediateResult = null;
         try {
-            if (!semaphore.tryAcquire(10L, TimeUnit.SECONDS)) {
+            if (!semaphore.tryAcquire(3, TimeUnit.MINUTES)) {
                 throw new IllegalArgumentException("Could not acquire intermediate result lock");
             }
             try {
@@ -280,7 +301,7 @@ public class TpcHMessageProcessor {
         semaphores.putIfAbsent(queryId, new Semaphore(1));
         Semaphore semaphore = semaphores.get(queryId);
         try {
-            if (!semaphore.tryAcquire(10L, TimeUnit.SECONDS)) {
+            if (!semaphore.tryAcquire(3, TimeUnit.MINUTES)) {
                 throw new IllegalArgumentException("Could not acquire intermediate result lock");
             }
             try {
@@ -296,7 +317,8 @@ public class TpcHMessageProcessor {
                                 writer.writeValueAsString(reducedResult),
                                 writer.writeValueAsString(existingReducedResult));
                     }
-                    if (existingReducedResult.numberOfAggregatedResults % 1000 < 50) {
+                    Integer numAggregatesResults = existingReducedResult.numberOfAggregatedResults;
+                    if (numAggregatesResults % 1000 < 50 || numAggregatesResults > 9100) {
                         log.info("TPC-H progress: {}", existingReducedResult.numberOfAggregatedResults);
                     }
                     if (existingReducedResult.numberOfAggregatedResults.intValue()
