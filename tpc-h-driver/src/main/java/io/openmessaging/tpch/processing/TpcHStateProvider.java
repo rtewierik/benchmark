@@ -25,7 +25,7 @@ public interface TpcHStateProvider {
 
     Set<String> getProcessedMapMessageIds();
 
-    Map<String, Void> getProcessedIntermediateResults();
+    Set<String> getProcessedIntermediateResults();
 
-    Map<String, Void> getProcessedReducedResults();
+    Set<String> getProcessedReducedResults();
 }
