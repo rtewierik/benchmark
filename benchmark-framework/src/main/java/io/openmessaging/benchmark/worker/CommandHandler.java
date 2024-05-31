@@ -16,17 +16,24 @@ package io.openmessaging.benchmark.worker;
 
 import io.netty.util.concurrent.DefaultThreadFactory;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CommandHandler {
 
     private final ExecutorService executorService;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final AtomicInteger numCommandsSubmitted = new AtomicInteger();
 
     public CommandHandler(String poolName) {
@@ -46,8 +53,8 @@ public class CommandHandler {
                 new ThreadPoolExecutor(
                         numConsumers,
                         numConsumers, // Maximum pool size
-                        0L,
-                        TimeUnit.SECONDS, // Keep-alive time for idle threads
+                        50L,
+                        TimeUnit.MILLISECONDS, // Keep-alive time for idle threads
                         new ArrayBlockingQueue<>(50000), // Bounded queue for tasks
                         new DefaultThreadFactory(poolName),
                         new ThreadPoolExecutor.AbortPolicy() // Rejected execution policy
@@ -55,9 +62,44 @@ public class CommandHandler {
     }
 
     public void handleCommand(Runnable command) {
-        executorService.submit(command);
+        submitTaskWithTimeoutAndRetry(scheduler, command, 1, TimeUnit.SECONDS, 10);
         Integer latest = numCommandsSubmitted.incrementAndGet();
         log.info("Number of commands submitted: {}", latest);
+    }
+
+    public void submitTaskWithTimeoutAndRetry(ScheduledExecutorService scheduler,
+                                             Runnable task,
+                                             long timeout,
+                                             TimeUnit timeUnit,
+                                             int maxRetries) {
+        final AtomicInteger retries = new AtomicInteger(0);
+
+        Runnable taskWrapper = new Runnable() {
+            @SneakyThrows
+            @Override
+            public void run() {
+                Future<?> future = executorService.submit(task);
+
+                try {
+                    // Wait for the task to complete within the timeout
+                    future.get(timeout, timeUnit);
+                } catch (TimeoutException e) {
+                    future.cancel(true);
+                    if (retries.incrementAndGet() <= maxRetries) {
+                        System.out.println("Task timed out, retrying... (" + retries.get() + ")");
+                        scheduler.schedule(this, 1, TimeUnit.SECONDS);
+                    } else {
+                        System.out.println("Task failed after max retries");
+                    }
+                } catch (InterruptedException | ExecutionException e) {
+                    future.cancel(true);
+                    System.out.println("Task execution failed: " + e.getMessage());
+                }
+            }
+        };
+
+        // Submit the initial task
+        scheduler.submit(taskWrapper);
     }
 
     public void close() {

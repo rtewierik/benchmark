@@ -104,7 +104,7 @@ public class WorkloadGenerator implements AutoCloseable {
     private TestResult runTpcH() throws Exception {
         Timer timer = new Timer();
         /*
-         * 6 topics for Map commands;
+         * 3 topics for Map commands;
          * 1 topic to send aggregated intermediate results to.
          * x topics to send intermediate results to;
          */

@@ -102,11 +102,7 @@ public class TpcHMessageProcessor {
                     throw new IllegalArgumentException("Invalid message type detected!");
             }
         } catch (Throwable t) {
-            String messageStr = t.getMessage();
-            String stackTrace = writer.writeValueAsString(t.getStackTrace());
-            int size = this.producers.size();
-            log.error(
-                    "Error occurred while processing TPC-H message: {} {} {}", size, messageStr, stackTrace);
+            log.error("Error occurred while processing TPC-H message", t);
             throw new RuntimeException(t);
         }
     }
