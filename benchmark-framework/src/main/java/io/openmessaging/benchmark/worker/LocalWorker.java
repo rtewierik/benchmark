@@ -200,12 +200,11 @@ public class LocalWorker implements Worker, ConsumerCallback {
         List<String> topics;
         if (producerAssignment.isTpcH) {
             int mapIndex = TpcHConstants.MAP_CMD_START_INDEX + producerAssignment.producerIndex;
+            int reduceIndex = TpcHConstants.REDUCE_SRC_START_INDEX + producerAssignment.producerIndex;
             topics = new ArrayList<>();
             topics.add(producerAssignment.topics.get(TpcHConstants.REDUCE_DST_INDEX));
             topics.add(producerAssignment.topics.get(mapIndex));
-            for (int i = TpcHConstants.REDUCE_SRC_START_INDEX; i < producerAssignment.topics.size(); i++) {
-                topics.add(producerAssignment.topics.get(i));
-            }
+            topics.add(producerAssignment.topics.get(reduceIndex));
         } else {
             topics = producerAssignment.topics;
         }
@@ -357,7 +356,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                 );
                                 String key = keyDistributor.next();
                                 Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
-
                                 BenchmarkProducer producer = producers.get(TpcHConstants.MAP_CMD_START_INDEX);
                                 CompletableFuture<Void> future = messageProducer.sendMessage(
                                         producer,

@@ -228,22 +228,16 @@ public class DistributedWorkersEnsemble implements Worker {
 
     private void createTpcHConsumers(ConsumerAssignment assignment) throws IOException {
         List<TopicSubscription> subscriptions = assignment.topicsSubscriptions;
-        List<TopicSubscription> distributableConsumerSubscriptions =
-                new ArrayList<>(
-                        subscriptions.subList(TpcHConstants.REDUCE_SRC_START_INDEX, subscriptions.size()));
         TopicSubscription resultSubscription = subscriptions.get(TpcHConstants.REDUCE_DST_INDEX);
-        List<List<TopicSubscription>> reduceSubscriptionsPerConsumer =
-                ListPartition.partitionList(distributableConsumerSubscriptions, workers.size());
         Map<Integer, ConsumerAssignment> topicsPerConsumerMap = Maps.newHashMap();
-        int i = 0;
-        for (List<TopicSubscription> reduceSubscriptions : reduceSubscriptionsPerConsumer) {
+        for (int i = 0; i < 3; i++) {
             ConsumerAssignment individualAssignment = new ConsumerAssignment(assignment);
             TopicSubscription mapSubscription = subscriptions.get(TpcHConstants.MAP_CMD_START_INDEX + i);
+            TopicSubscription reduceSubscription = subscriptions.get(TpcHConstants.REDUCE_SRC_START_INDEX + i);
             individualAssignment.topicsSubscriptions.add(resultSubscription);
             individualAssignment.topicsSubscriptions.add(mapSubscription);
-            individualAssignment.topicsSubscriptions.addAll(reduceSubscriptions);
+            individualAssignment.topicsSubscriptions.add(reduceSubscription);
             topicsPerConsumerMap.put(i, individualAssignment);
-            i++;
         }
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Topics per consumer map: {}", writer.writeValueAsString(topicsPerConsumerMap));

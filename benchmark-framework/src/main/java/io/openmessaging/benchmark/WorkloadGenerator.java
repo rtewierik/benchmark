@@ -104,11 +104,11 @@ public class WorkloadGenerator implements AutoCloseable {
     private TestResult runTpcH() throws Exception {
         Timer timer = new Timer();
         /*
-         * 6 topics for Map commands;
          * 1 topic to send aggregated intermediate results to.
-         * x topics to send intermediate results to;
+         * 3 topics for Map commands;
+         * 3 topics to send intermediate results to;
          */
-        int numberOfTopics = 3 + 1 + this.arguments.numberOfWorkers;
+        int numberOfTopics = 1 + 3 + 3;
         List<String> topics =
                 worker.createTopics(new TopicsInfo(numberOfTopics, workload.partitionsPerTopic));
         log.info("Created {} topics in {} ms", topics.size(), timer.elapsedMillis());
@@ -374,6 +374,13 @@ public class WorkloadGenerator implements AutoCloseable {
                 new TopicSubscription(topics.get(index), generateSubscriptionName(index)));
     }
 
+    private void addReduceSubscription(
+            ConsumerAssignment consumerAssignment, List<String> topics, int offset) {
+        int index = TpcHConstants.REDUCE_SRC_START_INDEX + offset;
+        consumerAssignment.topicsSubscriptions.add(
+                new TopicSubscription(topics.get(index), generateSubscriptionName(index)));
+    }
+
     private ConsumerAssignment createTpcHConsumers(List<String> topics) throws IOException {
         ConsumerAssignment consumerAssignment = new ConsumerAssignment(experimentId, true);
         ConsumerAssignment orchestratorConsumerAssignment = new ConsumerAssignment(experimentId, true);
@@ -389,12 +396,9 @@ public class WorkloadGenerator implements AutoCloseable {
         addMapSubscription(consumerAssignment, topics, 0);
         addMapSubscription(consumerAssignment, topics, 1);
         addMapSubscription(consumerAssignment, topics, 2);
-
-        for (int i = 0; i < this.arguments.numberOfWorkers; i++) {
-            int sourceIndex = TpcHConstants.REDUCE_SRC_START_INDEX + i;
-            consumerAssignment.topicsSubscriptions.add(
-                    new TopicSubscription(topics.get(sourceIndex), generateSubscriptionName(sourceIndex)));
-        }
+        addReduceSubscription(consumerAssignment, topics, 0);
+        addReduceSubscription(consumerAssignment, topics, 1);
+        addReduceSubscription(consumerAssignment, topics, 2);
 
         if (EnvironmentConfiguration.isDebug()) {
             log.info(

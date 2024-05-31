@@ -42,6 +42,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Semaphore;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
@@ -52,7 +54,9 @@ public class TpcHMessageProcessor {
     private final List<BenchmarkProducer> producers;
     private volatile MessageProducer messageProducer;
     private final Runnable onTestCompleted;
-    private final Semaphore semaphore = new Semaphore(1);
+    private final ConcurrentMap<String, Semaphore> mapSemaphores = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Semaphore> reduceSemaphores = new ConcurrentHashMap<>();
+    private final Semaphore resultSemaphore = new Semaphore(1);
     private final Logger log;
     private static final AmazonS3Client s3Client = new AmazonS3Client();
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
@@ -172,12 +176,12 @@ public class TpcHMessageProcessor {
                 stateProvider.getProcessedIntermediateResults();
         Map<String, TpcHIntermediateResult> collectedIntermediateResults =
                 stateProvider.getCollectedIntermediateResults();
-//        if (processedIntermediateResults.containsKey(chunkId)) {
-//            log.warn("Ignored intermediate result with chunk ID {} due to duplicity!", chunkId);
-//            return queryId;
-//        } else {
-//            processedIntermediateResults.put(chunkId, null);
-//        }
+        if (processedIntermediateResults.containsKey(chunkId)) {
+            log.warn("Ignored intermediate result with chunk ID {} due to duplicity!", chunkId);
+            return queryId;
+        } else {
+            processedIntermediateResults.put(chunkId, null);
+        }
         TpcHIntermediateResult existingIntermediateResult;
         if (!collectedIntermediateResults.containsKey(batchId)) {
             collectedIntermediateResults.put(batchId, intermediateResult);
@@ -217,12 +221,12 @@ public class TpcHMessageProcessor {
         Map<String, Void> processedReducedResults = stateProvider.getProcessedReducedResults();
         Map<String, TpcHIntermediateResult> collectedReducedResults =
                 stateProvider.getCollectedReducedResults();
-//        if (processedReducedResults.containsKey(batchId)) {
-//            log.warn("Ignored reduced result with batch ID {} due to duplicity!", batchId);
-//            return queryId;
-//        } else {
-//            processedReducedResults.put(batchId, null);
-//        }
+        if (processedReducedResults.containsKey(batchId)) {
+            log.warn("Ignored reduced result with batch ID {} due to duplicity!", batchId);
+            return queryId;
+        } else {
+            processedReducedResults.put(batchId, null);
+        }
 
         log.info("Received reduced result {} {} {}",
                 reducedResult.queryId, reducedResult.batchId, reducedResult.numberOfAggregatedResults);
@@ -259,7 +263,7 @@ public class TpcHMessageProcessor {
         } catch (Throwable t) {
             log.error("Error requesting semaphore!", t);
         } finally {
-            semaphore.release();
+            resultSemaphore.release();
         }
         return queryId;
     }
