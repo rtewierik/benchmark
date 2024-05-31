@@ -35,7 +35,7 @@ public class CommandHandler {
                         // Always one, and only one, thread required.
                         1, 1, 60L, TimeUnit.SECONDS,
                         // The results reducer does not receive more than 1.000 reduced results.
-                        new ArrayBlockingQueue<>(10000),
+                        new ArrayBlockingQueue<>(50000),
                         new DefaultThreadFactory(poolName),
                         new ThreadPoolExecutor.AbortPolicy()
                 );
@@ -46,7 +46,7 @@ public class CommandHandler {
                 new ThreadPoolExecutor(
                         numConsumers,
                         numConsumers, // Maximum pool size
-                        60L,
+                        0L,
                         TimeUnit.SECONDS, // Keep-alive time for idle threads
                         new ArrayBlockingQueue<>(50000), // Bounded queue for tasks
                         new DefaultThreadFactory(poolName),

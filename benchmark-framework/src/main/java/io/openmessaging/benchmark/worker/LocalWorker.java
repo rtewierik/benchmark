@@ -246,7 +246,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     @Override
     public void startLoad(ProducerWorkAssignment producerWorkAssignment) {
         commandHandler.close();
-        commandHandler = new CommandHandler(Runtime.getRuntime().availableProcessors(), "local-worker");
+        commandHandler = new CommandHandler(128, "local-worker");
         if (producerWorkAssignment.tpcHArguments == null) {
             startLoadForThroughputProducers(producerWorkAssignment);
         } else {

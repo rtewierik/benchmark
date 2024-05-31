@@ -127,6 +127,7 @@ public class WorkloadGenerator implements AutoCloseable {
                     timer.elapsedMillis());
         }
 
+
         createTpcHProducers(topics);
 
         ensureTopicsAreReady();
@@ -148,6 +149,7 @@ public class WorkloadGenerator implements AutoCloseable {
         log.info(
                 "[BenchmarkStart] Starting benchmark {} at {}", this.experimentId, new Date().getTime());
         worker.startLoad(producerWorkAssignment);
+
 
         TestResult result =
                 printAndCollectStats(
