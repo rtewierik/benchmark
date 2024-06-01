@@ -15,7 +15,7 @@
         "ignore_file_system_types": ["sysfs", "devtmpfs"]
       },
       "mem": {
-        "measurement": ["mem_available_percent"]
+        "measurement": ["mem_used_percent", "mem_available_percent"]
       }
     }
   }

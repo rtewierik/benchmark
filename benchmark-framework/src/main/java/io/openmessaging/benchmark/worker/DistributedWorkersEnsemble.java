@@ -231,28 +231,19 @@ public class DistributedWorkersEnsemble implements Worker {
         List<TopicSubscription> distributableConsumerSubscriptions =
                 new ArrayList<>(
                         subscriptions.subList(TpcHConstants.REDUCE_SRC_START_INDEX, subscriptions.size()));
-        TopicSubscription mapSubscription1 = subscriptions.get(TpcHConstants.MAP_CMD_START_INDEX);
-        TopicSubscription mapSubscription2 = subscriptions.get(TpcHConstants.MAP_CMD_START_INDEX + 1);
-        TopicSubscription mapSubscription3 = subscriptions.get(TpcHConstants.MAP_CMD_START_INDEX + 2);
-        TopicSubscription mapSubscription4 = subscriptions.get(TpcHConstants.MAP_CMD_START_INDEX + 3);
-        TopicSubscription mapSubscription5 = subscriptions.get(TpcHConstants.MAP_CMD_START_INDEX + 4);
-        TopicSubscription mapSubscription6 = subscriptions.get(TpcHConstants.MAP_CMD_START_INDEX + 5);
         TopicSubscription resultSubscription = subscriptions.get(TpcHConstants.REDUCE_DST_INDEX);
         List<List<TopicSubscription>> reduceSubscriptionsPerConsumer =
                 ListPartition.partitionList(distributableConsumerSubscriptions, workers.size());
-        Map<Worker, ConsumerAssignment> topicsPerConsumerMap = Maps.newHashMap();
+        Map<Integer, ConsumerAssignment> topicsPerConsumerMap = Maps.newHashMap();
         int i = 0;
         for (List<TopicSubscription> reduceSubscriptions : reduceSubscriptionsPerConsumer) {
             ConsumerAssignment individualAssignment = new ConsumerAssignment(assignment);
-            individualAssignment.topicsSubscriptions.add(mapSubscription1);
-            individualAssignment.topicsSubscriptions.add(mapSubscription2);
-            individualAssignment.topicsSubscriptions.add(mapSubscription3);
-            individualAssignment.topicsSubscriptions.add(mapSubscription4);
-            individualAssignment.topicsSubscriptions.add(mapSubscription5);
-            individualAssignment.topicsSubscriptions.add(mapSubscription6);
+            TopicSubscription mapSubscription = subscriptions.get(TpcHConstants.MAP_CMD_START_INDEX + i);
             individualAssignment.topicsSubscriptions.add(resultSubscription);
+            individualAssignment.topicsSubscriptions.add(mapSubscription);
             individualAssignment.topicsSubscriptions.addAll(reduceSubscriptions);
-            topicsPerConsumerMap.put(workers.get(i++), individualAssignment);
+            topicsPerConsumerMap.put(i, individualAssignment);
+            i++;
         }
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Topics per consumer map: {}", writer.writeValueAsString(topicsPerConsumerMap));
@@ -261,7 +252,10 @@ public class DistributedWorkersEnsemble implements Worker {
                 .forEach(
                         e -> {
                             try {
-                                e.getKey().createConsumers(e.getValue());
+                                Integer consumerIndex = e.getKey();
+                                ConsumerAssignment consumerAssignment =
+                                        e.getValue().withConsumerIndex(consumerIndex);
+                                workers.get(consumerIndex).createConsumers(consumerAssignment);
                             } catch (IOException ex) {
                                 throw new RuntimeException(ex);
                             }

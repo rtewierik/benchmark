@@ -21,15 +21,18 @@ import java.util.List;
 public class ConsumerAssignment {
     public List<TopicSubscription> topicsSubscriptions = new ArrayList<>();
     public String experimentId;
+    public Integer consumerIndex;
     public boolean isTpcH = false;
 
     private ConsumerAssignment(
             @JsonProperty("topicsSubscriptions") List<TopicSubscription> topicsSubscriptions,
             @JsonProperty("experimentId") String experimentId,
+            @JsonProperty("consumerIndex") Integer consumerIndex,
             @JsonProperty("isTpcH") boolean isTpcH) {
         this.topicsSubscriptions = topicsSubscriptions;
-        this.isTpcH = isTpcH;
         this.experimentId = experimentId;
+        this.consumerIndex = consumerIndex;
+        this.isTpcH = isTpcH;
     }
 
     public ConsumerAssignment(String experimentId) {
@@ -37,11 +40,17 @@ public class ConsumerAssignment {
     }
 
     public ConsumerAssignment(String experimentId, boolean isTpcH) {
-        this.isTpcH = isTpcH;
         this.experimentId = experimentId;
+        this.consumerIndex = 0;
+        this.isTpcH = isTpcH;
     }
 
     public ConsumerAssignment(ConsumerAssignment assignment) {
-        this(new ArrayList<>(), assignment.experimentId, assignment.isTpcH);
+        this(new ArrayList<>(), assignment.experimentId, assignment.consumerIndex, assignment.isTpcH);
+    }
+
+    public ConsumerAssignment withConsumerIndex(Integer consumerIndex) {
+        return new ConsumerAssignment(
+                new ArrayList<>(this.topicsSubscriptions), this.experimentId, consumerIndex, this.isTpcH);
     }
 }

@@ -39,11 +39,20 @@ public class AmazonS3Client {
 
     public S3Object readFileFromS3(String bucketName, String key) throws IOException {
         try {
-            return this.s3Client.getObject(new GetObjectRequest(bucketName, key));
+            int numRetries = 0;
+            while (numRetries < 5) {
+                try {
+                    return this.s3Client.getObject(new GetObjectRequest(bucketName, key));
+                } catch (Throwable t) {
+                    log.error("[Try {}] Error occurred while retrieving object from S3.", numRetries);
+                    numRetries++;
+                }
+            }
         } catch (Exception exception) {
             log.error(String.format("Could not retrieve object %s from bucket %s!", key, bucketName));
             throw new IOException("Failed to read and CSV from S3: " + exception.getMessage(), exception);
         }
+        return this.s3Client.getObject(new GetObjectRequest(bucketName, key));
     }
 
     public S3Object readFileFromS3(String s3Uri) throws IOException {

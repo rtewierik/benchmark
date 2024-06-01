@@ -43,6 +43,7 @@ import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import io.openmessaging.tpch.processing.TpcHStateProvider;
 import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -123,7 +124,7 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
                 }
                 String body = message.getBody();
                 TpcHMessage tpcHMessage = mapper.readValue(body, TpcHMessage.class);
-                String experimentId = messageProcessor.processTpcHMessage(tpcHMessage, stateProvider);
+                String experimentId = messageProcessor.processTpcHMessage(tpcHMessage, stateProvider).get();
                 long now = System.currentTimeMillis();
                 String sentTimestampStr = message.getAttributes().get("SentTimestamp");
                 long publishTimestamp = Long.parseLong(sentTimestampStr);
@@ -137,7 +138,7 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
                         tpcHMessage.messageId,
                         true);
                 this.deleteMessage(message.getReceiptHandle());
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
         }

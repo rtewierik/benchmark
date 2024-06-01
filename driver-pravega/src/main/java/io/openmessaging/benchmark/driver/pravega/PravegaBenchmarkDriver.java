@@ -186,8 +186,8 @@ public class PravegaBenchmarkDriver implements BenchmarkDriver {
         }
         // This delete step does not work for large benchmarks.
         // if (streamManager != null) {
-        // deleteTopics();
-        // streamManager.close();
+        //     deleteTopics();
+        //     streamManager.close();
         // }
     }
 }

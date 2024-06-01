@@ -22,6 +22,6 @@ payloadFile: ""
 subscriptionsPerTopic: 1
 consumerPerSubscription: 1
 producersPerTopic: 1
-producerRate: 10000
+producerRate: 10000000
 consumerBacklogSizeGB: 0
 testDurationMinutes: 10
