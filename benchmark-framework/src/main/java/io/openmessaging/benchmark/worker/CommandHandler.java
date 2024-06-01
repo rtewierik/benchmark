@@ -15,6 +15,8 @@ package io.openmessaging.benchmark.worker;
 
 
 import io.netty.util.concurrent.DefaultThreadFactory;
+import io.openmessaging.benchmark.common.EnvironmentConfiguration;
+import java.util.Objects;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -37,35 +39,38 @@ public class CommandHandler {
 
     public CommandHandler(String poolName) {
         this.executorService =
+                Objects.equals(poolName, "local-worker")
+                        ? new ThreadPoolExecutor(
+                                // Always one, and only one, thread required.
+                                1,
+                                1,
+                                60L,
+                                TimeUnit.SECONDS,
+                                // The results reducer does not receive more than 1.000 reduced results.
+                                new ArrayBlockingQueue<>(1000),
+                                new DefaultThreadFactory(poolName),
+                                new ThreadPoolExecutor.AbortPolicy())
+                        : Executors.newCachedThreadPool(new DefaultThreadFactory(poolName));
+    }
+
+    public CommandHandler(Integer numWorkers, String poolName) {
+        this.executorService =
                 new ThreadPoolExecutor(
-                        // Always one, and only one, thread required.
-                        1,
-                        1,
-                        60L,
-                        TimeUnit.SECONDS,
-                        // The results reducer does not receive more than 1.000 reduced results.
+                        numWorkers,
+                        numWorkers,
+                        50L,
+                        TimeUnit.MILLISECONDS,
                         new ArrayBlockingQueue<>(50000),
                         new DefaultThreadFactory(poolName),
                         new ThreadPoolExecutor.AbortPolicy());
     }
 
-    public CommandHandler(Integer numConsumers, String poolName) {
-        this.executorService =
-                new ThreadPoolExecutor(
-                        numConsumers,
-                        numConsumers, // Maximum pool size
-                        50L,
-                        TimeUnit.MILLISECONDS, // Keep-alive time for idle threads
-                        new ArrayBlockingQueue<>(50000), // Bounded queue for tasks
-                        new DefaultThreadFactory(poolName),
-                        new ThreadPoolExecutor.AbortPolicy() // Rejected execution policy
-                        );
-    }
-
     public void handleCommand(Runnable command) {
-        submitTaskWithTimeoutAndRetry(scheduler, command, 1, TimeUnit.SECONDS, 10);
-        Integer latest = numCommandsSubmitted.incrementAndGet();
-        log.info("Number of commands submitted: {}", latest);
+        submitTaskWithTimeoutAndRetry(scheduler, command, 1, TimeUnit.SECONDS, 3);
+        Integer newNumCommandsSubmitted = numCommandsSubmitted.incrementAndGet();
+        if (EnvironmentConfiguration.isDebug()) {
+            log.info("Number of commands submitted: {}", newNumCommandsSubmitted);
+        }
     }
 
     public void submitTaskWithTimeoutAndRetry(
@@ -84,24 +89,22 @@ public class CommandHandler {
                         Future<?> future = executorService.submit(task);
 
                         try {
-                            // Wait for the task to complete within the timeout
                             future.get(timeout, timeUnit);
                         } catch (TimeoutException e) {
                             future.cancel(true);
                             if (retries.incrementAndGet() <= maxRetries) {
-                                System.out.println("Task timed out, retrying... (" + retries.get() + ")");
+                                log.warn(String.format("Task timed out, retrying... (%d)", retries.get()));
                                 scheduler.schedule(this, 1, TimeUnit.SECONDS);
                             } else {
-                                System.out.println("Task failed after max retries");
+                                log.warn("Task failed after max retries");
                             }
                         } catch (InterruptedException | ExecutionException e) {
                             future.cancel(true);
-                            System.out.println("Task execution failed: " + e.getMessage());
+                            log.warn("Task execution failed: {}", e.getMessage());
                         }
                     }
                 };
 
-        // Submit the initial task
         scheduler.submit(taskWrapper);
     }
 

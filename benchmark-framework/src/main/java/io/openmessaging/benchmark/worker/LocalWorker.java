@@ -81,7 +81,6 @@ import org.slf4j.LoggerFactory;
 
 public class LocalWorker implements Worker, ConsumerCallback {
 
-    private static final Semaphore processingSemaphore = new Semaphore(64);
     private static final RateLimiter rateLimiter = RateLimiter.create(100);
     private BenchmarkDriver benchmarkDriver = null;
     /*
@@ -201,7 +200,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 producerInfo.add(new BenchmarkDriver.ProducerInfo(producerIndex.getAndIncrement(), topic));
             }
         }
-        // result, map, reduce1, reduce2, reduceN, map2, map3, map8
         producers.addAll(benchmarkDriver.createProducers(producerInfo).join());
         String assignment = writer.writeValueAsString(producerAssignment);
         log.info("Created {} producers in {} ms from {}", producers.size(), timer.elapsedMillis(), assignment);
@@ -258,10 +256,11 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public void startLoad(ProducerWorkAssignment producerWorkAssignment) {
-        commandHandler = new CommandHandler(32, "local-worker");
         if (producerWorkAssignment.tpcHArguments == null) {
+            commandHandler = new CommandHandler(32, "tpc-h-worker");
             startLoadForThroughputProducers(producerWorkAssignment);
         } else {
+            commandHandler = new CommandHandler("throughput-worker");
             startLoadForTpcHProducers(producerWorkAssignment);
         }
     }
@@ -523,13 +522,15 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 rateLimiter.acquire();
                 TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
                 int size = data.length;
-                String queryId = handleTpcHMessage(message, consumer).get();
-                try {
-                    internalMessageReceived(size, publishTimestamp, queryId, message.messageId);
-                } catch (IOException e) {
-                    log.error("Internal message received resulted in an error.", e);
-                    throw new RuntimeException(e);
-                }
+                handleTpcHMessage(message, consumer).thenApply((queryId) -> {
+                    try {
+                        internalMessageReceived(size, publishTimestamp, queryId, message.messageId);
+                    } catch (IOException e) {
+                        log.error("Internal message received resulted in an error.", e);
+                        throw new RuntimeException(e);
+                    }
+                    return null;
+                });
             } catch (Throwable t) {
                 TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
                 log.error("Exception occurred while handling command or {}", writer.writeValueAsString(message), t);
@@ -555,13 +556,15 @@ public class LocalWorker implements Worker, ConsumerCallback {
             data.get(byteArray);
             try {
                 TpcHMessage message = mapper.readValue(byteArray, TpcHMessage.class);
-                String queryId = handleTpcHMessage(message, consumer).get();
-                try {
-                    internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
-                } catch (IOException e) {
-                    log.error("Internal message received resulted in an error.", e);
-                    throw new RuntimeException(e);
-                }
+                handleTpcHMessage(message, consumer).thenApply((queryId) -> {
+                    try {
+                        internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
+                    } catch (IOException e) {
+                        log.error("Internal message received resulted in an error.", e);
+                        throw new RuntimeException(e);
+                    }
+                    return null;
+                });
             } catch (Throwable t) {
                 TpcHMessage message = mapper.readValue(byteArray, TpcHMessage.class);
                 log.error("Exception occurred while handling command {}", writer.writeValueAsString(message), t);
