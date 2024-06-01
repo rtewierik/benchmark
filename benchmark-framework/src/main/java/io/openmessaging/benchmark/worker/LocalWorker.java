@@ -72,6 +72,7 @@ import io.openmessaging.tpch.model.TpcHProducerAssignment;
 import io.openmessaging.tpch.processing.SingleThreadTpcHStateProvider;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import io.openmessaging.tpch.processing.TpcHStateProvider;
+import io.pravega.keycloak.com.google.common.util.concurrent.RateLimiter;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
@@ -93,6 +94,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final Map<BenchmarkConsumer, TpcHStateProvider> stateProviders = new HashMap<>();
     private TpcHMessageProcessor tpcHMessageProcessor;
     private final AdaptiveRateLimitedTaskProcessor taskProcessor = new AdaptiveRateLimitedTaskProcessor(100, 50);
+    private final RateLimiter rateLimiter = RateLimiter.create(100);
     private CommandHandler commandHandler;
     private final StatsLogger statsLogger;
     private final WorkerStats stats;
@@ -516,7 +518,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     // This function is called in a fire-and-forget manner, many times for the same reducer.
     public void messageReceived(byte[] data, long publishTimestamp, BenchmarkConsumer consumer) throws IOException {
         if (this.isTpcH && data.length != 10) {
-            taskProcessor.submitTask(() -> {
+            rateLimiter.acquire();
                 try {
                 TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
                 int size = data.length;
@@ -533,9 +535,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
                 log.error("Exception occurred while handling command {}", writer.writeValueAsString(message), t);
             }
-                return null;
-            });
-
         } else {
             internalMessageReceived(data.length, publishTimestamp, this.experimentId, null);
         }
@@ -554,8 +553,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
         if (this.isTpcH && length != 10) {
             byte[] byteArray = new byte[length];
             data.get(byteArray);
-            taskProcessor.submitTask(() -> {
                 try {
+                    rateLimiter.acquire();
                     TpcHMessage message = mapper.readValue(byteArray, TpcHMessage.class);
                     handleTpcHMessage(message, consumer).thenApply((queryId) -> {
                         try {
@@ -570,8 +569,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     TpcHMessage message = mapper.readValue(byteArray, TpcHMessage.class);
                     log.error("Exception occurred while handling command {}", writer.writeValueAsString(message), t);
                 }
-                return null;
-            });
         } else {
             internalMessageReceived(length, publishTimestamp, this.experimentId, null);
         }
