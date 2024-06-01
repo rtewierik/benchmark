@@ -92,7 +92,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private volatile MessageProducerImpl messageProducer;
     private final Map<BenchmarkConsumer, TpcHStateProvider> stateProviders = new HashMap<>();
     private TpcHMessageProcessor tpcHMessageProcessor;
-    private final AdaptiveRateLimitedTaskProcessor taskProcessor = new AdaptiveRateLimitedTaskProcessor(500, 100);
+    private final AdaptiveRateLimitedTaskProcessor taskProcessor = new AdaptiveRateLimitedTaskProcessor(100, 50);
     private CommandHandler commandHandler;
     private final StatsLogger statsLogger;
     private final WorkerStats stats;
