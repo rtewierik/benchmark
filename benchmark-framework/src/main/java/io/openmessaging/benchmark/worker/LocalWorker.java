@@ -675,6 +675,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public void close() throws Exception {
+        taskProcessor.shutdown();
         commandHandler.close();
     }
 

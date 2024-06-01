@@ -90,7 +90,7 @@ public class AdaptiveRateLimitedTaskProcessor {
                     System.err.println("Executor service did not terminate");
                 }
             }
-        } catch (InterruptedException ie) {
+        } catch (InterruptedException exception) {
             executorService.shutdownNow();
             Thread.currentThread().interrupt();
         }
