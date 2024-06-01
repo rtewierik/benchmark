@@ -47,6 +47,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +58,7 @@ import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
 public class TpcHMessageProcessor {
+    private final AtomicInteger resultsProcessed = new AtomicInteger();
     private final Supplier<String> getExperimentId;
     private final List<BenchmarkProducer> producers;
     private volatile MessageProducer messageProducer;
@@ -66,8 +68,8 @@ public class TpcHMessageProcessor {
             S3AsyncClient.builder()
                     .httpClientBuilder(
                             NettyNioAsyncHttpClient.builder()
-                                    .maxConcurrency(2048)
-                                    .maxPendingConnectionAcquires(15000)
+                                    .maxConcurrency(256)
+                                    .maxPendingConnectionAcquires(1000)
                                     .connectionAcquisitionTimeout(Duration.ofSeconds(30)))
                     .build();
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
@@ -146,8 +148,10 @@ public class TpcHMessageProcessor {
                 }
             }
         } catch (Exception exception) {
-            log.error(String.format("Could not retrieve object %s from bucket %s!",
-                    getObjectRequest.key(), getObjectRequest.bucket()));
+            log.error(
+                    String.format(
+                            "Could not retrieve object %s from bucket %s!",
+                            getObjectRequest.key(), getObjectRequest.bucket()));
         }
         return s3AsyncClient
                 .getObject(getObjectRequest, AsyncResponseTransformer.toBytes())
@@ -237,7 +241,7 @@ public class TpcHMessageProcessor {
 
         TpcHIntermediateResult existingIntermediateResult = null;
         try {
-            if (!semaphore.tryAcquire(3, TimeUnit.MINUTES)) {
+            if (!semaphore.tryAcquire(30, TimeUnit.SECONDS)) {
                 throw new IllegalArgumentException("Could not acquire intermediate result lock");
             }
             try {
@@ -298,46 +302,30 @@ public class TpcHMessageProcessor {
             processedReducedResults.add(batchId);
         }
 
-        semaphores.putIfAbsent(queryId, new Semaphore(1));
-        Semaphore semaphore = semaphores.get(queryId);
-        try {
-            if (!semaphore.tryAcquire(3, TimeUnit.MINUTES)) {
-                throw new IllegalArgumentException("Could not acquire intermediate result lock");
-            }
-            try {
-                if (!collectedReducedResults.containsKey(queryId)) {
-                    collectedReducedResults.put(queryId, reducedResult);
-                } else {
-                    TpcHIntermediateResult existingReducedResult = collectedReducedResults.get(queryId);
-                    existingReducedResult.aggregateReducedResult(reducedResult);
+        if (!collectedReducedResults.containsKey(queryId)) {
+            collectedReducedResults.put(queryId, reducedResult);
+        } else {
+            TpcHIntermediateResult existingReducedResult = collectedReducedResults.get(queryId);
+            existingReducedResult.aggregateReducedResult(reducedResult);
 
-                    if (EnvironmentConfiguration.isDebug()) {
-                        log.info(
-                                "Detected reduced result: {}\n\n{}",
-                                writer.writeValueAsString(reducedResult),
-                                writer.writeValueAsString(existingReducedResult));
-                    }
-                    Integer numAggregatesResults = existingReducedResult.numberOfAggregatedResults;
-                    if (numAggregatesResults % 1000 < 50 || numAggregatesResults > 9100) {
-                        log.info("TPC-H progress: {}", existingReducedResult.numberOfAggregatedResults);
-                    }
-                    if (existingReducedResult.numberOfAggregatedResults.intValue()
-                            == reducedResult.numberOfChunks.intValue()) {
-                        TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
-                        log.info("[RESULT] TPC-H query result: {}", writer.writeValueAsString(result));
-                        stateProvider.getProcessedIntermediateResults().clear();
-                        processedReducedResults.clear();
-                        stateProvider.getCollectedIntermediateResults().clear();
-                        collectedReducedResults.clear();
-                        onTestCompleted.run();
-                    }
-                }
-            } finally {
-                semaphore.release();
+            if (EnvironmentConfiguration.isDebug()) {
+                log.info(
+                        "Detected reduced result: {}\n\n{}",
+                        writer.writeValueAsString(reducedResult),
+                        writer.writeValueAsString(existingReducedResult));
             }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Restore the interrupted status
-            throw new RuntimeException(e);
+            Integer numAggregatesResults = resultsProcessed.incrementAndGet();
+            log.info("TPC-H progress: {}", numAggregatesResults);
+            if (existingReducedResult.numberOfAggregatedResults.intValue()
+                    == reducedResult.numberOfChunks.intValue()) {
+                TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
+                log.info("[RESULT] TPC-H query result: {}", writer.writeValueAsString(result));
+                stateProvider.getProcessedIntermediateResults().clear();
+                processedReducedResults.clear();
+                stateProvider.getCollectedIntermediateResults().clear();
+                collectedReducedResults.clear();
+                onTestCompleted.run();
+            }
         }
         return CompletableFuture.completedFuture(queryId);
     }

@@ -15,6 +15,8 @@ package io.openmessaging.tpch.processing;
 
 
 import io.openmessaging.tpch.model.TpcHIntermediateResult;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,11 +25,10 @@ import java.util.concurrent.ConcurrentSkipListSet;
 public class SingleThreadTpcHStateProvider implements TpcHStateProvider {
     private final Map<String, TpcHIntermediateResult> collectedIntermediateResults =
             new ConcurrentHashMap<>();
-    private final Map<String, TpcHIntermediateResult> collectedReducedResults =
-            new ConcurrentHashMap<>();
+    private final Map<String, TpcHIntermediateResult> collectedReducedResults = new HashMap<>();
     private final Set<String> processedMapMessageIds = new ConcurrentSkipListSet<>();
     private final Set<String> processedIntermediateResults = new ConcurrentSkipListSet<>();
-    private final Set<String> processedReducedResults = new ConcurrentSkipListSet<>();
+    private final Set<String> processedReducedResults = new HashSet<>();
 
     @Override
     public Map<String, TpcHIntermediateResult> getCollectedIntermediateResults() {

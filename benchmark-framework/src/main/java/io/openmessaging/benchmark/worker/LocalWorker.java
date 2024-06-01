@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.RateLimiter;
 import io.openmessaging.benchmark.DriverConfiguration;
 import io.openmessaging.benchmark.common.ObjectMappers;
 import io.openmessaging.benchmark.common.key.distribution.KeyDistributor;
@@ -59,6 +60,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -79,6 +81,8 @@ import org.slf4j.LoggerFactory;
 
 public class LocalWorker implements Worker, ConsumerCallback {
 
+    private static final Semaphore processingSemaphore = new Semaphore(64);
+    private static final RateLimiter rateLimiter = RateLimiter.create(100);
     private BenchmarkDriver benchmarkDriver = null;
     /*
         For TPC-H queries, the producers list is allocated with the producer for Map messages and producers for all the
@@ -516,17 +520,16 @@ public class LocalWorker implements Worker, ConsumerCallback {
     public void messageReceived(byte[] data, long publishTimestamp, BenchmarkConsumer consumer) throws IOException {
         if (this.isTpcH && data.length != 10) {
             try {
+                rateLimiter.acquire();
                 TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
                 int size = data.length;
-                handleTpcHMessage(message, consumer).thenApply((queryId) -> {
-                    try {
-                        internalMessageReceived(size, publishTimestamp, queryId, message.messageId);
-                    } catch (IOException e) {
-                        log.error("Internal message received resulted in an error.", e);
-                        throw new RuntimeException(e);
-                    }
-                    return null;
-                });
+                String queryId = handleTpcHMessage(message, consumer).get();
+                try {
+                    internalMessageReceived(size, publishTimestamp, queryId, message.messageId);
+                } catch (IOException e) {
+                    log.error("Internal message received resulted in an error.", e);
+                    throw new RuntimeException(e);
+                }
             } catch (Throwable t) {
                 TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
                 log.error("Exception occurred while handling command or {}", writer.writeValueAsString(message), t);
@@ -547,19 +550,18 @@ public class LocalWorker implements Worker, ConsumerCallback {
     public void messageReceived(ByteBuffer data, long publishTimestamp, BenchmarkConsumer consumer) throws IOException {
         int length = data.remaining();
         if (this.isTpcH && length != 10) {
+            rateLimiter.acquire();
             byte[] byteArray = new byte[length];
             data.get(byteArray);
             try {
                 TpcHMessage message = mapper.readValue(byteArray, TpcHMessage.class);
-                handleTpcHMessage(message, consumer).thenApply((queryId) -> {
-                    try {
-                        internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
-                    } catch (IOException e) {
-                        log.error("Internal message received resulted in an error.", e);
-                        throw new RuntimeException(e);
-                    }
-                    return null;
-                });
+                String queryId = handleTpcHMessage(message, consumer).get();
+                try {
+                    internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
+                } catch (IOException e) {
+                    log.error("Internal message received resulted in an error.", e);
+                    throw new RuntimeException(e);
+                }
             } catch (Throwable t) {
                 TpcHMessage message = mapper.readValue(byteArray, TpcHMessage.class);
                 log.error("Exception occurred while handling command {}", writer.writeValueAsString(message), t);
