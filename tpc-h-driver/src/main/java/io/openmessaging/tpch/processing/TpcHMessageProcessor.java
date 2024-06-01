@@ -58,7 +58,7 @@ import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
 public class TpcHMessageProcessor {
-    private final AtomicInteger resultsProcessed = new AtomicInteger();
+    private final AtomicInteger numResultsProcessed = new AtomicInteger();
     private final Supplier<String> getExperimentId;
     private final List<BenchmarkProducer> producers;
     private volatile MessageProducer messageProducer;
@@ -69,7 +69,7 @@ public class TpcHMessageProcessor {
                     .httpClientBuilder(
                             NettyNioAsyncHttpClient.builder()
                                     .maxConcurrency(256)
-                                    .maxPendingConnectionAcquires(1000)
+                                    .maxPendingConnectionAcquires(1024)
                                     .connectionAcquisitionTimeout(Duration.ofSeconds(30)))
                     .build();
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
@@ -153,9 +153,7 @@ public class TpcHMessageProcessor {
                             "Could not retrieve object %s from bucket %s!",
                             getObjectRequest.key(), getObjectRequest.bucket()));
         }
-        return s3AsyncClient
-                .getObject(getObjectRequest, AsyncResponseTransformer.toBytes())
-                .thenApply(BytesWrapper::asInputStream);
+        throw new RuntimeException("Allowed number of retries for retrieving a file from S3 exceeded!");
     }
 
     private CompletableFuture<String> processConsumerAssignment(
@@ -241,8 +239,8 @@ public class TpcHMessageProcessor {
 
         TpcHIntermediateResult existingIntermediateResult = null;
         try {
-            if (!semaphore.tryAcquire(30, TimeUnit.SECONDS)) {
-                throw new IllegalArgumentException("Could not acquire intermediate result lock");
+            if (!semaphore.tryAcquire(10, TimeUnit.SECONDS)) {
+                throw new IllegalArgumentException("Could not acquire intermediate result lock!");
             }
             try {
                 if (!collectedIntermediateResults.containsKey(batchId)) {
@@ -255,7 +253,7 @@ public class TpcHMessageProcessor {
                 semaphore.release();
             }
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Restore the interrupted status
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
         if (existingIntermediateResult != null
@@ -314,8 +312,10 @@ public class TpcHMessageProcessor {
                         writer.writeValueAsString(reducedResult),
                         writer.writeValueAsString(existingReducedResult));
             }
-            Integer numAggregatesResults = resultsProcessed.incrementAndGet();
-            log.info("TPC-H progress: {}", numAggregatesResults);
+            Integer newNumResultsProcessed = numResultsProcessed.incrementAndGet();
+            if (newNumResultsProcessed % 10 == 0) {
+                log.info("TPC-H progress: {}", newNumResultsProcessed);
+            }
             if (existingReducedResult.numberOfAggregatedResults.intValue()
                     == reducedResult.numberOfChunks.intValue()) {
                 TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
