@@ -74,6 +74,7 @@ import io.openmessaging.tpch.model.TpcHProducerAssignment;
 import io.openmessaging.tpch.processing.SingleThreadTpcHStateProvider;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import io.openmessaging.tpch.processing.TpcHStateProvider;
+import io.pravega.keycloak.com.google.common.util.concurrent.RateLimiter;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
@@ -95,6 +96,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final Map<BenchmarkConsumer, TpcHStateProvider> stateProviders = new HashMap<>();
     private TpcHMessageProcessor tpcHMessageProcessor;
     private AdaptiveRateLimitedTaskProcessor taskProcessor;
+    private final RateLimiter rateLimiter = RateLimiter.create(50);
+    private final RateLimiter producerRateLimiter = RateLimiter.create(512);
     private CommandHandler commandHandler;
     private final StatsLogger statsLogger;
     private final WorkerStats stats;
@@ -258,12 +261,12 @@ public class LocalWorker implements Worker, ConsumerCallback {
     @Override
     public void startLoad(ProducerWorkAssignment producerWorkAssignment) {
         if (producerWorkAssignment.tpcHArguments == null) {
-            commandHandler = new CommandHandler(32, "tpc-h-worker");
+            commandHandler = new CommandHandler("throughput-worker");
             startLoadForThroughputProducers(producerWorkAssignment);
         } else {
+            commandHandler = new CommandHandler(8, "tpc-h-worker");
             TpcHArguments arguments = producerWorkAssignment.tpcHArguments;
             int numberOfWorkers = (int) Math.ceil((double) arguments.numberOfWorkers / 3);
-            commandHandler = new CommandHandler("throughput-worker");
             int maxTasksPerSecond = numberOfWorkers / 10;
             taskProcessor = new AdaptiveRateLimitedTaskProcessor(4);
             startLoadForTpcHProducers(producerWorkAssignment);
@@ -290,16 +293,14 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 assignment.tpcHArguments,
                 assignment.producerIndex
         );
-        // TODO: This logic does not seem correct according to the logs. 1666 for producer, 98 x 17, each processor
-        // firing 136 promises.
-        // Initial consumption rate is also way too high and I need to find a way to limit it.
         int numBatchesForProducer = (int) Math.ceil((double) tpcHAssignment.producerNumberOfCommands
                 / tpcHAssignment.commandsPerBatch);
         log.info("Number of commands {} | Commands per batch {} | Batches per producer {}",
                 tpcHAssignment.producerNumberOfCommands, tpcHAssignment.commandsPerBatch, numBatchesForProducer);
+        int numBatchesForProcessor = (int) Math.ceil((double) numBatchesForProducer / processors);
         ArrayList<List<Integer>> partitions = new ArrayList<>(IntStream.range(0, numBatchesForProducer)
                 .boxed()
-                .collect(Collectors.groupingBy(i -> i / processors))
+                .collect(Collectors.groupingBy(i -> i / numBatchesForProcessor))
                 .values());
         BenchmarkProducer mainProducer = producers.get(TpcHConstants.MAP_CMD_START_INDEX);
         Integer extraStartIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.tpcHArguments.numberOfWorkers;
@@ -369,7 +370,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                 );
                                 String key = keyDistributor.next();
                                 Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
-
+                                producerRateLimiter.acquire();
                                 CompletableFuture<Void> future = messageProducer.sendMessage(
                                         producer,
                                         optionalKey,
@@ -567,7 +568,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     private void processTpcHMessage(long publishTimestamp, BenchmarkConsumer consumer, int length, TpcHMessage message)
             throws IOException {
-        taskProcessor.startNewTask();
+//        taskProcessor.startNewTask();
+        rateLimiter.acquire();
         TpcHStateProvider stateProvider = stateProviders.get(consumer);
         tpcHMessageProcessor.processTpcHMessage(message, stateProvider).thenApply((queryId) -> {
             try {
@@ -575,9 +577,10 @@ public class LocalWorker implements Worker, ConsumerCallback {
             } catch (IOException e) {
                 log.error("Internal message received resulted in an error.", e);
                 throw new RuntimeException(e);
-            } finally {
-                taskProcessor.finishedRunningTask();
-            }
+                }
+//            } finally {
+//                taskProcessor.finishedRunningTask();
+//            }
             return null;
         });
     }
