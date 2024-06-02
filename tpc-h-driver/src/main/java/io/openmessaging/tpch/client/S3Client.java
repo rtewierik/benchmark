@@ -37,7 +37,7 @@ public class S3Client {
     private final Throttler throttler;
 
     public S3Client() {
-        this.throttler = new Throttler(500, 1, TimeUnit.SECONDS);
+        this.throttler = new Throttler(1000, 1, TimeUnit.SECONDS);
     }
 
     public CompletableFuture<InputStream> getObject(GetObjectRequest request) {

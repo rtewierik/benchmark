@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -307,6 +308,7 @@ public class TpcHMessageProcessor {
                     == reducedResult.numberOfChunks.intValue()) {
                 TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(existingReducedResult);
                 log.info("[RESULT] TPC-H query result: {}", writer.writeValueAsString(result));
+                log.info("[RESULT] Observed at {}", new Date().getTime());
                 stateProvider.getProcessedIntermediateResults().clear();
                 processedReducedResults.clear();
                 stateProvider.getCollectedIntermediateResults().clear();
