@@ -518,19 +518,10 @@ public class LocalWorker implements Worker, ConsumerCallback {
     // This function is called in a fire-and-forget manner, many times for the same reducer.
     public void messageReceived(byte[] data, long publishTimestamp, BenchmarkConsumer consumer) throws IOException {
         if (this.isTpcH && data.length != 10) {
-            rateLimiter.acquire();
-                try {
+            try {
                 TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
                 int size = data.length;
-                handleTpcHMessage(message, consumer).thenApply((queryId) -> {
-                    try {
-                        internalMessageReceived(size, publishTimestamp, queryId, message.messageId);
-                    } catch (IOException e) {
-                        log.error("Internal message received resulted in an error.", e);
-                        throw new RuntimeException(e);
-                    }
-                    return null;
-                });
+                processTpcHMessage(publishTimestamp, consumer, size, message);
             } catch (Throwable t) {
                 TpcHMessage message = mapper.readValue(data, TpcHMessage.class);
                 log.error("Exception occurred while handling command {}", writer.writeValueAsString(message), t);
@@ -554,17 +545,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
             byte[] byteArray = new byte[length];
             data.get(byteArray);
                 try {
-                    rateLimiter.acquire();
                     TpcHMessage message = mapper.readValue(byteArray, TpcHMessage.class);
-                    handleTpcHMessage(message, consumer).thenApply((queryId) -> {
-                        try {
-                            internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
-                        } catch (IOException e) {
-                            log.error("Internal message received resulted in an error.", e);
-                            throw new RuntimeException(e);
-                        }
-                        return null;
-                    });
+                    processTpcHMessage(publishTimestamp, consumer, length, message);
                 } catch (Throwable t) {
                     TpcHMessage message = mapper.readValue(byteArray, TpcHMessage.class);
                     log.error("Exception occurred while handling command {}", writer.writeValueAsString(message), t);
@@ -581,10 +563,21 @@ public class LocalWorker implements Worker, ConsumerCallback {
         }
     }
 
-    private CompletableFuture<String> handleTpcHMessage(
-            TpcHMessage message, BenchmarkConsumer consumer) throws IOException {
+    private void processTpcHMessage(long publishTimestamp, BenchmarkConsumer consumer, int length, TpcHMessage message)
+            throws IOException {
+        taskProcessor.startNewTask();
         TpcHStateProvider stateProvider = stateProviders.get(consumer);
-        return tpcHMessageProcessor.processTpcHMessage(message, stateProvider);
+        tpcHMessageProcessor.processTpcHMessage(message, stateProvider).thenApply((queryId) -> {
+            try {
+                internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
+            } catch (IOException e) {
+                log.error("Internal message received resulted in an error.", e);
+                throw new RuntimeException(e);
+            } finally {
+                taskProcessor.finishedRunningTask();
+            }
+            return null;
+        });
     }
 
     public boolean getTestCompleted() {
