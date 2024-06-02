@@ -111,7 +111,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     public LocalWorker(StatsLogger statsLogger, String poolName) {
         if (Objects.equals(poolName, "local-worker")) {
             this.commandHandler = new CommandHandler(poolName);
-            this.taskProcessor = new AdaptiveRateLimitedTaskProcessor(1, 1);
+            this.taskProcessor = new AdaptiveRateLimitedTaskProcessor(1);
         }
         this.statsLogger = statsLogger;
         this.stats = EnvironmentConfiguration.isCloudMonitoringEnabled()
@@ -264,10 +264,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
             TpcHArguments arguments = producerWorkAssignment.tpcHArguments;
             int numberOfWorkers = (int) Math.ceil((double) arguments.numberOfWorkers / 3);
             commandHandler = new CommandHandler("throughput-worker");
-            if (taskProcessor != null) {
-                taskProcessor.shutdown();
-            }
-            taskProcessor = new AdaptiveRateLimitedTaskProcessor(numberOfWorkers, (double) numberOfWorkers / 2);
+            int maxTasksPerSecond = numberOfWorkers / 10;
+            taskProcessor = new AdaptiveRateLimitedTaskProcessor(4);
             startLoadForTpcHProducers(producerWorkAssignment);
         }
     }
@@ -292,6 +290,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 assignment.tpcHArguments,
                 assignment.producerIndex
         );
+        // TODO: This logic does not seem correct according to the logs. 1666 for producer, 98 x 17, each processor
+        // firing 136 promises.
+        // Initial consumption rate is also way too high and I need to find a way to limit it.
         int numBatchesForProducer = (int) Math.ceil((double) tpcHAssignment.producerNumberOfCommands
                 / tpcHAssignment.commandsPerBatch);
         log.info("Number of commands {} | Commands per batch {} | Batches per producer {}",
@@ -666,7 +667,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @Override
     public void close() throws Exception {
-        taskProcessor.shutdown();
         commandHandler.close();
     }
 

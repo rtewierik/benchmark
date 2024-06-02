@@ -14,50 +14,28 @@
 package io.openmessaging.benchmark.worker;
 
 
-import com.google.common.util.concurrent.RateLimiter;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.Semaphore;
 
 public class AdaptiveRateLimitedTaskProcessor {
 
-    private final AtomicInteger runningTasks;
-    private final int maxConcurrentTasks;
-    private final ScheduledExecutorService rateAdjustmentService;
-    private final RateLimiter rateLimiter;
+    private final Semaphore semaphore;
 
-    public AdaptiveRateLimitedTaskProcessor(int maxConcurrentTasks, double initialTasksPerSecond) {
-        this.maxConcurrentTasks = maxConcurrentTasks;
-        this.rateLimiter = RateLimiter.create(initialTasksPerSecond);
-        this.runningTasks = new AtomicInteger(0);
-        this.rateAdjustmentService = Executors.newScheduledThreadPool(1);
-        this.rateAdjustmentService.scheduleAtFixedRate(this::adjustRateLimiter, 1, 1, TimeUnit.SECONDS);
+    public AdaptiveRateLimitedTaskProcessor(int maxConcurrentTasks) {
+        this.semaphore = new Semaphore(maxConcurrentTasks);
     }
 
     public void finishedRunningTask() {
-        this.runningTasks.decrementAndGet();
+        this.semaphore.release();
     }
 
     public void startNewTask() {
-        rateLimiter.acquire();
-        runningTasks.incrementAndGet();
-    }
-
-    private void adjustRateLimiter() {
-        int currentlyRunningTasks = runningTasks.get();
-        double currentRate = rateLimiter.getRate();
-
-        if (currentlyRunningTasks >= maxConcurrentTasks * 0.8) {
-            // Reduce rate if we're nearing the max capacity
-            rateLimiter.setRate(Math.max(currentRate / 2, 1.0));
-        } else if (currentlyRunningTasks <= maxConcurrentTasks * 0.5) {
-            // Increase rate if we're well below capacity
-            rateLimiter.setRate(currentRate * 1.5);
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        } finally {
+            semaphore.release();
         }
-    }
-
-    public void shutdown() {
-        rateAdjustmentService.shutdown();
     }
 }
