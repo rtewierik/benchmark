@@ -66,6 +66,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import io.openmessaging.tpch.TpcHConstants;
+import io.openmessaging.tpch.model.TpcHArguments;
 import io.openmessaging.tpch.model.TpcHConsumerAssignment;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.model.TpcHMessageType;
@@ -73,7 +74,6 @@ import io.openmessaging.tpch.model.TpcHProducerAssignment;
 import io.openmessaging.tpch.processing.SingleThreadTpcHStateProvider;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import io.openmessaging.tpch.processing.TpcHStateProvider;
-import io.pravega.keycloak.com.google.common.util.concurrent.RateLimiter;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
@@ -94,8 +94,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private volatile MessageProducerImpl messageProducer;
     private final Map<BenchmarkConsumer, TpcHStateProvider> stateProviders = new HashMap<>();
     private TpcHMessageProcessor tpcHMessageProcessor;
-    private final AdaptiveRateLimitedTaskProcessor taskProcessor = new AdaptiveRateLimitedTaskProcessor(100, 50);
-    private final RateLimiter rateLimiter = RateLimiter.create(100);
+    private AdaptiveRateLimitedTaskProcessor taskProcessor;
     private CommandHandler commandHandler;
     private final StatsLogger statsLogger;
     private final WorkerStats stats;
@@ -261,7 +260,10 @@ public class LocalWorker implements Worker, ConsumerCallback {
             commandHandler = new CommandHandler(32, "tpc-h-worker");
             startLoadForThroughputProducers(producerWorkAssignment);
         } else {
+            TpcHArguments arguments = producerWorkAssignment.tpcHArguments;
+            int numberOfWorkers = (int) Math.ceil((double) arguments.numberOfWorkers / 3);
             commandHandler = new CommandHandler("throughput-worker");
+            taskProcessor = new AdaptiveRateLimitedTaskProcessor(numberOfWorkers, (double) numberOfWorkers / 2);
             startLoadForTpcHProducers(producerWorkAssignment);
         }
     }
@@ -288,7 +290,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
         );
         int numBatchesForProducer = (int) Math.ceil((double) tpcHAssignment.producerNumberOfCommands
                 / tpcHAssignment.commandsPerBatch);
-        log.info("Number of commands {} | Commands per batch {} | Batches per processor {}",
+        log.info("Number of commands {} | Commands per batch {} | Batches per producer {}",
                 tpcHAssignment.producerNumberOfCommands, tpcHAssignment.commandsPerBatch, numBatchesForProducer);
         ArrayList<List<Integer>> partitions = new ArrayList<>(IntStream.range(0, numBatchesForProducer)
                 .boxed()
