@@ -37,6 +37,7 @@ import io.openmessaging.benchmark.common.monitoring.CentralWorkerStats;
 import io.openmessaging.benchmark.common.monitoring.InstanceWorkerStats;
 import io.openmessaging.benchmark.common.monitoring.WorkerStats;
 import io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkConfiguration;
+import io.openmessaging.benchmark.utils.ListPartition;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
 import io.openmessaging.benchmark.common.monitoring.CountersStats;
@@ -62,6 +63,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import io.openmessaging.tpch.TpcHConstants;
@@ -285,6 +287,13 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 assignment.tpcHArguments,
                 assignment.producerIndex
         );
+        int numCommandsPerProcessor = (int) Math.ceil((double)tpcHAssignment.producerNumberOfCommands / processors);
+        // TODO: Use batch size based on numWorkers to figure out how many batches are to be processed and assign those.
+        int numBatches =
+        List<List<Integer>> partitions = new ArrayList<>(IntStream.range(0, numCommandsPerProcessor)
+                .boxed()
+                .collect(Collectors.groupingBy(i -> i / processors))
+                .values());
         BenchmarkProducer mainProducer = producers.get(TpcHConstants.MAP_CMD_START_INDEX);
         Integer extraStartIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.tpcHArguments.numberOfWorkers;
         IntStream.range(0, processors).forEach(index ->
@@ -293,6 +302,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                         tpcHAssignment,
                         processors,
                         index == 0 ? mainProducer : producers.get(extraStartIndex + index - 1),
+                        partitions,
                         index
                 ));
     }
@@ -315,6 +325,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
             TpcHProducerAssignment assignment,
             Integer numProcessors,
             BenchmarkProducer producer,
+            List<Integer> batches,
             Integer processorProducerIndex
     ) {
         commandHandler.handleCommand(
