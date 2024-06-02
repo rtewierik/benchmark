@@ -148,7 +148,7 @@ sudo bin/benchmark \
 
 sudo bin/benchmark \
 --drivers driver-kafka/kafka-experiment.yaml \
---tpc-h-files workloads/tpc-h-q1-1000-100.yaml,workloads/tpc-h-q1-100-10.yaml \
+--tpc-h-files workloads/tpc-h-q1-100-10.yaml \
 workloads/tpc-h-base-long.yaml
 
 sudo bin/benchmark \

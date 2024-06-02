@@ -37,7 +37,6 @@ import io.openmessaging.benchmark.common.monitoring.CentralWorkerStats;
 import io.openmessaging.benchmark.common.monitoring.InstanceWorkerStats;
 import io.openmessaging.benchmark.common.monitoring.WorkerStats;
 import io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkConfiguration;
-import io.openmessaging.benchmark.utils.ListPartition;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
 import io.openmessaging.benchmark.common.monitoring.CountersStats;
@@ -287,10 +286,11 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 assignment.tpcHArguments,
                 assignment.producerIndex
         );
-        int numCommandsPerProcessor = (int) Math.ceil((double)tpcHAssignment.producerNumberOfCommands / processors);
-        // TODO: Use batch size based on numWorkers to figure out how many batches are to be processed and assign those.
-        int numBatches =
-        List<List<Integer>> partitions = new ArrayList<>(IntStream.range(0, numCommandsPerProcessor)
+        int numBatchesForProducer = (int) Math.ceil((double) tpcHAssignment.producerNumberOfCommands
+                / tpcHAssignment.commandsPerBatch);
+        log.info("Number of commands {} | Commands per batch {} | Batches per processor {}",
+                tpcHAssignment.producerNumberOfCommands, tpcHAssignment.commandsPerBatch, numBatchesForProducer);
+        ArrayList<List<Integer>> partitions = new ArrayList<>(IntStream.range(0, numBatchesForProducer)
                 .boxed()
                 .collect(Collectors.groupingBy(i -> i / processors))
                 .values());
@@ -300,108 +300,92 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 submitTpcHProducersToExecutor(
                         assignment,
                         tpcHAssignment,
-                        processors,
                         index == 0 ? mainProducer : producers.get(extraStartIndex + index - 1),
-                        partitions,
+                        index < partitions.size() ? partitions.get(index) : new ArrayList<>(),
                         index
                 ));
-    }
-
-    public int getProcessorNumberOfCommands(int numberOfCommands, int numberOfProcessors, int index) {
-        int defaultNumberOfCommands = getDefaultProcessorNumberOfCommands(numberOfCommands, numberOfProcessors);
-        int commandsLeft = numberOfCommands - index * defaultNumberOfCommands;
-        if (commandsLeft < 0) {
-            return 0;
-        }
-        return Math.min(commandsLeft, defaultNumberOfCommands);
-    }
-
-    public int getDefaultProcessorNumberOfCommands(int numberOfCommands, int numberOfProcessors) {
-         return (int) Math.ceil((double) numberOfCommands / numberOfProcessors);
     }
 
     private void submitTpcHProducersToExecutor(
             ProducerWorkAssignment producerWorkAssignment,
             TpcHProducerAssignment assignment,
-            Integer numProcessors,
             BenchmarkProducer producer,
             List<Integer> batches,
             Integer processorProducerIndex
     ) {
         commandHandler.handleCommand(
                 () -> {
+                    if (batches.isEmpty()) {
+                        log.info("[TpcHBenchmark] No work for TPC-H producer {}-{}. Shutting down.",
+                                producerWorkAssignment.producerIndex,
+                                processorProducerIndex);
+                        return;
+                    }
                     KeyDistributor keyDistributor = KeyDistributor.build(producerWorkAssignment.keyDistributorType);
-                    Integer defaultProcessorNumberOfCommands = getDefaultProcessorNumberOfCommands(
-                            assignment.producerNumberOfCommands,
-                            numProcessors
-                    );
-                    Integer processorNumberOfCommands = getProcessorNumberOfCommands(
-                            assignment.producerNumberOfCommands,
-                            numProcessors,
-                            processorProducerIndex);
                     Integer producerStart = producerWorkAssignment.producerIndex
                             * assignment.defaultProducerNumberOfCommands;
+                    Integer max = producerStart + assignment.producerNumberOfCommands;
                     String folderUri = assignment.sourceDataS3FolderUri;
                     Integer messagesSent = 0;
-                    CompletableFuture<Void>[] futures = new CompletableFuture[processorNumberOfCommands];
-                    for (int commandIdx = 1; commandIdx <= processorNumberOfCommands; commandIdx++) {
-                        try {
-                            Integer chunkIndex = producerStart
-                                    + processorProducerIndex * defaultProcessorNumberOfCommands
-                                    + commandIdx;
-                            Integer batchIdx = (chunkIndex - 1) / assignment.commandsPerBatch;
-                            Integer numberOfMapResults = assignment.getBatchSize(batchIdx);
-                            String batchId = String.format(
-                                    "%s-batch-%d-%s", assignment.queryId, batchIdx, numberOfMapResults);
-                            Integer groupedChunkIndex = (chunkIndex - 1) / 1000;
-                            String s3Uri = chunkIndex > 1000
-                                    ? String.format("%s/%s/chunk_%d.csv", folderUri, groupedChunkIndex, chunkIndex)
-                                    : String.format("%s/chunk_%d.csv", folderUri, chunkIndex);
-                            TpcHConsumerAssignment consumerAssignment = new TpcHConsumerAssignment(
-                                    assignment.query,
-                                    assignment.queryId,
-                                    batchId,
-                                    chunkIndex,
-                                    batchIdx,
-                                    numberOfMapResults,
-                                    assignment.numberOfChunks,
-                                    s3Uri
-                            );
-                            TpcHMessage message = new TpcHMessage(
-                                    TpcHMessageType.ConsumerAssignment,
-                                    messageWriter.writeValueAsString(consumerAssignment)
-                            );
-                            String key = keyDistributor.next();
-                            Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
+                    List<CompletableFuture<Void>> futures = new ArrayList<>();
+                    log.info("Number of batches {} | Start {} | Max {}", batches.size(), producerStart, max);
+                    for (int batchIdx = 0; batchIdx < batches.size(); batchIdx++) {
+                        Integer batch = batches.get(batchIdx);
+                        Integer start = producerStart + batch * assignment.commandsPerBatch;
+                        for (int commandIdx = 0; commandIdx < assignment.commandsPerBatch; commandIdx++) {
+                            try {
+                                Integer chunkIndex = start + commandIdx + 1;
+                                if (chunkIndex > max) {
+                                    continue;
+                                }
+                                Integer globalBatchIdx = (chunkIndex - 1) / assignment.commandsPerBatch;
+                                Integer numberOfMapResults = assignment.getBatchSize(globalBatchIdx);
+                                String batchId = String.format(
+                                        "%s-batch-%d-%s", assignment.queryId, batchIdx, numberOfMapResults);
+                                Integer groupedChunkIndex = (chunkIndex - 1) / 1000;
+                                String s3Uri = chunkIndex > 1000
+                                        ? String.format("%s/%s/chunk_%d.csv", folderUri, groupedChunkIndex, chunkIndex)
+                                        : String.format("%s/chunk_%d.csv", folderUri, chunkIndex);
+                                TpcHConsumerAssignment consumerAssignment = new TpcHConsumerAssignment(
+                                        assignment.query,
+                                        assignment.queryId,
+                                        batchId,
+                                        chunkIndex,
+                                        batchIdx,
+                                        numberOfMapResults,
+                                        assignment.numberOfChunks,
+                                        s3Uri
+                                );
+                                TpcHMessage message = new TpcHMessage(
+                                        TpcHMessageType.ConsumerAssignment,
+                                        messageWriter.writeValueAsString(consumerAssignment)
+                                );
+                                String key = keyDistributor.next();
+                                Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
 
-                            CompletableFuture<Void> future = messageProducer.sendMessage(
-                                    producer,
-                                    optionalKey,
-                                    messageWriter.writeValueAsBytes(message),
-                                    this.experimentId,
-                                    message.messageId,
-                                    true
-                            );
-                            futures[commandIdx - 1] = future;
-                            messagesSent++;
-                        } catch (Throwable t) {
-                            log.error("Got error", t);
+                                CompletableFuture<Void> future = messageProducer.sendMessage(
+                                        producer,
+                                        optionalKey,
+                                        messageWriter.writeValueAsBytes(message),
+                                        this.experimentId,
+                                        message.messageId,
+                                        true
+                                );
+                                futures.add(future);
+                                messagesSent++;
+                            } catch (Throwable t) {
+                                log.error("Got error", t);
+                            }
                         }
                     }
                     log.info("[TpcHBenchmark] Launched {} completable futures. Awaiting...", messagesSent);
-                    CompletableFuture<Void> allOf = CompletableFuture.allOf(futures);
+                    CompletableFuture[] futuresArray = futures.toArray(new CompletableFuture[0]);
+                    CompletableFuture<Void> allOf = CompletableFuture.allOf(futuresArray);
                     allOf.join();
                     log.info("[TpcHBenchmark] Finished TPC-H producer {}-{} after sending {} messages. Shutting down.",
                             producerWorkAssignment.producerIndex,
                             processorProducerIndex,
                             messagesSent);
-//                    while (!testCompleted) {
-//                        try {
-//                            Thread.sleep(1000);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
                 });
     }
 
