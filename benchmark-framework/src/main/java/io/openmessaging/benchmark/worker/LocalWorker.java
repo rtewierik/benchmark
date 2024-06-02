@@ -341,7 +341,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                 Integer globalBatchIdx = (chunkIndex - 1) / assignment.commandsPerBatch;
                                 Integer numberOfMapResults = assignment.getBatchSize(globalBatchIdx);
                                 String batchId = String.format(
-                                        "%s-batch-%d-%s", assignment.queryId, batchIdx, numberOfMapResults);
+                                        "%s-batch-%d-%s", assignment.queryId, globalBatchIdx, numberOfMapResults);
                                 Integer groupedChunkIndex = (chunkIndex - 1) / 1000;
                                 String s3Uri = chunkIndex > 1000
                                         ? String.format("%s/%s/chunk_%d.csv", folderUri, groupedChunkIndex, chunkIndex)
@@ -351,7 +351,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                         assignment.queryId,
                                         batchId,
                                         chunkIndex,
-                                        batchIdx,
+                                        globalBatchIdx,
                                         numberOfMapResults,
                                         assignment.numberOfChunks,
                                         s3Uri
