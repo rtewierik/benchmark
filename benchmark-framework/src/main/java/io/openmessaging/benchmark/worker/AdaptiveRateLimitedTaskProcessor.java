@@ -15,27 +15,29 @@ package io.openmessaging.benchmark.worker;
 
 
 import java.util.concurrent.Semaphore;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class AdaptiveRateLimitedTaskProcessor {
 
     private final Semaphore semaphore;
 
     public AdaptiveRateLimitedTaskProcessor(int maxConcurrentTasks) {
+        log.info("Initialising with {} max concurrent tasks", maxConcurrentTasks);
         this.semaphore = new Semaphore(maxConcurrentTasks);
-    }
-
-    public void finishedRunningTask() {
-        this.semaphore.release();
     }
 
     public void startNewTask() {
         try {
             semaphore.acquire();
         } catch (InterruptedException e) {
+            log.error("Error occurred starting new task.", e);
             Thread.currentThread().interrupt();
             throw new RuntimeException(e);
-        } finally {
-            semaphore.release();
         }
+    }
+
+    public void finishedRunningTask() {
+        this.semaphore.release();
     }
 }

@@ -74,7 +74,6 @@ import io.openmessaging.tpch.model.TpcHProducerAssignment;
 import io.openmessaging.tpch.processing.SingleThreadTpcHStateProvider;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import io.openmessaging.tpch.processing.TpcHStateProvider;
-import io.pravega.keycloak.com.google.common.util.concurrent.RateLimiter;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
@@ -96,8 +95,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private final Map<BenchmarkConsumer, TpcHStateProvider> stateProviders = new HashMap<>();
     private TpcHMessageProcessor tpcHMessageProcessor;
     private AdaptiveRateLimitedTaskProcessor taskProcessor;
-    private final RateLimiter rateLimiter = RateLimiter.create(50);
-    private final RateLimiter producerRateLimiter = RateLimiter.create(512);
     private CommandHandler commandHandler;
     private final StatsLogger statsLogger;
     private final WorkerStats stats;
@@ -264,11 +261,10 @@ public class LocalWorker implements Worker, ConsumerCallback {
             commandHandler = new CommandHandler("throughput-worker");
             startLoadForThroughputProducers(producerWorkAssignment);
         } else {
-            commandHandler = new CommandHandler(8, "tpc-h-worker");
+            commandHandler = new CommandHandler(32, "tpc-h-worker");
             TpcHArguments arguments = producerWorkAssignment.tpcHArguments;
             int numberOfWorkers = (int) Math.ceil((double) arguments.numberOfWorkers / 3);
-            int maxTasksPerSecond = numberOfWorkers / 10;
-            taskProcessor = new AdaptiveRateLimitedTaskProcessor(4);
+            taskProcessor = new AdaptiveRateLimitedTaskProcessor(numberOfWorkers);
             startLoadForTpcHProducers(producerWorkAssignment);
         }
     }
@@ -370,7 +366,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                 );
                                 String key = keyDistributor.next();
                                 Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
-                                producerRateLimiter.acquire();
                                 CompletableFuture<Void> future = messageProducer.sendMessage(
                                         producer,
                                         optionalKey,
@@ -568,8 +563,12 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     private void processTpcHMessage(long publishTimestamp, BenchmarkConsumer consumer, int length, TpcHMessage message)
             throws IOException {
-//        taskProcessor.startNewTask();
-        rateLimiter.acquire();
+        boolean isConsumerAssignment = message.type == TpcHMessageType.ConsumerAssignment;
+        if (isConsumerAssignment) {
+            log.info("Starting new task.");
+            taskProcessor.startNewTask();
+            log.info("Started new task!");
+        }
         TpcHStateProvider stateProvider = stateProviders.get(consumer);
         tpcHMessageProcessor.processTpcHMessage(message, stateProvider).thenApply((queryId) -> {
             try {
@@ -577,10 +576,12 @@ public class LocalWorker implements Worker, ConsumerCallback {
             } catch (IOException e) {
                 log.error("Internal message received resulted in an error.", e);
                 throw new RuntimeException(e);
+            } finally {
+                if (isConsumerAssignment) {
+                    log.info("Finishing task.");
+                    taskProcessor.finishedRunningTask();
                 }
-//            } finally {
-//                taskProcessor.finishedRunningTask();
-//            }
+            }
             return null;
         });
     }

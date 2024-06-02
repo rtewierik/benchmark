@@ -28,6 +28,7 @@ import io.openmessaging.tpch.TpcHConstants;
 import io.openmessaging.tpch.algorithm.TpcHAlgorithm;
 import io.openmessaging.tpch.algorithm.TpcHDataParser;
 import io.openmessaging.tpch.algorithm.TpcHQueryResultGenerator;
+import io.openmessaging.tpch.client.S3Client;
 import io.openmessaging.tpch.model.TpcHConsumerAssignment;
 import io.openmessaging.tpch.model.TpcHIntermediateResult;
 import io.openmessaging.tpch.model.TpcHMessage;
@@ -38,7 +39,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -51,10 +51,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import software.amazon.awssdk.core.BytesWrapper;
-import software.amazon.awssdk.core.async.AsyncResponseTransformer;
-import software.amazon.awssdk.http.nio.netty.NettyNioAsyncHttpClient;
-import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
 public class TpcHMessageProcessor {
@@ -64,14 +60,7 @@ public class TpcHMessageProcessor {
     private volatile MessageProducer messageProducer;
     private final Runnable onTestCompleted;
     private final Logger log;
-    private static final S3AsyncClient s3AsyncClient =
-            S3AsyncClient.builder()
-                    .httpClientBuilder(
-                            NettyNioAsyncHttpClient.builder()
-                                    .maxConcurrency(256)
-                                    .maxPendingConnectionAcquires(1024)
-                                    .connectionAcquisitionTimeout(Duration.ofSeconds(30)))
-                    .build();
+    private static final S3Client s3AsyncClient = new S3Client();
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
     private static final ObjectWriter writer = new ObjectMapper().writer();
     private static final ObjectMapper mapper =
@@ -139,9 +128,7 @@ public class TpcHMessageProcessor {
             int numRetries = 0;
             while (numRetries < 5) {
                 try {
-                    return s3AsyncClient
-                            .getObject(getObjectRequest, AsyncResponseTransformer.toBytes())
-                            .thenApply(BytesWrapper::asInputStream);
+                    return s3AsyncClient.getObject(getObjectRequest);
                 } catch (Throwable t) {
                     log.error("[Try {}] Error occurred while retrieving object from S3.", numRetries);
                     numRetries++;
