@@ -111,6 +111,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     public LocalWorker(StatsLogger statsLogger, String poolName) {
         if (Objects.equals(poolName, "local-worker")) {
             this.commandHandler = new CommandHandler(poolName);
+            this.taskProcessor = new AdaptiveRateLimitedTaskProcessor(1, 1);
         }
         this.statsLogger = statsLogger;
         this.stats = EnvironmentConfiguration.isCloudMonitoringEnabled()
