@@ -30,14 +30,14 @@ public class S3Client {
             S3AsyncClient.builder()
                     .httpClientBuilder(
                             NettyNioAsyncHttpClient.builder()
-                                    .maxConcurrency(512)
-                                    .maxPendingConnectionAcquires(512)
+                                    .maxConcurrency(1024)
+                                    .maxPendingConnectionAcquires(1024)
                                     .connectionAcquisitionTimeout(Duration.ofSeconds(30)))
                     .build();
     private final Throttler throttler;
 
     public S3Client() {
-        this.throttler = new Throttler(1000, 1, TimeUnit.SECONDS);
+        this.throttler = new Throttler(2500, 1, TimeUnit.SECONDS);
     }
 
     public CompletableFuture<InputStream> getObject(GetObjectRequest request) {
