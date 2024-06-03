@@ -66,7 +66,8 @@ public class CommandHandler {
     }
 
     public void handleCommand(Runnable command) {
-        submitTaskWithTimeoutAndRetry(scheduler, command, 1, TimeUnit.SECONDS, 3);
+        executorService.submit(command);
+        // submitTaskWithTimeoutAndRetry(scheduler, command, 1, TimeUnit.SECONDS, 3);
         Integer newNumCommandsSubmitted = numCommandsSubmitted.incrementAndGet();
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Number of commands submitted: {}", newNumCommandsSubmitted);
