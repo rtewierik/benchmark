@@ -68,7 +68,17 @@ workloads/tpc-h-base-long.yaml
 
 sudo bin/benchmark \
 --drivers driver-pravega/pravega-experiment.yaml \
---tpc-h-files workloads/tpc-h-q1-1000-100.yaml \
+--tpc-h-files workloads/tpc-h-q1-100-30.yaml,workloads/tpc-h-q6-100-30.yaml,workloads/tpc-h-q1-100-50.yaml,workloads/tpc-h-q6-100-50.yaml \
+workloads/tpc-h-base-long.yaml
+
+sudo bin/benchmark \
+--drivers driver-pravega/pravega-experiment.yaml \
+--tpc-h-files workloads/tpc-h-q6-1000-100.yaml,workloads/tpc-h-q1-1000-100.yaml,workloads/tpc-h-q6-1000-300.yaml,workloads/tpc-h-q1-1000-300.yaml,workloads/tpc-h-q6-1000-500.yaml,workloads/tpc-h-q1-1000-500.yaml \
+workloads/tpc-h-base-long.yaml
+
+sudo bin/benchmark \
+--drivers driver-pravega/pravega-experiment.yaml \
+--tpc-h-files workloads/tpc-h-q6-10000-100.yaml \
 workloads/tpc-h-base-long.yaml
 
 sudo bin/benchmark \

@@ -54,10 +54,13 @@ public class RedisBenchmarkProducer implements BenchmarkProducer {
             data.put("key", key.toString());
         }
 
-        if (cluster != null) {
-            return this.asyncCommands.xadd(this.rmqTopic, data).toCompletableFuture().thenRun(() -> {});
-        }
         CompletableFuture<Void> future = new CompletableFuture<>();
+        if (cluster != null) {
+            this.asyncCommands.xadd(this.rmqTopic, data).toCompletableFuture().thenRun(() -> {
+                future.complete(null);
+            });
+            return future;
+        }
         try (Jedis jedis = this.pool.getResource()) {
             jedis.xadd(this.rmqTopic, data, this.xaddParams);
             future.complete(null);
