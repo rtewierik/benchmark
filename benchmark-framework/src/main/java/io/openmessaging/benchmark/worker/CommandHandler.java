@@ -60,14 +60,13 @@ public class CommandHandler {
                         numWorkers,
                         50L,
                         TimeUnit.MILLISECONDS,
-                        new ArrayBlockingQueue<>(50000),
+                        new ArrayBlockingQueue<>(5000),
                         new DefaultThreadFactory(poolName),
                         new ThreadPoolExecutor.AbortPolicy());
     }
 
     public void handleCommand(Runnable command) {
         executorService.submit(command);
-        // submitTaskWithTimeoutAndRetry(scheduler, command, 1, TimeUnit.SECONDS, 3);
         Integer newNumCommandsSubmitted = numCommandsSubmitted.incrementAndGet();
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Number of commands submitted: {}", newNumCommandsSubmitted);

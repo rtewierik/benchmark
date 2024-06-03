@@ -66,7 +66,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import io.openmessaging.tpch.TpcHConstants;
-import io.openmessaging.tpch.model.TpcHArguments;
 import io.openmessaging.tpch.model.TpcHConsumerAssignment;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.model.TpcHMessageType;
@@ -261,9 +260,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
             commandHandler = new CommandHandler("throughput-worker");
             startLoadForThroughputProducers(producerWorkAssignment);
         } else {
-            commandHandler = new CommandHandler(32, "tpc-h-worker");
-            TpcHArguments arguments = producerWorkAssignment.tpcHArguments;
-            int numberOfWorkers = (int) Math.ceil((double) arguments.numberOfWorkers / 3);
+            commandHandler = new CommandHandler(8, "tpc-h-worker");
             int maxConcurrentTasks = 1;
             switch (producerWorkAssignment.tpcHArguments.numberOfChunks) {
                 case 100:
@@ -274,6 +271,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     break;
                 case 10000:
                     maxConcurrentTasks = 500;
+                    break;
+                default:
                     break;
             }
             taskProcessor = new AdaptiveRateLimitedTaskProcessor(maxConcurrentTasks);
