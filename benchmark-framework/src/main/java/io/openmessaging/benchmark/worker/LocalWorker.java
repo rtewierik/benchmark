@@ -264,7 +264,19 @@ public class LocalWorker implements Worker, ConsumerCallback {
             commandHandler = new CommandHandler(32, "tpc-h-worker");
             TpcHArguments arguments = producerWorkAssignment.tpcHArguments;
             int numberOfWorkers = (int) Math.ceil((double) arguments.numberOfWorkers / 3);
-            taskProcessor = new AdaptiveRateLimitedTaskProcessor(numberOfWorkers * 4);
+            int maxConcurrentTasks = 1;
+            switch (producerWorkAssignment.tpcHArguments.numberOfChunks) {
+                case 100:
+                    maxConcurrentTasks = 125;
+                    break;
+                case 1000:
+                    maxConcurrentTasks = 250;
+                    break;
+                case 10000:
+                    maxConcurrentTasks = 500;
+                    break;
+            }
+            taskProcessor = new AdaptiveRateLimitedTaskProcessor(maxConcurrentTasks);
             startLoadForTpcHProducers(producerWorkAssignment);
         }
     }
