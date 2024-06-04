@@ -285,7 +285,11 @@ public class LocalWorker implements Worker, ConsumerCallback {
         producers.forEach(
             producer -> {
                 if (producer != null) {
-                    producer.sendAsync(Optional.of("key"), new byte[10]).thenRun(stats::recordMessageSent);
+                    try {
+                        producer.sendAsync(Optional.of("key"), new byte[10]).thenRun(stats::recordMessageSent);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         );
@@ -458,23 +462,28 @@ public class LocalWorker implements Worker, ConsumerCallback {
                             producers.forEach(
                                     p -> {
                                         Integer currMessagesSent = messagesSent[0].incrementAndGet();
-                                        CompletableFuture<Void> newFuture = messageProducer.sendMessage(
-                                                p,
-                                                Optional.ofNullable(keyDistributor.next()),
-                                                payloads.get(r.nextInt(payloadCount)),
-                                                this.experimentId,
-                                                null,
-                                                false);
-                                        if (currMessagesSent > ovrMaxOutstandingMessages) {
-                                            messagesSent[0] = new AtomicInteger();
-                                            try {
-                                                futureToAwait[0].get();
-                                            } catch (InterruptedException | ExecutionException e) {
-                                                throw new RuntimeException(e);
+                                        try {
+                                            CompletableFuture<Void> newFuture = messageProducer.sendMessage(
+                                                    p,
+                                                    Optional.ofNullable(keyDistributor.next()),
+                                                    payloads.get(r.nextInt(payloadCount)),
+                                                    this.experimentId,
+                                                    null,
+                                                    false);
+                                            if (currMessagesSent > ovrMaxOutstandingMessages) {
+                                                messagesSent[0] = new AtomicInteger();
+                                                try {
+                                                    futureToAwait[0].get();
+                                                } catch (InterruptedException | ExecutionException e) {
+                                                    throw new RuntimeException(e);
+                                                }
                                             }
-                                        }
-                                        if (futureToAwait[0] == null || currMessagesSent > ovrMaxOutstandingMessages) {
-                                            futureToAwait[0] = newFuture;
+                                            if (futureToAwait[0] == null
+                                                    || currMessagesSent > ovrMaxOutstandingMessages) {
+                                                futureToAwait[0] = newFuture;
+                                            }
+                                        } catch (Exception e) {
+                                            throw new RuntimeException(e);
                                         }
                                     });
                         }
