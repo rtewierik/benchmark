@@ -38,9 +38,9 @@ import io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient;
 import io.openmessaging.benchmark.driver.redis.client.RedisClientConfig;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
@@ -86,7 +86,7 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
         log.info(
                 "Creating producer with Jedis pool {} and cluster client {}", jedisPool, asyncRedisClient);
         return CompletableFuture.completedFuture(
-                new RedisBenchmarkProducer(jedisPool, connection, topic));
+                new RedisBenchmarkProducer(jedisPool, clusterClient.connect(), topic));
     }
 
     @Override
@@ -136,15 +136,10 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
                 this.clientConfig.redisPort,
                 this.clientConfig.redisUser);
         if (this.clientConfig.redisNodes != null && !this.clientConfig.redisNodes.isEmpty()) {
-            List<RedisURI> redisUris = new ArrayList<>();
-            for (String address : this.clientConfig.redisNodes) {
-                String[] parts = address.split(":");
-                String host = parts[0];
-                int port = Integer.parseInt(parts[1]);
-                RedisURI redisUri = new RedisURI(host, port, RedisURI.DEFAULT_TIMEOUT_DURATION);
-                redisUris.add(redisUri);
-            }
-            clusterClient = RedisClusterClient.create(resources, redisUris);
+            RedisURI redisUri = RedisURI.Builder.redis(this.clientConfig.redisHost)
+                    .withPort(6379)
+                    .build();
+            clusterClient = RedisClusterClient.create(resources, redisUri);
             this.connection = clusterClient.connect();
             this.asyncCommands = connection.async();
             this.asyncRedisClient = new AsyncRedisClient(asyncCommands);

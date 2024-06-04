@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.params.XAddParams;
@@ -56,9 +59,13 @@ public class RedisBenchmarkProducer implements BenchmarkProducer {
 
         CompletableFuture<Void> future = new CompletableFuture<>();
         if (cluster != null) {
-            this.asyncCommands.xadd(this.rmqTopic, data).toCompletableFuture().thenRun(() -> {
-                future.complete(null);
-            });
+            this.asyncCommands.xadd(this.rmqTopic, data)
+                .thenRun(() -> future.complete(null))
+                .exceptionally(ex -> {
+                    log.error("Exception occurred while sending xadd command", ex);
+                    future.completeExceptionally(ex);
+                    return null;
+                });
             return future;
         }
         try (Jedis jedis = this.pool.getResource()) {
@@ -74,4 +81,6 @@ public class RedisBenchmarkProducer implements BenchmarkProducer {
     public void close() throws Exception {
         // Close in Driver
     }
+
+    private static final Logger log = LoggerFactory.getLogger(RedisBenchmarkProducer.class);
 }
