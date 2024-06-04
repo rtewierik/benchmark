@@ -362,7 +362,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                 String batchId = String.format(
                                         "%s-batch-%d-%s", assignment.queryId, globalBatchIdx, numberOfMapResults);
                                 Integer groupedChunkIndex = (chunkIndex - 1) / 1000;
-                                String s3Uri = chunkIndex > 1000
+                                String s3Uri = chunkIndex > 1010
                                         ? String.format("%s/%s/chunk_%d.csv", folderUri, groupedChunkIndex, chunkIndex)
                                         : String.format("%s/chunk_%d.csv", folderUri, chunkIndex);
                                 TpcHConsumerAssignment consumerAssignment = new TpcHConsumerAssignment(
