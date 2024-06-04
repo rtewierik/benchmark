@@ -21,8 +21,11 @@ import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+import io.openmessaging.tpch.TpcHConstants;
 import org.apache.bookkeeper.stats.StatsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,10 +49,17 @@ public class S3BenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<List<TopicInfo>> createTopics(List<TopicInfo> topics) {
-        return CompletableFuture.completedFuture(
-                S3BenchmarkConfiguration.s3Uris.stream()
-                        .map(topic -> new TopicInfo(topic, 1))
-                        .collect(toList()));
+        List<TopicInfo> mappedTopics = S3BenchmarkConfiguration.s3Uris.stream()
+                .map(topic -> new TopicInfo(topic, 1))
+                .collect(toList());
+        TopicInfo mapTopic = mappedTopics.get(TpcHConstants.MAP_CMD_START_INDEX);
+        List<TopicInfo> allTopics = new ArrayList<>();
+        allTopics.add(mappedTopics.get(TpcHConstants.REDUCE_DST_INDEX));
+        allTopics.add(mapTopic);
+        allTopics.add(mapTopic);
+        allTopics.add(mapTopic);
+        allTopics.addAll(mappedTopics.subList(TpcHConstants.REDUCE_PRODUCER_START_INDEX, mappedTopics.size()));
+        return CompletableFuture.completedFuture(allTopics);
     }
 
     @Override
