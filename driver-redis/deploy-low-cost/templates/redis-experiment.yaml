@@ -19,5 +19,5 @@ driverClass: io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver
 redisPort: 6379
 redisHost: {{ redisHost }}
 redisNodes: {{ redisNodes }}
-jedisPoolMaxTotal: 500
-jedisPoolMaxIdle: 500
+poolMaxTotal: 1000
+poolMaxIdle: 1000

@@ -1,0 +1,542 @@
+sudo bin/benchmark \
+> --drivers driver-pravega/pravega-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-1000-100.yaml,workloads/tpc-h-q1-100-10.yaml,workloads/tpc-h-q6-1000-100.yaml,workloads/tpc-h-q6-100-10.yaml,workloads/tpc-h-q1-1000-100.yaml,workloads/tpc-h-q1-100-10.yaml,workloads/tpc-h-q6-1000-100.yaml,workloads/tpc-h-q6-100-10.yaml,workloads/tpc-h-q1-1000-100.yaml,workloads/tpc-h-q1-100-10.yaml,workloads/tpc-h-q6-1000-100.yaml,workloads/tpc-h-q6-100-10.yaml \
+> workloads/tpc-h-base-long.yaml
+00:56:38.618 [main] INFO Benchmark - Using default worker file workers.yaml!
+00:56:38.625 [main] INFO Benchmark - Reading workers list from workers.yaml
+00:56:38.674 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-pravega/pravega-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.171:8080", "http://10.0.0.47:8080", "http://10.0.0.104:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-1000-100.yaml", "workloads/tpc-h-q1-100-10.yaml", "workloads/tpc-h-q6-1000-100.yaml", "workloads/tpc-h-q6-100-10.yaml", "workloads/tpc-h-q1-1000-100.yaml", "workloads/tpc-h-q1-100-10.yaml", "workloads/tpc-h-q6-1000-100.yaml", "workloads/tpc-h-q6-100-10.yaml", "workloads/tpc-h-q1-1000-100.yaml", "workloads/tpc-h-q1-100-10.yaml", "workloads/tpc-h-q6-1000-100.yaml", "workloads/tpc-h-q6-100-10.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+00:56:38.689 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+00:56:38.704 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-1000-100",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 100
+}, {
+  "queryId" : "tpc-h-q1-100-10",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 10
+}, {
+  "queryId" : "tpc-h-q6-1000-100",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 100
+}, {
+  "queryId" : "tpc-h-q6-100-10",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 10
+}, {
+  "queryId" : "tpc-h-q1-1000-100",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 100
+}, {
+  "queryId" : "tpc-h-q1-100-10",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 10
+}, {
+  "queryId" : "tpc-h-q6-1000-100",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 100
+}, {
+  "queryId" : "tpc-h-q6-100-10",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 10
+}, {
+  "queryId" : "tpc-h-q1-1000-100",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 100
+}, {
+  "queryId" : "tpc-h-q1-100-10",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 10
+}, {
+  "queryId" : "tpc-h-q6-1000-100",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 100
+}, {
+  "queryId" : "tpc-h-q6-100-10",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 10
+} ]
+00:56:38.746 [main] INFO InstanceWorkerStats - Instance worker stats initialized.
+00:56:39.288 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.171:8080,http://10.0.0.47:8080,http://10.0.0.104:8080]
+00:56:39.288 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.171:8080,http://10.0.0.47:8080,http://10.0.0.104:8080
+00:56:39.290 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pravega---------------
+00:56:40.059 [main] INFO LocalWorker - Driver: {
+  "name" : "Pravega",
+  "driverClass" : "io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver"
+}
+00:56:40.065 [main] INFO PravegaBenchmarkDriver - Pravega driver configuration: {
+  "client" : {
+    "controllerURI" : "tcp://10.0.0.4:9090",
+    "scopeName" : "examples"
+  },
+  "writer" : {
+    "enableConnectionPooling" : true
+  },
+  "includeTimestampInEvent" : true,
+  "enableTransaction" : false,
+  "eventsPerTransaction" : 1,
+  "enableStreamAutoScaling" : false,
+  "eventsPerSecond" : -1,
+  "kbytesPerSecond" : 1000000,
+  "createScope" : true,
+  "deleteStreams" : false
+}
+00:56:40.258 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.4:9090
+00:56:40.264 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.4:9090
+00:56:40.270 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.4:9090
+00:57:02.183 [main] INFO WorkloadGenerator - Created 107 topics in 21909.199509 ms
+00:57:29.564 [main] INFO WorkloadGenerator - Created 107 external consumers in 27375.39434 ms
+00:57:29.567 [main] INFO PravegaBenchmarkConsumer - PravegaBenchmarkConsumer: BEGIN: subscriptionName=sub-006-Hac7My8, streamName=openmessaging-benchmark-0000006-ViHwA5s
+00:57:29.575 [main] INFO ReaderGroupManagerImpl - Creating reader group: sub-006-Hac7My8 for streams: [StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000006-ViHwA5s)] with configuration: ReaderGroupConfig(groupRefreshTimeMillis=3000, automaticCheckpointIntervalMillis=30000, startingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000006-ViHwA5s)=UNBOUNDED}, endingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000006-ViHwA5s)=UNBOUNDED}, maxOutstandingCheckpointRequest=3, retentionType=NONE, generation=-1, readerGroupId=00000000-0000-0000-0000-000000000000)
+00:57:29.585 [clientInternal-2-1] INFO ControllerImpl - [requestId=7641283788410252299] Tagging client request (createReaderGroup-examples-sub-006-Hac7My8).
+00:57:29.674 [clientInternal-2-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.4:9090]/{}]]
+00:57:30.210 [clientInternal-2-1] INFO ControllerImpl - [requestId=7641283788410252299] Reader Group examples/sub-006-Hac7My8 created successfully: {}
+00:57:30.235 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-006-Hac7My8 and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+00:57:30.237 [clientInternal-2-1] INFO ControllerImpl - [requestId=6212112559594010731] Tagging client request (getCurrentSegments-examples-_RGsub-006-Hac7My8).
+00:57:30.255 [clientInternal-2-1] INFO ControllerImpl - [requestId=8151074867306228172] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-006-Hac7My8).
+00:57:30.261 [clientInternal-2-1] INFO ControllerImpl - [requestId=1763375123165242996] Tagging client request (getURI-examples/_RGsub-006-Hac7My8/0.#epoch.0).
+00:57:30.317 [ClientSocketReaders-1] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+00:57:30.318 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-006-Hac7My8/0.#epoch.0, writer 2a4df620-c73a-4822-bdad-410af9716807
+00:57:30.323 [clientInternal-2-1] INFO ControllerImpl - [requestId=-832635639484755852] Tagging client request (getSegmentsAtTime-examples-openmessaging-benchmark-0000006-ViHwA5s).
+00:57:30.324 [clientInternal-2-1] INFO ControllerImpl - [requestId=-5856674921626633964] Tagging client request (getURI-examples/_RGsub-006-Hac7My8/0.#epoch.0).
+00:57:30.325 [clientInternal-2-1] INFO ControllerImpl - [requestId=-2329922171768110834] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-006-Hac7My8).
+00:57:30.330 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.83:12345 for examples/_RGsub-006-Hac7My8/0.#epoch.0, writerID: 2a4df620-c73a-4822-bdad-410af9716807
+00:57:30.335 [clientInternal-2-1] INFO ControllerImpl - [requestId=750593174686003502] Tagging client request (getURI-examples/_RGsub-006-Hac7My8/0.#epoch.0).
+00:57:30.335 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=8589934592, segment=examples/_RGsub-006-Hac7My8/0.#epoch.0, writerId=2a4df620-c73a-4822-bdad-410af9716807, lastEventNumber=-9223372036854775808)
+00:57:30.336 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Connection setup complete for writer 2a4df620-c73a-4822-bdad-410af9716807
+00:57:30.348 [clientInternal-2-1] INFO ControllerImpl - [requestId=-6391246568055184550] Tagging client request (getURI-examples/_RGsub-006-Hac7My8/0.#epoch.0).
+00:57:30.363 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000006-ViHwA5s/0.#epoch.0, range=null)=0} }, segment=examples/_RGsub-006-Hac7My8/0.#epoch.0)
+00:57:30.364 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-006-Hac7My8/0.#epoch.0
+00:57:30.364 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-006-Hac7My8/0.#epoch.0
+00:57:30.364 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-006-Hac7My8/0.#epoch.0
+00:57:30.364 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-006-Hac7My8/0.#epoch.0 will be retransmitted.
+00:57:30.365 [main] INFO ClientFactoryImpl - Creating reader: e9c2de6c-c41b-416a-88ee-51dde44314b4 under readerGroup: sub-006-Hac7My8 with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+00:57:30.366 [main] INFO ClientFactoryImpl - Creating reader: e9c2de6c-c41b-416a-88ee-51dde44314b4 under readerGroup: sub-006-Hac7My8 with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+00:57:30.366 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-006-Hac7My8 and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+00:57:30.366 [clientInternal-3-1] INFO ControllerImpl - [requestId=-4609722586061788935] Tagging client request (getCurrentSegments-examples-_RGsub-006-Hac7My8).
+00:57:30.367 [clientInternal-3-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.4:9090]/{}]]
+00:57:30.378 [clientInternal-3-4] INFO ControllerImpl - [requestId=2194367015821566195] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-006-Hac7My8).
+00:57:30.378 [clientInternal-3-7] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-006-Hac7My8/0.#epoch.0, writer 637690ef-de6c-4eb2-8714-1d9cd27b1ed1
+00:57:30.378 [clientInternal-3-5] INFO ControllerImpl - [requestId=7241731705876860278] Tagging client request (getURI-examples/_RGsub-006-Hac7My8/0.#epoch.0).
+00:57:30.379 [clientInternal-3-1] INFO ControllerImpl - [requestId=-7964743975243066900] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-006-Hac7My8).
+00:57:30.379 [clientInternal-3-8] INFO ControllerImpl - [requestId=2635077486711487149] Tagging client request (getURI-examples/_RGsub-006-Hac7My8/0.#epoch.0).
+00:57:30.386 [clientInternal-3-2] INFO ControllerImpl - [requestId=8451943910731934211] Tagging client request (getURI-examples/_RGsub-006-Hac7My8/0.#epoch.0).
+00:57:30.393 [clientInternal-3-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.83:12345 for examples/_RGsub-006-Hac7My8/0.#epoch.0, writerID: 637690ef-de6c-4eb2-8714-1d9cd27b1ed1
+00:57:30.395 [ClientSocketReaders-2] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+00:57:30.396 [ClientSocketReaders-3] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+00:57:30.396 [ClientSocketReaders-4] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+00:57:30.398 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=25769803776, segment=examples/_RGsub-006-Hac7My8/0.#epoch.0, writerId=637690ef-de6c-4eb2-8714-1d9cd27b1ed1, lastEventNumber=-9223372036854775808)
+00:57:30.398 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Connection setup complete for writer 637690ef-de6c-4eb2-8714-1d9cd27b1ed1
+00:57:30.403 [clientInternal-3-8] INFO ControllerImpl - [requestId=7022585612810843919] Tagging client request (getURI-examples/_RGsub-006-Hac7My8/0.#epoch.0).
+00:57:30.408 [ClientSocketReaders-5] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+00:57:30.420 [main] INFO LocalWorker - Created 1 consumers in 855.732782 ms
+00:57:30.431 [pool-2-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=e9c2de6c-c41b-416a-88ee-51dde44314b4) acquiring segments {SegmentWithRange(segment=examples/openmessaging-benchmark-0000006-ViHwA5s/0.#epoch.0, range=null)=0}
+00:57:30.434 [clientInternal-3-1] INFO ControllerImpl - [requestId=5903790930192986950] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000006-ViHwA5s).
+00:57:30.434 [clientInternal-3-7] INFO ControllerImpl - [requestId=2122874752491800968] Tagging client request (getURI-examples/openmessaging-benchmark-0000006-ViHwA5s/0.#epoch.0).
+00:57:30.438 [clientInternal-3-1] INFO ControllerImpl - [requestId=2343314016357723062] Tagging client request (getURI-examples/openmessaging-benchmark-0000006-ViHwA5s/0.#epoch.0).
+00:57:30.440 [ClientSocketReaders-6] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+00:57:31.188 [main] INFO WorkloadGenerator - Created 107 producers in 767.585977 ms
+00:57:31.188 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+00:57:31.214 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 320, Received: 315, Expected: 0
+00:57:31.215 [main] INFO WorkloadGenerator - All consumers are ready!
+00:57:31.215 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pravega-tpc-h-tpc-h-q1-1000-100-2024-05-27-00-56-40 at 1716771451215
+00:57:32.209 [pool-2-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=e9c2de6c-c41b-416a-88ee-51dde44314b4) at checkpoint 7cc48154-6338-4461-80ba-4456d41a8ae7
+00:57:32.215 [pool-2-thread-1] INFO EventStreamReaderImpl - Reader e9c2de6c-c41b-416a-88ee-51dde44314b4 completed checkpoint 7cc48154-6338-4461-80ba-4456d41a8ae7
+00:57:41.490 [main] INFO WorkloadGenerator - Pub rate   109.8 msg/s /  0.1 MB/s | Pub err     0.0 err/s | Cons rate    54.4 msg/s /  0.0 MB/s | Backlog:  0.9 K | Pub Latency (ms) avg: 12.9 - 50%:  7.5 - 99%: 51.8 - 99.9%: 56.8 - Max: 58.3 | Pub Delay Latency (us) avg: 516399.4 - 50%: 66.0 - 99%: 9057407.0 - 99.9%: 9770303.0 - Max: 9804671.0
+00:57:51.664 [main] INFO WorkloadGenerator - Pub rate    11.6 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate    22.8 msg/s /  0.0 MB/s | Backlog:  0.8 K | Pub Latency (ms) avg:  3.2 - 50%:  3.2 - 99%:  3.9 - 99.9%:  8.6 - Max:  8.6 | Pub Delay Latency (us) avg: 15110912.5 - 50%: 15109951.0 - 99%: 20006399.0 - 99.9%: 20092671.0 - Max: 20092671.0
+00:58:01.829 [main] INFO WorkloadGenerator - Pub rate    12.6 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate    23.2 msg/s /  0.0 MB/s | Backlog:  0.7 K | Pub Latency (ms) avg:  3.2 - 50%:  3.2 - 99%:  5.1 - 99.9%:  7.6 - Max:  7.6 | Pub Delay Latency (us) avg: 25215710.0 - 50%: 25142399.0 - 99%: 30089983.0 - 99.9%: 30090495.0 - Max: 30090495.0
+00:58:02.755 [pool-2-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=e9c2de6c-c41b-416a-88ee-51dde44314b4) at checkpoint c37a0d44-c127-4cee-beb0-81313f658ebe
+00:58:02.758 [pool-2-thread-1] INFO EventStreamReaderImpl - Reader e9c2de6c-c41b-416a-88ee-51dde44314b4 completed checkpoint c37a0d44-c127-4cee-beb0-81313f658ebe
+00:58:11.993 [main] INFO WorkloadGenerator - Pub rate    12.3 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate    23.4 msg/s /  0.0 MB/s | Backlog:  0.6 K | Pub Latency (ms) avg:  3.1 - 50%:  3.1 - 99%:  3.7 - 99.9%:  4.1 - Max:  4.1 | Pub Delay Latency (us) avg: 35313504.3 - 50%: 35476479.0 - 99%: 40156415.0 - 99.9%: 40282623.0 - Max: 40282623.0
+00:58:22.188 [main] INFO WorkloadGenerator - Pub rate    13.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate    23.0 msg/s /  0.0 MB/s | Backlog:  0.5 K | Pub Latency (ms) avg:  3.1 - 50%:  3.1 - 99%:  3.4 - 99.9%:  3.8 - Max:  3.8 | Pub Delay Latency (us) avg: 45442974.8 - 50%: 45414911.0 - 99%: 50482175.0 - 99.9%: 50502399.0 - Max: 50502399.0
+00:58:32.360 [main] INFO WorkloadGenerator - Pub rate    12.7 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate    23.1 msg/s /  0.0 MB/s | Backlog:  0.4 K | Pub Latency (ms) avg:  3.1 - 50%:  3.1 - 99%:  3.4 - 99.9%:  3.5 - Max:  3.5 | Pub Delay Latency (us) avg: 55481918.5 - 50%: 55386879.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+00:58:33.153 [pool-2-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=e9c2de6c-c41b-416a-88ee-51dde44314b4) at checkpoint fede28bc-fbe9-4204-b4d4-d2a5aededf22
+00:58:33.157 [pool-2-thread-1] INFO EventStreamReaderImpl - Reader e9c2de6c-c41b-416a-88ee-51dde44314b4 completed checkpoint fede28bc-fbe9-4204-b4d4-d2a5aededf22
+00:58:42.536 [main] INFO WorkloadGenerator - Pub rate    12.2 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate    21.8 msg/s /  0.0 MB/s | Backlog:  0.3 K | Pub Latency (ms) avg:  3.1 - 50%:  3.1 - 99%:  4.4 - 99.9%: 16.4 - Max: 16.4 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+00:58:52.709 [main] INFO WorkloadGenerator - Pub rate    13.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate    23.0 msg/s /  0.0 MB/s | Backlog:  0.2 K | Pub Latency (ms) avg:  3.0 - 50%:  3.1 - 99%:  3.4 - 99.9%:  3.9 - Max:  3.9 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+00:59:02.148 [pool-2-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+00:59:02.877 [main] INFO WorkloadGenerator - Pub rate    11.0 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate    16.7 msg/s /  0.0 MB/s | Backlog:  0.1 K | Pub Latency (ms) avg:  3.1 - 50%:  3.1 - 99%:  6.3 - 99.9%:  8.5 - Max:  8.5 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+00:59:03.055 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg:  8.2 - 50%:  3.2 - 95%: 31.5 - 99%: 43.7 - 99.9%: 56.4 - 99.99%: 58.3 - Max: 58.3 | Pub Delay (us)  avg: 21565778.2 - 50%: 5800415.0 - 95%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - 99.99%: 60000255.0 - Max: 60000255.0
+00:59:03.191 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pravega-tpc-h-tpc-h-q1-1000-100-2024-05-27-00-56-40 at 1716771543191
+00:59:04.157 [pool-2-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=e9c2de6c-c41b-416a-88ee-51dde44314b4) at checkpoint 7638a57d-c26c-4739-96de-5934186a0d09
+00:59:04.160 [pool-2-thread-1] INFO EventStreamReaderImpl - Reader e9c2de6c-c41b-416a-88ee-51dde44314b4 completed checkpoint 7638a57d-c26c-4739-96de-5934186a0d09
+00:59:25.207 [main] INFO EventStreamReaderImpl - Closing reader EventStreamReaderImpl( id=e9c2de6c-c41b-416a-88ee-51dde44314b4) at position examples/openmessaging-benchmark-0000006-ViHwA5s/0.#epoch.0=183857.
+00:59:25.214 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/openmessaging-benchmark-0000006-ViHwA5s/0.#epoch.0
+00:59:25.214 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/openmessaging-benchmark-0000006-ViHwA5s/0.#epoch.0
+00:59:25.214 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/openmessaging-benchmark-0000006-ViHwA5s/0.#epoch.0 will be retransmitted.
+00:59:25.214 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [7638a57d-c26c-4739-96de-5934186a0d09],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000006-ViHwA5s/0.#epoch.0, range=null)=183857} }, segment=examples/_RGsub-006-Hac7My8/0.#epoch.0)
+00:59:25.215 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-006-Hac7My8/0.#epoch.0
+00:59:25.215 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-006-Hac7My8/0.#epoch.0
+00:59:25.215 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-006-Hac7My8/0.#epoch.0
+00:59:25.215 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-006-Hac7My8/0.#epoch.0 will be retransmitted.
+00:59:25.215 [main] INFO PravegaBenchmarkDriver - close: clientConfig=ClientConfig(controllerURI=tcp://10.0.0.4:9090, credentials=null, trustStore=null, validateHostName=true, maxConnectionsPerSegmentStore=10, isDefaultMaxConnections=true, deriveTlsEnabledFromControllerURI=true, enableTlsToController=false, enableTlsToSegmentStore=false, metricListener=null)
+00:59:25.217 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+00:59:25.217 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+00:59:25.219 [ClientSocketReaders-2] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+00:59:25.220 [ClientSocketReaders-3] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+00:59:25.220 [ClientSocketReaders-4] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+00:59:25.221 [ClientSocketReaders-5] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+00:59:25.221 [ClientSocketReaders-6] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+00:59:25.227 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+00:59:25.227 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+00:59:25.227 [ClientSocketReaders-1] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+
+
+sudo bin/benchmark \
+> --drivers driver-pravega/pravega-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-100-10.yaml \
+> workloads/tpc-h-base-long.yaml
+01:03:01.534 [main] INFO Benchmark - Using default worker file workers.yaml!
+01:03:01.542 [main] INFO Benchmark - Reading workers list from workers.yaml
+01:03:01.598 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-pravega/pravega-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.171:8080", "http://10.0.0.47:8080", "http://10.0.0.104:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-100-10.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+01:03:01.615 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+01:03:01.625 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-100-10",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 10
+} ]
+01:03:01.667 [main] INFO InstanceWorkerStats - Instance worker stats initialized.
+01:03:02.256 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.171:8080,http://10.0.0.47:8080,http://10.0.0.104:8080]
+01:03:02.257 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.171:8080,http://10.0.0.47:8080,http://10.0.0.104:8080
+01:03:02.259 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pravega---------------
+01:03:09.284 [main] INFO LocalWorker - Driver: {
+  "name" : "Pravega",
+  "driverClass" : "io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver"
+}
+01:03:09.290 [main] INFO PravegaBenchmarkDriver - Pravega driver configuration: {
+  "client" : {
+    "controllerURI" : "tcp://10.0.0.4:9090",
+    "scopeName" : "examples"
+  },
+  "writer" : {
+    "enableConnectionPooling" : true
+  },
+  "includeTimestampInEvent" : true,
+  "enableTransaction" : false,
+  "eventsPerTransaction" : 1,
+  "enableStreamAutoScaling" : false,
+  "eventsPerSecond" : -1,
+  "kbytesPerSecond" : 1000000,
+  "createScope" : true,
+  "deleteStreams" : false
+}
+01:03:09.491 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.4:9090
+01:03:09.498 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.4:9090
+01:03:09.504 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.4:9090
+01:03:12.514 [main] INFO WorkloadGenerator - Created 17 topics in 3004.922992 ms
+01:03:17.257 [main] INFO WorkloadGenerator - Created 17 external consumers in 4741.389995 ms
+01:03:17.260 [main] INFO PravegaBenchmarkConsumer - PravegaBenchmarkConsumer: BEGIN: subscriptionName=sub-006-aqZXueU, streamName=openmessaging-benchmark-0000006-J17u0L4
+01:03:17.269 [main] INFO ReaderGroupManagerImpl - Creating reader group: sub-006-aqZXueU for streams: [StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000006-J17u0L4)] with configuration: ReaderGroupConfig(groupRefreshTimeMillis=3000, automaticCheckpointIntervalMillis=30000, startingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000006-J17u0L4)=UNBOUNDED}, endingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000006-J17u0L4)=UNBOUNDED}, maxOutstandingCheckpointRequest=3, retentionType=NONE, generation=-1, readerGroupId=00000000-0000-0000-0000-000000000000)
+01:03:17.279 [clientInternal-2-1] INFO ControllerImpl - [requestId=2809582236932385248] Tagging client request (createReaderGroup-examples-sub-006-aqZXueU).
+01:03:17.385 [clientInternal-2-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.4:9090]/{}]]
+01:03:17.940 [clientInternal-2-1] INFO ControllerImpl - [requestId=2809582236932385248] Reader Group examples/sub-006-aqZXueU created successfully: {}
+01:03:17.965 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-006-aqZXueU and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+01:03:17.967 [clientInternal-2-1] INFO ControllerImpl - [requestId=-6995890337478707434] Tagging client request (getCurrentSegments-examples-_RGsub-006-aqZXueU).
+01:03:17.985 [clientInternal-2-1] INFO ControllerImpl - [requestId=-3265729569888895] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-006-aqZXueU).
+01:03:17.992 [clientInternal-2-1] INFO ControllerImpl - [requestId=-8793873778690192159] Tagging client request (getURI-examples/_RGsub-006-aqZXueU/0.#epoch.0).
+01:03:18.053 [ClientSocketReaders-1] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+01:03:18.053 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-006-aqZXueU/0.#epoch.0, writer 131f11f0-a0ea-4085-9e32-90b1a754155e
+01:03:18.059 [clientInternal-2-1] INFO ControllerImpl - [requestId=6811993114333729498] Tagging client request (getSegmentsAtTime-examples-openmessaging-benchmark-0000006-J17u0L4).
+01:03:18.060 [clientInternal-2-1] INFO ControllerImpl - [requestId=-5787173830901532906] Tagging client request (getURI-examples/_RGsub-006-aqZXueU/0.#epoch.0).
+01:03:18.061 [clientInternal-2-1] INFO ControllerImpl - [requestId=-7381620703198843667] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-006-aqZXueU).
+01:03:18.066 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.90:12345 for examples/_RGsub-006-aqZXueU/0.#epoch.0, writerID: 131f11f0-a0ea-4085-9e32-90b1a754155e
+01:03:18.071 [clientInternal-2-1] INFO ControllerImpl - [requestId=-1504173192229703009] Tagging client request (getURI-examples/_RGsub-006-aqZXueU/0.#epoch.0).
+01:03:18.076 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=8589934592, segment=examples/_RGsub-006-aqZXueU/0.#epoch.0, writerId=131f11f0-a0ea-4085-9e32-90b1a754155e, lastEventNumber=-9223372036854775808)
+01:03:18.078 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Connection setup complete for writer 131f11f0-a0ea-4085-9e32-90b1a754155e
+01:03:18.085 [clientInternal-2-1] INFO ControllerImpl - [requestId=-2700868269235820202] Tagging client request (getURI-examples/_RGsub-006-aqZXueU/0.#epoch.0).
+01:03:18.100 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000006-J17u0L4/0.#epoch.0, range=null)=0} }, segment=examples/_RGsub-006-aqZXueU/0.#epoch.0)
+01:03:18.101 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-006-aqZXueU/0.#epoch.0
+01:03:18.101 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-006-aqZXueU/0.#epoch.0
+01:03:18.101 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-006-aqZXueU/0.#epoch.0
+01:03:18.101 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-006-aqZXueU/0.#epoch.0 will be retransmitted.
+01:03:18.102 [main] INFO ClientFactoryImpl - Creating reader: 58f82c0a-06a8-4a1f-947b-64a3142bc897 under readerGroup: sub-006-aqZXueU with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+01:03:18.103 [main] INFO ClientFactoryImpl - Creating reader: 58f82c0a-06a8-4a1f-947b-64a3142bc897 under readerGroup: sub-006-aqZXueU with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+01:03:18.103 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-006-aqZXueU and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+01:03:18.103 [clientInternal-3-1] INFO ControllerImpl - [requestId=8222301241313459298] Tagging client request (getCurrentSegments-examples-_RGsub-006-aqZXueU).
+01:03:18.104 [clientInternal-3-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.4:9090]/{}]]
+01:03:18.114 [clientInternal-3-4] INFO ControllerImpl - [requestId=4039881609413946063] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-006-aqZXueU).
+01:03:18.114 [clientInternal-3-5] INFO ControllerImpl - [requestId=4159495895737162632] Tagging client request (getURI-examples/_RGsub-006-aqZXueU/0.#epoch.0).
+01:03:18.117 [clientInternal-3-4] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-006-aqZXueU/0.#epoch.0, writer 2be0853e-ce9b-4d55-aac2-c51768fba289
+01:03:18.117 [clientInternal-3-7] INFO ControllerImpl - [requestId=-5717264417672881933] Tagging client request (getURI-examples/_RGsub-006-aqZXueU/0.#epoch.0).
+01:03:18.117 [clientInternal-3-8] INFO ControllerImpl - [requestId=-5566461607949987447] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-006-aqZXueU).
+01:03:18.125 [clientInternal-3-3] INFO ControllerImpl - [requestId=7096142416414654879] Tagging client request (getURI-examples/_RGsub-006-aqZXueU/0.#epoch.0).
+01:03:18.126 [clientInternal-3-2] INFO ControllerImpl - [requestId=8242026861017328880] Tagging client request (getURI-examples/_RGsub-006-aqZXueU/0.#epoch.0).
+01:03:18.127 [clientInternal-3-7] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.90:12345 for examples/_RGsub-006-aqZXueU/0.#epoch.0, writerID: 2be0853e-ce9b-4d55-aac2-c51768fba289
+01:03:18.130 [ClientSocketReaders-2] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+01:03:18.130 [ClientSocketReaders-3] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+01:03:18.133 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=25769803776, segment=examples/_RGsub-006-aqZXueU/0.#epoch.0, writerId=2be0853e-ce9b-4d55-aac2-c51768fba289, lastEventNumber=-9223372036854775808)
+01:03:18.134 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Connection setup complete for writer 2be0853e-ce9b-4d55-aac2-c51768fba289
+01:03:18.134 [ClientSocketReaders-4] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+01:03:18.142 [clientInternal-3-8] INFO ControllerImpl - [requestId=-6503365629572769713] Tagging client request (getURI-examples/_RGsub-006-aqZXueU/0.#epoch.0).
+01:03:18.147 [ClientSocketReaders-5] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+01:03:18.160 [main] INFO LocalWorker - Created 1 consumers in 902.454564 ms
+01:03:18.177 [pool-2-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=58f82c0a-06a8-4a1f-947b-64a3142bc897) acquiring segments {SegmentWithRange(segment=examples/openmessaging-benchmark-0000006-J17u0L4/0.#epoch.0, range=null)=0}
+01:03:18.178 [clientInternal-3-7] INFO ControllerImpl - [requestId=3506402614694899243] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000006-J17u0L4).
+01:03:18.178 [clientInternal-3-1] INFO ControllerImpl - [requestId=4165828799497116877] Tagging client request (getURI-examples/openmessaging-benchmark-0000006-J17u0L4/0.#epoch.0).
+01:03:18.182 [clientInternal-3-2] INFO ControllerImpl - [requestId=4788712860594264945] Tagging client request (getURI-examples/openmessaging-benchmark-0000006-J17u0L4/0.#epoch.0).
+01:03:18.188 [ClientSocketReaders-6] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+01:03:18.368 [main] INFO WorkloadGenerator - Created 17 producers in 208.106175 ms
+01:03:18.369 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+01:03:18.380 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 69, Received: 67, Expected: 0
+01:03:18.381 [main] INFO WorkloadGenerator - All consumers are ready!
+01:03:18.381 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pravega-tpc-h-tpc-h-q1-100-10-2024-05-27-01-03-09 at 1716771798381
+01:03:19.387 [pool-2-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=58f82c0a-06a8-4a1f-947b-64a3142bc897) at checkpoint 7e0abcf6-3e98-465e-bcd1-893704e9c3b0
+01:03:19.391 [pool-2-thread-1] INFO EventStreamReaderImpl - Reader 58f82c0a-06a8-4a1f-947b-64a3142bc897 completed checkpoint 7e0abcf6-3e98-465e-bcd1-893704e9c3b0
+01:03:28.725 [main] INFO WorkloadGenerator - Pub rate    11.4 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate    10.6 msg/s /  0.0 MB/s | Backlog:  0.1 K | Pub Latency (ms) avg:  8.3 - 50%:  3.6 - 99%: 40.5 - 99.9%: 40.7 - Max: 40.7 | Pub Delay Latency (us) avg: 694301.7 - 50%: 63.0 - 99%: 9298303.0 - 99.9%: 9510335.0 - Max: 9510335.0
+01:03:38.937 [main] INFO WorkloadGenerator - Pub rate     2.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     4.2 msg/s /  0.0 MB/s | Backlog:  0.1 K | Pub Latency (ms) avg:  3.1 - 50%:  3.2 - 99%:  3.4 - 99.9%:  3.4 - Max:  3.4 | Pub Delay Latency (us) avg: 15264450.9 - 50%: 15606271.0 - 99%: 19636095.0 - 99.9%: 19636095.0 - Max: 19636095.0
+01:03:49.137 [main] INFO WorkloadGenerator - Pub rate     1.6 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     3.1 msg/s /  0.0 MB/s | Backlog:  0.1 K | Pub Latency (ms) avg:  3.2 - 50%:  3.1 - 99%:  4.8 - 99.9%:  4.8 - Max:  4.8 | Pub Delay Latency (us) avg: 25056584.0 - 50%: 25335935.0 - 99%: 28676223.0 - 99.9%: 28676223.0 - Max: 28676223.0
+01:03:49.471 [pool-2-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=58f82c0a-06a8-4a1f-947b-64a3142bc897) at checkpoint feb18636-c948-48a4-97c4-02494d43e067
+01:03:49.475 [pool-2-thread-1] INFO EventStreamReaderImpl - Reader 58f82c0a-06a8-4a1f-947b-64a3142bc897 completed checkpoint feb18636-c948-48a4-97c4-02494d43e067
+01:03:59.348 [main] INFO WorkloadGenerator - Pub rate     2.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     4.1 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  3.2 - 50%:  3.2 - 99%:  3.4 - 99.9%:  3.4 - Max:  3.4 | Pub Delay Latency (us) avg: 35217520.8 - 50%: 34744575.0 - 99%: 40515839.0 - 99.9%: 40515839.0 - Max: 40515839.0
+01:04:09.576 [main] INFO WorkloadGenerator - Pub rate     1.9 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     3.1 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  3.2 - 50%:  3.2 - 99%:  3.5 - 99.9%:  3.5 - Max:  3.5 | Pub Delay Latency (us) avg: 46276803.4 - 50%: 46398207.0 - 99%: 50329855.0 - 99.9%: 50329855.0 - Max: 50329855.0
+01:04:19.784 [main] INFO WorkloadGenerator - Pub rate     1.4 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     1.8 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  3.1 - 50%:  3.1 - 99%:  3.5 - 99.9%:  3.5 - Max:  3.5 | Pub Delay Latency (us) avg: 55787867.4 - 50%: 56354303.0 - 99%: 59860223.0 - 99.9%: 59860223.0 - Max: 59860223.0
+01:04:20.274 [pool-2-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=58f82c0a-06a8-4a1f-947b-64a3142bc897) at checkpoint 666a7f53-948f-42f5-8257-d3c551028091
+01:04:20.277 [pool-2-thread-1] INFO EventStreamReaderImpl - Reader 58f82c0a-06a8-4a1f-947b-64a3142bc897 completed checkpoint 666a7f53-948f-42f5-8257-d3c551028091
+01:04:21.208 [pool-2-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.13274,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880073,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":26,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612946,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":26,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+01:04:29.979 [main] INFO WorkloadGenerator - Pub rate     0.4 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     0.4 msg/s /  0.0 MB/s | Backlog:  0.0 K | Pub Latency (ms) avg:  3.0 - 50%:  3.0 - 99%:  3.2 - 99.9%:  3.2 - Max:  3.2 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+01:04:30.199 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg:  6.0 - 50%:  3.2 - 95%: 30.1 - 99%: 38.6 - 99.9%: 40.7 - 99.99%: 40.7 - Max: 40.7 | Pub Delay (us)  avg: 16455864.4 - 50%: 4175631.0 - 95%: 56357887.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - 99.99%: 60000255.0 - Max: 60000255.0
+01:04:30.344 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pravega-tpc-h-tpc-h-q1-100-10-2024-05-27-01-03-09 at 1716771870344
+01:04:35.244 [main] INFO EventStreamReaderImpl - Closing reader EventStreamReaderImpl( id=58f82c0a-06a8-4a1f-947b-64a3142bc897) at position examples/openmessaging-benchmark-0000006-J17u0L4/0.#epoch.0=18627.
+01:04:35.252 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/openmessaging-benchmark-0000006-J17u0L4/0.#epoch.0
+01:04:35.252 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/openmessaging-benchmark-0000006-J17u0L4/0.#epoch.0
+01:04:35.252 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/openmessaging-benchmark-0000006-J17u0L4/0.#epoch.0 will be retransmitted.
+01:04:35.252 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [666a7f53-948f-42f5-8257-d3c551028091],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000006-J17u0L4/0.#epoch.0, range=null)=18627} }, segment=examples/_RGsub-006-aqZXueU/0.#epoch.0)
+01:04:35.252 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-006-aqZXueU/0.#epoch.0
+01:04:35.252 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-006-aqZXueU/0.#epoch.0
+01:04:35.252 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-006-aqZXueU/0.#epoch.0
+01:04:35.253 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-006-aqZXueU/0.#epoch.0 will be retransmitted.
+01:04:35.253 [main] INFO PravegaBenchmarkDriver - close: clientConfig=ClientConfig(controllerURI=tcp://10.0.0.4:9090, credentials=null, trustStore=null, validateHostName=true, maxConnectionsPerSegmentStore=10, isDefaultMaxConnections=true, deriveTlsEnabledFromControllerURI=true, enableTlsToController=false, enableTlsToSegmentStore=false, metricListener=null)
+01:04:35.257 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+01:04:35.257 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+01:04:35.259 [ClientSocketReaders-6] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+01:04:35.260 [ClientSocketReaders-2] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+01:04:35.260 [ClientSocketReaders-3] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+01:04:35.261 [ClientSocketReaders-4] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+01:04:35.261 [ClientSocketReaders-5] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+01:04:35.267 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+01:04:35.267 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+01:04:35.268 [ClientSocketReaders-1] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+sudo bin/benchmark \
+> --drivers driver-pravega/pravega-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-1000-100.yaml \
+> workloads/tpc-h-base-long.yaml
+01:15:24.716 [main] INFO Benchmark - Using default worker file workers.yaml!
+01:15:24.725 [main] INFO Benchmark - Reading workers list from workers.yaml
+01:15:24.776 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-pravega/pravega-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.171:8080", "http://10.0.0.47:8080", "http://10.0.0.104:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-1000-100.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+01:15:24.793 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+01:15:24.803 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-1000-100",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 100
+} ]
+01:15:24.846 [main] INFO InstanceWorkerStats - Instance worker stats initialized.
+01:15:25.410 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.171:8080,http://10.0.0.47:8080,http://10.0.0.104:8080]
+01:15:25.411 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.171:8080,http://10.0.0.47:8080,http://10.0.0.104:8080
+01:15:25.413 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pravega---------------
+01:15:31.130 [main] INFO LocalWorker - Driver: {
+  "name" : "Pravega",
+  "driverClass" : "io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver"
+}
+01:15:31.136 [main] INFO PravegaBenchmarkDriver - Pravega driver configuration: {
+  "client" : {
+    "controllerURI" : "tcp://10.0.0.4:9090",
+    "scopeName" : "examples"
+  },
+  "writer" : {
+    "enableConnectionPooling" : true
+  },
+  "includeTimestampInEvent" : true,
+  "enableTransaction" : false,
+  "eventsPerTransaction" : 1,
+  "enableStreamAutoScaling" : false,
+  "eventsPerSecond" : -1,
+  "kbytesPerSecond" : 1000000,
+  "createScope" : true,
+  "deleteStreams" : false
+}
+01:15:31.355 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.4:9090
+01:15:31.362 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.4:9090
+01:15:31.367 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.4:9090
+01:15:49.259 [main] INFO WorkloadGenerator - Created 107 topics in 17886.643995 ms
+01:16:14.408 [main] INFO WorkloadGenerator - Created 107 external consumers in 25144.231051 ms
+01:16:14.411 [main] INFO PravegaBenchmarkConsumer - PravegaBenchmarkConsumer: BEGIN: subscriptionName=sub-006-RapZgwk, streamName=openmessaging-benchmark-0000006-PQw2rpQ
+01:16:14.420 [main] INFO ReaderGroupManagerImpl - Creating reader group: sub-006-RapZgwk for streams: [StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000006-PQw2rpQ)] with configuration: ReaderGroupConfig(groupRefreshTimeMillis=3000, automaticCheckpointIntervalMillis=30000, startingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000006-PQw2rpQ)=UNBOUNDED}, endingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000006-PQw2rpQ)=UNBOUNDED}, maxOutstandingCheckpointRequest=3, retentionType=NONE, generation=-1, readerGroupId=00000000-0000-0000-0000-000000000000)
+01:16:14.431 [clientInternal-2-1] INFO ControllerImpl - [requestId=1452793723451710317] Tagging client request (createReaderGroup-examples-sub-006-RapZgwk).
+01:16:14.552 [clientInternal-2-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.4:9090]/{}]]
+01:16:15.082 [clientInternal-2-1] INFO ControllerImpl - [requestId=1452793723451710317] Reader Group examples/sub-006-RapZgwk created successfully: {}
+01:16:15.107 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-006-RapZgwk and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+01:16:15.109 [clientInternal-2-1] INFO ControllerImpl - [requestId=-239590070798067350] Tagging client request (getCurrentSegments-examples-_RGsub-006-RapZgwk).
+01:16:15.126 [clientInternal-2-1] INFO ControllerImpl - [requestId=7298139322289485685] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-006-RapZgwk).
+01:16:15.133 [clientInternal-2-1] INFO ControllerImpl - [requestId=8843221013014830629] Tagging client request (getURI-examples/_RGsub-006-RapZgwk/0.#epoch.0).
+01:16:15.195 [ClientSocketReaders-1] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+01:16:15.195 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-006-RapZgwk/0.#epoch.0, writer cdf488b0-b408-4926-a62a-a7c2ec75eed2
+01:16:15.202 [clientInternal-2-1] INFO ControllerImpl - [requestId=6877999850951374020] Tagging client request (getSegmentsAtTime-examples-openmessaging-benchmark-0000006-PQw2rpQ).
+01:16:15.204 [clientInternal-2-1] INFO ControllerImpl - [requestId=-2640008619461722140] Tagging client request (getURI-examples/_RGsub-006-RapZgwk/0.#epoch.0).
+01:16:15.205 [clientInternal-2-1] INFO ControllerImpl - [requestId=6917167526887028453] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-006-RapZgwk).
+01:16:15.212 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.90:12345 for examples/_RGsub-006-RapZgwk/0.#epoch.0, writerID: cdf488b0-b408-4926-a62a-a7c2ec75eed2
+01:16:15.216 [clientInternal-2-1] INFO ControllerImpl - [requestId=7505213134803093833] Tagging client request (getURI-examples/_RGsub-006-RapZgwk/0.#epoch.0).
+01:16:15.217 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=8589934592, segment=examples/_RGsub-006-RapZgwk/0.#epoch.0, writerId=cdf488b0-b408-4926-a62a-a7c2ec75eed2, lastEventNumber=-9223372036854775808)
+01:16:15.217 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Connection setup complete for writer cdf488b0-b408-4926-a62a-a7c2ec75eed2
+01:16:15.230 [clientInternal-2-1] INFO ControllerImpl - [requestId=-4529249458656842291] Tagging client request (getURI-examples/_RGsub-006-RapZgwk/0.#epoch.0).
+01:16:15.247 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000006-PQw2rpQ/0.#epoch.0, range=null)=0} }, segment=examples/_RGsub-006-RapZgwk/0.#epoch.0)
+01:16:15.247 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-006-RapZgwk/0.#epoch.0
+01:16:15.248 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-006-RapZgwk/0.#epoch.0
+01:16:15.248 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-006-RapZgwk/0.#epoch.0
+01:16:15.248 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-006-RapZgwk/0.#epoch.0 will be retransmitted.
+01:16:15.249 [main] INFO ClientFactoryImpl - Creating reader: 443f473f-c1ac-4ef6-919f-27e676244a13 under readerGroup: sub-006-RapZgwk with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+01:16:15.249 [main] INFO ClientFactoryImpl - Creating reader: 443f473f-c1ac-4ef6-919f-27e676244a13 under readerGroup: sub-006-RapZgwk with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+01:16:15.250 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-006-RapZgwk and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+01:16:15.250 [clientInternal-3-1] INFO ControllerImpl - [requestId=2613815875780586008] Tagging client request (getCurrentSegments-examples-_RGsub-006-RapZgwk).
+01:16:15.250 [clientInternal-3-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.4:9090]/{}]]
+01:16:15.260 [clientInternal-3-4] INFO ControllerImpl - [requestId=1722707383295502752] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-006-RapZgwk).
+01:16:15.260 [clientInternal-3-7] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-006-RapZgwk/0.#epoch.0, writer d310fb43-4dc9-4adf-a133-d17025f0d7b8
+01:16:15.260 [clientInternal-3-5] INFO ControllerImpl - [requestId=-1996053551393419005] Tagging client request (getURI-examples/_RGsub-006-RapZgwk/0.#epoch.0).
+01:16:15.261 [clientInternal-3-7] INFO ControllerImpl - [requestId=3183662744289045490] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-006-RapZgwk).
+01:16:15.261 [clientInternal-3-8] INFO ControllerImpl - [requestId=8933994424110403616] Tagging client request (getURI-examples/_RGsub-006-RapZgwk/0.#epoch.0).
+01:16:15.269 [clientInternal-3-3] INFO ControllerImpl - [requestId=-7856534771306069622] Tagging client request (getURI-examples/_RGsub-006-RapZgwk/0.#epoch.0).
+01:16:15.270 [clientInternal-3-2] INFO ControllerImpl - [requestId=-7597027664346988493] Tagging client request (getURI-examples/_RGsub-006-RapZgwk/0.#epoch.0).
+01:16:15.273 [clientInternal-3-7] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.90:12345 for examples/_RGsub-006-RapZgwk/0.#epoch.0, writerID: d310fb43-4dc9-4adf-a133-d17025f0d7b8
+01:16:15.275 [ClientSocketReaders-2] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+01:16:15.276 [ClientSocketReaders-3] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+01:16:15.278 [ClientSocketReaders-4] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+01:16:15.278 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=25769803776, segment=examples/_RGsub-006-RapZgwk/0.#epoch.0, writerId=d310fb43-4dc9-4adf-a133-d17025f0d7b8, lastEventNumber=-9223372036854775808)
+01:16:15.279 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Connection setup complete for writer d310fb43-4dc9-4adf-a133-d17025f0d7b8
+01:16:15.285 [clientInternal-3-5] INFO ControllerImpl - [requestId=-6121413278669110263] Tagging client request (getURI-examples/_RGsub-006-RapZgwk/0.#epoch.0).
+01:16:15.289 [ClientSocketReaders-5] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+01:16:15.302 [main] INFO LocalWorker - Created 1 consumers in 893.696092 ms
+01:16:15.312 [pool-2-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=443f473f-c1ac-4ef6-919f-27e676244a13) acquiring segments {SegmentWithRange(segment=examples/openmessaging-benchmark-0000006-PQw2rpQ/0.#epoch.0, range=null)=0}
+01:16:15.312 [clientInternal-3-6] INFO ControllerImpl - [requestId=2074842821636162118] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000006-PQw2rpQ).
+01:16:15.313 [clientInternal-3-3] INFO ControllerImpl - [requestId=5528365233221229330] Tagging client request (getURI-examples/openmessaging-benchmark-0000006-PQw2rpQ/0.#epoch.0).
+01:16:15.322 [ClientSocketReaders-6] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+01:16:15.684 [main] INFO WorkloadGenerator - Created 107 producers in 381.523024 ms
+01:16:15.684 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+01:16:15.697 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 321, Received: 301, Expected: 0
+01:16:15.697 [main] INFO WorkloadGenerator - All consumers are ready!
+01:16:15.698 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pravega-tpc-h-tpc-h-q1-1000-100-2024-05-27-01-15-31 at 1716772575698
+01:16:16.703 [pool-2-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=443f473f-c1ac-4ef6-919f-27e676244a13) at checkpoint 297ce46a-8703-49b2-8cd9-e411b9cd4fff
+01:16:16.707 [pool-2-thread-1] INFO EventStreamReaderImpl - Reader 443f473f-c1ac-4ef6-919f-27e676244a13 completed checkpoint 297ce46a-8703-49b2-8cd9-e411b9cd4fff
+01:16:25.953 [main] INFO WorkloadGenerator - Pub rate   113.7 msg/s /  0.1 MB/s | Pub err     0.0 err/s | Cons rate    62.2 msg/s /  0.0 MB/s | Backlog:  0.9 K | Pub Latency (ms) avg:  4.3 - 50%:  3.2 - 99%: 22.3 - 99.9%: 41.7 - Max: 42.5 | Pub Delay Latency (us) avg: 604287.5 - 50%: 60.0 - 99%: 9122367.0 - 99.9%: 9740095.0 - Max: 9878719.0
+01:16:36.117 [main] INFO WorkloadGenerator - Pub rate    14.7 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate    27.7 msg/s /  0.0 MB/s | Backlog:  0.7 K | Pub Latency (ms) avg:  3.0 - 50%:  3.0 - 99%:  3.3 - 99.9%:  4.8 - Max:  4.8 | Pub Delay Latency (us) avg: 15100602.1 - 50%: 15245823.0 - 99%: 19939839.0 - 99.9%: 19961471.0 - Max: 19961471.0
+01:16:46.271 [main] INFO WorkloadGenerator - Pub rate    15.6 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate    28.5 msg/s /  0.0 MB/s | Backlog:  0.6 K | Pub Latency (ms) avg:  3.0 - 50%:  2.9 - 99%:  3.8 - 99.9%:  3.8 - Max:  3.8 | Pub Delay Latency (us) avg: 25280510.0 - 50%: 25252863.0 - 99%: 30196223.0 - 99.9%: 30290175.0 - Max: 30290175.0
+01:16:47.078 [pool-2-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=443f473f-c1ac-4ef6-919f-27e676244a13) at checkpoint c3c0b767-97b8-449d-9674-9ef6d699fcb2
+01:16:47.081 [pool-2-thread-1] INFO EventStreamReaderImpl - Reader 443f473f-c1ac-4ef6-919f-27e676244a13 completed checkpoint c3c0b767-97b8-449d-9674-9ef6d699fcb2
+01:16:56.419 [main] INFO WorkloadGenerator - Pub rate    14.8 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate    27.4 msg/s /  0.0 MB/s | Backlog:  0.5 K | Pub Latency (ms) avg:  2.9 - 50%:  2.9 - 99%:  3.1 - 99.9%:  3.2 - Max:  3.2 | Pub Delay Latency (us) avg: 35336125.0 - 50%: 35298303.0 - 99%: 40381695.0 - 99.9%: 40400639.0 - Max: 40400639.0
+01:17:06.584 [main] INFO WorkloadGenerator - Pub rate    15.1 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate    27.2 msg/s /  0.0 MB/s | Backlog:  0.4 K | Pub Latency (ms) avg:  2.9 - 50%:  2.9 - 99%:  3.7 - 99.9%:  9.2 - Max:  9.2 | Pub Delay Latency (us) avg: 45638352.3 - 50%: 45673471.0 - 99%: 50433535.0 - 99.9%: 50494975.0 - Max: 50494975.0
+01:17:16.746 [main] INFO WorkloadGenerator - Pub rate    15.2 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate    27.9 msg/s /  0.0 MB/s | Backlog:  0.2 K | Pub Latency (ms) avg:  2.9 - 50%:  2.9 - 99%:  3.9 - 99.9%:  4.2 - Max:  4.2 | Pub Delay Latency (us) avg: 55593522.4 - 50%: 55454207.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+01:17:17.854 [pool-2-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=443f473f-c1ac-4ef6-919f-27e676244a13) at checkpoint eef3b9b4-1d2e-40cc-bc0c-cec26497ce53
+01:17:17.857 [pool-2-thread-1] INFO EventStreamReaderImpl - Reader 443f473f-c1ac-4ef6-919f-27e676244a13 completed checkpoint eef3b9b4-1d2e-40cc-bc0c-cec26497ce53
+01:17:26.918 [main] INFO WorkloadGenerator - Pub rate    13.8 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate    24.4 msg/s /  0.0 MB/s | Backlog:  0.1 K | Pub Latency (ms) avg:  2.9 - 50%:  2.9 - 99%:  4.6 - 99.9%:  7.1 - Max:  7.1 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+01:17:31.253 [pool-2-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+01:17:37.141 [main] INFO WorkloadGenerator - Pub rate     5.4 msg/s /  0.0 MB/s | Pub err     0.0 err/s | Cons rate     6.5 msg/s /  0.0 MB/s | Backlog:  0.1 K | Pub Latency (ms) avg:  2.9 - 50%:  2.9 - 99%:  4.5 - 99.9%:  4.5 - Max:  4.5 | Pub Delay Latency (us) avg: 60000128.0 - 50%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - Max: 60000255.0
+01:17:37.296 [main] INFO WorkloadGenerator - ----- Aggregated Pub Latency (ms) avg:  3.7 - 50%:  3.0 - 95%:  7.0 - 99%: 19.0 - 99.9%: 38.3 - 99.99%: 42.5 - Max: 42.5 | Pub Delay (us)  avg: 18850940.2 - 50%: 3748271.0 - 95%: 60000255.0 - 99%: 60000255.0 - 99.9%: 60000255.0 - 99.99%: 60000255.0 - Max: 60000255.0
+01:17:37.484 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pravega-tpc-h-tpc-h-q1-1000-100-2024-05-27-01-15-31 at 1716772657484
+01:17:48.291 [pool-2-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=443f473f-c1ac-4ef6-919f-27e676244a13) at checkpoint c4cc5da6-139e-4206-add5-998768a55a83
+01:17:48.294 [pool-2-thread-1] INFO EventStreamReaderImpl - Reader 443f473f-c1ac-4ef6-919f-27e676244a13 completed checkpoint c4cc5da6-139e-4206-add5-998768a55a83

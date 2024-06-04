@@ -66,7 +66,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import io.openmessaging.tpch.TpcHConstants;
-import io.openmessaging.tpch.model.TpcHArguments;
 import io.openmessaging.tpch.model.TpcHConsumerAssignment;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.model.TpcHMessageType;
@@ -261,9 +260,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
             commandHandler = new CommandHandler("throughput-worker");
             startLoadForThroughputProducers(producerWorkAssignment);
         } else {
-            commandHandler = new CommandHandler(32, "tpc-h-worker");
-            TpcHArguments arguments = producerWorkAssignment.tpcHArguments;
-            int numberOfWorkers = (int) Math.ceil((double) arguments.numberOfWorkers / 3);
+            commandHandler = new CommandHandler(8, "tpc-h-worker");
             int maxConcurrentTasks = 1;
             switch (producerWorkAssignment.tpcHArguments.numberOfChunks) {
                 case 100:
@@ -274,6 +271,8 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     break;
                 case 10000:
                     maxConcurrentTasks = 500;
+                    break;
+                default:
                     break;
             }
             taskProcessor = new AdaptiveRateLimitedTaskProcessor(maxConcurrentTasks);
@@ -286,7 +285,11 @@ public class LocalWorker implements Worker, ConsumerCallback {
         producers.forEach(
             producer -> {
                 if (producer != null) {
-                    producer.sendAsync(Optional.of("key"), new byte[10]).thenRun(stats::recordMessageSent);
+                    try {
+                        producer.sendAsync(Optional.of("key"), new byte[10]).thenRun(stats::recordMessageSent);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         );
@@ -359,7 +362,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                 String batchId = String.format(
                                         "%s-batch-%d-%s", assignment.queryId, globalBatchIdx, numberOfMapResults);
                                 Integer groupedChunkIndex = (chunkIndex - 1) / 1000;
-                                String s3Uri = chunkIndex > 1000
+                                String s3Uri = chunkIndex > 1010
                                         ? String.format("%s/%s/chunk_%d.csv", folderUri, groupedChunkIndex, chunkIndex)
                                         : String.format("%s/chunk_%d.csv", folderUri, chunkIndex);
                                 TpcHConsumerAssignment consumerAssignment = new TpcHConsumerAssignment(
@@ -459,23 +462,28 @@ public class LocalWorker implements Worker, ConsumerCallback {
                             producers.forEach(
                                     p -> {
                                         Integer currMessagesSent = messagesSent[0].incrementAndGet();
-                                        CompletableFuture<Void> newFuture = messageProducer.sendMessage(
-                                                p,
-                                                Optional.ofNullable(keyDistributor.next()),
-                                                payloads.get(r.nextInt(payloadCount)),
-                                                this.experimentId,
-                                                null,
-                                                false);
-                                        if (currMessagesSent > ovrMaxOutstandingMessages) {
-                                            messagesSent[0] = new AtomicInteger();
-                                            try {
-                                                futureToAwait[0].get();
-                                            } catch (InterruptedException | ExecutionException e) {
-                                                throw new RuntimeException(e);
+                                        try {
+                                            CompletableFuture<Void> newFuture = messageProducer.sendMessage(
+                                                    p,
+                                                    Optional.ofNullable(keyDistributor.next()),
+                                                    payloads.get(r.nextInt(payloadCount)),
+                                                    this.experimentId,
+                                                    null,
+                                                    false);
+                                            if (currMessagesSent > ovrMaxOutstandingMessages) {
+                                                messagesSent[0] = new AtomicInteger();
+                                                try {
+                                                    futureToAwait[0].get();
+                                                } catch (InterruptedException | ExecutionException e) {
+                                                    throw new RuntimeException(e);
+                                                }
                                             }
-                                        }
-                                        if (futureToAwait[0] == null || currMessagesSent > ovrMaxOutstandingMessages) {
-                                            futureToAwait[0] = newFuture;
+                                            if (futureToAwait[0] == null
+                                                    || currMessagesSent > ovrMaxOutstandingMessages) {
+                                                futureToAwait[0] = newFuture;
+                                            }
+                                        } catch (Exception e) {
+                                            throw new RuntimeException(e);
                                         }
                                     });
                         }

@@ -1,0 +1,109 @@
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+- name: Get common facts
+  hosts: ["!tier2"]
+  tags: ["always"]
+  connection: ssh
+  become: true
+  vars_files:
+    - vars.yaml
+  tasks:
+    - set_fact:
+        pravegaVersion: "{{ pravegaVersion }}"
+        zookeeperVersion: "{{ zookeeperVersion }}"
+        bookkeeperVersion: "{{ bookkeeperVersion }}"
+        prometheusVersion: "{{ prometheusVersion }}"
+        pravegaContainersPerSegmentStore: "{{ pravegaContainersPerSegmentStore }}"
+        zookeeperServers: "{{ groups['zookeeper'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | map('regex_replace', '^(.*)$', '\\1:2181') | join(',') }}"
+        controllerUrl: "tcp://{{ hostvars[groups['controller'][0]].private_ip }}:9090"
+        private_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+        segmentStoreCount: "{{ groups['bookkeeper'] | length }}"
+    - set_fact:
+        # Change below to use a published release of Pravega or a local build.
+        pravegaSrc: "https://github.com/pravega/pravega/releases/download/v{{ pravegaVersion }}/pravega-{{ pravegaVersion }}.tgz"
+        pravegaSrcRemote: yes
+        # Here is the file path for local Pravega build
+        #pravegaSrc: "../../../pravega/build/distributions/pravega-{{ pravegaVersion }}.tgz"
+        #pravegaSrcRemote: no
+        pravegaContainerCount: "{{ segmentStoreCount|int * pravegaContainersPerSegmentStore|int }}"
+
+# - name: Uninstall
+#   hosts: ["!tier2"]
+#   tags: ["uninstall"]
+#   connection: ssh
+#   become: true
+#   tasks:
+#     - name: Stop services
+#       systemd:
+#         name: "{{ item }}"
+#         state: stopped
+#         enabled: no
+#       ignore_errors: yes
+#       with_items:
+#         - "benchmark-worker"
+#         - "pravega-segmentstore"
+#         - "pravega-controller"
+#         - "bookkeeper"
+#         - "zookeeper"
+#     - name: Delete files on hosts
+#       ansible.builtin.shell:
+#         cmd: "rm -rf /opt/pravega /opt/zookeeper /opt/bookkeeper /opt/benchmark /mnt/journal/*"
+
+- name: Benchmark client setup
+  hosts: client
+  tags: ["client"]
+  connection: ssh
+  become: true
+  tasks:
+    - file: path=/opt/benchmark state=absent
+      tags: [client-code]
+    - name: Copy benchmark code
+      unarchive:
+        src: ../../package/target/openmessaging-benchmark-0.0.1-SNAPSHOT-bin.tar.gz
+        dest: /opt
+      tags: [client-code]
+    - shell: mv /opt/openmessaging-benchmark-0.0.1-SNAPSHOT /opt/benchmark
+      tags: [client-code]
+    - template:
+        src: "templates/workers.yaml"
+        dest: "/opt/benchmark/workers.yaml"
+    - name: Get list of driver config files
+      raw: ls -1 /opt/benchmark/driver-pravega/*.yaml
+      register: drivers_list
+    - name: Configure service URL
+      lineinfile:
+         dest: '{{ item }}'
+         regexp: '^  controllerURI\: '
+         line: '  controllerURI: {{ controllerUrl }}'
+      with_items: '{{ drivers_list.stdout_lines }}'
+    - name: Configure memory
+      lineinfile:
+         dest: /opt/benchmark/bin/benchmark-worker
+         regexp: '^JVM_MEM='
+         line: 'JVM_MEM="-Xms12G -Xmx12G -XX:MaxDirectMemorySize=14g -XX:+UseG1GC -XX:MaxGCPauseMillis=10 -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=32 -XX:ConcGCThreads=32 -XX:G1NewSizePercent=50 -XX:+DisableExplicitGC -XX:-ResizePLAB -XX:+PerfDisableSharedMem -XX:+AlwaysPreTouch -XX:-UseBiasedLocking"'
+    - name: Configure memory
+      lineinfile:
+         dest: /opt/benchmark/bin/benchmark
+         regexp: '^JVM_MEM='
+         line: 'JVM_MEM="-Xmx4G"'
+    - name: Install benchmark systemd service
+      template:
+        src: "templates/benchmark-worker.service"
+        dest: "/etc/systemd/system/benchmark-worker.service"
+    - systemd:
+        name: "benchmark-worker"
+        daemon_reload: yes
+        state: restarted
+        enabled: yes

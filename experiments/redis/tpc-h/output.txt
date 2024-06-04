@@ -1,0 +1,1542 @@
+sudo bin/benchmark \
+> --drivers driver-redis/redis-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-100-10.yaml,workloads/tpc-h-q6-100-10.yaml,workloads/tpc-h-q1-100-30.yaml,workloads/tpc-h-q6-100-30.yaml,workloads/tpc-h-q1-100-50.yaml,workloads/tpc-h-q6-100-50.yaml \
+> workloads/tpc-h-base-long.yaml
+07:15:56.247 [main] INFO Benchmark - Using default worker file workers.yaml!
+07:15:56.255 [main] INFO Benchmark - Reading workers list from workers.yaml
+07:15:56.304 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-redis/redis-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.98:8080", "http://10.0.0.56:8080", "http://10.0.0.240:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-100-10.yaml", "workloads/tpc-h-q6-100-10.yaml", "workloads/tpc-h-q1-100-30.yaml", "workloads/tpc-h-q6-100-30.yaml", "workloads/tpc-h-q1-100-50.yaml", "workloads/tpc-h-q6-100-50.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+07:15:56.320 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+07:15:56.332 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-100-10",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 10
+}, {
+  "queryId" : "tpc-h-q6-100-10",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 10
+}, {
+  "queryId" : "tpc-h-q1-100-30",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 30
+}, {
+  "queryId" : "tpc-h-q6-100-30",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 30
+}, {
+  "queryId" : "tpc-h-q1-100-50",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 50
+}, {
+  "queryId" : "tpc-h-q6-100-50",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 50
+} ]
+07:15:56.346 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+07:15:56.706 [main] INFO CentralWorkerStats - Central worker stats initialized
+07:15:57.233 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+07:15:57.234 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+07:15:57.237 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+07:15:57.594 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+07:15:57.793 [main] INFO WorkloadGenerator - Created 14 topics in 10.800613 ms
+07:15:57.900 [main] INFO WorkloadGenerator - Created 14 external consumers in 101.170792 ms
+07:15:57.902 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+07:15:58.466 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@2bf2d6eb
+07:15:58.496 [main] INFO LocalWorker - Created 1 consumers in 595.707311 ms
+07:15:58.510 [main] INFO WorkloadGenerator - Created 14 producers in 12.919887 ms
+07:15:58.510 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+07:15:58.535 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 57, Received: 13, Expected: 0
+07:15:58.535 [main] INFO WorkloadGenerator - All consumers are ready!
+07:15:58.536 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q1-100-10-2024-06-04-07-15-57 at 1717485358536
+07:17:16.038 [pool-8-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.13274,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880073,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":26,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612946,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":26,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+07:17:16.039 [pool-8-thread-1] INFO LocalWorker - [RESULT] Observed at 1717485436039
+07:17:18.566 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q1-100-10-2024-06-04-07-15-57 at 1717485438566
+07:17:18.794 [pool-8-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+07:17:18.805 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+07:17:18.814 [main] WARN RedisChannelHandler - Connection is already closed
+07:17:19.028 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+07:17:19.028 [main] INFO CentralWorkerStats - Central worker stats initialized
+07:17:19.048 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+07:17:19.048 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+07:17:19.049 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+07:17:19.261 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+07:17:19.265 [main] INFO WorkloadGenerator - Created 14 topics in 2.83538 ms
+07:17:19.357 [main] INFO WorkloadGenerator - Created 14 external consumers in 91.254554 ms
+07:17:19.357 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+07:17:19.387 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@23ad2d17
+07:17:19.396 [main] INFO LocalWorker - Created 1 consumers in 38.651163 ms
+07:17:19.402 [main] INFO WorkloadGenerator - Created 14 producers in 5.323247 ms
+07:17:19.402 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+07:17:19.413 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 57, Received: 13, Expected: 0
+07:17:19.413 [main] INFO WorkloadGenerator - All consumers are ready!
+07:17:19.414 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-100-10-2024-06-04-07-17-19 at 1717485439414
+07:18:19.599 [pool-10-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+07:18:19.599 [pool-10-thread-1] INFO LocalWorker - [RESULT] Observed at 1717485499599
+07:18:29.441 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-100-10-2024-06-04-07-17-19 at 1717485509441
+07:18:29.658 [pool-10-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+07:18:29.662 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+07:18:29.670 [main] WARN RedisChannelHandler - Connection is already closed
+07:18:29.877 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+07:18:29.877 [main] INFO CentralWorkerStats - Central worker stats initialized
+07:18:29.882 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+07:18:29.882 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+07:18:29.883 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+07:18:30.092 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+07:18:30.095 [main] INFO WorkloadGenerator - Created 34 topics in 2.615648 ms
+07:18:30.203 [main] INFO WorkloadGenerator - Created 34 external consumers in 106.055494 ms
+07:18:30.203 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+07:18:30.228 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@6c8efde4
+07:18:30.231 [main] INFO LocalWorker - Created 1 consumers in 28.649274 ms
+07:18:30.238 [main] INFO WorkloadGenerator - Created 34 producers in 5.748214 ms
+07:18:30.238 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+07:18:30.257 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 117, Received: 34, Expected: 0
+07:18:30.258 [main] INFO WorkloadGenerator - All consumers are ready!
+07:18:30.259 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q1-100-30-2024-06-04-07-18-30 at 1717485510259
+07:19:37.794 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 10
+07:19:42.514 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 20
+07:19:45.089 [pool-12-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132740,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880077,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":26,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612940,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":26,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+07:19:45.089 [pool-12-thread-1] INFO LocalWorker - [RESULT] Observed at 1717485585089
+07:19:50.283 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q1-100-30-2024-06-04-07-18-30 at 1717485590283
+07:19:50.500 [pool-12-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+07:19:50.503 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+07:19:50.506 [main] WARN RedisChannelHandler - Connection is already closed
+07:19:50.506 [lettuce-epollEventLoop-30-2] WARN RedisChannelHandler - Connection is already closed
+07:19:50.506 [main] WARN RedisChannelHandler - Connection is already closed
+07:19:50.506 [lettuce-epollEventLoop-30-3] WARN RedisChannelHandler - Connection is already closed
+07:19:50.713 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+07:19:50.713 [main] INFO CentralWorkerStats - Central worker stats initialized
+07:19:50.717 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+07:19:50.717 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+07:19:50.718 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+07:19:50.927 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+07:19:50.930 [main] INFO WorkloadGenerator - Created 34 topics in 2.810145 ms
+07:19:51.029 [main] INFO WorkloadGenerator - Created 34 external consumers in 97.187424 ms
+07:19:51.029 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+07:19:51.052 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@681de87f
+07:19:51.055 [main] INFO LocalWorker - Created 1 consumers in 26.34177 ms
+07:19:51.064 [main] INFO WorkloadGenerator - Created 34 producers in 8.253032 ms
+07:19:51.064 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+07:19:51.083 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 117, Received: 32, Expected: 0
+07:19:51.084 [main] INFO WorkloadGenerator - All consumers are ready!
+07:19:51.084 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-100-30-2024-06-04-07-19-50 at 1717485591084
+07:20:43.974 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 10
+07:20:50.082 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 20
+07:20:51.854 [pool-14-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+07:20:51.855 [pool-14-thread-1] INFO LocalWorker - [RESULT] Observed at 1717485651855
+07:21:01.100 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-100-30-2024-06-04-07-19-50 at 1717485661100
+07:21:01.316 [pool-14-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+07:21:01.319 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+07:21:01.322 [main] WARN RedisChannelHandler - Connection is already closed
+07:21:01.322 [lettuce-epollEventLoop-39-2] WARN RedisChannelHandler - Connection is already closed
+07:21:01.527 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+07:21:01.527 [main] INFO CentralWorkerStats - Central worker stats initialized
+07:21:01.532 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+07:21:01.532 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+07:21:01.533 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+07:21:01.741 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+07:21:01.744 [main] INFO WorkloadGenerator - Created 54 topics in 2.462402 ms
+07:21:01.838 [main] INFO WorkloadGenerator - Created 54 external consumers in 92.685763 ms
+07:21:01.838 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+07:21:01.862 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@7c4b5ceb
+07:21:01.866 [main] INFO LocalWorker - Created 1 consumers in 27.353846 ms
+07:21:01.871 [main] INFO WorkloadGenerator - Created 54 producers in 4.790606 ms
+07:21:01.871 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+07:21:01.893 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 177, Received: 58, Expected: 0
+07:21:01.893 [main] INFO WorkloadGenerator - All consumers are ready!
+07:21:01.894 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q1-100-50-2024-06-04-07-21-01 at 1717485661894
+07:21:44.264 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 10
+07:21:58.684 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 20
+07:22:06.725 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 30
+07:22:12.029 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 40
+07:22:16.413 [pool-16-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132737,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880071,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612946,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+07:22:16.413 [pool-16-thread-1] INFO LocalWorker - [RESULT] Observed at 1717485736413
+07:22:21.941 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q1-100-50-2024-06-04-07-21-01 at 1717485741941
+07:22:22.160 [pool-16-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+07:22:22.163 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+07:22:22.166 [lettuce-epollEventLoop-48-2] WARN RedisChannelHandler - Connection is already closed
+07:22:22.166 [main] WARN RedisChannelHandler - Connection is already closed
+07:22:22.166 [lettuce-epollEventLoop-48-3] WARN RedisChannelHandler - Connection is already closed
+07:22:22.372 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+07:22:22.372 [main] INFO CentralWorkerStats - Central worker stats initialized
+07:22:22.386 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+07:22:22.386 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+07:22:22.387 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+07:22:22.596 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+07:22:22.599 [main] INFO WorkloadGenerator - Created 54 topics in 2.795482 ms
+07:22:22.706 [main] INFO WorkloadGenerator - Created 54 external consumers in 105.340252 ms
+07:22:22.706 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+07:22:22.728 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@56b1e527
+07:22:22.732 [main] INFO LocalWorker - Created 1 consumers in 26.344702 ms
+07:22:22.738 [main] INFO WorkloadGenerator - Created 54 producers in 5.16068 ms
+07:22:22.738 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+07:22:22.751 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 177, Received: 53, Expected: 0
+07:22:22.753 [main] INFO WorkloadGenerator - All consumers are ready!
+07:22:22.754 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-100-50-2024-06-04-07-22-22 at 1717485742753
+07:22:54.169 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 10
+07:23:05.064 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 20
+07:23:16.021 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 30
+07:23:18.593 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 40
+07:23:23.157 [pool-18-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+07:23:23.157 [pool-18-thread-1] INFO LocalWorker - [RESULT] Observed at 1717485803157
+07:23:32.790 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-100-50-2024-06-04-07-22-22 at 1717485812790
+07:23:33.008 [pool-18-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+07:23:33.011 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+07:23:33.013 [main] WARN RedisChannelHandler - Connection is already closed
+07:23:33.014 [lettuce-epollEventLoop-57-2] WARN RedisChannelHandler - Connection is already closed
+07:23:33.014 [lettuce-epollEventLoop-57-3] WARN RedisChannelHandler - Connection is already closed
+
+
+
+sudo bin/benchmark \
+> --drivers driver-redis/redis-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-10000-300.yaml,workloads/tpc-h-q6-10000-300.yaml,workloads/tpc-h-q1-10000-500.yaml,workloads/tpc-h-q6-10000-500.yaml,workloads/tpc-h-q1-10000-800.yaml,workloads/tpc-h-q6-10000-800.yaml \
+> workloads/tpc-h-base-long.yaml
+07:34:33.999 [main] INFO Benchmark - Using default worker file workers.yaml!
+07:34:34.007 [main] INFO Benchmark - Reading workers list from workers.yaml
+07:34:34.056 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-redis/redis-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.98:8080", "http://10.0.0.56:8080", "http://10.0.0.240:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-10000-300.yaml", "workloads/tpc-h-q6-10000-300.yaml", "workloads/tpc-h-q1-10000-500.yaml", "workloads/tpc-h-q6-10000-500.yaml", "workloads/tpc-h-q1-10000-800.yaml", "workloads/tpc-h-q6-10000-800.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+07:34:34.071 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+07:34:34.084 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-10000-300",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 300
+}, {
+  "queryId" : "tpc-h-q6-10000-300",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 300
+}, {
+  "queryId" : "tpc-h-q1-10000-500",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 500
+}, {
+  "queryId" : "tpc-h-q6-10000-500",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 500
+}, {
+  "queryId" : "tpc-h-q1-10000-800",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 800
+}, {
+  "queryId" : "tpc-h-q6-10000-800",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 800
+} ]
+07:34:34.098 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+07:34:34.480 [main] INFO CentralWorkerStats - Central worker stats initialized
+07:34:35.061 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+07:34:35.061 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+07:34:35.065 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+07:34:35.397 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+07:34:35.590 [main] INFO WorkloadGenerator - Created 304 topics in 11.291015 ms
+07:34:35.828 [main] INFO WorkloadGenerator - Created 304 external consumers in 222.898175 ms
+07:34:35.830 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+07:34:36.349 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@7d25913
+07:34:36.377 [main] INFO LocalWorker - Created 1 consumers in 548.629113 ms
+07:34:36.396 [main] INFO WorkloadGenerator - Created 304 producers in 18.034874 ms
+07:34:36.396 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+07:34:36.454 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 846, Received: 348, Expected: 0
+07:34:36.455 [main] INFO WorkloadGenerator - All consumers are ready!
+07:34:36.455 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q1-10000-300-2024-06-04-07-34-35 at 1717486476455
+07:34:45.988 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 10
+07:34:48.766 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 20
+07:34:54.831 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 30
+07:34:57.113 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 40
+07:34:58.027 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 50
+07:34:58.781 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 60
+07:34:59.141 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 70
+07:35:00.063 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 80
+07:35:01.571 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 90
+07:35:01.994 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 100
+07:35:02.766 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 110
+07:35:03.276 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 120
+07:35:03.988 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 130
+07:35:05.386 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 140
+07:35:05.845 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 150
+07:35:06.395 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 160
+07:35:06.631 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 170
+07:35:07.028 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 180
+07:35:07.324 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 190
+07:35:07.748 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 200
+07:35:08.028 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 210
+07:35:08.191 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 220
+07:35:08.549 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 230
+07:35:08.863 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 240
+07:35:09.147 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 250
+07:35:09.646 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 260
+07:35:10.071 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 270
+07:35:10.429 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 280
+07:35:11.284 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 290
+07:35:11.715 [pool-8-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+07:35:11.716 [pool-8-thread-1] INFO LocalWorker - [RESULT] Observed at 1717486511716
+07:35:16.508 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q1-10000-300-2024-06-04-07-34-35 at 1717486516508
+07:35:16.759 [pool-8-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+07:35:16.769 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+07:35:16.776 [main] WARN RedisChannelHandler - Connection is already closed
+07:35:16.987 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+07:35:16.987 [main] INFO CentralWorkerStats - Central worker stats initialized
+07:35:17.003 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+07:35:17.003 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+07:35:17.004 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+07:35:17.214 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+07:35:17.218 [main] INFO WorkloadGenerator - Created 304 topics in 3.279311 ms
+07:35:17.414 [main] INFO WorkloadGenerator - Created 304 external consumers in 189.901056 ms
+07:35:17.414 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+07:35:17.443 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@59e7564b
+07:35:17.451 [main] INFO LocalWorker - Created 1 consumers in 36.394512 ms
+07:35:17.461 [main] INFO WorkloadGenerator - Created 304 producers in 10.43795 ms
+07:35:17.462 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+07:35:17.519 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 927, Received: 408, Expected: 0
+07:35:17.520 [main] INFO WorkloadGenerator - All consumers are ready!
+07:35:17.520 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-10000-300-2024-06-04-07-35-17 at 1717486517520
+07:35:25.877 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 10
+07:35:27.817 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 20
+07:35:29.846 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 30
+07:35:30.891 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 40
+07:35:31.356 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 50
+07:35:32.193 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 60
+07:35:33.043 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 70
+07:35:34.157 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 80
+07:35:36.041 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 90
+07:35:37.110 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 100
+07:35:37.646 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 110
+07:35:38.420 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 120
+07:35:39.325 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 130
+07:35:40.016 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 140
+07:35:40.498 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 150
+07:35:40.821 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 160
+07:35:41.346 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 170
+07:35:41.769 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 180
+07:35:42.017 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 190
+07:35:42.473 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 200
+07:35:43.152 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 210
+07:35:43.843 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 220
+07:35:44.600 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 230
+07:35:44.882 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 240
+07:35:45.382 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 250
+07:35:45.985 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 260
+07:35:46.627 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 270
+07:35:47.230 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 280
+07:35:47.657 [pool-10-thread-1] INFO LocalWorker - TPC-H progress: 290
+07:35:47.882 [pool-10-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+07:35:47.883 [pool-10-thread-1] INFO LocalWorker - [RESULT] Observed at 1717486547883
+07:35:57.555 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-10000-300-2024-06-04-07-35-17 at 1717486557555
+07:35:57.789 [pool-10-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+07:35:57.793 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+07:35:57.798 [main] WARN RedisChannelHandler - Connection is already closed
+07:35:58.005 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+07:35:58.005 [main] INFO CentralWorkerStats - Central worker stats initialized
+07:35:58.011 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+07:35:58.011 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+07:35:58.012 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+07:35:58.220 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+07:35:58.224 [main] INFO WorkloadGenerator - Created 504 topics in 3.419386 ms
+07:35:58.494 [main] INFO WorkloadGenerator - Created 504 external consumers in 266.57428 ms
+07:35:58.495 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+07:35:58.519 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@14b8a751
+07:35:58.522 [main] INFO LocalWorker - Created 1 consumers in 27.887919 ms
+07:35:58.532 [main] INFO WorkloadGenerator - Created 504 producers in 9.77041 ms
+07:35:58.533 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+07:35:58.599 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 1527, Received: 767, Expected: 0
+07:35:58.599 [main] INFO WorkloadGenerator - All consumers are ready!
+07:35:58.599 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q1-10000-500-2024-06-04-07-35-58 at 1717486558599
+07:36:02.690 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 10
+07:36:05.183 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 20
+07:36:05.809 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 30
+07:36:07.800 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 40
+07:36:09.666 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 50
+07:36:12.634 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 60
+07:36:13.688 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 70
+07:36:14.315 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 80
+07:36:15.884 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 90
+07:36:16.577 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 100
+07:36:16.904 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 110
+07:36:17.136 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 120
+07:36:17.474 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 130
+07:36:17.770 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 140
+07:36:18.068 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 150
+07:36:18.388 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 160
+07:36:18.956 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 170
+07:36:19.423 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 180
+07:36:19.794 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 190
+07:36:20.051 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 200
+07:36:20.616 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 210
+07:36:20.970 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 220
+07:36:21.688 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 230
+07:36:21.989 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 240
+07:36:22.266 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 250
+07:36:22.816 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 260
+07:36:23.169 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 270
+07:36:23.382 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 280
+07:36:23.552 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 290
+07:36:23.738 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 300
+07:36:24.191 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 310
+07:36:24.770 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 320
+07:36:25.378 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 330
+07:36:26.059 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 340
+07:36:26.523 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 350
+07:36:26.856 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 360
+07:36:27.068 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 370
+07:36:27.386 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 380
+07:36:27.777 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 390
+07:36:27.942 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 400
+07:36:28.100 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 410
+07:36:28.356 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 420
+07:36:28.571 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 430
+07:36:28.715 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 440
+07:36:28.879 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 450
+07:36:29.117 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 460
+07:36:29.392 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 470
+07:36:29.644 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 480
+07:36:30.272 [pool-12-thread-1] INFO LocalWorker - TPC-H progress: 490
+07:36:31.616 [pool-12-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+07:36:31.616 [pool-12-thread-1] INFO LocalWorker - [RESULT] Observed at 1717486591616
+07:36:38.637 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q1-10000-500-2024-06-04-07-35-58 at 1717486598637
+07:36:38.886 [pool-12-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+07:36:38.889 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+07:36:38.892 [main] WARN RedisChannelHandler - Connection is already closed
+07:36:38.892 [lettuce-epollEventLoop-30-3] WARN RedisChannelHandler - Connection is already closed
+07:36:39.097 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+07:36:39.098 [main] INFO CentralWorkerStats - Central worker stats initialized
+07:36:39.103 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+07:36:39.103 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+07:36:39.104 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+07:36:39.312 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+07:36:39.316 [main] INFO WorkloadGenerator - Created 504 topics in 3.529173 ms
+07:36:39.574 [main] INFO WorkloadGenerator - Created 504 external consumers in 255.77568 ms
+07:36:39.574 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+07:36:39.594 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@6bb4cc0e
+07:36:39.597 [main] INFO LocalWorker - Created 1 consumers in 23.379461 ms
+07:36:39.607 [main] INFO WorkloadGenerator - Created 504 producers in 9.68013 ms
+07:36:39.607 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+07:36:39.653 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 1220, Received: 396, Expected: 0
+07:36:39.654 [main] INFO WorkloadGenerator - All consumers are ready!
+07:36:39.654 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-10000-500-2024-06-04-07-36-39 at 1717486599654
+07:36:45.715 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 10
+07:36:46.853 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 20
+07:36:47.769 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 30
+07:36:49.814 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 40
+07:36:50.276 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 50
+07:36:52.245 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 60
+07:36:53.042 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 70
+07:36:53.566 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 80
+07:36:54.429 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 90
+07:36:55.208 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 100
+07:36:55.816 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 110
+07:36:56.233 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 120
+07:36:56.484 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 130
+07:36:56.730 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 140
+07:36:57.056 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 150
+07:36:57.387 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 160
+07:36:57.689 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 170
+07:36:57.897 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 180
+07:36:58.188 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 190
+07:36:58.519 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 200
+07:36:58.959 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 210
+07:36:59.431 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 220
+07:36:59.993 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 230
+07:37:00.169 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 240
+07:37:00.618 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 250
+07:37:00.962 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 260
+07:37:01.257 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 270
+07:37:01.707 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 280
+07:37:02.294 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 290
+07:37:02.893 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 300
+07:37:03.346 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 310
+07:37:03.681 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 320
+07:37:03.911 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 330
+07:37:04.170 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 340
+07:37:04.375 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 350
+07:37:04.613 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 360
+07:37:04.784 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 370
+07:37:05.013 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 380
+07:37:05.158 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 390
+07:37:05.280 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 400
+07:37:05.505 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 410
+07:37:05.653 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 420
+07:37:05.832 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 430
+07:37:06.028 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 440
+07:37:06.177 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 450
+07:37:06.431 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 460
+07:37:06.753 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 470
+07:37:06.971 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 480
+07:37:07.163 [pool-14-thread-1] INFO LocalWorker - TPC-H progress: 490
+07:37:07.608 [pool-14-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+07:37:07.608 [pool-14-thread-1] INFO LocalWorker - [RESULT] Observed at 1717486627608
+07:37:09.685 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-10000-500-2024-06-04-07-36-39 at 1717486629685
+07:37:09.929 [pool-14-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+07:37:09.933 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+07:37:09.935 [main] WARN RedisChannelHandler - Connection is already closed
+07:37:09.936 [lettuce-epollEventLoop-39-2] WARN RedisChannelHandler - Connection is already closed
+07:37:09.936 [lettuce-epollEventLoop-39-3] WARN RedisChannelHandler - Connection is already closed
+07:37:10.141 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+07:37:10.141 [main] INFO CentralWorkerStats - Central worker stats initialized
+07:37:10.145 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+07:37:10.146 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+07:37:10.146 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+07:37:10.354 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+07:37:10.360 [main] INFO WorkloadGenerator - Created 804 topics in 5.036892 ms
+07:37:10.728 [main] INFO WorkloadGenerator - Created 804 external consumers in 364.871425 ms
+07:37:10.728 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+07:37:10.791 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@23648d2d
+07:37:10.795 [main] INFO LocalWorker - Created 1 consumers in 66.801835 ms
+07:37:10.811 [main] INFO WorkloadGenerator - Created 804 producers in 15.561561 ms
+07:37:10.811 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+07:37:10.882 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 2417, Received: 1102, Expected: 0
+07:37:10.882 [main] INFO WorkloadGenerator - All consumers are ready!
+07:37:10.882 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q1-10000-800-2024-06-04-07-37-10 at 1717486630882
+07:37:17.162 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 10
+07:37:19.199 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 20
+07:37:19.502 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 30
+07:37:20.038 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 40
+07:37:20.343 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 50
+07:37:20.695 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 60
+07:37:21.322 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 70
+07:37:21.819 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 80
+07:37:22.511 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 90
+07:37:23.866 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 100
+07:37:25.007 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 110
+07:37:25.280 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 120
+07:37:25.509 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 130
+07:37:25.769 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 140
+07:37:26.178 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 150
+07:37:26.967 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 160
+07:37:27.219 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 170
+07:37:27.434 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 180
+07:37:27.734 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 190
+07:37:27.931 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 200
+07:37:28.200 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 210
+07:37:28.713 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 220
+07:37:29.017 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 230
+07:37:29.340 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 240
+07:37:29.808 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 250
+07:37:30.197 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 260
+07:37:30.528 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 270
+07:37:30.785 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 280
+07:37:31.163 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 290
+07:37:31.504 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 300
+07:37:31.854 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 310
+07:37:32.129 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 320
+07:37:32.389 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 330
+07:37:32.664 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 340
+07:37:32.944 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 350
+07:37:33.348 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 360
+07:37:33.760 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 370
+07:37:34.099 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 380
+07:37:34.412 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 390
+07:37:34.646 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 400
+07:37:34.996 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 410
+07:37:35.335 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 420
+07:37:35.743 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 430
+07:37:36.019 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 440
+07:37:36.369 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 450
+07:37:36.734 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 460
+07:37:36.997 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 470
+07:37:37.203 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 480
+07:37:37.479 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 490
+07:37:37.626 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 500
+07:37:37.914 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 510
+07:37:38.085 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 520
+07:37:38.309 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 530
+07:37:38.568 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 540
+07:37:38.691 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 550
+07:37:38.820 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 560
+07:37:39.017 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 570
+07:37:39.362 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 580
+07:37:39.707 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 590
+07:37:40.054 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 600
+07:37:40.328 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 610
+07:37:40.651 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 620
+07:37:40.877 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 630
+07:37:41.117 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 640
+07:37:41.368 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 650
+07:37:41.645 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 660
+07:37:41.967 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 670
+07:37:42.175 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 680
+07:37:42.416 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 690
+07:37:42.757 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 700
+07:37:42.987 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 710
+07:37:43.306 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 720
+07:37:43.654 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 730
+07:37:44.025 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 740
+07:37:44.389 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 750
+07:37:44.893 [pool-16-thread-1] INFO LocalWorker - TPC-H progress: 760
+07:37:45.309 [pool-16-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+07:37:45.309 [pool-16-thread-1] INFO LocalWorker - [RESULT] Observed at 1717486665309
+07:37:50.916 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q1-10000-800-2024-06-04-07-37-10 at 1717486670916
+07:37:51.184 [pool-16-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+07:37:51.187 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+07:37:51.190 [main] WARN RedisChannelHandler - Connection is already closed
+07:37:51.190 [lettuce-epollEventLoop-48-2] WARN RedisChannelHandler - Connection is already closed
+07:37:51.190 [lettuce-epollEventLoop-48-3] WARN RedisChannelHandler - Connection is already closed
+07:37:51.395 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+07:37:51.395 [main] INFO CentralWorkerStats - Central worker stats initialized
+07:37:51.410 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+07:37:51.410 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+07:37:51.411 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+07:37:51.619 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+07:37:51.623 [main] INFO WorkloadGenerator - Created 804 topics in 3.671214 ms
+07:37:51.992 [main] INFO WorkloadGenerator - Created 804 external consumers in 366.661462 ms
+07:37:51.992 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+07:37:52.012 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@6d31f106
+07:37:52.015 [main] INFO LocalWorker - Created 1 consumers in 23.031292 ms
+07:37:52.026 [main] INFO WorkloadGenerator - Created 804 producers in 10.638248 ms
+07:37:52.026 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+07:37:52.092 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 2087, Received: 1009, Expected: 0
+07:37:52.092 [main] INFO WorkloadGenerator - All consumers are ready!
+07:37:52.092 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-10000-800-2024-06-04-07-37-51 at 1717486672092
+07:37:57.471 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 10
+07:37:58.070 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 20
+07:37:58.185 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 30
+07:37:58.329 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 40
+07:37:58.665 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 50
+07:37:59.148 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 60
+07:37:59.876 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 70
+07:38:00.632 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 80
+07:38:01.123 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 90
+07:38:01.453 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 100
+07:38:01.808 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 110
+07:38:02.294 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 120
+07:38:02.852 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 130
+07:38:03.230 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 140
+07:38:03.723 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 150
+07:38:04.286 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 160
+07:38:04.489 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 170
+07:38:05.157 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 180
+07:38:05.459 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 190
+07:38:05.708 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 200
+07:38:06.007 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 210
+07:38:06.576 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 220
+07:38:06.956 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 230
+07:38:07.606 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 240
+07:38:07.903 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 250
+07:38:08.227 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 260
+07:38:08.734 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 270
+07:38:09.195 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 280
+07:38:09.504 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 290
+07:38:09.677 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 300
+07:38:09.966 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 310
+07:38:10.252 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 320
+07:38:10.448 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 330
+07:38:10.609 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 340
+07:38:10.713 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 350
+07:38:10.909 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 360
+07:38:11.136 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 370
+07:38:11.562 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 380
+07:38:11.872 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 390
+07:38:11.996 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 400
+07:38:12.141 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 410
+07:38:12.314 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 420
+07:38:12.689 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 430
+07:38:12.921 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 440
+07:38:13.227 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 450
+07:38:13.522 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 460
+07:38:13.755 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 470
+07:38:13.952 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 480
+07:38:14.160 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 490
+07:38:14.360 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 500
+07:38:14.513 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 510
+07:38:14.636 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 520
+07:38:14.846 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 530
+07:38:15.204 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 540
+07:38:15.461 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 550
+07:38:15.623 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 560
+07:38:15.772 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 570
+07:38:15.917 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 580
+07:38:16.006 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 590
+07:38:16.128 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 600
+07:38:16.257 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 610
+07:38:16.348 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 620
+07:38:16.474 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 630
+07:38:16.589 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 640
+07:38:16.650 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 650
+07:38:16.887 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 660
+07:38:17.158 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 670
+07:38:17.440 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 680
+07:38:17.682 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 690
+07:38:17.932 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 700
+07:38:18.173 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 710
+07:38:18.470 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 720
+07:38:18.699 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 730
+07:38:18.804 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 740
+07:38:18.899 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 750
+07:38:19.072 [pool-18-thread-1] INFO LocalWorker - TPC-H progress: 760
+07:38:19.328 [pool-18-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+07:38:19.328 [pool-18-thread-1] INFO LocalWorker - [RESULT] Observed at 1717486699328
+07:38:22.104 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-10000-800-2024-06-04-07-37-51 at 1717486702103
+07:38:22.376 [pool-18-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+07:38:22.379 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+07:38:22.381 [main] WARN RedisChannelHandler - Connection is already closed
+07:38:22.381 [lettuce-epollEventLoop-57-2] WARN RedisChannelHandler - Connection is already closed
+
+
+
+sudo bin/benchmark \
+> --drivers driver-redis/redis-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-1000-100.yaml,workloads/tpc-h-q6-1000-100.yaml,workloads/tpc-h-q1-1000-300.yaml,workloads/tpc-h-q6-1000-300.yaml,workloads/tpc-h-q1-1000-500.yaml,workloads/tpc-h-q6-1000-500.yaml \
+> workloads/tpc-h-base-long.yaml
+07:48:03.372 [main] INFO Benchmark - Using default worker file workers.yaml!
+07:48:03.380 [main] INFO Benchmark - Reading workers list from workers.yaml
+07:48:03.429 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-redis/redis-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.98:8080", "http://10.0.0.56:8080", "http://10.0.0.240:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-1000-100.yaml", "workloads/tpc-h-q6-1000-100.yaml", "workloads/tpc-h-q1-1000-300.yaml", "workloads/tpc-h-q6-1000-300.yaml", "workloads/tpc-h-q1-1000-500.yaml", "workloads/tpc-h-q6-1000-500.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+07:48:03.445 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+07:48:03.457 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-1000-100",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 100
+}, {
+  "queryId" : "tpc-h-q6-1000-100",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 100
+}, {
+  "queryId" : "tpc-h-q1-1000-300",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 300
+}, {
+  "queryId" : "tpc-h-q6-1000-300",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 300
+}, {
+  "queryId" : "tpc-h-q1-1000-500",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 500
+}, {
+  "queryId" : "tpc-h-q6-1000-500",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 500
+} ]
+07:48:03.471 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+07:48:03.840 [main] INFO CentralWorkerStats - Central worker stats initialized
+07:48:04.413 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+07:48:04.414 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+07:48:04.417 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+07:48:05.020 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+07:48:05.236 [main] INFO WorkloadGenerator - Created 104 topics in 33.04016 ms
+07:48:07.412 [main] INFO WorkloadGenerator - Created 104 external consumers in 2167.984622 ms
+07:48:07.414 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+07:48:07.929 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@5866731
+07:48:07.958 [main] INFO LocalWorker - Created 1 consumers in 545.388812 ms
+07:48:07.995 [main] INFO WorkloadGenerator - Created 104 producers in 35.936128 ms
+07:48:07.995 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+07:48:08.040 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 327, Received: 103, Expected: 0
+07:48:08.041 [main] INFO WorkloadGenerator - All consumers are ready!
+07:48:08.041 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q1-1000-100-2024-06-04-07-48-05 at 1717487288041
+07:48:45.121 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 10
+07:48:47.691 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 20
+07:48:49.985 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 30
+07:48:51.094 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 40
+07:48:51.968 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 50
+07:48:52.588 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 60
+07:48:53.436 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 70
+07:48:54.260 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 80
+07:48:55.173 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 90
+07:48:57.805 [pool-8-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+07:48:57.805 [pool-8-thread-1] INFO LocalWorker - [RESULT] Observed at 1717487337805
+07:48:58.093 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q1-1000-100-2024-06-04-07-48-05 at 1717487338093
+07:48:58.349 [pool-8-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+07:48:58.358 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+07:48:58.366 [main] WARN RedisChannelHandler - Connection is already closed
+sudo bin/benchmark \
+> --drivers driver-redis/redis-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q6-1000-100.yaml \
+> workloads/tpc-h-base-long.yaml
+07:51:26.181 [main] INFO Benchmark - Using default worker file workers.yaml!
+07:51:26.189 [main] INFO Benchmark - Reading workers list from workers.yaml
+07:51:26.239 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-redis/redis-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.98:8080", "http://10.0.0.56:8080", "http://10.0.0.240:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q6-1000-100.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+07:51:26.255 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+07:51:26.265 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q6-1000-100",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 100
+} ]
+07:51:26.279 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+07:51:26.619 [main] INFO CentralWorkerStats - Central worker stats initialized
+07:51:27.160 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+07:51:27.160 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+07:51:27.163 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+07:51:27.785 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+07:51:28.019 [main] INFO WorkloadGenerator - Created 104 topics in 35.451695 ms
+07:51:30.243 [main] INFO WorkloadGenerator - Created 104 external consumers in 2213.303254 ms
+07:51:30.245 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+07:51:30.742 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@307cf964
+07:51:30.770 [main] INFO LocalWorker - Created 1 consumers in 527.084499 ms
+07:51:30.806 [main] INFO WorkloadGenerator - Created 104 producers in 34.824905 ms
+07:51:30.806 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+07:51:30.856 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 327, Received: 103, Expected: 0
+07:51:30.857 [main] INFO WorkloadGenerator - All consumers are ready!
+07:51:30.857 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-1000-100-2024-06-04-07-51-27 at 1717487490857
+07:52:02.582 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 10
+07:52:04.945 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 20
+07:52:06.065 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 30
+07:52:06.885 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 40
+07:52:08.120 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 50
+07:52:08.761 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 60
+07:52:09.277 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 70
+07:52:10.470 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 80
+07:52:11.457 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 90
+07:52:12.117 [pool-8-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+07:52:12.117 [pool-8-thread-1] INFO LocalWorker - [RESULT] Observed at 1717487532117
+07:52:20.916 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-1000-100-2024-06-04-07-51-27 at 1717487540916
+07:52:21.174 [pool-8-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+07:52:21.185 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+07:52:21.192 [main] WARN RedisChannelHandler - Connection is already closed
+sudo bin/benchmark \
+> --drivers driver-redis/redis-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-1000-300.yaml \
+> workloads/tpc-h-base-long.yaml
+07:53:30.505 [main] INFO Benchmark - Using default worker file workers.yaml!
+07:53:30.512 [main] INFO Benchmark - Reading workers list from workers.yaml
+07:53:30.559 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-redis/redis-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.98:8080", "http://10.0.0.56:8080", "http://10.0.0.240:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-1000-300.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+07:53:30.574 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+07:53:30.583 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-1000-300",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 300
+} ]
+07:53:30.596 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+07:53:30.941 [main] INFO CentralWorkerStats - Central worker stats initialized
+07:53:31.470 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+07:53:31.471 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+07:53:31.474 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+07:53:32.097 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+07:53:32.335 [main] INFO WorkloadGenerator - Created 304 topics in 40.516272 ms
+07:53:34.966 [main] INFO WorkloadGenerator - Created 304 external consumers in 2615.366829 ms
+07:53:34.967 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+07:53:35.494 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@2d22d3b1
+07:53:35.531 [main] INFO LocalWorker - Created 1 consumers in 565.557346 ms
+07:53:35.586 [main] INFO WorkloadGenerator - Created 304 producers in 54.255752 ms
+07:53:35.586 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+07:53:35.697 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 927, Received: 303, Expected: 0
+07:53:35.697 [main] INFO WorkloadGenerator - All consumers are ready!
+07:53:35.698 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q1-1000-300-2024-06-04-07-53-32 at 1717487615698
+07:53:58.658 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 10
+07:54:02.544 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 20
+07:54:04.140 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 30
+07:54:04.926 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 40
+07:54:06.204 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 50
+07:54:07.774 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 60
+07:54:09.510 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 70
+07:54:11.391 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 80
+07:54:12.438 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 90
+07:54:13.971 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 100
+07:54:15.029 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 110
+07:54:16.684 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 120
+07:54:17.199 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 130
+07:54:17.956 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 140
+07:54:18.416 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 150
+07:54:18.921 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 160
+07:54:19.603 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 170
+07:54:20.052 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 180
+07:54:20.580 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 190
+07:54:20.838 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 200
+07:54:21.170 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 210
+07:54:21.550 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 220
+07:54:22.171 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 230
+07:54:22.727 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 240
+07:54:23.272 [pool-8-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+07:54:23.272 [pool-8-thread-1] INFO LocalWorker - [RESULT] Observed at 1717487663272
+07:54:25.782 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q1-1000-300-2024-06-04-07-53-32 at 1717487665782
+07:54:26.074 [pool-8-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+07:54:26.083 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+07:54:26.090 [main] WARN RedisChannelHandler - Connection is already closed
+sudo bin/benchmark \
+> --drivers driver-redis/redis-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q6-1000-300.yaml \
+> workloads/tpc-h-base-long.yaml
+07:58:55.595 [main] INFO Benchmark - Using default worker file workers.yaml!
+07:58:55.602 [main] INFO Benchmark - Reading workers list from workers.yaml
+07:58:55.651 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-redis/redis-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.98:8080", "http://10.0.0.56:8080", "http://10.0.0.240:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q6-1000-300.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+07:58:55.666 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+07:58:55.675 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q6-1000-300",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 300
+} ]
+07:58:55.689 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+07:58:56.025 [main] INFO CentralWorkerStats - Central worker stats initialized
+07:58:56.549 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+07:58:56.550 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+07:58:56.553 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+07:58:57.166 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+07:58:57.389 [main] INFO WorkloadGenerator - Created 304 topics in 40.679022 ms
+07:58:59.933 [main] INFO WorkloadGenerator - Created 304 external consumers in 2525.179072 ms
+07:58:59.935 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+07:59:00.440 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@73d62b5
+07:59:00.468 [main] INFO LocalWorker - Created 1 consumers in 535.018983 ms
+07:59:00.522 [main] INFO WorkloadGenerator - Created 304 producers in 53.158351 ms
+07:59:00.522 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+07:59:00.640 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 920, Received: 303, Expected: 0
+07:59:00.641 [main] INFO WorkloadGenerator - All consumers are ready!
+07:59:00.641 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-1000-300-2024-06-04-07-58-57 at 1717487940641
+07:59:25.788 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 10
+07:59:27.909 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 20
+07:59:29.327 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 30
+07:59:30.123 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 40
+07:59:30.918 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 50
+07:59:31.816 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 60
+07:59:32.259 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 70
+07:59:32.888 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 80
+07:59:33.443 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 90
+07:59:33.878 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 100
+07:59:34.161 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 110
+07:59:34.673 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 120
+07:59:35.249 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 130
+07:59:35.515 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 140
+07:59:36.019 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 150
+07:59:36.306 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 160
+07:59:36.832 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 170
+07:59:37.171 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 180
+07:59:37.560 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 190
+07:59:37.905 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 200
+07:59:38.296 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 210
+07:59:39.189 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 220
+07:59:39.893 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 230
+07:59:41.127 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 240
+07:59:42.182 [pool-8-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+07:59:42.182 [pool-8-thread-1] INFO LocalWorker - [RESULT] Observed at 1717487982182
+07:59:50.742 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-1000-300-2024-06-04-07-58-57 at 1717487990741
+07:59:51.025 [pool-8-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+07:59:51.036 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+07:59:51.042 [main] WARN RedisChannelHandler - Connection is already closed
+sudo bin/benchmark \
+> --drivers driver-redis/redis-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-1000-500.yaml \
+> workloads/tpc-h-base-long.yaml
+08:00:58.137 [main] INFO Benchmark - Using default worker file workers.yaml!
+08:00:58.145 [main] INFO Benchmark - Reading workers list from workers.yaml
+08:00:58.205 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-redis/redis-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.98:8080", "http://10.0.0.56:8080", "http://10.0.0.240:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-1000-500.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+08:00:58.224 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+08:00:58.236 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-1000-500",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 500
+} ]
+08:00:58.250 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+08:00:58.593 [main] INFO CentralWorkerStats - Central worker stats initialized
+08:00:59.117 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+08:00:59.117 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+08:00:59.120 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+08:00:59.744 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+08:00:59.984 [main] INFO WorkloadGenerator - Created 504 topics in 59.279259 ms
+08:01:02.654 [main] INFO WorkloadGenerator - Created 504 external consumers in 2643.071314 ms
+08:01:02.656 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+08:01:03.198 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@42d9e8d2
+08:01:03.227 [main] INFO LocalWorker - Created 1 consumers in 572.344388 ms
+08:01:03.290 [main] INFO WorkloadGenerator - Created 504 producers in 62.597723 ms
+08:01:03.290 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+08:01:03.459 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 1525, Received: 503, Expected: 0
+08:01:03.460 [main] INFO WorkloadGenerator - All consumers are ready!
+08:01:03.460 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q1-1000-500-2024-06-04-08-00-59 at 1717488063460
+08:01:20.111 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 10
+08:01:22.137 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 20
+08:01:25.943 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 30
+08:01:27.374 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 40
+08:01:28.147 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 50
+08:01:29.119 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 60
+08:01:30.017 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 70
+08:01:31.064 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 80
+08:01:31.660 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 90
+08:01:32.231 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 100
+08:01:32.662 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 110
+08:01:33.443 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 120
+08:01:34.279 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 130
+08:01:34.753 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 140
+08:01:35.625 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 150
+08:01:36.629 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 160
+08:01:37.331 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 170
+08:01:37.970 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 180
+08:01:38.699 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 190
+08:01:39.148 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 200
+08:01:39.913 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 210
+08:01:40.516 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 220
+08:01:40.976 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 230
+08:01:41.768 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 240
+08:01:42.170 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 250
+08:01:42.623 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 260
+08:01:43.070 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 270
+08:01:43.393 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 280
+08:01:43.787 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 290
+08:01:44.238 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 300
+08:01:44.618 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 310
+08:01:45.113 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 320
+08:01:45.382 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 330
+08:01:45.906 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 340
+08:01:46.133 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 350
+08:01:46.678 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 360
+08:01:47.019 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 370
+08:01:47.393 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 380
+08:01:47.709 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 390
+08:01:48.092 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 400
+08:01:48.675 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 410
+08:01:48.963 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 420
+08:01:49.457 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 430
+08:01:49.875 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 440
+08:01:50.390 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 450
+08:01:50.948 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 460
+08:01:51.371 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 470
+08:01:52.463 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 480
+08:01:53.347 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 490
+08:01:54.065 [pool-8-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+08:01:54.066 [pool-8-thread-1] INFO LocalWorker - [RESULT] Observed at 1717488114066
+08:02:03.563 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q1-1000-500-2024-06-04-08-00-59 at 1717488123563
+08:02:03.885 [pool-8-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+08:02:03.894 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+08:02:03.900 [main] WARN RedisChannelHandler - Connection is already closed
+sudo bin/benchmark \
+> --drivers driver-redis/redis-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q6-1000-500.yaml \
+> workloads/tpc-h-base-long.yaml
+08:03:40.211 [main] INFO Benchmark - Using default worker file workers.yaml!
+08:03:40.219 [main] INFO Benchmark - Reading workers list from workers.yaml
+08:03:40.269 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-redis/redis-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.98:8080", "http://10.0.0.56:8080", "http://10.0.0.240:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q6-1000-500.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+08:03:40.285 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+08:03:40.295 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q6-1000-500",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 500
+} ]
+08:03:40.310 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+08:03:40.648 [main] INFO CentralWorkerStats - Central worker stats initialized
+08:03:41.213 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080]
+08:03:41.214 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.98:8080,http://10.0.0.56:8080,http://10.0.0.240:8080
+08:03:41.216 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Redis---------------
+08:03:41.814 [main] INFO LocalWorker - Driver: {
+  "name" : "Redis",
+  "driverClass" : "io.openmessaging.benchmark.driver.redis.RedisBenchmarkDriver"
+}
+08:03:42.051 [main] INFO WorkloadGenerator - Created 504 topics in 47.972206 ms
+08:03:44.846 [main] INFO WorkloadGenerator - Created 504 external consumers in 2776.342595 ms
+08:03:44.848 [main] INFO RedisBenchmarkDriver - Attempting to connect to redis-benchmark-cluster.slzqgo.clustercfg.euw1.cache.amazonaws.com:6379 with user null
+08:03:45.382 [main] INFO RedisBenchmarkDriver - Created cluster client: io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient@5d2a86c0
+08:03:45.410 [main] INFO LocalWorker - Created 1 consumers in 563.674909 ms
+08:03:45.485 [main] INFO WorkloadGenerator - Created 504 producers in 74.267571 ms
+08:03:45.485 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+08:03:45.667 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 1525, Received: 503, Expected: 0
+08:03:45.667 [main] INFO WorkloadGenerator - All consumers are ready!
+08:03:45.667 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Redis-tpc-h-tpc-h-q6-1000-500-2024-06-04-08-03-42 at 1717488225667
+08:03:59.904 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 10
+08:04:01.466 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 20
+08:04:03.284 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 30
+08:04:04.486 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 40
+08:04:05.693 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 50
+08:04:06.791 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 60
+08:04:07.524 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 70
+08:04:08.876 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 80
+08:04:09.475 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 90
+08:04:10.117 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 100
+08:04:10.627 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 110
+08:04:11.297 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 120
+08:04:11.837 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 130
+08:04:12.322 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 140
+08:04:12.793 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 150
+08:04:13.324 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 160
+08:04:13.887 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 170
+08:04:14.420 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 180
+08:04:14.886 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 190
+08:04:15.271 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 200
+08:04:15.725 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 210
+08:04:16.266 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 220
+08:04:16.566 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 230
+08:04:17.082 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 240
+08:04:17.597 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 250
+08:04:17.769 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 260
+08:04:18.195 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 270
+08:04:18.595 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 280
+08:04:18.919 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 290
+08:04:19.164 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 300
+08:04:19.548 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 310
+08:04:19.851 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 320
+08:04:20.355 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 330
+08:04:20.686 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 340
+08:04:20.997 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 350
+08:04:21.278 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 360
+08:04:21.657 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 370
+08:04:21.869 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 380
+08:04:22.326 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 390
+08:04:22.634 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 400
+08:04:22.988 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 410
+08:04:23.241 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 420
+08:04:23.691 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 430
+08:04:24.009 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 440
+08:04:24.494 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 450
+08:04:24.769 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 460
+08:04:25.262 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 470
+08:04:25.641 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 480
+08:04:26.059 [pool-8-thread-1] INFO LocalWorker - TPC-H progress: 490
+08:04:26.409 [pool-8-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+08:04:26.409 [pool-8-thread-1] INFO LocalWorker - [RESULT] Observed at 1717488266409
+08:04:35.819 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Redis-tpc-h-tpc-h-q6-1000-500-2024-06-04-08-03-42 at 1717488275819
+08:04:36.123 [pool-8-thread-1] ERROR RedisBenchmarkDriver - Failed to read from consumer instance.
+java.lang.InterruptedException: null
+	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:385) ~[?:?]
+	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2005) ~[?:?]
+	at io.openmessaging.benchmark.driver.redis.RedisBenchmarkConsumer.lambda$new$0(RedisBenchmarkConsumer.java:80) ~[io.openmessaging.benchmark-driver-redis-0.0.1-SNAPSHOT.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515) [?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+08:04:36.132 [main] INFO RedisBenchmarkDriver - Streams left over: 0
+08:04:36.139 [main] WARN RedisChannelHandler - Connection is already closed

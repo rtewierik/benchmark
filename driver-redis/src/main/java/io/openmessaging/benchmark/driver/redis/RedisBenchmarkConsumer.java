@@ -16,7 +16,7 @@ package io.openmessaging.benchmark.driver.redis;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import io.lettuce.core.StreamMessage;
-import io.lettuce.core.cluster.api.async.RedisAdvancedClusterAsyncCommands;
+import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
@@ -38,7 +39,7 @@ import redis.clients.jedis.resps.StreamEntry;
 
 public class RedisBenchmarkConsumer implements BenchmarkConsumer {
     private final JedisPool pool;
-    private final AsyncRedisClient cluster;
+    private final GenericObjectPool<StatefulRedisClusterConnection<String, String>> lettucePool;
     private final String topic;
     private final String subscriptionName;
     private final String consumerId;
@@ -52,16 +53,16 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
             final String topic,
             final String subscriptionName,
             final JedisPool pool,
-            final RedisAdvancedClusterAsyncCommands<String, String> asyncCommands,
+            final GenericObjectPool<StatefulRedisClusterConnection<String, String>> lettucePool,
             ConsumerCallback consumerCallback) {
         this.pool = pool;
-        this.cluster = asyncCommands != null ? new AsyncRedisClient(asyncCommands) : null;
+        this.lettucePool = lettucePool;
         this.topic = topic;
         this.subscriptionName = subscriptionName;
         this.consumerId = consumerId;
         this.executor = Executors.newSingleThreadExecutor();
         this.consumerCallback = consumerCallback;
-        Jedis jedis = asyncCommands == null ? this.pool.getResource() : null;
+        Jedis jedis = lettucePool == null ? this.pool.getResource() : null;
 
         this.consumerTask =
                 this.executor.submit(
@@ -70,12 +71,15 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
                                 try {
                                     Map<String, StreamEntryID> streamQuery =
                                             Collections.singletonMap(this.topic, StreamEntryID.UNRECEIVED_ENTRY);
-                                    if (asyncCommands != null) {
-                                        List<StreamMessage<String, String>> range =
-                                                this.cluster
-                                                        .xreadGroup(this.subscriptionName, this.consumerId, this.topic)
-                                                        .get();
-                                        handleClusterRange(range);
+                                    if (lettucePool != null) {
+                                        try (StatefulRedisClusterConnection<String, String> connection =
+                                                lettucePool.borrowObject()) {
+                                            List<StreamMessage<String, String>> range =
+                                                    new AsyncRedisClient(connection.async())
+                                                            .xreadGroup(subscriptionName, consumerId, topic)
+                                                            .get();
+                                            handleClusterRange(range);
+                                        }
                                     } else {
                                         List<Map.Entry<String, List<StreamEntry>>> range =
                                                 jedis.xreadGroup(

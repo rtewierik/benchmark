@@ -30,6 +30,7 @@ import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.cluster.api.async.RedisAdvancedClusterAsyncCommands;
 import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.resource.DefaultClientResources;
+import io.lettuce.core.support.ConnectionPoolSupport;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
@@ -38,10 +39,10 @@ import io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient;
 import io.openmessaging.benchmark.driver.redis.client.RedisClientConfig;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import org.apache.bookkeeper.stats.StatsLogger;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +58,7 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
     private RedisClusterClient clusterClient;
     private AsyncRedisClient asyncRedisClient;
     private RedisClientConfig clientConfig;
+    private GenericObjectPool<StatefulRedisClusterConnection<String, String>> lettucePool;
     private StatefulRedisClusterConnection<String, String> connection;
     private RedisAdvancedClusterAsyncCommands<String, String> asyncCommands;
 
@@ -86,7 +88,7 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
         log.info(
                 "Creating producer with Jedis pool {} and cluster client {}", jedisPool, asyncRedisClient);
         return CompletableFuture.completedFuture(
-                new RedisBenchmarkProducer(jedisPool, connection, topic));
+                new RedisBenchmarkProducer(jedisPool, lettucePool, topic));
     }
 
     @Override
@@ -110,7 +112,7 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
                                                 topic,
                                                 subscriptionName,
                                                 jedisPool,
-                                                asyncCommands,
+                                                lettucePool,
                                                 consumerCallback));
             } catch (Exception e) {
                 log.info("Failed to create consumer instance.", e);
@@ -135,16 +137,17 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
                 this.clientConfig.redisHost,
                 this.clientConfig.redisPort,
                 this.clientConfig.redisUser);
+        GenericObjectPoolConfig<StatefulRedisClusterConnection<String, String>> lettucePoolConfig =
+                new GenericObjectPoolConfig<>();
+        lettucePoolConfig.setMaxTotal(this.clientConfig.poolMaxTotal);
+        lettucePoolConfig.setMaxIdle(this.clientConfig.poolMaxIdle);
         if (this.clientConfig.redisNodes != null && !this.clientConfig.redisNodes.isEmpty()) {
-            List<RedisURI> redisUris = new ArrayList<>();
-            for (String address : this.clientConfig.redisNodes) {
-                String[] parts = address.split(":");
-                String host = parts[0];
-                int port = Integer.parseInt(parts[1]);
-                RedisURI redisUri = new RedisURI(host, port, RedisURI.DEFAULT_TIMEOUT_DURATION);
-                redisUris.add(redisUri);
-            }
-            clusterClient = RedisClusterClient.create(resources, redisUris);
+            RedisURI redisUri =
+                    RedisURI.Builder.redis(this.clientConfig.redisHost).withPort(6379).build();
+            clusterClient = RedisClusterClient.create(resources, redisUri);
+            this.lettucePool =
+                    ConnectionPoolSupport.createGenericObjectPool(
+                            () -> clusterClient.connect(), lettucePoolConfig);
             this.connection = clusterClient.connect();
             this.asyncCommands = connection.async();
             this.asyncRedisClient = new AsyncRedisClient(asyncCommands);
@@ -152,8 +155,8 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
             return;
         }
         GenericObjectPoolConfig<Jedis> poolConfig = new GenericObjectPoolConfig<>();
-        poolConfig.setMaxTotal(this.clientConfig.jedisPoolMaxTotal);
-        poolConfig.setMaxIdle(this.clientConfig.jedisPoolMaxIdle);
+        poolConfig.setMaxTotal(this.clientConfig.poolMaxTotal);
+        poolConfig.setMaxIdle(this.clientConfig.poolMaxIdle);
         if (this.clientConfig.redisPass != null) {
             if (this.clientConfig.redisUser != null) {
                 jedisPool =

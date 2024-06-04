@@ -193,7 +193,7 @@ public class TpcHMessageProcessor {
                                         message.messageId,
                                         true);
                                 return queryId;
-                            } catch (IOException e) {
+                            } catch (Exception e) {
                                 log.error("Error occurred while transforming retrieved file.", e);
                                 throw new RuntimeException(e);
                             }
@@ -207,7 +207,7 @@ public class TpcHMessageProcessor {
 
     private CompletableFuture<String> processIntermediateResult(
             TpcHIntermediateResult intermediateResult, TpcHStateProvider stateProvider)
-            throws IOException {
+            throws Exception {
         String queryId = intermediateResult.queryId;
         String chunkId = this.getChunkId(intermediateResult);
         String batchId = intermediateResult.batchId;
