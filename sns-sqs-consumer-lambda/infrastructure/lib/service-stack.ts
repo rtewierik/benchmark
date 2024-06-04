@@ -61,8 +61,8 @@ export class ServiceStack extends Stack {
     const monitoringSqsQueue = Queue.fromQueueArn(this, 'S3ConsumerMonitoringSqsQueue', props.monitoringSqsArn)
     if (props.isTpcH) {
       const snsTopicNames = [
+        this.getSnsTopicName(props, RESULT_ID),
         this.getSnsTopicName(props, MAP_ID),
-        this.getSnsTopicName(props, RESULT_ID)
       ]
       for (var i = 0; i < props.numberOfConsumers; i++) {
         const reduceTopicId = `${REDUCE_ID}${i}`
@@ -92,8 +92,9 @@ export class ServiceStack extends Stack {
     }
   }
 
-  private getSnsTopicName(props: SnsSqsConsumerLambdaStackProps, id: string) {
-    return `${props.appName}-${id.toLowerCase()}`
+  private getSnsTopicName(props: SnsSqsConsumerLambdaStackProps, id: string, index?: number) {
+    const suffix = index !== undefined ? `-${index}` : ''
+    return `${props.appName}-${id.toLowerCase()}${suffix}`
   }
 
   private createDataIngestionLayer(props: SnsSqsConsumerLambdaStackProps, id: string, chunksBucket: IBucket, monitoringSqsQueue: IQueue, lambdaConfiguration: LambdaConfiguration, existingTopic?: SnsTopic, existingQueue?: IQueue) {

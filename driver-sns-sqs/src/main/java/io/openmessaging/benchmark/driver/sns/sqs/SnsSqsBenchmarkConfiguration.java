@@ -50,8 +50,8 @@ public class SnsSqsBenchmarkConfiguration {
     private static List<String> getSnsUrisFromEnvironment() {
         ArrayList<String> snsUris = new ArrayList<>();
         if (isTpcH) {
-            snsUris.add(getSnsUri("map"));
             snsUris.add(getSnsUri("result"));
+            snsUris.add(getSnsUri("map"));
             for (int i = 0; i < numberOfConsumers; i++) {
                 String id = String.format("reduce%s", i);
                 snsUris.add(getSnsUri(id));

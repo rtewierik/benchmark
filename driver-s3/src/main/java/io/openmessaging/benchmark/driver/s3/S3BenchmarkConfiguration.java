@@ -36,8 +36,8 @@ public class S3BenchmarkConfiguration {
     private static List<String> getS3UrisFromEnvironment() {
         ArrayList<String> s3Uris = new ArrayList<>();
         if (isTpcH) {
-            s3Uris.add(getS3Uri("map"));
             s3Uris.add(getS3Uri("result"));
+            s3Uris.add(getS3Uri("map"));
             for (int i = 0; i < numberOfConsumers; i++) {
                 String id = String.format("reduce%s", i);
                 s3Uris.add(getS3Uri(id));
