@@ -1,0 +1,1607 @@
+sudo bin/benchmark \
+> --drivers driver-pravega/pravega-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q6-100-10.yaml \
+> workloads/tpc-h-base-long.yaml
+09:24:27.065 [main] INFO Benchmark - Using default worker file workers.yaml!
+09:24:27.076 [main] INFO Benchmark - Reading workers list from workers.yaml
+09:24:27.131 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-pravega/pravega-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.39:8080", "http://10.0.0.138:8080", "http://10.0.0.225:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q6-100-10.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+09:24:27.146 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+09:24:27.156 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q6-100-10",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 10
+} ]
+09:24:27.172 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+09:24:27.616 [main] INFO CentralWorkerStats - Central worker stats initialized
+09:24:28.219 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.39:8080,http://10.0.0.138:8080,http://10.0.0.225:8080]
+09:24:28.220 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.39:8080,http://10.0.0.138:8080,http://10.0.0.225:8080
+09:24:28.222 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pravega---------------
+09:24:28.571 [main] INFO LocalWorker - Driver: {
+  "name" : "Pravega",
+  "driverClass" : "io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver"
+}
+09:24:28.577 [main] INFO PravegaBenchmarkDriver - Pravega driver configuration: {
+  "client" : {
+    "controllerURI" : "tcp://10.0.0.93:9090",
+    "scopeName" : "examples"
+  },
+  "writer" : {
+    "enableConnectionPooling" : true
+  },
+  "includeTimestampInEvent" : true,
+  "enableTransaction" : false,
+  "eventsPerTransaction" : 1,
+  "enableStreamAutoScaling" : false,
+  "eventsPerSecond" : -1,
+  "kbytesPerSecond" : 1000000,
+  "createScope" : true,
+  "deleteStreams" : true
+}
+09:24:28.756 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:24:28.762 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:24:28.767 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:24:31.636 [main] INFO WorkloadGenerator - Created 14 topics in 2864.759683 ms
+09:24:36.521 [main] INFO WorkloadGenerator - Created 14 external consumers in 4883.589821 ms
+09:24:36.523 [main] INFO PravegaBenchmarkConsumer - PravegaBenchmarkConsumer: BEGIN: subscriptionName=sub-000-B0ayyMU, streamName=openmessaging-benchmark-0000000-UYNT9jI
+09:24:36.532 [main] INFO ReaderGroupManagerImpl - Creating reader group: sub-000-B0ayyMU for streams: [StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-UYNT9jI)] with configuration: ReaderGroupConfig(groupRefreshTimeMillis=3000, automaticCheckpointIntervalMillis=30000, startingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-UYNT9jI)=UNBOUNDED}, endingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-UYNT9jI)=UNBOUNDED}, maxOutstandingCheckpointRequest=3, retentionType=NONE, generation=-1, readerGroupId=00000000-0000-0000-0000-000000000000)
+09:24:36.541 [clientInternal-2-1] INFO ControllerImpl - [requestId=-2092573390276221720] Tagging client request (createReaderGroup-examples-sub-000-B0ayyMU).
+09:24:36.632 [clientInternal-2-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.93:9090]/{}]]
+09:24:37.152 [clientInternal-2-1] INFO ControllerImpl - [requestId=-2092573390276221720] Reader Group examples/sub-000-B0ayyMU created successfully: {}
+09:24:37.175 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-000-B0ayyMU and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+09:24:37.177 [clientInternal-2-1] INFO ControllerImpl - [requestId=-1483664771154222013] Tagging client request (getCurrentSegments-examples-_RGsub-000-B0ayyMU).
+09:24:37.195 [clientInternal-2-1] INFO ControllerImpl - [requestId=8763774597786824178] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-B0ayyMU).
+09:24:37.201 [clientInternal-2-1] INFO ControllerImpl - [requestId=-6202288465027856226] Tagging client request (getURI-examples/_RGsub-000-B0ayyMU/0.#epoch.0).
+09:24:37.264 [ClientSocketReaders-1] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:24:37.265 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-000-B0ayyMU/0.#epoch.0, writer 26499f6c-6186-45d5-a2f5-b8d5eee45da3
+09:24:37.272 [clientInternal-2-1] INFO ControllerImpl - [requestId=3119127038524775758] Tagging client request (getSegmentsAtTime-examples-openmessaging-benchmark-0000000-UYNT9jI).
+09:24:37.273 [clientInternal-2-1] INFO ControllerImpl - [requestId=6301728491490330612] Tagging client request (getURI-examples/_RGsub-000-B0ayyMU/0.#epoch.0).
+09:24:37.274 [clientInternal-2-1] INFO ControllerImpl - [requestId=-2223870598724835815] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-B0ayyMU).
+09:24:37.278 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.76:12345 for examples/_RGsub-000-B0ayyMU/0.#epoch.0, writerID: 26499f6c-6186-45d5-a2f5-b8d5eee45da3
+09:24:37.283 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=8589934592, segment=examples/_RGsub-000-B0ayyMU/0.#epoch.0, writerId=26499f6c-6186-45d5-a2f5-b8d5eee45da3, lastEventNumber=-9223372036854775808)
+09:24:37.285 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Connection setup complete for writer 26499f6c-6186-45d5-a2f5-b8d5eee45da3
+09:24:37.291 [clientInternal-2-1] INFO ControllerImpl - [requestId=3008405511958320308] Tagging client request (getURI-examples/_RGsub-000-B0ayyMU/0.#epoch.0).
+09:24:37.305 [clientInternal-2-1] INFO ControllerImpl - [requestId=2818695348563364216] Tagging client request (getURI-examples/_RGsub-000-B0ayyMU/0.#epoch.0).
+09:24:37.321 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-UYNT9jI/0.#epoch.0, range=null)=0} }, segment=examples/_RGsub-000-B0ayyMU/0.#epoch.0)
+09:24:37.321 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-000-B0ayyMU/0.#epoch.0
+09:24:37.321 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-000-B0ayyMU/0.#epoch.0
+09:24:37.322 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-000-B0ayyMU/0.#epoch.0
+09:24:37.322 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-000-B0ayyMU/0.#epoch.0 will be retransmitted.
+09:24:37.322 [main] INFO ClientFactoryImpl - Creating reader: e6e7d555-6880-417a-8ade-3a4e01b65a4a under readerGroup: sub-000-B0ayyMU with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+09:24:37.323 [main] INFO ClientFactoryImpl - Creating reader: e6e7d555-6880-417a-8ade-3a4e01b65a4a under readerGroup: sub-000-B0ayyMU with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+09:24:37.323 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-000-B0ayyMU and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+09:24:37.324 [clientInternal-3-1] INFO ControllerImpl - [requestId=-1945491520104423398] Tagging client request (getCurrentSegments-examples-_RGsub-000-B0ayyMU).
+09:24:37.324 [clientInternal-3-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.93:9090]/{}]]
+09:24:37.335 [clientInternal-3-4] INFO ControllerImpl - [requestId=-5755168492443899829] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-B0ayyMU).
+09:24:37.335 [clientInternal-3-5] INFO ControllerImpl - [requestId=4698278232742679369] Tagging client request (getURI-examples/_RGsub-000-B0ayyMU/0.#epoch.0).
+09:24:37.335 [clientInternal-3-7] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-000-B0ayyMU/0.#epoch.0, writer e43de244-cf78-4840-85ea-ed30d3e54113
+09:24:37.336 [clientInternal-3-7] INFO ControllerImpl - [requestId=5230897338213162676] Tagging client request (getURI-examples/_RGsub-000-B0ayyMU/0.#epoch.0).
+09:24:37.336 [clientInternal-3-8] INFO ControllerImpl - [requestId=-5221806704383609125] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-B0ayyMU).
+09:24:37.343 [clientInternal-3-3] INFO ControllerImpl - [requestId=-2943974645631474883] Tagging client request (getURI-examples/_RGsub-000-B0ayyMU/0.#epoch.0).
+09:24:37.344 [clientInternal-3-2] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.76:12345 for examples/_RGsub-000-B0ayyMU/0.#epoch.0, writerID: e43de244-cf78-4840-85ea-ed30d3e54113
+09:24:37.346 [ClientSocketReaders-2] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:24:37.347 [ClientSocketReaders-3] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:24:37.349 [ClientSocketReaders-2] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=25769803776, segment=examples/_RGsub-000-B0ayyMU/0.#epoch.0, writerId=e43de244-cf78-4840-85ea-ed30d3e54113, lastEventNumber=-9223372036854775808)
+09:24:37.349 [ClientSocketReaders-4] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:24:37.350 [ClientSocketReaders-2] INFO SegmentOutputStreamImpl - Connection setup complete for writer e43de244-cf78-4840-85ea-ed30d3e54113
+09:24:37.358 [clientInternal-3-8] INFO ControllerImpl - [requestId=1490820383714493603] Tagging client request (getURI-examples/_RGsub-000-B0ayyMU/0.#epoch.0).
+09:24:37.363 [ClientSocketReaders-5] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:24:37.375 [main] INFO LocalWorker - Created 1 consumers in 853.394994 ms
+09:24:37.385 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=e6e7d555-6880-417a-8ade-3a4e01b65a4a) acquiring segments {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-UYNT9jI/0.#epoch.0, range=null)=0}
+09:24:37.386 [clientInternal-3-5] INFO ControllerImpl - [requestId=-5728933963773875301] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000000-UYNT9jI).
+09:24:37.386 [clientInternal-3-3] INFO ControllerImpl - [requestId=-7088493467452665312] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-UYNT9jI/0.#epoch.0).
+09:24:37.390 [clientInternal-3-4] INFO ControllerImpl - [requestId=-1202863008332283478] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-UYNT9jI/0.#epoch.0).
+09:24:37.392 [ClientSocketReaders-6] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:24:37.572 [main] INFO WorkloadGenerator - Created 14 producers in 196.676988 ms
+09:24:37.572 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+09:24:37.586 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 17, Received: 8, Expected: 0
+09:24:37.586 [main] INFO WorkloadGenerator - All consumers are ready!
+09:24:37.587 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pravega-tpc-h-tpc-h-q6-100-10-2024-06-04-09-24-28 at 1717493077587
+09:24:38.367 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=e6e7d555-6880-417a-8ade-3a4e01b65a4a) at checkpoint ef420c32-e0f9-4496-9a7d-c86f2c65f36d
+09:24:38.372 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader e6e7d555-6880-417a-8ade-3a4e01b65a4a completed checkpoint ef420c32-e0f9-4496-9a7d-c86f2c65f36d
+09:25:08.536 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=e6e7d555-6880-417a-8ade-3a4e01b65a4a) at checkpoint c92cd443-5f77-46cd-a7ad-566ebb73d212
+09:25:08.540 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader e6e7d555-6880-417a-8ade-3a4e01b65a4a completed checkpoint c92cd443-5f77-46cd-a7ad-566ebb73d212
+09:25:38.269 [pool-7-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+09:25:38.269 [pool-7-thread-1] INFO LocalWorker - [RESULT] Observed at 1717493138269
+09:25:39.281 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=e6e7d555-6880-417a-8ade-3a4e01b65a4a) at checkpoint 56eb205b-4b85-475f-bde4-9ae9a3355920
+09:25:39.285 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader e6e7d555-6880-417a-8ade-3a4e01b65a4a completed checkpoint 56eb205b-4b85-475f-bde4-9ae9a3355920
+09:25:47.646 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pravega-tpc-h-tpc-h-q6-100-10-2024-06-04-09-24-28 at 1717493147646
+09:25:50.138 [ClientSocketReaders-6] INFO AsyncSegmentInputStreamImpl - Received segmentSealed WireCommands.SegmentIsSealed(type=SEGMENT_IS_SEALED, requestId=38654705664, segment=examples/openmessaging-benchmark-0000000-UYNT9jI/0.#epoch.0, serverStackTrace=, offset=5497)
+09:25:50.139 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=e6e7d555-6880-417a-8ade-3a4e01b65a4a) encountered end of segment examples/openmessaging-benchmark-0000000-UYNT9jI/0.#epoch.0
+09:25:50.139 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/openmessaging-benchmark-0000000-UYNT9jI/0.#epoch.0
+09:25:50.139 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/openmessaging-benchmark-0000000-UYNT9jI/0.#epoch.0
+09:25:50.139 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/openmessaging-benchmark-0000000-UYNT9jI/0.#epoch.0 will be retransmitted.
+09:25:54.145 [main] INFO EventStreamReaderImpl - Closing reader EventStreamReaderImpl( id=e6e7d555-6880-417a-8ade-3a4e01b65a4a) at position examples/openmessaging-benchmark-0000000-UYNT9jI/0.#epoch.0=-1.
+09:25:54.152 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [56eb205b-4b85-475f-bde4-9ae9a3355920],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-UYNT9jI/0.#epoch.0, range=null)=-1} }, segment=examples/_RGsub-000-B0ayyMU/0.#epoch.0)
+09:25:54.152 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-000-B0ayyMU/0.#epoch.0
+09:25:54.152 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-000-B0ayyMU/0.#epoch.0
+09:25:54.152 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-000-B0ayyMU/0.#epoch.0
+09:25:54.152 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-000-B0ayyMU/0.#epoch.0 will be retransmitted.
+09:25:54.153 [main] INFO PravegaBenchmarkDriver - close: clientConfig=ClientConfig(controllerURI=tcp://10.0.0.93:9090, credentials=null, trustStore=null, validateHostName=true, maxConnectionsPerSegmentStore=10, isDefaultMaxConnections=true, deriveTlsEnabledFromControllerURI=true, enableTlsToController=false, enableTlsToSegmentStore=false, metricListener=null)
+09:25:54.154 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:25:54.154 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+09:25:54.156 [ClientSocketReaders-2] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:25:54.157 [ClientSocketReaders-3] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:25:54.157 [ClientSocketReaders-4] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:25:54.158 [ClientSocketReaders-5] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:25:54.159 [ClientSocketReaders-6] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:25:54.164 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:25:54.164 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+09:25:54.165 [ClientSocketReaders-1] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:25:54.167 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:25:54.167 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+sudo bin/benchmark \
+> --drivers driver-pravega/pravega-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q6-100-30.yaml \
+> workloads/tpc-h-base-long.yaml
+09:37:09.245 [main] INFO Benchmark - Using default worker file workers.yaml!
+09:37:09.253 [main] INFO Benchmark - Reading workers list from workers.yaml
+09:37:09.302 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-pravega/pravega-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.39:8080", "http://10.0.0.138:8080", "http://10.0.0.225:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q6-100-30.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+09:37:09.318 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+09:37:09.328 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q6-100-30",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 30
+} ]
+09:37:09.342 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+09:37:09.690 [main] INFO CentralWorkerStats - Central worker stats initialized
+09:37:10.221 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.39:8080,http://10.0.0.138:8080,http://10.0.0.225:8080]
+09:37:10.222 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.39:8080,http://10.0.0.138:8080,http://10.0.0.225:8080
+09:37:10.224 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pravega---------------
+09:37:11.033 [main] INFO LocalWorker - Driver: {
+  "name" : "Pravega",
+  "driverClass" : "io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver"
+}
+09:37:11.039 [main] INFO PravegaBenchmarkDriver - Pravega driver configuration: {
+  "client" : {
+    "controllerURI" : "tcp://10.0.0.93:9090",
+    "scopeName" : "examples"
+  },
+  "writer" : {
+    "enableConnectionPooling" : true
+  },
+  "includeTimestampInEvent" : true,
+  "enableTransaction" : false,
+  "eventsPerTransaction" : 1,
+  "enableStreamAutoScaling" : false,
+  "eventsPerSecond" : -1,
+  "kbytesPerSecond" : 1000000,
+  "createScope" : true,
+  "deleteStreams" : true
+}
+09:37:11.244 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:37:11.251 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:37:11.258 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:37:17.816 [main] INFO WorkloadGenerator - Created 34 topics in 6552.592463 ms
+09:37:30.913 [main] INFO WorkloadGenerator - Created 34 external consumers in 13095.174884 ms
+09:37:30.916 [main] INFO PravegaBenchmarkConsumer - PravegaBenchmarkConsumer: BEGIN: subscriptionName=sub-000-lsS6-z0, streamName=openmessaging-benchmark-0000000-7zMLlio
+09:37:30.926 [main] INFO ReaderGroupManagerImpl - Creating reader group: sub-000-lsS6-z0 for streams: [StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-7zMLlio)] with configuration: ReaderGroupConfig(groupRefreshTimeMillis=3000, automaticCheckpointIntervalMillis=30000, startingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-7zMLlio)=UNBOUNDED}, endingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-7zMLlio)=UNBOUNDED}, maxOutstandingCheckpointRequest=3, retentionType=NONE, generation=-1, readerGroupId=00000000-0000-0000-0000-000000000000)
+09:37:30.935 [clientInternal-2-1] INFO ControllerImpl - [requestId=6413587186072510623] Tagging client request (createReaderGroup-examples-sub-000-lsS6-z0).
+09:37:31.031 [clientInternal-2-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.93:9090]/{}]]
+09:37:31.543 [clientInternal-2-1] INFO ControllerImpl - [requestId=6413587186072510623] Reader Group examples/sub-000-lsS6-z0 created successfully: {}
+09:37:31.568 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-000-lsS6-z0 and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+09:37:31.570 [clientInternal-2-1] INFO ControllerImpl - [requestId=1722533678717729398] Tagging client request (getCurrentSegments-examples-_RGsub-000-lsS6-z0).
+09:37:31.589 [clientInternal-2-1] INFO ControllerImpl - [requestId=1445135597249860122] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-lsS6-z0).
+09:37:31.596 [clientInternal-2-1] INFO ControllerImpl - [requestId=-8306476607278339056] Tagging client request (getURI-examples/_RGsub-000-lsS6-z0/0.#epoch.0).
+09:37:31.647 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-000-lsS6-z0/0.#epoch.0, writer b07ac2b9-9a73-4a99-afc3-05418c1e0e7e
+09:37:31.652 [clientInternal-2-1] INFO ControllerImpl - [requestId=-4170121854017235539] Tagging client request (getSegmentsAtTime-examples-openmessaging-benchmark-0000000-7zMLlio).
+09:37:31.653 [clientInternal-2-1] INFO ControllerImpl - [requestId=-2817035242376497676] Tagging client request (getURI-examples/_RGsub-000-lsS6-z0/0.#epoch.0).
+09:37:31.664 [clientInternal-2-1] INFO ControllerImpl - [requestId=-6659103350885374869] Tagging client request (getURI-examples/_RGsub-000-lsS6-z0/0.#epoch.0).
+09:37:31.665 [clientInternal-2-1] INFO ControllerImpl - [requestId=5753049692745297951] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-lsS6-z0).
+09:37:31.665 [ClientSocketReaders-1] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:37:31.669 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.76:12345 for examples/_RGsub-000-lsS6-z0/0.#epoch.0, writerID: b07ac2b9-9a73-4a99-afc3-05418c1e0e7e
+09:37:31.673 [clientInternal-2-1] INFO ControllerImpl - [requestId=-6408249031667319191] Tagging client request (getURI-examples/_RGsub-000-lsS6-z0/0.#epoch.0).
+09:37:31.673 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=8589934592, segment=examples/_RGsub-000-lsS6-z0/0.#epoch.0, writerId=b07ac2b9-9a73-4a99-afc3-05418c1e0e7e, lastEventNumber=-9223372036854775808)
+09:37:31.675 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Connection setup complete for writer b07ac2b9-9a73-4a99-afc3-05418c1e0e7e
+09:37:31.687 [clientInternal-2-1] INFO ControllerImpl - [requestId=8915966458008127542] Tagging client request (getURI-examples/_RGsub-000-lsS6-z0/0.#epoch.0).
+09:37:31.702 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-7zMLlio/0.#epoch.0, range=null)=0} }, segment=examples/_RGsub-000-lsS6-z0/0.#epoch.0)
+09:37:31.702 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-000-lsS6-z0/0.#epoch.0
+09:37:31.703 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-000-lsS6-z0/0.#epoch.0
+09:37:31.703 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-000-lsS6-z0/0.#epoch.0
+09:37:31.703 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-000-lsS6-z0/0.#epoch.0 will be retransmitted.
+09:37:31.704 [main] INFO ClientFactoryImpl - Creating reader: ac8e018a-d474-4053-b9d6-af10da9ee677 under readerGroup: sub-000-lsS6-z0 with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+09:37:31.704 [main] INFO ClientFactoryImpl - Creating reader: ac8e018a-d474-4053-b9d6-af10da9ee677 under readerGroup: sub-000-lsS6-z0 with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+09:37:31.705 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-000-lsS6-z0 and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+09:37:31.705 [clientInternal-3-1] INFO ControllerImpl - [requestId=8477791067565590179] Tagging client request (getCurrentSegments-examples-_RGsub-000-lsS6-z0).
+09:37:31.705 [clientInternal-3-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.93:9090]/{}]]
+09:37:31.714 [clientInternal-3-4] INFO ControllerImpl - [requestId=1578777515002028782] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-lsS6-z0).
+09:37:31.714 [clientInternal-3-5] INFO ControllerImpl - [requestId=-6230083219312024593] Tagging client request (getURI-examples/_RGsub-000-lsS6-z0/0.#epoch.0).
+09:37:31.715 [clientInternal-3-7] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-000-lsS6-z0/0.#epoch.0, writer 4d5585f2-54a8-49fb-82ff-dd60fcfba074
+09:37:31.716 [clientInternal-3-7] INFO ControllerImpl - [requestId=8554284939313913246] Tagging client request (getURI-examples/_RGsub-000-lsS6-z0/0.#epoch.0).
+09:37:31.717 [clientInternal-3-8] INFO ControllerImpl - [requestId=718731796041180529] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-lsS6-z0).
+09:37:31.727 [clientInternal-3-6] INFO ControllerImpl - [requestId=775677954366179362] Tagging client request (getURI-examples/_RGsub-000-lsS6-z0/0.#epoch.0).
+09:37:31.729 [clientInternal-3-6] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.76:12345 for examples/_RGsub-000-lsS6-z0/0.#epoch.0, writerID: 4d5585f2-54a8-49fb-82ff-dd60fcfba074
+09:37:31.731 [clientInternal-3-8] INFO ControllerImpl - [requestId=-5849393528215306533] Tagging client request (getURI-examples/_RGsub-000-lsS6-z0/0.#epoch.0).
+09:37:31.732 [ClientSocketReaders-2] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:37:31.733 [ClientSocketReaders-3] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:37:31.736 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=25769803776, segment=examples/_RGsub-000-lsS6-z0/0.#epoch.0, writerId=4d5585f2-54a8-49fb-82ff-dd60fcfba074, lastEventNumber=-9223372036854775808)
+09:37:31.736 [ClientSocketReaders-4] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:37:31.737 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Connection setup complete for writer 4d5585f2-54a8-49fb-82ff-dd60fcfba074
+09:37:31.744 [clientInternal-3-6] INFO ControllerImpl - [requestId=-2453837008419568771] Tagging client request (getURI-examples/_RGsub-000-lsS6-z0/0.#epoch.0).
+09:37:31.749 [ClientSocketReaders-5] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:37:31.761 [main] INFO LocalWorker - Created 1 consumers in 846.935499 ms
+09:37:31.773 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=ac8e018a-d474-4053-b9d6-af10da9ee677) acquiring segments {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-7zMLlio/0.#epoch.0, range=null)=0}
+09:37:31.776 [clientInternal-3-5] INFO ControllerImpl - [requestId=4240670620962594078] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000000-7zMLlio).
+09:37:31.777 [clientInternal-3-2] INFO ControllerImpl - [requestId=2227118906059503861] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-7zMLlio/0.#epoch.0).
+09:37:31.784 [clientInternal-3-8] INFO ControllerImpl - [requestId=1982304275583627588] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-7zMLlio/0.#epoch.0).
+09:37:31.790 [ClientSocketReaders-6] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:37:32.006 [main] INFO WorkloadGenerator - Created 34 producers in 244.398958 ms
+09:37:32.006 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+09:37:32.028 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 114, Received: 33, Expected: 0
+09:37:32.029 [main] INFO WorkloadGenerator - All consumers are ready!
+09:37:32.029 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pravega-tpc-h-tpc-h-q6-100-30-2024-06-04-09-37-11 at 1717493852029
+09:37:33.615 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=ac8e018a-d474-4053-b9d6-af10da9ee677) at checkpoint 892164fe-7f40-4381-840c-eb189273d5f8
+09:37:33.621 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader ac8e018a-d474-4053-b9d6-af10da9ee677 completed checkpoint 892164fe-7f40-4381-840c-eb189273d5f8
+09:38:03.725 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=ac8e018a-d474-4053-b9d6-af10da9ee677) at checkpoint e92cdf37-1fa2-48bc-9a78-04e0fe80597d
+09:38:03.729 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader ac8e018a-d474-4053-b9d6-af10da9ee677 completed checkpoint e92cdf37-1fa2-48bc-9a78-04e0fe80597d
+09:38:14.759 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 10
+09:38:30.794 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 20
+09:38:34.101 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=ac8e018a-d474-4053-b9d6-af10da9ee677) at checkpoint fe67da40-a2b2-48c2-bbc6-f9c08e83441f
+09:38:34.105 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader ac8e018a-d474-4053-b9d6-af10da9ee677 completed checkpoint fe67da40-a2b2-48c2-bbc6-f9c08e83441f
+09:38:34.421 [pool-7-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+09:38:34.421 [pool-7-thread-1] INFO LocalWorker - [RESULT] Observed at 1717493914421
+09:38:42.077 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pravega-tpc-h-tpc-h-q6-100-30-2024-06-04-09-37-11 at 1717493922077
+09:38:47.555 [ClientSocketReaders-6] INFO AsyncSegmentInputStreamImpl - Received segmentSealed WireCommands.SegmentIsSealed(type=SEGMENT_IS_SEALED, requestId=38654705664, segment=examples/openmessaging-benchmark-0000000-7zMLlio/0.#epoch.0, serverStackTrace=, offset=13541)
+09:38:47.556 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=ac8e018a-d474-4053-b9d6-af10da9ee677) encountered end of segment examples/openmessaging-benchmark-0000000-7zMLlio/0.#epoch.0
+09:38:47.556 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/openmessaging-benchmark-0000000-7zMLlio/0.#epoch.0
+09:38:47.556 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/openmessaging-benchmark-0000000-7zMLlio/0.#epoch.0
+09:38:47.556 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/openmessaging-benchmark-0000000-7zMLlio/0.#epoch.0 will be retransmitted.
+sudo bin/benchmark \
+> --drivers driver-pravega/pravega-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q6-100-50.yaml \
+> workloads/tpc-h-base-long.yaml
+09:39:00.493 [main] INFO Benchmark - Using default worker file workers.yaml!
+09:39:00.502 [main] INFO Benchmark - Reading workers list from workers.yaml
+09:39:00.553 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-pravega/pravega-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.39:8080", "http://10.0.0.138:8080", "http://10.0.0.225:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q6-100-50.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+09:39:00.569 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+09:39:00.580 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q6-100-50",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 50
+} ]
+09:39:00.594 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+09:39:00.965 [main] INFO CentralWorkerStats - Central worker stats initialized
+09:39:01.521 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.39:8080,http://10.0.0.138:8080,http://10.0.0.225:8080]
+09:39:01.522 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.39:8080,http://10.0.0.138:8080,http://10.0.0.225:8080
+09:39:01.524 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pravega---------------
+09:39:01.887 [main] INFO LocalWorker - Driver: {
+  "name" : "Pravega",
+  "driverClass" : "io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver"
+}
+09:39:01.892 [main] INFO PravegaBenchmarkDriver - Pravega driver configuration: {
+  "client" : {
+    "controllerURI" : "tcp://10.0.0.93:9090",
+    "scopeName" : "examples"
+  },
+  "writer" : {
+    "enableConnectionPooling" : true
+  },
+  "includeTimestampInEvent" : true,
+  "enableTransaction" : false,
+  "eventsPerTransaction" : 1,
+  "enableStreamAutoScaling" : false,
+  "eventsPerSecond" : -1,
+  "kbytesPerSecond" : 1000000,
+  "createScope" : true,
+  "deleteStreams" : true
+}
+09:39:02.121 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:39:02.128 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:39:02.134 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:39:11.672 [main] INFO WorkloadGenerator - Created 54 topics in 9533.416876 ms
+09:39:30.315 [main] INFO WorkloadGenerator - Created 54 external consumers in 18639.669361 ms
+09:39:30.319 [main] INFO PravegaBenchmarkConsumer - PravegaBenchmarkConsumer: BEGIN: subscriptionName=sub-000-jViklSE, streamName=openmessaging-benchmark-0000000-BI8B0jw
+09:39:30.331 [main] INFO ReaderGroupManagerImpl - Creating reader group: sub-000-jViklSE for streams: [StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-BI8B0jw)] with configuration: ReaderGroupConfig(groupRefreshTimeMillis=3000, automaticCheckpointIntervalMillis=30000, startingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-BI8B0jw)=UNBOUNDED}, endingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-BI8B0jw)=UNBOUNDED}, maxOutstandingCheckpointRequest=3, retentionType=NONE, generation=-1, readerGroupId=00000000-0000-0000-0000-000000000000)
+09:39:30.343 [clientInternal-2-1] INFO ControllerImpl - [requestId=-3404861568671208321] Tagging client request (createReaderGroup-examples-sub-000-jViklSE).
+09:39:30.443 [clientInternal-2-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.93:9090]/{}]]
+09:39:30.965 [clientInternal-2-1] INFO ControllerImpl - [requestId=-3404861568671208321] Reader Group examples/sub-000-jViklSE created successfully: {}
+09:39:30.989 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-000-jViklSE and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+09:39:30.992 [clientInternal-2-1] INFO ControllerImpl - [requestId=8981454976646983065] Tagging client request (getCurrentSegments-examples-_RGsub-000-jViklSE).
+09:39:31.011 [clientInternal-2-1] INFO ControllerImpl - [requestId=8733255565308291686] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-jViklSE).
+09:39:31.019 [clientInternal-2-1] INFO ControllerImpl - [requestId=1719899807605153916] Tagging client request (getURI-examples/_RGsub-000-jViklSE/0.#epoch.0).
+09:39:31.072 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-000-jViklSE/0.#epoch.0, writer 8491f277-f5c9-49ad-8f6c-2ed8f8baf083
+09:39:31.072 [ClientSocketReaders-1] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:39:31.077 [clientInternal-2-1] INFO ControllerImpl - [requestId=7571136923186273311] Tagging client request (getSegmentsAtTime-examples-openmessaging-benchmark-0000000-BI8B0jw).
+09:39:31.078 [clientInternal-2-1] INFO ControllerImpl - [requestId=1396923525015469993] Tagging client request (getURI-examples/_RGsub-000-jViklSE/0.#epoch.0).
+09:39:31.078 [clientInternal-2-1] INFO ControllerImpl - [requestId=-5050237002416253931] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-jViklSE).
+09:39:31.086 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.76:12345 for examples/_RGsub-000-jViklSE/0.#epoch.0, writerID: 8491f277-f5c9-49ad-8f6c-2ed8f8baf083
+09:39:31.091 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=8589934592, segment=examples/_RGsub-000-jViklSE/0.#epoch.0, writerId=8491f277-f5c9-49ad-8f6c-2ed8f8baf083, lastEventNumber=-9223372036854775808)
+09:39:31.091 [clientInternal-2-1] INFO ControllerImpl - [requestId=3507679622345296826] Tagging client request (getURI-examples/_RGsub-000-jViklSE/0.#epoch.0).
+09:39:31.092 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Connection setup complete for writer 8491f277-f5c9-49ad-8f6c-2ed8f8baf083
+09:39:31.110 [clientInternal-2-1] INFO ControllerImpl - [requestId=9120477873198603127] Tagging client request (getURI-examples/_RGsub-000-jViklSE/0.#epoch.0).
+09:39:31.126 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-BI8B0jw/0.#epoch.0, range=null)=0} }, segment=examples/_RGsub-000-jViklSE/0.#epoch.0)
+09:39:31.127 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-000-jViklSE/0.#epoch.0
+09:39:31.127 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-000-jViklSE/0.#epoch.0
+09:39:31.128 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-000-jViklSE/0.#epoch.0
+09:39:31.128 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-000-jViklSE/0.#epoch.0 will be retransmitted.
+09:39:31.129 [main] INFO ClientFactoryImpl - Creating reader: 89c7ba2f-f0e6-40d9-8b9e-d202ac41c8e0 under readerGroup: sub-000-jViklSE with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+09:39:31.130 [main] INFO ClientFactoryImpl - Creating reader: 89c7ba2f-f0e6-40d9-8b9e-d202ac41c8e0 under readerGroup: sub-000-jViklSE with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+09:39:31.130 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-000-jViklSE and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+09:39:31.131 [clientInternal-3-1] INFO ControllerImpl - [requestId=6502455327487240670] Tagging client request (getCurrentSegments-examples-_RGsub-000-jViklSE).
+09:39:31.131 [clientInternal-3-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.93:9090]/{}]]
+09:39:31.141 [clientInternal-3-4] INFO ControllerImpl - [requestId=6715790042842089360] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-jViklSE).
+09:39:31.141 [clientInternal-3-5] INFO ControllerImpl - [requestId=-7895519733386465432] Tagging client request (getURI-examples/_RGsub-000-jViklSE/0.#epoch.0).
+09:39:31.144 [clientInternal-3-7] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-000-jViklSE/0.#epoch.0, writer 3f287f53-bf52-46ba-adf6-55c5fcd566c9
+09:39:31.145 [clientInternal-3-1] INFO ControllerImpl - [requestId=-623747789689018399] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-jViklSE).
+09:39:31.145 [clientInternal-3-8] INFO ControllerImpl - [requestId=5633593879519494142] Tagging client request (getURI-examples/_RGsub-000-jViklSE/0.#epoch.0).
+09:39:31.152 [clientInternal-3-4] INFO ControllerImpl - [requestId=2801561891422636390] Tagging client request (getURI-examples/_RGsub-000-jViklSE/0.#epoch.0).
+09:39:31.152 [clientInternal-3-5] INFO ControllerImpl - [requestId=-5449091179986207575] Tagging client request (getURI-examples/_RGsub-000-jViklSE/0.#epoch.0).
+09:39:31.153 [clientInternal-3-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.76:12345 for examples/_RGsub-000-jViklSE/0.#epoch.0, writerID: 3f287f53-bf52-46ba-adf6-55c5fcd566c9
+09:39:31.155 [ClientSocketReaders-2] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:39:31.155 [ClientSocketReaders-3] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:39:31.158 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=25769803776, segment=examples/_RGsub-000-jViklSE/0.#epoch.0, writerId=3f287f53-bf52-46ba-adf6-55c5fcd566c9, lastEventNumber=-9223372036854775808)
+09:39:31.158 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Connection setup complete for writer 3f287f53-bf52-46ba-adf6-55c5fcd566c9
+09:39:31.158 [ClientSocketReaders-4] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:39:31.167 [clientInternal-3-8] INFO ControllerImpl - [requestId=2432862408262491553] Tagging client request (getURI-examples/_RGsub-000-jViklSE/0.#epoch.0).
+09:39:31.171 [ClientSocketReaders-5] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:39:31.184 [main] INFO LocalWorker - Created 1 consumers in 868.670291 ms
+09:39:31.196 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=89c7ba2f-f0e6-40d9-8b9e-d202ac41c8e0) acquiring segments {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-BI8B0jw/0.#epoch.0, range=null)=0}
+09:39:31.197 [clientInternal-3-5] INFO ControllerImpl - [requestId=8678874555500595838] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000000-BI8B0jw).
+09:39:31.197 [clientInternal-3-8] INFO ControllerImpl - [requestId=-987730863001700692] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-BI8B0jw/0.#epoch.0).
+09:39:31.206 [clientInternal-3-5] INFO ControllerImpl - [requestId=-7349212886075223774] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-BI8B0jw/0.#epoch.0).
+09:39:31.212 [ClientSocketReaders-6] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:39:31.433 [main] INFO WorkloadGenerator - Created 54 producers in 247.64688 ms
+09:39:31.433 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+09:39:31.473 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 174, Received: 52, Expected: 0
+09:39:31.473 [main] INFO WorkloadGenerator - All consumers are ready!
+09:39:31.474 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pravega-tpc-h-tpc-h-q6-100-50-2024-06-04-09-39-02 at 1717493971474
+09:39:32.266 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=89c7ba2f-f0e6-40d9-8b9e-d202ac41c8e0) at checkpoint 4122f79e-8b6f-45f4-b854-991990892da7
+09:39:32.272 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 89c7ba2f-f0e6-40d9-8b9e-d202ac41c8e0 completed checkpoint 4122f79e-8b6f-45f4-b854-991990892da7
+09:40:02.476 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=89c7ba2f-f0e6-40d9-8b9e-d202ac41c8e0) at checkpoint d313e4a5-45be-45db-ae29-a5a236a39fa5
+09:40:02.479 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 89c7ba2f-f0e6-40d9-8b9e-d202ac41c8e0 completed checkpoint d313e4a5-45be-45db-ae29-a5a236a39fa5
+09:40:03.413 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 10
+09:40:11.010 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 20
+09:40:15.626 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 30
+09:40:24.367 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 40
+09:40:33.421 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=89c7ba2f-f0e6-40d9-8b9e-d202ac41c8e0) at checkpoint 6e240527-f555-4c09-af0c-d0c0da21cbdd
+09:40:33.425 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 89c7ba2f-f0e6-40d9-8b9e-d202ac41c8e0 completed checkpoint 6e240527-f555-4c09-af0c-d0c0da21cbdd
+09:40:39.826 [pool-7-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+09:40:39.826 [pool-7-thread-1] INFO LocalWorker - [RESULT] Observed at 1717494039826
+09:40:41.536 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pravega-tpc-h-tpc-h-q6-100-50-2024-06-04-09-39-02 at 1717494041536
+09:40:55.131 [ClientSocketReaders-6] INFO AsyncSegmentInputStreamImpl - Received segmentSealed WireCommands.SegmentIsSealed(type=SEGMENT_IS_SEALED, requestId=38654705664, segment=examples/openmessaging-benchmark-0000000-BI8B0jw/0.#epoch.0, serverStackTrace=, offset=27013)
+09:40:55.132 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=89c7ba2f-f0e6-40d9-8b9e-d202ac41c8e0) encountered end of segment examples/openmessaging-benchmark-0000000-BI8B0jw/0.#epoch.0
+09:40:55.132 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/openmessaging-benchmark-0000000-BI8B0jw/0.#epoch.0
+09:40:55.132 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/openmessaging-benchmark-0000000-BI8B0jw/0.#epoch.0
+09:40:55.132 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/openmessaging-benchmark-0000000-BI8B0jw/0.#epoch.0 will be retransmitted.
+09:41:04.155 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=89c7ba2f-f0e6-40d9-8b9e-d202ac41c8e0) at checkpoint 66bf013f-5c3d-415a-9237-fdb56a46456a
+09:41:04.159 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 89c7ba2f-f0e6-40d9-8b9e-d202ac41c8e0 completed checkpoint 66bf013f-5c3d-415a-9237-fdb56a46456a
+09:41:04.159 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=89c7ba2f-f0e6-40d9-8b9e-d202ac41c8e0) releasing sealed segment examples/openmessaging-benchmark-0000000-BI8B0jw/0.#epoch.0
+09:41:04.160 [clientInternal-3-8] INFO ControllerImpl - [requestId=7219098337735491827] Tagging client request (getSegmentsImmediatelyFollowing-examples/openmessaging-benchmark-0000000-BI8B0jw/0.#epoch.0).
+09:41:04.173 [grpc-default-worker-ELG-1-6] WARN ControllerImpl - gRPC call for getSuccessors with trace id 7219098337735491827 and parameters [examples/openmessaging-benchmark-0000000-BI8B0jw/0.#epoch.0] failed with server error.
+io.grpc.StatusRuntimeException: NOT_FOUND: get entry: key: openmessaging-benchmark-0000000-BI8B0jw table: _system/_tables/examples/streamsInScope.#.66cf46d7-2cc2-4e05-b520-8c2eb9bf2635
+	at io.grpc.Status.asRuntimeException(Status.java:535) ~[io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.stub.ClientCalls$StreamObserverToCallListenerAdapter.onClose(ClientCalls.java:487) [io.grpc-grpc-stub-1.49.0.jar:1.49.0]
+	at io.grpc.PartialForwardingClientCallListener.onClose(PartialForwardingClientCallListener.java:39) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.ForwardingClientCallListener.onClose(ForwardingClientCallListener.java:23) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.ForwardingClientCallListener$SimpleForwardingClientCallListener.onClose(ForwardingClientCallListener.java:40) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl.closeObserver(ClientCallImpl.java:563) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl.access$300(ClientCallImpl.java:70) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInternal(ClientCallImpl.java:744) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInContext(ClientCallImpl.java:723) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.SerializeReentrantCallsDirectExecutor.execute(SerializeReentrantCallsDirectExecutor.java:49) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.closedInternal(ClientCallImpl.java:752) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.closed(ClientCallImpl.java:688) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.RetriableStream$Sublistener$5.run(RetriableStream.java:986) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.SynchronizationContext.drain(SynchronizationContext.java:95) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.SynchronizationContext.execute(SynchronizationContext.java:127) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.internal.RetriableStream$Sublistener.closed(RetriableStream.java:981) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ForwardingClientStreamListener.closed(ForwardingClientStreamListener.java:34) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.InternalSubchannel$CallTracingTransport$1$1.closed(InternalSubchannel.java:693) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.closeListener(AbstractClientStream.java:458) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.access$400(AbstractClientStream.java:221) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState$1.run(AbstractClientStream.java:441) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.deframerClosed(AbstractClientStream.java:278) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.Http2ClientStreamTransportState.deframerClosed(Http2ClientStreamTransportState.java:31) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.MessageDeframer.close(MessageDeframer.java:234) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.MessageDeframer.closeWhenComplete(MessageDeframer.java:192) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractStream$TransportState.closeDeframer(AbstractStream.java:200) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.transportReportStatus(AbstractClientStream.java:444) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.transportReportStatus(AbstractClientStream.java:400) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.inboundTrailersReceived(AbstractClientStream.java:383) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.Http2ClientStreamTransportState.transportTrailersReceived(Http2ClientStreamTransportState.java:183) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.grpc.netty.NettyClientStream$TransportState.transportHeadersReceived(NettyClientStream.java:341) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.grpc.netty.NettyClientHandler.onHeadersRead(NettyClientHandler.java:372) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.grpc.netty.NettyClientHandler.access$1200(NettyClientHandler.java:91) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.grpc.netty.NettyClientHandler$FrameListener.onHeadersRead(NettyClientHandler.java:940) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2ConnectionDecoder$FrameReadListener.onHeadersRead(DefaultHttp2ConnectionDecoder.java:409) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2ConnectionDecoder$FrameReadListener.onHeadersRead(DefaultHttp2ConnectionDecoder.java:337) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.Http2InboundFrameLogger$1.onHeadersRead(Http2InboundFrameLogger.java:56) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2FrameReader$2.processFragment(DefaultHttp2FrameReader.java:476) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2FrameReader.readHeadersFrame(DefaultHttp2FrameReader.java:484) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2FrameReader.processPayloadState(DefaultHttp2FrameReader.java:253) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2FrameReader.readFrame(DefaultHttp2FrameReader.java:159) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.Http2InboundFrameLogger.readFrame(Http2InboundFrameLogger.java:41) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2ConnectionDecoder.decodeFrame(DefaultHttp2ConnectionDecoder.java:173) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.Http2ConnectionHandler$FrameDecoder.decode(Http2ConnectionHandler.java:378) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.Http2ConnectionHandler.decode(Http2ConnectionHandler.java:438) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:510) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:449) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:279) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.epoll.AbstractEpollStreamChannel$EpollStreamUnsafe.epollInReady(AbstractEpollStreamChannel.java:800) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.epoll.EpollEventLoop.processReady(EpollEventLoop.java:487) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.epoll.EpollEventLoop.run(EpollEventLoop.java:385) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:995) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+09:41:04.180 [grpc-default-worker-ELG-1-6] WARN ControllerImpl - [requestId=7219098337735491827] getSuccessors of segment 0 failed:
+java.util.concurrent.CompletionException: io.grpc.StatusRuntimeException: NOT_FOUND: get entry: key: openmessaging-benchmark-0000000-BI8B0jw table: _system/_tables/examples/streamsInScope.#.66cf46d7-2cc2-4e05-b520-8c2eb9bf2635
+	at java.util.concurrent.CompletableFuture.encodeRelay(CompletableFuture.java:367) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeRelay(CompletableFuture.java:376) ~[?:?]
+	at java.util.concurrent.CompletableFuture$UniRelay.tryFire(CompletableFuture.java:1019) ~[?:?]
+	at java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506) [?:?]
+	at java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2094) [?:?]
+	at io.pravega.client.control.impl.ControllerImpl$RPCAsyncCallback.onError(ControllerImpl.java:2044) [io.pravega-pravega-client-0.12.0.jar:?]
+	at io.grpc.stub.ClientCalls$StreamObserverToCallListenerAdapter.onClose(ClientCalls.java:487) [io.grpc-grpc-stub-1.49.0.jar:1.49.0]
+	at io.grpc.PartialForwardingClientCallListener.onClose(PartialForwardingClientCallListener.java:39) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.ForwardingClientCallListener.onClose(ForwardingClientCallListener.java:23) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.ForwardingClientCallListener$SimpleForwardingClientCallListener.onClose(ForwardingClientCallListener.java:40) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl.closeObserver(ClientCallImpl.java:563) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl.access$300(ClientCallImpl.java:70) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInternal(ClientCallImpl.java:744) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInContext(ClientCallImpl.java:723) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.SerializeReentrantCallsDirectExecutor.execute(SerializeReentrantCallsDirectExecutor.java:49) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.closedInternal(ClientCallImpl.java:752) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.closed(ClientCallImpl.java:688) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.RetriableStream$Sublistener$5.run(RetriableStream.java:986) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.SynchronizationContext.drain(SynchronizationContext.java:95) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.SynchronizationContext.execute(SynchronizationContext.java:127) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.internal.RetriableStream$Sublistener.closed(RetriableStream.java:981) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ForwardingClientStreamListener.closed(ForwardingClientStreamListener.java:34) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.InternalSubchannel$CallTracingTransport$1$1.closed(InternalSubchannel.java:693) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.closeListener(AbstractClientStream.java:458) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.access$400(AbstractClientStream.java:221) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState$1.run(AbstractClientStream.java:441) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.deframerClosed(AbstractClientStream.java:278) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.Http2ClientStreamTransportState.deframerClosed(Http2ClientStreamTransportState.java:31) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.MessageDeframer.close(MessageDeframer.java:234) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.MessageDeframer.closeWhenComplete(MessageDeframer.java:192) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractStream$TransportState.closeDeframer(AbstractStream.java:200) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.transportReportStatus(AbstractClientStream.java:444) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.transportReportStatus(AbstractClientStream.java:400) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.inboundTrailersReceived(AbstractClientStream.java:383) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.Http2ClientStreamTransportState.transportTrailersReceived(Http2ClientStreamTransportState.java:183) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.grpc.netty.NettyClientStream$TransportState.transportHeadersReceived(NettyClientStream.java:341) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.grpc.netty.NettyClientHandler.onHeadersRead(NettyClientHandler.java:372) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.grpc.netty.NettyClientHandler.access$1200(NettyClientHandler.java:91) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.grpc.netty.NettyClientHandler$FrameListener.onHeadersRead(NettyClientHandler.java:940) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2ConnectionDecoder$FrameReadListener.onHeadersRead(DefaultHttp2ConnectionDecoder.java:409) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2ConnectionDecoder$FrameReadListener.onHeadersRead(DefaultHttp2ConnectionDecoder.java:337) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.Http2InboundFrameLogger$1.onHeadersRead(Http2InboundFrameLogger.java:56) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2FrameReader$2.processFragment(DefaultHttp2FrameReader.java:476) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2FrameReader.readHeadersFrame(DefaultHttp2FrameReader.java:484) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2FrameReader.processPayloadState(DefaultHttp2FrameReader.java:253) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2FrameReader.readFrame(DefaultHttp2FrameReader.java:159) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.Http2InboundFrameLogger.readFrame(Http2InboundFrameLogger.java:41) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2ConnectionDecoder.decodeFrame(DefaultHttp2ConnectionDecoder.java:173) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.Http2ConnectionHandler$FrameDecoder.decode(Http2ConnectionHandler.java:378) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.Http2ConnectionHandler.decode(Http2ConnectionHandler.java:438) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:510) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:449) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:279) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.epoll.AbstractEpollStreamChannel$EpollStreamUnsafe.epollInReady(AbstractEpollStreamChannel.java:800) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.epoll.EpollEventLoop.processReady(EpollEventLoop.java:487) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.epoll.EpollEventLoop.run(EpollEventLoop.java:385) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:995) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+Caused by: io.grpc.StatusRuntimeException: NOT_FOUND: get entry: key: openmessaging-benchmark-0000000-BI8B0jw table: _system/_tables/examples/streamsInScope.#.66cf46d7-2cc2-4e05-b520-8c2eb9bf2635
+	at io.grpc.Status.asRuntimeException(Status.java:535) ~[io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	... 62 more
+09:41:07.197 [main] INFO EventStreamReaderImpl - Closing reader EventStreamReaderImpl( id=89c7ba2f-f0e6-40d9-8b9e-d202ac41c8e0) at position examples/openmessaging-benchmark-0000000-BI8B0jw/0.#epoch.0=-1.
+09:41:07.204 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [66bf013f-5c3d-415a-9237-fdb56a46456a],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-BI8B0jw/0.#epoch.0, range=null)=-1} }, segment=examples/_RGsub-000-jViklSE/0.#epoch.0)
+09:41:07.205 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-000-jViklSE/0.#epoch.0
+09:41:07.205 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-000-jViklSE/0.#epoch.0
+09:41:07.205 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-000-jViklSE/0.#epoch.0
+09:41:07.205 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-000-jViklSE/0.#epoch.0 will be retransmitted.
+09:41:07.205 [main] INFO PravegaBenchmarkDriver - close: clientConfig=ClientConfig(controllerURI=tcp://10.0.0.93:9090, credentials=null, trustStore=null, validateHostName=true, maxConnectionsPerSegmentStore=10, isDefaultMaxConnections=true, deriveTlsEnabledFromControllerURI=true, enableTlsToController=false, enableTlsToSegmentStore=false, metricListener=null)
+09:41:07.206 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:41:07.206 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+09:41:07.208 [ClientSocketReaders-2] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:41:07.209 [ClientSocketReaders-3] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:41:07.209 [ClientSocketReaders-4] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:41:07.210 [ClientSocketReaders-5] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:41:07.211 [ClientSocketReaders-6] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:41:07.216 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:41:07.216 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+09:41:07.217 [ClientSocketReaders-1] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:41:07.220 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:41:07.220 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+sudo bin/benchmark \
+> --drivers driver-pravega/pravega-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-100-10.yaml \
+> workloads/tpc-h-base-long.yaml
+09:41:30.320 [main] INFO Benchmark - Using default worker file workers.yaml!
+09:41:30.328 [main] INFO Benchmark - Reading workers list from workers.yaml
+09:41:30.379 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-pravega/pravega-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.39:8080", "http://10.0.0.138:8080", "http://10.0.0.225:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-100-10.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+09:41:30.395 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+09:41:30.405 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-100-10",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 10
+} ]
+09:41:30.419 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+09:41:30.785 [main] INFO CentralWorkerStats - Central worker stats initialized
+09:41:31.360 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.39:8080,http://10.0.0.138:8080,http://10.0.0.225:8080]
+09:41:31.361 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.39:8080,http://10.0.0.138:8080,http://10.0.0.225:8080
+09:41:31.364 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pravega---------------
+09:41:31.723 [main] INFO LocalWorker - Driver: {
+  "name" : "Pravega",
+  "driverClass" : "io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver"
+}
+09:41:31.729 [main] INFO PravegaBenchmarkDriver - Pravega driver configuration: {
+  "client" : {
+    "controllerURI" : "tcp://10.0.0.93:9090",
+    "scopeName" : "examples"
+  },
+  "writer" : {
+    "enableConnectionPooling" : true
+  },
+  "includeTimestampInEvent" : true,
+  "enableTransaction" : false,
+  "eventsPerTransaction" : 1,
+  "enableStreamAutoScaling" : false,
+  "eventsPerSecond" : -1,
+  "kbytesPerSecond" : 1000000,
+  "createScope" : true,
+  "deleteStreams" : true
+}
+09:41:31.985 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:41:31.992 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:41:31.998 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:41:34.544 [main] INFO WorkloadGenerator - Created 14 topics in 2540.812166 ms
+09:41:39.154 [main] INFO WorkloadGenerator - Created 14 external consumers in 4607.981878 ms
+09:41:39.157 [main] INFO PravegaBenchmarkConsumer - PravegaBenchmarkConsumer: BEGIN: subscriptionName=sub-000-RgLB7Aw, streamName=openmessaging-benchmark-0000000-bcRyek
+09:41:39.167 [main] INFO ReaderGroupManagerImpl - Creating reader group: sub-000-RgLB7Aw for streams: [StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-bcRyek)] with configuration: ReaderGroupConfig(groupRefreshTimeMillis=3000, automaticCheckpointIntervalMillis=30000, startingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-bcRyek)=UNBOUNDED}, endingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-bcRyek)=UNBOUNDED}, maxOutstandingCheckpointRequest=3, retentionType=NONE, generation=-1, readerGroupId=00000000-0000-0000-0000-000000000000)
+09:41:39.177 [clientInternal-2-1] INFO ControllerImpl - [requestId=-6177240134684224640] Tagging client request (createReaderGroup-examples-sub-000-RgLB7Aw).
+09:41:39.271 [clientInternal-2-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.93:9090]/{}]]
+09:41:39.794 [clientInternal-2-1] INFO ControllerImpl - [requestId=-6177240134684224640] Reader Group examples/sub-000-RgLB7Aw created successfully: {}
+09:41:39.819 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-000-RgLB7Aw and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+09:41:39.821 [clientInternal-2-1] INFO ControllerImpl - [requestId=1492786429935284698] Tagging client request (getCurrentSegments-examples-_RGsub-000-RgLB7Aw).
+09:41:39.840 [clientInternal-2-1] INFO ControllerImpl - [requestId=3669657471530744816] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-RgLB7Aw).
+09:41:39.846 [clientInternal-2-1] INFO ControllerImpl - [requestId=-2945755341418481837] Tagging client request (getURI-examples/_RGsub-000-RgLB7Aw/0.#epoch.0).
+09:41:39.894 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-000-RgLB7Aw/0.#epoch.0, writer 4435b0ca-b82a-4261-8e55-a0605a8e1729
+09:41:39.899 [clientInternal-2-1] INFO ControllerImpl - [requestId=4056999393718997518] Tagging client request (getSegmentsAtTime-examples-openmessaging-benchmark-0000000-bcRyek).
+09:41:39.901 [clientInternal-2-1] INFO ControllerImpl - [requestId=-2009166027972982423] Tagging client request (getURI-examples/_RGsub-000-RgLB7Aw/0.#epoch.0).
+09:41:39.912 [clientInternal-2-1] INFO ControllerImpl - [requestId=8525359040109033881] Tagging client request (getURI-examples/_RGsub-000-RgLB7Aw/0.#epoch.0).
+09:41:39.913 [clientInternal-2-1] INFO ControllerImpl - [requestId=971644015880927399] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-RgLB7Aw).
+09:41:39.913 [ClientSocketReaders-1] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:41:39.921 [clientInternal-2-1] INFO ControllerImpl - [requestId=-405296859093197804] Tagging client request (getURI-examples/_RGsub-000-RgLB7Aw/0.#epoch.0).
+09:41:39.922 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.231:12345 for examples/_RGsub-000-RgLB7Aw/0.#epoch.0, writerID: 4435b0ca-b82a-4261-8e55-a0605a8e1729
+09:41:39.927 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=8589934592, segment=examples/_RGsub-000-RgLB7Aw/0.#epoch.0, writerId=4435b0ca-b82a-4261-8e55-a0605a8e1729, lastEventNumber=-9223372036854775808)
+09:41:39.929 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Connection setup complete for writer 4435b0ca-b82a-4261-8e55-a0605a8e1729
+09:41:39.937 [clientInternal-2-1] INFO ControllerImpl - [requestId=7297624846595991550] Tagging client request (getURI-examples/_RGsub-000-RgLB7Aw/0.#epoch.0).
+09:41:39.953 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-bcRyek/0.#epoch.0, range=null)=0} }, segment=examples/_RGsub-000-RgLB7Aw/0.#epoch.0)
+09:41:39.954 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-000-RgLB7Aw/0.#epoch.0
+09:41:39.954 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-000-RgLB7Aw/0.#epoch.0
+09:41:39.955 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-000-RgLB7Aw/0.#epoch.0
+09:41:39.955 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-000-RgLB7Aw/0.#epoch.0 will be retransmitted.
+09:41:39.956 [main] INFO ClientFactoryImpl - Creating reader: dbdf95c1-efbd-45f5-99cd-b113064dfed3 under readerGroup: sub-000-RgLB7Aw with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+09:41:39.956 [main] INFO ClientFactoryImpl - Creating reader: dbdf95c1-efbd-45f5-99cd-b113064dfed3 under readerGroup: sub-000-RgLB7Aw with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+09:41:39.957 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-000-RgLB7Aw and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+09:41:39.957 [clientInternal-3-1] INFO ControllerImpl - [requestId=-7266045489240677975] Tagging client request (getCurrentSegments-examples-_RGsub-000-RgLB7Aw).
+09:41:39.958 [clientInternal-3-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.93:9090]/{}]]
+09:41:39.968 [clientInternal-3-4] INFO ControllerImpl - [requestId=6378721226457376847] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-RgLB7Aw).
+09:41:39.968 [clientInternal-3-5] INFO ControllerImpl - [requestId=-9120966131331621292] Tagging client request (getURI-examples/_RGsub-000-RgLB7Aw/0.#epoch.0).
+09:41:39.968 [clientInternal-3-7] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-000-RgLB7Aw/0.#epoch.0, writer 9ccec368-45bd-4d58-86cf-d717c78be9e7
+09:41:39.968 [clientInternal-3-1] INFO ControllerImpl - [requestId=-601015404700551756] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-RgLB7Aw).
+09:41:39.969 [clientInternal-3-8] INFO ControllerImpl - [requestId=6111267276120984902] Tagging client request (getURI-examples/_RGsub-000-RgLB7Aw/0.#epoch.0).
+09:41:39.976 [clientInternal-3-6] INFO ControllerImpl - [requestId=-313979016673930953] Tagging client request (getURI-examples/_RGsub-000-RgLB7Aw/0.#epoch.0).
+09:41:39.977 [clientInternal-3-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.231:12345 for examples/_RGsub-000-RgLB7Aw/0.#epoch.0, writerID: 9ccec368-45bd-4d58-86cf-d717c78be9e7
+09:41:39.979 [ClientSocketReaders-2] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:41:39.981 [clientInternal-3-7] INFO ControllerImpl - [requestId=3478450405225261024] Tagging client request (getURI-examples/_RGsub-000-RgLB7Aw/0.#epoch.0).
+09:41:39.981 [ClientSocketReaders-3] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:41:39.985 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=25769803776, segment=examples/_RGsub-000-RgLB7Aw/0.#epoch.0, writerId=9ccec368-45bd-4d58-86cf-d717c78be9e7, lastEventNumber=-9223372036854775808)
+09:41:39.986 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Connection setup complete for writer 9ccec368-45bd-4d58-86cf-d717c78be9e7
+09:41:39.989 [ClientSocketReaders-4] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:41:39.997 [clientInternal-3-3] INFO ControllerImpl - [requestId=-1123048470097468818] Tagging client request (getURI-examples/_RGsub-000-RgLB7Aw/0.#epoch.0).
+09:41:40.003 [ClientSocketReaders-5] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:41:40.016 [main] INFO LocalWorker - Created 1 consumers in 861.68603 ms
+09:41:40.026 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=dbdf95c1-efbd-45f5-99cd-b113064dfed3) acquiring segments {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-bcRyek/0.#epoch.0, range=null)=0}
+09:41:40.027 [clientInternal-3-8] INFO ControllerImpl - [requestId=-2735208897532025607] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000000-bcRyek).
+09:41:40.027 [clientInternal-3-1] INFO ControllerImpl - [requestId=2562579559465945580] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-bcRyek/0.#epoch.0).
+09:41:40.035 [ClientSocketReaders-6] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:41:40.202 [main] INFO WorkloadGenerator - Created 14 producers in 185.576969 ms
+09:41:40.203 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+09:41:40.216 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 10, Received: 8, Expected: 0
+09:41:40.217 [main] INFO WorkloadGenerator - All consumers are ready!
+09:41:40.217 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pravega-tpc-h-tpc-h-q1-100-10-2024-06-04-09-41-32 at 1717494100217
+09:41:40.982 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=dbdf95c1-efbd-45f5-99cd-b113064dfed3) at checkpoint 7401e68f-dd6e-46bf-9919-8d4a5e16368c
+09:41:40.988 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader dbdf95c1-efbd-45f5-99cd-b113064dfed3 completed checkpoint 7401e68f-dd6e-46bf-9919-8d4a5e16368c
+09:42:11.105 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=dbdf95c1-efbd-45f5-99cd-b113064dfed3) at checkpoint 9135aa54-31db-4916-9906-e0a4e7b348a5
+09:42:11.109 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader dbdf95c1-efbd-45f5-99cd-b113064dfed3 completed checkpoint 9135aa54-31db-4916-9906-e0a4e7b348a5
+09:42:41.116 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=dbdf95c1-efbd-45f5-99cd-b113064dfed3) at checkpoint a34c2553-2a51-4fb7-935c-fbe3266bea2f
+09:42:41.120 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader dbdf95c1-efbd-45f5-99cd-b113064dfed3 completed checkpoint a34c2553-2a51-4fb7-935c-fbe3266bea2f
+09:42:58.172 [pool-7-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.13274,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880073,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":26,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612946,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":26,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+09:42:58.173 [pool-7-thread-1] INFO LocalWorker - [RESULT] Observed at 1717494178173
+09:43:00.270 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pravega-tpc-h-tpc-h-q1-100-10-2024-06-04-09-41-32 at 1717494180270
+09:43:02.973 [ClientSocketReaders-6] INFO AsyncSegmentInputStreamImpl - Received segmentSealed WireCommands.SegmentIsSealed(type=SEGMENT_IS_SEALED, requestId=38654705664, segment=examples/openmessaging-benchmark-0000000-bcRyek/0.#epoch.0, serverStackTrace=, offset=18627)
+09:43:02.974 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=dbdf95c1-efbd-45f5-99cd-b113064dfed3) encountered end of segment examples/openmessaging-benchmark-0000000-bcRyek/0.#epoch.0
+09:43:02.974 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/openmessaging-benchmark-0000000-bcRyek/0.#epoch.0
+09:43:02.974 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/openmessaging-benchmark-0000000-bcRyek/0.#epoch.0
+09:43:02.974 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/openmessaging-benchmark-0000000-bcRyek/0.#epoch.0 will be retransmitted.
+09:43:06.979 [main] INFO EventStreamReaderImpl - Closing reader EventStreamReaderImpl( id=dbdf95c1-efbd-45f5-99cd-b113064dfed3) at position examples/openmessaging-benchmark-0000000-bcRyek/0.#epoch.0=-1.
+09:43:06.986 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [a34c2553-2a51-4fb7-935c-fbe3266bea2f],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-bcRyek/0.#epoch.0, range=null)=-1} }, segment=examples/_RGsub-000-RgLB7Aw/0.#epoch.0)
+09:43:06.986 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-000-RgLB7Aw/0.#epoch.0
+09:43:06.986 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-000-RgLB7Aw/0.#epoch.0
+09:43:06.986 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-000-RgLB7Aw/0.#epoch.0
+09:43:06.986 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-000-RgLB7Aw/0.#epoch.0 will be retransmitted.
+09:43:06.986 [main] INFO PravegaBenchmarkDriver - close: clientConfig=ClientConfig(controllerURI=tcp://10.0.0.93:9090, credentials=null, trustStore=null, validateHostName=true, maxConnectionsPerSegmentStore=10, isDefaultMaxConnections=true, deriveTlsEnabledFromControllerURI=true, enableTlsToController=false, enableTlsToSegmentStore=false, metricListener=null)
+09:43:06.988 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:43:06.988 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+09:43:06.991 [ClientSocketReaders-6] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:43:06.992 [ClientSocketReaders-2] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:43:06.992 [ClientSocketReaders-3] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:43:06.993 [ClientSocketReaders-4] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:43:06.993 [ClientSocketReaders-5] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:43:06.999 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:43:06.999 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+09:43:06.999 [ClientSocketReaders-1] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:43:07.001 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:43:07.002 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+sudo bin/benchmark \
+> --drivers driver-pravega/pravega-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-100-30.yaml \
+> workloads/tpc-h-base-long.yaml
+09:43:18.143 [main] INFO Benchmark - Using default worker file workers.yaml!
+09:43:18.152 [main] INFO Benchmark - Reading workers list from workers.yaml
+09:43:18.199 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-pravega/pravega-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.39:8080", "http://10.0.0.138:8080", "http://10.0.0.225:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-100-30.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+09:43:18.214 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+09:43:18.223 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-100-30",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 30
+} ]
+09:43:18.236 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+09:43:18.571 [main] INFO CentralWorkerStats - Central worker stats initialized
+09:43:19.126 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.39:8080,http://10.0.0.138:8080,http://10.0.0.225:8080]
+09:43:19.126 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.39:8080,http://10.0.0.138:8080,http://10.0.0.225:8080
+09:43:19.129 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pravega---------------
+09:43:19.481 [main] INFO LocalWorker - Driver: {
+  "name" : "Pravega",
+  "driverClass" : "io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver"
+}
+09:43:19.487 [main] INFO PravegaBenchmarkDriver - Pravega driver configuration: {
+  "client" : {
+    "controllerURI" : "tcp://10.0.0.93:9090",
+    "scopeName" : "examples"
+  },
+  "writer" : {
+    "enableConnectionPooling" : true
+  },
+  "includeTimestampInEvent" : true,
+  "enableTransaction" : false,
+  "eventsPerTransaction" : 1,
+  "enableStreamAutoScaling" : false,
+  "eventsPerSecond" : -1,
+  "kbytesPerSecond" : 1000000,
+  "createScope" : true,
+  "deleteStreams" : true
+}
+09:43:19.700 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:43:19.707 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:43:19.712 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:43:25.640 [main] INFO WorkloadGenerator - Created 34 topics in 5923.015263 ms
+09:43:37.262 [main] INFO WorkloadGenerator - Created 34 external consumers in 11618.65894 ms
+09:43:37.264 [main] INFO PravegaBenchmarkConsumer - PravegaBenchmarkConsumer: BEGIN: subscriptionName=sub-000-I4OoN18, streamName=openmessaging-benchmark-0000000-hMOOAXQ
+09:43:37.273 [main] INFO ReaderGroupManagerImpl - Creating reader group: sub-000-I4OoN18 for streams: [StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-hMOOAXQ)] with configuration: ReaderGroupConfig(groupRefreshTimeMillis=3000, automaticCheckpointIntervalMillis=30000, startingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-hMOOAXQ)=UNBOUNDED}, endingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-hMOOAXQ)=UNBOUNDED}, maxOutstandingCheckpointRequest=3, retentionType=NONE, generation=-1, readerGroupId=00000000-0000-0000-0000-000000000000)
+09:43:37.283 [clientInternal-2-1] INFO ControllerImpl - [requestId=-7057685709180496050] Tagging client request (createReaderGroup-examples-sub-000-I4OoN18).
+09:43:37.380 [clientInternal-2-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.93:9090]/{}]]
+09:43:37.891 [clientInternal-2-1] INFO ControllerImpl - [requestId=-7057685709180496050] Reader Group examples/sub-000-I4OoN18 created successfully: {}
+09:43:37.914 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-000-I4OoN18 and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+09:43:37.916 [clientInternal-2-1] INFO ControllerImpl - [requestId=-8889296021793355069] Tagging client request (getCurrentSegments-examples-_RGsub-000-I4OoN18).
+09:43:37.934 [clientInternal-2-1] INFO ControllerImpl - [requestId=-3861922302294917627] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-I4OoN18).
+09:43:37.940 [clientInternal-2-1] INFO ControllerImpl - [requestId=8617656647319498620] Tagging client request (getURI-examples/_RGsub-000-I4OoN18/0.#epoch.0).
+09:43:37.991 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-000-I4OoN18/0.#epoch.0, writer 9f64f12e-b6dd-4954-ba2a-bc3d7c99a1b4
+09:43:37.991 [ClientSocketReaders-1] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:43:37.996 [clientInternal-2-1] INFO ControllerImpl - [requestId=-3560646267547291434] Tagging client request (getSegmentsAtTime-examples-openmessaging-benchmark-0000000-hMOOAXQ).
+09:43:37.997 [clientInternal-2-1] INFO ControllerImpl - [requestId=7639346264259495243] Tagging client request (getURI-examples/_RGsub-000-I4OoN18/0.#epoch.0).
+09:43:37.997 [clientInternal-2-1] INFO ControllerImpl - [requestId=3510689120074063868] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-I4OoN18).
+09:43:38.004 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.231:12345 for examples/_RGsub-000-I4OoN18/0.#epoch.0, writerID: 9f64f12e-b6dd-4954-ba2a-bc3d7c99a1b4
+09:43:38.009 [clientInternal-2-1] INFO ControllerImpl - [requestId=-3949844684763287497] Tagging client request (getURI-examples/_RGsub-000-I4OoN18/0.#epoch.0).
+09:43:38.009 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=8589934592, segment=examples/_RGsub-000-I4OoN18/0.#epoch.0, writerId=9f64f12e-b6dd-4954-ba2a-bc3d7c99a1b4, lastEventNumber=-9223372036854775808)
+09:43:38.011 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Connection setup complete for writer 9f64f12e-b6dd-4954-ba2a-bc3d7c99a1b4
+09:43:38.022 [clientInternal-2-1] INFO ControllerImpl - [requestId=-1002104471299845465] Tagging client request (getURI-examples/_RGsub-000-I4OoN18/0.#epoch.0).
+09:43:38.037 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-hMOOAXQ/0.#epoch.0, range=null)=0} }, segment=examples/_RGsub-000-I4OoN18/0.#epoch.0)
+09:43:38.038 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-000-I4OoN18/0.#epoch.0
+09:43:38.038 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-000-I4OoN18/0.#epoch.0
+09:43:38.038 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-000-I4OoN18/0.#epoch.0
+09:43:38.038 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-000-I4OoN18/0.#epoch.0 will be retransmitted.
+09:43:38.039 [main] INFO ClientFactoryImpl - Creating reader: 7f874148-3f8f-4ae1-8ce9-75218168d371 under readerGroup: sub-000-I4OoN18 with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+09:43:38.039 [main] INFO ClientFactoryImpl - Creating reader: 7f874148-3f8f-4ae1-8ce9-75218168d371 under readerGroup: sub-000-I4OoN18 with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+09:43:38.040 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-000-I4OoN18 and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+09:43:38.040 [clientInternal-3-1] INFO ControllerImpl - [requestId=2885069340094306740] Tagging client request (getCurrentSegments-examples-_RGsub-000-I4OoN18).
+09:43:38.040 [clientInternal-3-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.93:9090]/{}]]
+09:43:38.050 [clientInternal-3-4] INFO ControllerImpl - [requestId=7747988168267174220] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-I4OoN18).
+09:43:38.050 [clientInternal-3-5] INFO ControllerImpl - [requestId=3184273931545101874] Tagging client request (getURI-examples/_RGsub-000-I4OoN18/0.#epoch.0).
+09:43:38.051 [clientInternal-3-7] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-000-I4OoN18/0.#epoch.0, writer 95576cac-fddc-4d91-92ff-e2c095bf2588
+09:43:38.051 [clientInternal-3-1] INFO ControllerImpl - [requestId=-933181794597180580] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-I4OoN18).
+09:43:38.051 [clientInternal-3-8] INFO ControllerImpl - [requestId=1320835251923865270] Tagging client request (getURI-examples/_RGsub-000-I4OoN18/0.#epoch.0).
+09:43:38.058 [clientInternal-3-2] INFO ControllerImpl - [requestId=-5853908308473766396] Tagging client request (getURI-examples/_RGsub-000-I4OoN18/0.#epoch.0).
+09:43:38.059 [clientInternal-3-4] INFO ControllerImpl - [requestId=-6328473097698612867] Tagging client request (getURI-examples/_RGsub-000-I4OoN18/0.#epoch.0).
+09:43:38.060 [clientInternal-3-4] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.231:12345 for examples/_RGsub-000-I4OoN18/0.#epoch.0, writerID: 95576cac-fddc-4d91-92ff-e2c095bf2588
+09:43:38.063 [ClientSocketReaders-2] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:43:38.063 [ClientSocketReaders-3] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:43:38.064 [ClientSocketReaders-2] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=25769803776, segment=examples/_RGsub-000-I4OoN18/0.#epoch.0, writerId=95576cac-fddc-4d91-92ff-e2c095bf2588, lastEventNumber=-9223372036854775808)
+09:43:38.065 [ClientSocketReaders-2] INFO SegmentOutputStreamImpl - Connection setup complete for writer 95576cac-fddc-4d91-92ff-e2c095bf2588
+09:43:38.066 [ClientSocketReaders-4] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:43:38.073 [clientInternal-3-3] INFO ControllerImpl - [requestId=-4855886283851535658] Tagging client request (getURI-examples/_RGsub-000-I4OoN18/0.#epoch.0).
+09:43:38.078 [ClientSocketReaders-5] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:43:38.089 [main] INFO LocalWorker - Created 1 consumers in 827.646919 ms
+09:43:38.099 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=7f874148-3f8f-4ae1-8ce9-75218168d371) acquiring segments {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-hMOOAXQ/0.#epoch.0, range=null)=0}
+09:43:38.100 [clientInternal-3-1] INFO ControllerImpl - [requestId=6121620274280276011] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000000-hMOOAXQ).
+09:43:38.100 [clientInternal-3-6] INFO ControllerImpl - [requestId=623041277541891264] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-hMOOAXQ/0.#epoch.0).
+09:43:38.105 [clientInternal-3-7] INFO ControllerImpl - [requestId=-8596613020140638040] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-hMOOAXQ/0.#epoch.0).
+09:43:38.111 [ClientSocketReaders-6] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:43:38.418 [main] INFO WorkloadGenerator - Created 34 producers in 328.023151 ms
+09:43:38.418 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+09:43:38.445 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 116, Received: 32, Expected: 0
+09:43:38.446 [main] INFO WorkloadGenerator - All consumers are ready!
+09:43:38.446 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pravega-tpc-h-tpc-h-q1-100-30-2024-06-04-09-43-19 at 1717494218446
+09:43:40.040 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=7f874148-3f8f-4ae1-8ce9-75218168d371) at checkpoint 56555fc2-5a92-4c49-a4e6-4efedc7839c7
+09:43:40.046 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 7f874148-3f8f-4ae1-8ce9-75218168d371 completed checkpoint 56555fc2-5a92-4c49-a4e6-4efedc7839c7
+09:44:10.162 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=7f874148-3f8f-4ae1-8ce9-75218168d371) at checkpoint e0d63831-d18a-4478-b28f-c1da886af317
+09:44:10.165 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 7f874148-3f8f-4ae1-8ce9-75218168d371 completed checkpoint e0d63831-d18a-4478-b28f-c1da886af317
+09:44:38.371 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 10
+09:44:40.414 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=7f874148-3f8f-4ae1-8ce9-75218168d371) at checkpoint 5ac4317a-ec03-411e-9d55-119d47f2a2c9
+09:44:40.419 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 7f874148-3f8f-4ae1-8ce9-75218168d371 completed checkpoint 5ac4317a-ec03-411e-9d55-119d47f2a2c9
+09:44:50.502 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 20
+09:44:53.117 [pool-7-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132740,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880077,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":26,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612940,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":26,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+09:44:53.117 [pool-7-thread-1] INFO LocalWorker - [RESULT] Observed at 1717494293117
+09:44:58.504 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pravega-tpc-h-tpc-h-q1-100-30-2024-06-04-09-43-19 at 1717494298504
+09:45:03.780 [ClientSocketReaders-6] INFO AsyncSegmentInputStreamImpl - Received segmentSealed WireCommands.SegmentIsSealed(type=SEGMENT_IS_SEALED, requestId=38654705664, segment=examples/openmessaging-benchmark-0000000-hMOOAXQ/0.#epoch.0, serverStackTrace=, offset=46216)
+09:45:03.781 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=7f874148-3f8f-4ae1-8ce9-75218168d371) encountered end of segment examples/openmessaging-benchmark-0000000-hMOOAXQ/0.#epoch.0
+09:45:03.781 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/openmessaging-benchmark-0000000-hMOOAXQ/0.#epoch.0
+09:45:03.782 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/openmessaging-benchmark-0000000-hMOOAXQ/0.#epoch.0
+09:45:03.782 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/openmessaging-benchmark-0000000-hMOOAXQ/0.#epoch.0 will be retransmitted.
+09:45:10.798 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=7f874148-3f8f-4ae1-8ce9-75218168d371) at checkpoint dce3b135-d24c-4ecb-b56b-5ce7bd759037
+09:45:10.801 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 7f874148-3f8f-4ae1-8ce9-75218168d371 completed checkpoint dce3b135-d24c-4ecb-b56b-5ce7bd759037
+09:45:10.801 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=7f874148-3f8f-4ae1-8ce9-75218168d371) releasing sealed segment examples/openmessaging-benchmark-0000000-hMOOAXQ/0.#epoch.0
+09:45:10.802 [clientInternal-3-4] INFO ControllerImpl - [requestId=3209537895106517581] Tagging client request (getSegmentsImmediatelyFollowing-examples/openmessaging-benchmark-0000000-hMOOAXQ/0.#epoch.0).
+09:45:10.808 [grpc-default-worker-ELG-1-6] WARN ControllerImpl - gRPC call for getSuccessors with trace id 3209537895106517581 and parameters [examples/openmessaging-benchmark-0000000-hMOOAXQ/0.#epoch.0] failed with server error.
+io.grpc.StatusRuntimeException: NOT_FOUND: get entry: key: openmessaging-benchmark-0000000-hMOOAXQ table: _system/_tables/examples/streamsInScope.#.66cf46d7-2cc2-4e05-b520-8c2eb9bf2635
+	at io.grpc.Status.asRuntimeException(Status.java:535) ~[io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.stub.ClientCalls$StreamObserverToCallListenerAdapter.onClose(ClientCalls.java:487) [io.grpc-grpc-stub-1.49.0.jar:1.49.0]
+	at io.grpc.PartialForwardingClientCallListener.onClose(PartialForwardingClientCallListener.java:39) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.ForwardingClientCallListener.onClose(ForwardingClientCallListener.java:23) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.ForwardingClientCallListener$SimpleForwardingClientCallListener.onClose(ForwardingClientCallListener.java:40) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl.closeObserver(ClientCallImpl.java:563) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl.access$300(ClientCallImpl.java:70) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInternal(ClientCallImpl.java:744) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInContext(ClientCallImpl.java:723) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.SerializeReentrantCallsDirectExecutor.execute(SerializeReentrantCallsDirectExecutor.java:49) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.closedInternal(ClientCallImpl.java:752) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.closed(ClientCallImpl.java:688) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.RetriableStream$Sublistener$5.run(RetriableStream.java:986) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.SynchronizationContext.drain(SynchronizationContext.java:95) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.SynchronizationContext.execute(SynchronizationContext.java:127) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.internal.RetriableStream$Sublistener.closed(RetriableStream.java:981) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ForwardingClientStreamListener.closed(ForwardingClientStreamListener.java:34) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.InternalSubchannel$CallTracingTransport$1$1.closed(InternalSubchannel.java:693) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.closeListener(AbstractClientStream.java:458) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.access$400(AbstractClientStream.java:221) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState$1.run(AbstractClientStream.java:441) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.deframerClosed(AbstractClientStream.java:278) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.Http2ClientStreamTransportState.deframerClosed(Http2ClientStreamTransportState.java:31) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.MessageDeframer.close(MessageDeframer.java:234) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.MessageDeframer.closeWhenComplete(MessageDeframer.java:192) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractStream$TransportState.closeDeframer(AbstractStream.java:200) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.transportReportStatus(AbstractClientStream.java:444) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.transportReportStatus(AbstractClientStream.java:400) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.inboundTrailersReceived(AbstractClientStream.java:383) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.Http2ClientStreamTransportState.transportTrailersReceived(Http2ClientStreamTransportState.java:183) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.grpc.netty.NettyClientStream$TransportState.transportHeadersReceived(NettyClientStream.java:341) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.grpc.netty.NettyClientHandler.onHeadersRead(NettyClientHandler.java:372) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.grpc.netty.NettyClientHandler.access$1200(NettyClientHandler.java:91) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.grpc.netty.NettyClientHandler$FrameListener.onHeadersRead(NettyClientHandler.java:940) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2ConnectionDecoder$FrameReadListener.onHeadersRead(DefaultHttp2ConnectionDecoder.java:409) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2ConnectionDecoder$FrameReadListener.onHeadersRead(DefaultHttp2ConnectionDecoder.java:337) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.Http2InboundFrameLogger$1.onHeadersRead(Http2InboundFrameLogger.java:56) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2FrameReader$2.processFragment(DefaultHttp2FrameReader.java:476) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2FrameReader.readHeadersFrame(DefaultHttp2FrameReader.java:484) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2FrameReader.processPayloadState(DefaultHttp2FrameReader.java:253) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2FrameReader.readFrame(DefaultHttp2FrameReader.java:159) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.Http2InboundFrameLogger.readFrame(Http2InboundFrameLogger.java:41) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2ConnectionDecoder.decodeFrame(DefaultHttp2ConnectionDecoder.java:173) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.Http2ConnectionHandler$FrameDecoder.decode(Http2ConnectionHandler.java:378) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.Http2ConnectionHandler.decode(Http2ConnectionHandler.java:438) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:510) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:449) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:279) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.epoll.AbstractEpollStreamChannel$EpollStreamUnsafe.epollInReady(AbstractEpollStreamChannel.java:800) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.epoll.EpollEventLoop.processReady(EpollEventLoop.java:487) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.epoll.EpollEventLoop.run(EpollEventLoop.java:385) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:995) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+09:45:10.815 [grpc-default-worker-ELG-1-6] WARN ControllerImpl - [requestId=3209537895106517581] getSuccessors of segment 0 failed:
+java.util.concurrent.CompletionException: io.grpc.StatusRuntimeException: NOT_FOUND: get entry: key: openmessaging-benchmark-0000000-hMOOAXQ table: _system/_tables/examples/streamsInScope.#.66cf46d7-2cc2-4e05-b520-8c2eb9bf2635
+	at java.util.concurrent.CompletableFuture.encodeRelay(CompletableFuture.java:367) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeRelay(CompletableFuture.java:376) ~[?:?]
+	at java.util.concurrent.CompletableFuture$UniRelay.tryFire(CompletableFuture.java:1019) ~[?:?]
+	at java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506) [?:?]
+	at java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2094) [?:?]
+	at io.pravega.client.control.impl.ControllerImpl$RPCAsyncCallback.onError(ControllerImpl.java:2044) [io.pravega-pravega-client-0.12.0.jar:?]
+	at io.grpc.stub.ClientCalls$StreamObserverToCallListenerAdapter.onClose(ClientCalls.java:487) [io.grpc-grpc-stub-1.49.0.jar:1.49.0]
+	at io.grpc.PartialForwardingClientCallListener.onClose(PartialForwardingClientCallListener.java:39) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.ForwardingClientCallListener.onClose(ForwardingClientCallListener.java:23) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.ForwardingClientCallListener$SimpleForwardingClientCallListener.onClose(ForwardingClientCallListener.java:40) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl.closeObserver(ClientCallImpl.java:563) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl.access$300(ClientCallImpl.java:70) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInternal(ClientCallImpl.java:744) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl$1StreamClosed.runInContext(ClientCallImpl.java:723) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.SerializeReentrantCallsDirectExecutor.execute(SerializeReentrantCallsDirectExecutor.java:49) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.closedInternal(ClientCallImpl.java:752) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ClientCallImpl$ClientStreamListenerImpl.closed(ClientCallImpl.java:688) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.RetriableStream$Sublistener$5.run(RetriableStream.java:986) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.SynchronizationContext.drain(SynchronizationContext.java:95) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.SynchronizationContext.execute(SynchronizationContext.java:127) [io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	at io.grpc.internal.RetriableStream$Sublistener.closed(RetriableStream.java:981) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.ForwardingClientStreamListener.closed(ForwardingClientStreamListener.java:34) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.InternalSubchannel$CallTracingTransport$1$1.closed(InternalSubchannel.java:693) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.closeListener(AbstractClientStream.java:458) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.access$400(AbstractClientStream.java:221) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState$1.run(AbstractClientStream.java:441) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.deframerClosed(AbstractClientStream.java:278) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.Http2ClientStreamTransportState.deframerClosed(Http2ClientStreamTransportState.java:31) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.MessageDeframer.close(MessageDeframer.java:234) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.MessageDeframer.closeWhenComplete(MessageDeframer.java:192) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractStream$TransportState.closeDeframer(AbstractStream.java:200) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.transportReportStatus(AbstractClientStream.java:444) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.transportReportStatus(AbstractClientStream.java:400) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.AbstractClientStream$TransportState.inboundTrailersReceived(AbstractClientStream.java:383) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.internal.Http2ClientStreamTransportState.transportTrailersReceived(Http2ClientStreamTransportState.java:183) [io.grpc-grpc-core-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.grpc.netty.NettyClientStream$TransportState.transportHeadersReceived(NettyClientStream.java:341) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.grpc.netty.NettyClientHandler.onHeadersRead(NettyClientHandler.java:372) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.grpc.netty.NettyClientHandler.access$1200(NettyClientHandler.java:91) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.grpc.netty.NettyClientHandler$FrameListener.onHeadersRead(NettyClientHandler.java:940) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2ConnectionDecoder$FrameReadListener.onHeadersRead(DefaultHttp2ConnectionDecoder.java:409) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2ConnectionDecoder$FrameReadListener.onHeadersRead(DefaultHttp2ConnectionDecoder.java:337) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.Http2InboundFrameLogger$1.onHeadersRead(Http2InboundFrameLogger.java:56) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2FrameReader$2.processFragment(DefaultHttp2FrameReader.java:476) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2FrameReader.readHeadersFrame(DefaultHttp2FrameReader.java:484) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2FrameReader.processPayloadState(DefaultHttp2FrameReader.java:253) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2FrameReader.readFrame(DefaultHttp2FrameReader.java:159) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.Http2InboundFrameLogger.readFrame(Http2InboundFrameLogger.java:41) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.DefaultHttp2ConnectionDecoder.decodeFrame(DefaultHttp2ConnectionDecoder.java:173) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.Http2ConnectionHandler$FrameDecoder.decode(Http2ConnectionHandler.java:378) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.http2.Http2ConnectionHandler.decode(Http2ConnectionHandler.java:438) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:510) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:449) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:279) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:357) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:379) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:365) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.epoll.AbstractEpollStreamChannel$EpollStreamUnsafe.epollInReady(AbstractEpollStreamChannel.java:800) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.epoll.EpollEventLoop.processReady(EpollEventLoop.java:487) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.channel.epoll.EpollEventLoop.run(EpollEventLoop.java:385) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:995) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at io.grpc.netty.shaded.io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) [io.grpc-grpc-netty-shaded-1.49.0.jar:1.49.0]
+	at java.lang.Thread.run(Thread.java:829) [?:?]
+Caused by: io.grpc.StatusRuntimeException: NOT_FOUND: get entry: key: openmessaging-benchmark-0000000-hMOOAXQ table: _system/_tables/examples/streamsInScope.#.66cf46d7-2cc2-4e05-b520-8c2eb9bf2635
+	at io.grpc.Status.asRuntimeException(Status.java:535) ~[io.grpc-grpc-api-1.49.0.jar:1.49.0]
+	... 62 more
+09:45:11.351 [main] INFO EventStreamReaderImpl - Closing reader EventStreamReaderImpl( id=7f874148-3f8f-4ae1-8ce9-75218168d371) at position examples/openmessaging-benchmark-0000000-hMOOAXQ/0.#epoch.0=-1.
+09:45:11.357 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [dce3b135-d24c-4ecb-b56b-5ce7bd759037],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-hMOOAXQ/0.#epoch.0, range=null)=-1} }, segment=examples/_RGsub-000-I4OoN18/0.#epoch.0)
+09:45:11.358 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-000-I4OoN18/0.#epoch.0
+09:45:11.358 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-000-I4OoN18/0.#epoch.0
+09:45:11.358 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-000-I4OoN18/0.#epoch.0
+09:45:11.358 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-000-I4OoN18/0.#epoch.0 will be retransmitted.
+09:45:11.358 [main] INFO PravegaBenchmarkDriver - close: clientConfig=ClientConfig(controllerURI=tcp://10.0.0.93:9090, credentials=null, trustStore=null, validateHostName=true, maxConnectionsPerSegmentStore=10, isDefaultMaxConnections=true, deriveTlsEnabledFromControllerURI=true, enableTlsToController=false, enableTlsToSegmentStore=false, metricListener=null)
+09:45:11.359 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:45:11.359 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+09:45:11.362 [ClientSocketReaders-6] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:45:11.362 [ClientSocketReaders-2] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:45:11.363 [ClientSocketReaders-3] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:45:11.364 [ClientSocketReaders-4] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:45:11.364 [ClientSocketReaders-5] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:45:11.382 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:45:11.382 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+09:45:11.383 [ClientSocketReaders-1] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:45:11.385 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:45:11.385 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+sudo bin/benchmark \
+> --drivers driver-pravega/pravega-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-100-50.yaml \
+> workloads/tpc-h-base-long.yaml
+09:45:24.416 [main] INFO Benchmark - Using default worker file workers.yaml!
+09:45:24.423 [main] INFO Benchmark - Reading workers list from workers.yaml
+09:45:24.472 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-pravega/pravega-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.39:8080", "http://10.0.0.138:8080", "http://10.0.0.225:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-100-50.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+09:45:24.487 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+09:45:24.497 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-100-50",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 50
+} ]
+09:45:24.510 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+09:45:24.848 [main] INFO CentralWorkerStats - Central worker stats initialized
+09:45:25.393 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.39:8080,http://10.0.0.138:8080,http://10.0.0.225:8080]
+09:45:25.394 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.39:8080,http://10.0.0.138:8080,http://10.0.0.225:8080
+09:45:25.396 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pravega---------------
+09:45:25.761 [main] INFO LocalWorker - Driver: {
+  "name" : "Pravega",
+  "driverClass" : "io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver"
+}
+09:45:25.767 [main] INFO PravegaBenchmarkDriver - Pravega driver configuration: {
+  "client" : {
+    "controllerURI" : "tcp://10.0.0.93:9090",
+    "scopeName" : "examples"
+  },
+  "writer" : {
+    "enableConnectionPooling" : true
+  },
+  "includeTimestampInEvent" : true,
+  "enableTransaction" : false,
+  "eventsPerTransaction" : 1,
+  "enableStreamAutoScaling" : false,
+  "eventsPerSecond" : -1,
+  "kbytesPerSecond" : 1000000,
+  "createScope" : true,
+  "deleteStreams" : true
+}
+09:45:26.006 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:45:26.013 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:45:26.018 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:45:35.458 [main] INFO WorkloadGenerator - Created 54 topics in 9434.703546 ms
+09:45:53.725 [main] INFO WorkloadGenerator - Created 54 external consumers in 18264.09215 ms
+09:45:53.728 [main] INFO PravegaBenchmarkConsumer - PravegaBenchmarkConsumer: BEGIN: subscriptionName=sub-000-CqpwoQw, streamName=openmessaging-benchmark-0000000-wOky2j0
+09:45:53.737 [main] INFO ReaderGroupManagerImpl - Creating reader group: sub-000-CqpwoQw for streams: [StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-wOky2j0)] with configuration: ReaderGroupConfig(groupRefreshTimeMillis=3000, automaticCheckpointIntervalMillis=30000, startingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-wOky2j0)=UNBOUNDED}, endingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-wOky2j0)=UNBOUNDED}, maxOutstandingCheckpointRequest=3, retentionType=NONE, generation=-1, readerGroupId=00000000-0000-0000-0000-000000000000)
+09:45:53.746 [clientInternal-2-1] INFO ControllerImpl - [requestId=325788655991629715] Tagging client request (createReaderGroup-examples-sub-000-CqpwoQw).
+09:45:53.845 [clientInternal-2-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.93:9090]/{}]]
+09:45:54.361 [clientInternal-2-1] INFO ControllerImpl - [requestId=325788655991629715] Reader Group examples/sub-000-CqpwoQw created successfully: {}
+09:45:54.385 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-000-CqpwoQw and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+09:45:54.387 [clientInternal-2-1] INFO ControllerImpl - [requestId=6652878579595793190] Tagging client request (getCurrentSegments-examples-_RGsub-000-CqpwoQw).
+09:45:54.405 [clientInternal-2-1] INFO ControllerImpl - [requestId=-7077295542676440471] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-CqpwoQw).
+09:45:54.412 [clientInternal-2-1] INFO ControllerImpl - [requestId=-5622062703342260319] Tagging client request (getURI-examples/_RGsub-000-CqpwoQw/0.#epoch.0).
+09:45:54.469 [ClientSocketReaders-1] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:45:54.469 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-000-CqpwoQw/0.#epoch.0, writer 62c993b6-af4f-4aed-8ede-a5d800d47b3a
+09:45:54.474 [clientInternal-2-1] INFO ControllerImpl - [requestId=-2948487386181855543] Tagging client request (getSegmentsAtTime-examples-openmessaging-benchmark-0000000-wOky2j0).
+09:45:54.475 [clientInternal-2-1] INFO ControllerImpl - [requestId=8312037730370629905] Tagging client request (getURI-examples/_RGsub-000-CqpwoQw/0.#epoch.0).
+09:45:54.476 [clientInternal-2-1] INFO ControllerImpl - [requestId=8810330002930700409] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-CqpwoQw).
+09:45:54.483 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.231:12345 for examples/_RGsub-000-CqpwoQw/0.#epoch.0, writerID: 62c993b6-af4f-4aed-8ede-a5d800d47b3a
+09:45:54.488 [clientInternal-2-1] INFO ControllerImpl - [requestId=1140485040872109990] Tagging client request (getURI-examples/_RGsub-000-CqpwoQw/0.#epoch.0).
+09:45:54.488 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=8589934592, segment=examples/_RGsub-000-CqpwoQw/0.#epoch.0, writerId=62c993b6-af4f-4aed-8ede-a5d800d47b3a, lastEventNumber=-9223372036854775808)
+09:45:54.490 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Connection setup complete for writer 62c993b6-af4f-4aed-8ede-a5d800d47b3a
+09:45:54.501 [clientInternal-2-1] INFO ControllerImpl - [requestId=-4224911761655682455] Tagging client request (getURI-examples/_RGsub-000-CqpwoQw/0.#epoch.0).
+09:45:54.514 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-wOky2j0/0.#epoch.0, range=null)=0} }, segment=examples/_RGsub-000-CqpwoQw/0.#epoch.0)
+09:45:54.515 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-000-CqpwoQw/0.#epoch.0
+09:45:54.515 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-000-CqpwoQw/0.#epoch.0
+09:45:54.515 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-000-CqpwoQw/0.#epoch.0
+09:45:54.515 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-000-CqpwoQw/0.#epoch.0 will be retransmitted.
+09:45:54.516 [main] INFO ClientFactoryImpl - Creating reader: 5de15ecd-96bb-4a90-958c-b5cba8680ccc under readerGroup: sub-000-CqpwoQw with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+09:45:54.517 [main] INFO ClientFactoryImpl - Creating reader: 5de15ecd-96bb-4a90-958c-b5cba8680ccc under readerGroup: sub-000-CqpwoQw with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+09:45:54.517 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-000-CqpwoQw and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+09:45:54.518 [clientInternal-3-1] INFO ControllerImpl - [requestId=-6810995550196247661] Tagging client request (getCurrentSegments-examples-_RGsub-000-CqpwoQw).
+09:45:54.518 [clientInternal-3-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.93:9090]/{}]]
+09:45:54.527 [clientInternal-3-4] INFO ControllerImpl - [requestId=-8547136647189339728] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-CqpwoQw).
+09:45:54.527 [clientInternal-3-5] INFO ControllerImpl - [requestId=-3231582998997137469] Tagging client request (getURI-examples/_RGsub-000-CqpwoQw/0.#epoch.0).
+09:45:54.527 [clientInternal-3-6] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-000-CqpwoQw/0.#epoch.0, writer 68ab532b-fef6-4717-a154-5f0557da4680
+09:45:54.528 [clientInternal-3-6] INFO ControllerImpl - [requestId=8070025261614651416] Tagging client request (getURI-examples/_RGsub-000-CqpwoQw/0.#epoch.0).
+09:45:54.528 [clientInternal-3-7] INFO ControllerImpl - [requestId=1323634484537025109] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-CqpwoQw).
+09:45:54.535 [clientInternal-3-1] INFO ControllerImpl - [requestId=-291085855278739840] Tagging client request (getURI-examples/_RGsub-000-CqpwoQw/0.#epoch.0).
+09:45:54.536 [clientInternal-3-6] INFO ControllerImpl - [requestId=2047800642834723147] Tagging client request (getURI-examples/_RGsub-000-CqpwoQw/0.#epoch.0).
+09:45:54.536 [clientInternal-3-7] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.231:12345 for examples/_RGsub-000-CqpwoQw/0.#epoch.0, writerID: 68ab532b-fef6-4717-a154-5f0557da4680
+09:45:54.539 [ClientSocketReaders-2] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:45:54.539 [ClientSocketReaders-3] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:45:54.541 [ClientSocketReaders-2] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=25769803776, segment=examples/_RGsub-000-CqpwoQw/0.#epoch.0, writerId=68ab532b-fef6-4717-a154-5f0557da4680, lastEventNumber=-9223372036854775808)
+09:45:54.541 [ClientSocketReaders-2] INFO SegmentOutputStreamImpl - Connection setup complete for writer 68ab532b-fef6-4717-a154-5f0557da4680
+09:45:54.543 [ClientSocketReaders-4] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:45:54.551 [clientInternal-3-1] INFO ControllerImpl - [requestId=2770203056013157108] Tagging client request (getURI-examples/_RGsub-000-CqpwoQw/0.#epoch.0).
+09:45:54.554 [ClientSocketReaders-5] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:45:54.567 [main] INFO LocalWorker - Created 1 consumers in 841.668041 ms
+09:45:54.580 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=5de15ecd-96bb-4a90-958c-b5cba8680ccc) acquiring segments {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-wOky2j0/0.#epoch.0, range=null)=0}
+09:45:54.580 [clientInternal-3-8] INFO ControllerImpl - [requestId=-4430860640560105659] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000000-wOky2j0).
+09:45:54.580 [clientInternal-3-7] INFO ControllerImpl - [requestId=-7141515946183840644] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-wOky2j0/0.#epoch.0).
+09:45:54.587 [ClientSocketReaders-6] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:45:55.003 [main] INFO WorkloadGenerator - Created 54 producers in 435.483428 ms
+09:45:55.004 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+09:45:55.014 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 50, Received: 21, Expected: 0
+09:45:55.014 [main] INFO WorkloadGenerator - All consumers are ready!
+09:45:55.015 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pravega-tpc-h-tpc-h-q1-100-50-2024-06-04-09-45-26 at 1717494355015
+09:45:55.913 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=5de15ecd-96bb-4a90-958c-b5cba8680ccc) at checkpoint 72368433-83b4-4029-8fb5-738f0221a390
+09:45:55.918 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 5de15ecd-96bb-4a90-958c-b5cba8680ccc completed checkpoint 72368433-83b4-4029-8fb5-738f0221a390
+09:46:26.345 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=5de15ecd-96bb-4a90-958c-b5cba8680ccc) at checkpoint 55de49be-5728-45c6-9bda-fc6f8f6dd3e4
+09:46:26.348 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 5de15ecd-96bb-4a90-958c-b5cba8680ccc completed checkpoint 55de49be-5728-45c6-9bda-fc6f8f6dd3e4
+09:46:38.514 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 10
+09:46:53.440 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 20
+09:46:55.586 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 30
+09:46:56.604 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=5de15ecd-96bb-4a90-958c-b5cba8680ccc) at checkpoint a194f6c7-f1cb-409e-a60d-78d890eb58e3
+09:46:56.607 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 5de15ecd-96bb-4a90-958c-b5cba8680ccc completed checkpoint a194f6c7-f1cb-409e-a60d-78d890eb58e3
+09:47:03.134 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 40
+09:47:11.280 [pool-7-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132737,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880071,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612946,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+09:47:11.280 [pool-7-thread-1] INFO LocalWorker - [RESULT] Observed at 1717494431280
+09:47:15.096 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pravega-tpc-h-tpc-h-q1-100-50-2024-06-04-09-45-26 at 1717494435096
+09:47:25.284 [ClientSocketReaders-6] INFO AsyncSegmentInputStreamImpl - Received segmentSealed WireCommands.SegmentIsSealed(type=SEGMENT_IS_SEALED, requestId=38654705664, segment=examples/openmessaging-benchmark-0000000-wOky2j0/0.#epoch.0, serverStackTrace=, offset=92058)
+09:47:25.285 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=5de15ecd-96bb-4a90-958c-b5cba8680ccc) encountered end of segment examples/openmessaging-benchmark-0000000-wOky2j0/0.#epoch.0
+09:47:25.285 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/openmessaging-benchmark-0000000-wOky2j0/0.#epoch.0
+09:47:25.285 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/openmessaging-benchmark-0000000-wOky2j0/0.#epoch.0
+09:47:25.285 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/openmessaging-benchmark-0000000-wOky2j0/0.#epoch.0 will be retransmitted.
+09:47:27.293 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=5de15ecd-96bb-4a90-958c-b5cba8680ccc) at checkpoint 88843618-5503-43cf-9909-04e7e81b20e8
+09:47:27.296 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 5de15ecd-96bb-4a90-958c-b5cba8680ccc completed checkpoint 88843618-5503-43cf-9909-04e7e81b20e8
+09:47:27.296 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=5de15ecd-96bb-4a90-958c-b5cba8680ccc) releasing sealed segment examples/openmessaging-benchmark-0000000-wOky2j0/0.#epoch.0
+09:47:27.297 [clientInternal-3-7] INFO ControllerImpl - [requestId=-3914923424979791851] Tagging client request (getSegmentsImmediatelyFollowing-examples/openmessaging-benchmark-0000000-wOky2j0/0.#epoch.0).
+09:47:37.269 [main] INFO EventStreamReaderImpl - Closing reader EventStreamReaderImpl( id=5de15ecd-96bb-4a90-958c-b5cba8680ccc) at position examples/openmessaging-benchmark-0000000-wOky2j0/0.#epoch.0=-1.
+09:47:37.275 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [88843618-5503-43cf-9909-04e7e81b20e8],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-wOky2j0/0.#epoch.0, range=null)=-1} }, segment=examples/_RGsub-000-CqpwoQw/0.#epoch.0)
+09:47:37.275 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-000-CqpwoQw/0.#epoch.0
+09:47:37.275 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-000-CqpwoQw/0.#epoch.0
+09:47:37.275 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-000-CqpwoQw/0.#epoch.0
+09:47:37.275 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-000-CqpwoQw/0.#epoch.0 will be retransmitted.
+09:47:37.275 [main] INFO PravegaBenchmarkDriver - close: clientConfig=ClientConfig(controllerURI=tcp://10.0.0.93:9090, credentials=null, trustStore=null, validateHostName=true, maxConnectionsPerSegmentStore=10, isDefaultMaxConnections=true, deriveTlsEnabledFromControllerURI=true, enableTlsToController=false, enableTlsToSegmentStore=false, metricListener=null)
+09:47:37.277 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:47:37.277 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+09:47:37.279 [ClientSocketReaders-6] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:47:37.280 [ClientSocketReaders-2] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:47:37.280 [ClientSocketReaders-3] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:47:37.281 [ClientSocketReaders-4] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:47:37.281 [ClientSocketReaders-5] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:47:37.287 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:47:37.287 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+09:47:37.287 [ClientSocketReaders-1] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:47:37.290 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:47:37.290 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+
+
+
+sudo bin/benchmark \
+> --drivers driver-pravega/pravega-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-1000-100.yaml \
+> workloads/tpc-h-base-long.yaml
+09:50:17.926 [main] INFO Benchmark - Using default worker file workers.yaml!
+09:50:17.937 [main] INFO Benchmark - Reading workers list from workers.yaml
+09:50:17.996 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-pravega/pravega-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.39:8080", "http://10.0.0.138:8080", "http://10.0.0.225:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-1000-100.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+09:50:18.015 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+09:50:18.025 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-1000-100",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 100
+} ]
+09:50:18.038 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+09:50:18.460 [main] INFO CentralWorkerStats - Central worker stats initialized
+09:50:18.936 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.39:8080,http://10.0.0.138:8080,http://10.0.0.225:8080]
+09:50:18.937 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.39:8080,http://10.0.0.138:8080,http://10.0.0.225:8080
+09:50:18.939 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pravega---------------
+09:50:19.276 [main] INFO LocalWorker - Driver: {
+  "name" : "Pravega",
+  "driverClass" : "io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver"
+}
+09:50:19.281 [main] INFO PravegaBenchmarkDriver - Pravega driver configuration: {
+  "client" : {
+    "controllerURI" : "tcp://10.0.0.93:9090",
+    "scopeName" : "examples"
+  },
+  "writer" : {
+    "enableConnectionPooling" : true
+  },
+  "includeTimestampInEvent" : true,
+  "enableTransaction" : false,
+  "eventsPerTransaction" : 1,
+  "enableStreamAutoScaling" : false,
+  "eventsPerSecond" : -1,
+  "kbytesPerSecond" : 1000000,
+  "createScope" : true,
+  "deleteStreams" : true
+}
+09:50:19.498 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:50:19.503 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:50:19.509 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:50:36.940 [main] INFO WorkloadGenerator - Created 104 topics in 17426.647207 ms
+09:51:12.054 [main] INFO WorkloadGenerator - Created 104 external consumers in 35109.806198 ms
+09:51:12.057 [main] INFO PravegaBenchmarkConsumer - PravegaBenchmarkConsumer: BEGIN: subscriptionName=sub-000-5n-HIKA, streamName=openmessaging-benchmark-0000000-0NKUrY4
+09:51:12.065 [main] INFO ReaderGroupManagerImpl - Creating reader group: sub-000-5n-HIKA for streams: [StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-0NKUrY4)] with configuration: ReaderGroupConfig(groupRefreshTimeMillis=3000, automaticCheckpointIntervalMillis=30000, startingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-0NKUrY4)=UNBOUNDED}, endingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-0NKUrY4)=UNBOUNDED}, maxOutstandingCheckpointRequest=3, retentionType=NONE, generation=-1, readerGroupId=00000000-0000-0000-0000-000000000000)
+09:51:12.074 [clientInternal-2-1] INFO ControllerImpl - [requestId=3580541623979655262] Tagging client request (createReaderGroup-examples-sub-000-5n-HIKA).
+09:51:12.161 [clientInternal-2-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.93:9090]/{}]]
+09:51:12.661 [clientInternal-2-1] INFO ControllerImpl - [requestId=3580541623979655262] Reader Group examples/sub-000-5n-HIKA created successfully: {}
+09:51:12.686 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-000-5n-HIKA and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+09:51:12.688 [clientInternal-2-1] INFO ControllerImpl - [requestId=243944214044478676] Tagging client request (getCurrentSegments-examples-_RGsub-000-5n-HIKA).
+09:51:12.705 [clientInternal-2-1] INFO ControllerImpl - [requestId=3069639120140615086] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-5n-HIKA).
+09:51:12.712 [clientInternal-2-1] INFO ControllerImpl - [requestId=-4743467115569227988] Tagging client request (getURI-examples/_RGsub-000-5n-HIKA/0.#epoch.0).
+09:51:12.763 [ClientSocketReaders-1] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:51:12.763 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-000-5n-HIKA/0.#epoch.0, writer cf73b2ab-4ba1-484d-8019-35d613e58485
+09:51:12.768 [clientInternal-2-1] INFO ControllerImpl - [requestId=-5344509977591708070] Tagging client request (getSegmentsAtTime-examples-openmessaging-benchmark-0000000-0NKUrY4).
+09:51:12.772 [clientInternal-2-1] INFO ControllerImpl - [requestId=389227334488110725] Tagging client request (getURI-examples/_RGsub-000-5n-HIKA/0.#epoch.0).
+09:51:12.773 [clientInternal-2-1] INFO ControllerImpl - [requestId=3802454817547603216] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-5n-HIKA).
+09:51:12.781 [clientInternal-2-1] INFO ControllerImpl - [requestId=5630837512948203622] Tagging client request (getURI-examples/_RGsub-000-5n-HIKA/0.#epoch.0).
+09:51:12.781 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.76:12345 for examples/_RGsub-000-5n-HIKA/0.#epoch.0, writerID: cf73b2ab-4ba1-484d-8019-35d613e58485
+09:51:12.786 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=8589934592, segment=examples/_RGsub-000-5n-HIKA/0.#epoch.0, writerId=cf73b2ab-4ba1-484d-8019-35d613e58485, lastEventNumber=-9223372036854775808)
+09:51:12.787 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Connection setup complete for writer cf73b2ab-4ba1-484d-8019-35d613e58485
+09:51:12.794 [clientInternal-2-1] INFO ControllerImpl - [requestId=-4397790677660552487] Tagging client request (getURI-examples/_RGsub-000-5n-HIKA/0.#epoch.0).
+09:51:12.808 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-0NKUrY4/0.#epoch.0, range=null)=0} }, segment=examples/_RGsub-000-5n-HIKA/0.#epoch.0)
+09:51:12.808 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-000-5n-HIKA/0.#epoch.0
+09:51:12.809 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-000-5n-HIKA/0.#epoch.0
+09:51:12.809 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-000-5n-HIKA/0.#epoch.0
+09:51:12.809 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-000-5n-HIKA/0.#epoch.0 will be retransmitted.
+09:51:12.810 [main] INFO ClientFactoryImpl - Creating reader: bb035007-ce1b-4071-8d9f-0fbe27374415 under readerGroup: sub-000-5n-HIKA with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+09:51:12.810 [main] INFO ClientFactoryImpl - Creating reader: bb035007-ce1b-4071-8d9f-0fbe27374415 under readerGroup: sub-000-5n-HIKA with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+09:51:12.810 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-000-5n-HIKA and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+09:51:12.811 [clientInternal-3-1] INFO ControllerImpl - [requestId=-2831787033919626103] Tagging client request (getCurrentSegments-examples-_RGsub-000-5n-HIKA).
+09:51:12.811 [clientInternal-3-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.93:9090]/{}]]
+09:51:12.822 [clientInternal-3-4] INFO ControllerImpl - [requestId=-392087415972001182] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-5n-HIKA).
+09:51:12.822 [clientInternal-3-5] INFO ControllerImpl - [requestId=693975207494899404] Tagging client request (getURI-examples/_RGsub-000-5n-HIKA/0.#epoch.0).
+09:51:12.822 [clientInternal-3-7] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-000-5n-HIKA/0.#epoch.0, writer c3dc89d9-fde9-4cf1-8e4c-e69da7cc1e72
+09:51:12.823 [clientInternal-3-1] INFO ControllerImpl - [requestId=1517221798790450197] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-5n-HIKA).
+09:51:12.823 [clientInternal-3-8] INFO ControllerImpl - [requestId=-1448964901163077398] Tagging client request (getURI-examples/_RGsub-000-5n-HIKA/0.#epoch.0).
+09:51:12.829 [clientInternal-3-2] INFO ControllerImpl - [requestId=-4056299501343832215] Tagging client request (getURI-examples/_RGsub-000-5n-HIKA/0.#epoch.0).
+09:51:12.830 [clientInternal-3-4] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.76:12345 for examples/_RGsub-000-5n-HIKA/0.#epoch.0, writerID: c3dc89d9-fde9-4cf1-8e4c-e69da7cc1e72
+09:51:12.833 [ClientSocketReaders-3] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:51:12.834 [ClientSocketReaders-2] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:51:12.836 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=25769803776, segment=examples/_RGsub-000-5n-HIKA/0.#epoch.0, writerId=c3dc89d9-fde9-4cf1-8e4c-e69da7cc1e72, lastEventNumber=-9223372036854775808)
+09:51:12.836 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Connection setup complete for writer c3dc89d9-fde9-4cf1-8e4c-e69da7cc1e72
+09:51:12.837 [ClientSocketReaders-4] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:51:12.846 [clientInternal-3-2] INFO ControllerImpl - [requestId=2670057453247827998] Tagging client request (getURI-examples/_RGsub-000-5n-HIKA/0.#epoch.0).
+09:51:12.850 [ClientSocketReaders-5] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:51:12.861 [main] INFO LocalWorker - Created 1 consumers in 806.488578 ms
+09:51:12.870 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=bb035007-ce1b-4071-8d9f-0fbe27374415) acquiring segments {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-0NKUrY4/0.#epoch.0, range=null)=0}
+09:51:12.871 [clientInternal-3-4] INFO ControllerImpl - [requestId=1190043404858435041] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000000-0NKUrY4).
+09:51:12.871 [clientInternal-3-3] INFO ControllerImpl - [requestId=-7811801229522187434] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-0NKUrY4/0.#epoch.0).
+09:51:12.878 [ClientSocketReaders-6] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:51:13.728 [main] INFO WorkloadGenerator - Created 104 producers in 866.629057 ms
+09:51:13.728 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+09:51:13.770 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 327, Received: 102, Expected: 0
+09:51:13.770 [main] INFO WorkloadGenerator - All consumers are ready!
+09:51:13.770 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pravega-tpc-h-tpc-h-q1-1000-100-2024-06-04-09-50-19 at 1717494673770
+09:51:14.413 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=bb035007-ce1b-4071-8d9f-0fbe27374415) at checkpoint 9a3ec508-9cb5-4a36-9bfe-5c13cc94b47a
+09:51:14.422 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader bb035007-ce1b-4071-8d9f-0fbe27374415 completed checkpoint 9a3ec508-9cb5-4a36-9bfe-5c13cc94b47a
+09:51:44.473 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=bb035007-ce1b-4071-8d9f-0fbe27374415) at checkpoint 4623abe9-b6a3-4f61-a33c-375bed6fed9b
+09:51:44.477 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader bb035007-ce1b-4071-8d9f-0fbe27374415 completed checkpoint 4623abe9-b6a3-4f61-a33c-375bed6fed9b
+09:51:52.406 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 10
+09:51:53.389 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 20
+09:51:54.240 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 30
+09:51:55.022 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 40
+09:51:55.664 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 50
+09:51:56.457 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 60
+09:51:57.423 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 70
+09:51:58.825 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 80
+09:51:59.786 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 90
+09:52:00.929 [pool-7-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+09:52:00.929 [pool-7-thread-1] INFO LocalWorker - [RESULT] Observed at 1717494720929
+09:52:03.825 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pravega-tpc-h-tpc-h-q1-1000-100-2024-06-04-09-50-19 at 1717494723825
+09:52:14.965 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=bb035007-ce1b-4071-8d9f-0fbe27374415) at checkpoint 9b9a8afa-d2d1-4212-a54e-359988c0a494
+09:52:14.968 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader bb035007-ce1b-4071-8d9f-0fbe27374415 completed checkpoint 9b9a8afa-d2d1-4212-a54e-359988c0a494
+09:52:20.531 [ClientSocketReaders-6] INFO AsyncSegmentInputStreamImpl - Received segmentSealed WireCommands.SegmentIsSealed(type=SEGMENT_IS_SEALED, requestId=38654705664, segment=examples/openmessaging-benchmark-0000000-0NKUrY4/0.#epoch.0, serverStackTrace=, offset=183857)
+09:52:20.532 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=bb035007-ce1b-4071-8d9f-0fbe27374415) encountered end of segment examples/openmessaging-benchmark-0000000-0NKUrY4/0.#epoch.0
+09:52:20.532 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/openmessaging-benchmark-0000000-0NKUrY4/0.#epoch.0
+09:52:20.532 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/openmessaging-benchmark-0000000-0NKUrY4/0.#epoch.0
+09:52:20.532 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/openmessaging-benchmark-0000000-0NKUrY4/0.#epoch.0 will be retransmitted.
+09:52:44.598 [main] INFO EventStreamReaderImpl - Closing reader EventStreamReaderImpl( id=bb035007-ce1b-4071-8d9f-0fbe27374415) at position examples/openmessaging-benchmark-0000000-0NKUrY4/0.#epoch.0=-1.
+09:52:44.605 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [9b9a8afa-d2d1-4212-a54e-359988c0a494],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-0NKUrY4/0.#epoch.0, range=null)=-1} }, segment=examples/_RGsub-000-5n-HIKA/0.#epoch.0)
+09:52:44.605 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-000-5n-HIKA/0.#epoch.0
+09:52:44.605 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-000-5n-HIKA/0.#epoch.0
+09:52:44.606 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-000-5n-HIKA/0.#epoch.0
+09:52:44.606 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-000-5n-HIKA/0.#epoch.0 will be retransmitted.
+09:52:44.606 [main] INFO PravegaBenchmarkDriver - close: clientConfig=ClientConfig(controllerURI=tcp://10.0.0.93:9090, credentials=null, trustStore=null, validateHostName=true, maxConnectionsPerSegmentStore=10, isDefaultMaxConnections=true, deriveTlsEnabledFromControllerURI=true, enableTlsToController=false, enableTlsToSegmentStore=false, metricListener=null)
+09:52:44.607 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:52:44.607 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+09:52:44.609 [ClientSocketReaders-2] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:52:44.610 [ClientSocketReaders-3] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:52:44.610 [ClientSocketReaders-4] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:52:44.611 [ClientSocketReaders-5] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:52:44.611 [ClientSocketReaders-6] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:52:44.617 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:52:44.617 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+09:52:44.617 [ClientSocketReaders-1] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:52:44.620 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:52:44.620 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+sudo bin/benchmark \
+> --drivers driver-pravega/pravega-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q1-1000-300.yaml \
+> workloads/tpc-h-base-long.yaml
+09:52:49.653 [main] INFO Benchmark - Using default worker file workers.yaml!
+09:52:49.660 [main] INFO Benchmark - Reading workers list from workers.yaml
+09:52:49.706 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-pravega/pravega-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.39:8080", "http://10.0.0.138:8080", "http://10.0.0.225:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-1000-300.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+09:52:49.721 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+09:52:49.730 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-1000-300",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7mb",
+  "numberOfChunks" : 1000,
+  "numberOfWorkers" : 300
+} ]
+09:52:49.743 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+09:52:50.071 [main] INFO CentralWorkerStats - Central worker stats initialized
+09:52:50.575 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.39:8080,http://10.0.0.138:8080,http://10.0.0.225:8080]
+09:52:50.575 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.39:8080,http://10.0.0.138:8080,http://10.0.0.225:8080
+09:52:50.577 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Pravega---------------
+09:52:50.938 [main] INFO LocalWorker - Driver: {
+  "name" : "Pravega",
+  "driverClass" : "io.openmessaging.benchmark.driver.pravega.PravegaBenchmarkDriver"
+}
+09:52:50.944 [main] INFO PravegaBenchmarkDriver - Pravega driver configuration: {
+  "client" : {
+    "controllerURI" : "tcp://10.0.0.93:9090",
+    "scopeName" : "examples"
+  },
+  "writer" : {
+    "enableConnectionPooling" : true
+  },
+  "includeTimestampInEvent" : true,
+  "enableTransaction" : false,
+  "eventsPerTransaction" : 1,
+  "enableStreamAutoScaling" : false,
+  "eventsPerSecond" : -1,
+  "kbytesPerSecond" : 1000000,
+  "createScope" : true,
+  "deleteStreams" : true
+}
+09:52:51.151 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:52:51.157 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:52:51.162 [main] INFO ControllerImpl - Controller client connecting to server at 10.0.0.93:9090
+09:53:41.702 [main] INFO WorkloadGenerator - Created 304 topics in 50535.134177 ms
+09:55:24.713 [main] INFO WorkloadGenerator - Created 304 external consumers in 103000.46213 ms
+09:55:24.716 [main] INFO PravegaBenchmarkConsumer - PravegaBenchmarkConsumer: BEGIN: subscriptionName=sub-000-lYH1gEM, streamName=openmessaging-benchmark-0000000-W8n381o
+09:55:24.724 [main] INFO ReaderGroupManagerImpl - Creating reader group: sub-000-lYH1gEM for streams: [StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-W8n381o)] with configuration: ReaderGroupConfig(groupRefreshTimeMillis=3000, automaticCheckpointIntervalMillis=30000, startingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-W8n381o)=UNBOUNDED}, endingStreamCuts={StreamImpl(scope=examples, streamName=openmessaging-benchmark-0000000-W8n381o)=UNBOUNDED}, maxOutstandingCheckpointRequest=3, retentionType=NONE, generation=-1, readerGroupId=00000000-0000-0000-0000-000000000000)
+09:55:24.733 [clientInternal-2-1] INFO ControllerImpl - [requestId=1564953239821608748] Tagging client request (createReaderGroup-examples-sub-000-lYH1gEM).
+09:55:24.821 [clientInternal-2-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.93:9090]/{}]]
+09:55:25.338 [clientInternal-2-1] INFO ControllerImpl - [requestId=1564953239821608748] Reader Group examples/sub-000-lYH1gEM created successfully: {}
+09:55:25.360 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-000-lYH1gEM and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+09:55:25.362 [clientInternal-2-1] INFO ControllerImpl - [requestId=1034516053399375865] Tagging client request (getCurrentSegments-examples-_RGsub-000-lYH1gEM).
+09:55:25.380 [clientInternal-2-1] INFO ControllerImpl - [requestId=6876476016816093011] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-lYH1gEM).
+09:55:25.386 [clientInternal-2-1] INFO ControllerImpl - [requestId=4926591643982091525] Tagging client request (getURI-examples/_RGsub-000-lYH1gEM/0.#epoch.0).
+09:55:25.442 [ClientSocketReaders-1] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:55:25.442 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-000-lYH1gEM/0.#epoch.0, writer 9c7eef7f-35dc-446f-a153-bbd2f575f656
+09:55:25.449 [clientInternal-2-1] INFO ControllerImpl - [requestId=3493276855495613252] Tagging client request (getSegmentsAtTime-examples-openmessaging-benchmark-0000000-W8n381o).
+09:55:25.450 [clientInternal-2-1] INFO ControllerImpl - [requestId=4065206690035118399] Tagging client request (getURI-examples/_RGsub-000-lYH1gEM/0.#epoch.0).
+09:55:25.451 [clientInternal-2-1] INFO ControllerImpl - [requestId=3767811811172360245] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-lYH1gEM).
+09:55:25.454 [clientInternal-2-1] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.231:12345 for examples/_RGsub-000-lYH1gEM/0.#epoch.0, writerID: 9c7eef7f-35dc-446f-a153-bbd2f575f656
+09:55:25.458 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=8589934592, segment=examples/_RGsub-000-lYH1gEM/0.#epoch.0, writerId=9c7eef7f-35dc-446f-a153-bbd2f575f656, lastEventNumber=-9223372036854775808)
+09:55:25.460 [ClientSocketReaders-1] INFO SegmentOutputStreamImpl - Connection setup complete for writer 9c7eef7f-35dc-446f-a153-bbd2f575f656
+09:55:25.462 [clientInternal-2-1] INFO ControllerImpl - [requestId=4337270897644873742] Tagging client request (getURI-examples/_RGsub-000-lYH1gEM/0.#epoch.0).
+09:55:25.475 [clientInternal-2-1] INFO ControllerImpl - [requestId=-4269835482572702064] Tagging client request (getURI-examples/_RGsub-000-lYH1gEM/0.#epoch.0).
+09:55:25.489 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-W8n381o/0.#epoch.0, range=null)=0} }, segment=examples/_RGsub-000-lYH1gEM/0.#epoch.0)
+09:55:25.489 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-000-lYH1gEM/0.#epoch.0
+09:55:25.489 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-000-lYH1gEM/0.#epoch.0
+09:55:25.489 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-000-lYH1gEM/0.#epoch.0
+09:55:25.490 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-000-lYH1gEM/0.#epoch.0 will be retransmitted.
+09:55:25.490 [main] INFO ClientFactoryImpl - Creating reader: 03d1dcfe-cdf7-456d-90d7-ad936adbf13d under readerGroup: sub-000-lYH1gEM with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+09:55:25.491 [main] INFO ClientFactoryImpl - Creating reader: 03d1dcfe-cdf7-456d-90d7-ad936adbf13d under readerGroup: sub-000-lYH1gEM with configuration: ReaderConfig(initialAllocationDelay=0, disableTimeWindows=true, bufferSize=1048576)
+09:55:25.491 [main] INFO ClientFactoryImpl - Creating state synchronizer with stream: _RGsub-000-lYH1gEM and configuration: SynchronizerConfig(eventWriterConfig=EventWriterConfig(initialBackoffMillis=1, maxBackoffMillis=20000, retryAttempts=2147483647, backoffMultiple=10, enableConnectionPooling=true, transactionTimeoutTime=599999, automaticallyNoteTime=false, enableLargeEvents=false), readBufferSize=262144)
+09:55:25.491 [clientInternal-3-1] INFO ControllerImpl - [requestId=-3340223769627704707] Tagging client request (getCurrentSegments-examples-_RGsub-000-lYH1gEM).
+09:55:25.492 [clientInternal-3-1] INFO ControllerResolverFactory - Updating client with controllers: [[[/10.0.0.93:9090]/{}]]
+09:55:25.501 [clientInternal-3-4] INFO ControllerImpl - [requestId=-3643805941524061537] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-lYH1gEM).
+09:55:25.501 [clientInternal-3-5] INFO ControllerImpl - [requestId=4136455937307316251] Tagging client request (getURI-examples/_RGsub-000-lYH1gEM/0.#epoch.0).
+09:55:25.502 [clientInternal-3-7] INFO SegmentOutputStreamImpl - Fetching endpoint for segment examples/_RGsub-000-lYH1gEM/0.#epoch.0, writer 94dea6fa-fe15-4cea-b26f-f0854a969a24
+09:55:25.502 [clientInternal-3-7] INFO ControllerImpl - [requestId=2867733869443811698] Tagging client request (getOrRefreshDelegationTokenFor-examples-_RGsub-000-lYH1gEM).
+09:55:25.502 [clientInternal-3-8] INFO ControllerImpl - [requestId=-5876340618032848355] Tagging client request (getURI-examples/_RGsub-000-lYH1gEM/0.#epoch.0).
+09:55:25.509 [clientInternal-3-1] INFO ControllerImpl - [requestId=7692304841511381186] Tagging client request (getURI-examples/_RGsub-000-lYH1gEM/0.#epoch.0).
+09:55:25.510 [clientInternal-3-2] INFO SegmentOutputStreamImpl - Establishing connection to 10.0.0.231:12345 for examples/_RGsub-000-lYH1gEM/0.#epoch.0, writerID: 94dea6fa-fe15-4cea-b26f-f0854a969a24
+09:55:25.511 [clientInternal-3-6] INFO ControllerImpl - [requestId=-5459735390652920487] Tagging client request (getURI-examples/_RGsub-000-lYH1gEM/0.#epoch.0).
+09:55:25.512 [ClientSocketReaders-2] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:55:25.517 [ClientSocketReaders-3] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:55:25.518 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Received appendSetup WireCommands.AppendSetup(type=APPEND_SETUP, requestId=25769803776, segment=examples/_RGsub-000-lYH1gEM/0.#epoch.0, writerId=94dea6fa-fe15-4cea-b26f-f0854a969a24, lastEventNumber=-9223372036854775808)
+09:55:25.519 [ClientSocketReaders-3] INFO SegmentOutputStreamImpl - Connection setup complete for writer 94dea6fa-fe15-4cea-b26f-f0854a969a24
+09:55:25.519 [ClientSocketReaders-4] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:55:25.528 [clientInternal-3-6] INFO ControllerImpl - [requestId=9084245125612750542] Tagging client request (getURI-examples/_RGsub-000-lYH1gEM/0.#epoch.0).
+09:55:25.535 [ClientSocketReaders-5] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:55:25.544 [main] INFO LocalWorker - Created 1 consumers in 831.05393 ms
+09:55:25.554 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=03d1dcfe-cdf7-456d-90d7-ad936adbf13d) acquiring segments {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-W8n381o/0.#epoch.0, range=null)=0}
+09:55:25.555 [clientInternal-3-5] INFO ControllerImpl - [requestId=665033111474734652] Tagging client request (getOrRefreshDelegationTokenFor-examples-openmessaging-benchmark-0000000-W8n381o).
+09:55:25.555 [clientInternal-3-2] INFO ControllerImpl - [requestId=-4797614956608880132] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-W8n381o/0.#epoch.0).
+09:55:25.567 [clientInternal-3-4] INFO ControllerImpl - [requestId=-7854022092791224071] Tagging client request (getURI-examples/openmessaging-benchmark-0000000-W8n381o/0.#epoch.0).
+09:55:25.578 [ClientSocketReaders-6] INFO FailingReplyProcessor - Received hello: WireCommands.Hello(type=HELLO, highVersion=15, lowVersion=5)
+09:55:26.566 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=03d1dcfe-cdf7-456d-90d7-ad936adbf13d) at checkpoint 6d28716f-8cf4-4908-8b67-f0e75db30d55
+09:55:26.571 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 03d1dcfe-cdf7-456d-90d7-ad936adbf13d completed checkpoint 6d28716f-8cf4-4908-8b67-f0e75db30d55
+09:55:27.163 [main] INFO WorkloadGenerator - Created 304 producers in 1618.442822 ms
+09:55:27.164 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+09:55:27.217 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 825, Received: 263, Expected: 0
+09:55:27.217 [main] INFO WorkloadGenerator - All consumers are ready!
+09:55:27.218 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Pravega-tpc-h-tpc-h-q1-1000-300-2024-06-04-09-52-51 at 1717494927218
+09:55:55.955 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 10
+09:55:57.266 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=03d1dcfe-cdf7-456d-90d7-ad936adbf13d) at checkpoint 9626b3d7-f4d8-4c0e-93ce-d4066bd47d31
+09:55:57.270 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 03d1dcfe-cdf7-456d-90d7-ad936adbf13d completed checkpoint 9626b3d7-f4d8-4c0e-93ce-d4066bd47d31
+09:55:58.855 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 20
+09:56:01.613 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 30
+09:56:02.879 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 40
+09:56:03.867 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 50
+09:56:04.649 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 60
+09:56:05.362 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 70
+09:56:05.761 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 80
+09:56:06.514 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 90
+09:56:07.119 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 100
+09:56:07.800 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 110
+09:56:08.317 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 120
+09:56:09.291 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 130
+09:56:09.808 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 140
+09:56:10.242 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 150
+09:56:10.739 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 160
+09:56:11.014 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 170
+09:56:11.270 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 180
+09:56:11.529 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 190
+09:56:11.843 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 200
+09:56:12.068 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 210
+09:56:12.531 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 220
+09:56:13.324 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 230
+09:56:14.414 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 240
+09:56:15.694 [pool-7-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+09:56:15.694 [pool-7-thread-1] INFO LocalWorker - [RESULT] Observed at 1717494975694
+09:56:17.290 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Pravega-tpc-h-tpc-h-q1-1000-300-2024-06-04-09-52-51 at 1717494977290
+09:56:27.728 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=03d1dcfe-cdf7-456d-90d7-ad936adbf13d) at checkpoint 71c3409b-dd32-4309-8b77-5ce64ab7ff63
+09:56:27.731 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 03d1dcfe-cdf7-456d-90d7-ad936adbf13d completed checkpoint 71c3409b-dd32-4309-8b77-5ce64ab7ff63
+09:56:57.794 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=03d1dcfe-cdf7-456d-90d7-ad936adbf13d) at checkpoint 74d442e4-09a6-49fb-b7e1-2d08ed1f7df4
+09:56:57.797 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 03d1dcfe-cdf7-456d-90d7-ad936adbf13d completed checkpoint 74d442e4-09a6-49fb-b7e1-2d08ed1f7df4
+09:57:06.267 [ClientSocketReaders-6] INFO AsyncSegmentInputStreamImpl - Received segmentSealed WireCommands.SegmentIsSealed(type=SEGMENT_IS_SEALED, requestId=38654705664, segment=examples/openmessaging-benchmark-0000000-W8n381o/0.#epoch.0, serverStackTrace=, offset=457191)
+09:57:06.268 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=03d1dcfe-cdf7-456d-90d7-ad936adbf13d) encountered end of segment examples/openmessaging-benchmark-0000000-W8n381o/0.#epoch.0
+09:57:06.268 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/openmessaging-benchmark-0000000-W8n381o/0.#epoch.0
+09:57:06.268 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/openmessaging-benchmark-0000000-W8n381o/0.#epoch.0
+09:57:06.268 [pool-7-thread-1] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/openmessaging-benchmark-0000000-W8n381o/0.#epoch.0 will be retransmitted.
+09:57:28.314 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=03d1dcfe-cdf7-456d-90d7-ad936adbf13d) at checkpoint fc25c087-bf18-4e6e-90d2-d8ec7e6ed44c
+09:57:28.317 [pool-7-thread-1] INFO EventStreamReaderImpl - Reader 03d1dcfe-cdf7-456d-90d7-ad936adbf13d completed checkpoint fc25c087-bf18-4e6e-90d2-d8ec7e6ed44c
+09:57:28.317 [pool-7-thread-1] INFO EventStreamReaderImpl - EventStreamReaderImpl( id=03d1dcfe-cdf7-456d-90d7-ad936adbf13d) releasing sealed segment examples/openmessaging-benchmark-0000000-W8n381o/0.#epoch.0
+09:58:14.014 [main] INFO EventStreamReaderImpl - Closing reader EventStreamReaderImpl( id=03d1dcfe-cdf7-456d-90d7-ad936adbf13d) at position examples/openmessaging-benchmark-0000000-W8n381o/0.#epoch.0=-1.
+09:58:14.021 [main] INFO StateSynchronizerImpl - Closing stateSynchronizer StateSynchronizerImpl(currentState=ReaderGroupState{ CheckpointState { ongoingCheckpoints: [fc25c087-bf18-4e6e-90d2-d8ec7e6ed44c],  readersBlockingEachCheckpoint: {} } futureSegments: {} assignedSegments: {} unassignedSegments: {SegmentWithRange(segment=examples/openmessaging-benchmark-0000000-W8n381o/0.#epoch.0, range=null)=-1} }, segment=examples/_RGsub-000-lYH1gEM/0.#epoch.0)
+09:58:14.021 [main] INFO SegmentMetadataClientImpl - Closing segment metadata connection for examples/_RGsub-000-lYH1gEM/0.#epoch.0
+09:58:14.021 [main] INFO AsyncSegmentInputStreamImpl - Closing reader for examples/_RGsub-000-lYH1gEM/0.#epoch.0
+09:58:14.021 [main] INFO AsyncSegmentInputStreamImpl - Closing connection to segment: examples/_RGsub-000-lYH1gEM/0.#epoch.0
+09:58:14.021 [main] INFO AsyncSegmentInputStreamImpl - Connection failed due to a io.pravega.client.stream.impl.ConnectionClosedException. Read requests for segment examples/_RGsub-000-lYH1gEM/0.#epoch.0 will be retransmitted.
+09:58:14.021 [main] INFO PravegaBenchmarkDriver - close: clientConfig=ClientConfig(controllerURI=tcp://10.0.0.93:9090, credentials=null, trustStore=null, validateHostName=true, maxConnectionsPerSegmentStore=10, isDefaultMaxConnections=true, deriveTlsEnabledFromControllerURI=true, enableTlsToController=false, enableTlsToSegmentStore=false, metricListener=null)
+09:58:14.022 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:58:14.023 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+09:58:14.028 [ClientSocketReaders-2] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:58:14.028 [ClientSocketReaders-3] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:58:14.029 [ClientSocketReaders-4] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:58:14.030 [ClientSocketReaders-5] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:58:14.030 [ClientSocketReaders-6] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:58:14.035 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:58:14.036 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
+09:58:14.036 [ClientSocketReaders-1] INFO TcpClientConnection - Closing TcpConnection.Reader because socket is closed.
+09:58:14.038 [main] INFO ConnectionPoolImpl - Shutting down connection pool
+09:58:14.038 [main] INFO SocketConnectionFactoryImpl - Shutting down connection factory
