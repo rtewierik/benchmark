@@ -18,7 +18,7 @@ list_sns_topics() {
 
     # List SNS topics and filter based on the provided substring
     aws sns list-topics --output json | \
-    jq -r --arg substring "$substring" '.Topics[] | select(.TopicArn | contains($substring)) | .TopicArn'
+    jq -r --arg substring "$substring" '.Topics[] | select(.TopicArn | contains($substring) and (contains("dlq") | not)) | .TopicArn'
 }
 
 list_sqs_queues() {
@@ -26,7 +26,7 @@ list_sqs_queues() {
 
     # List SQS queues and filter based on the provided substring
     aws sqs list-queues --output json | \
-    jq -r --arg substring "$substring" '.QueueUrls[] | select(contains($substring))'
+    jq -r --arg substring "$substring" '.QueueUrls[] | select(. | contains($substring) and (contains("dlq") | not))'
 }
 
 extract_topic_name() {
