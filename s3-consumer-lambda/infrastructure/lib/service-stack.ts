@@ -51,18 +51,18 @@ export class ServiceStack extends Stack {
     const monitoringSqsQueue = Queue.fromQueueArn(this, 'S3ConsumerMonitoringSqsQueue', props.monitoringSqsArn)
     if (props.isTpcH) {
       if (createEventSources) {
-        const mapLambda = LambdaFunction.fromFunctionName(this, `MapLambda`, getFunctionName(props, MAP_ID));
-        mapLambda.addEventSource(
-          new S3EventSourceV2(bucket, {
-            events: [EventType.OBJECT_CREATED],
-            filters: [{ prefix: this.getS3Prefix(props, MAP_ID, 333) }]
-          })
-        )
         const resultLambda = LambdaFunction.fromFunctionName(this, `ResultLambda`, getFunctionName(props, RESULT_ID));
         resultLambda.addEventSource(
           new S3EventSourceV2(bucket, {
             events: [EventType.OBJECT_CREATED],
-            filters: [{ prefix: this.getS3Prefix(props, RESULT_ID, 666) }]
+            filters: [{ prefix: this.getS3Prefix(props, RESULT_ID, 333) }]
+          })
+        )
+        const mapLambda = LambdaFunction.fromFunctionName(this, `MapLambda`, getFunctionName(props, MAP_ID));
+        mapLambda.addEventSource(
+          new S3EventSourceV2(bucket, {
+            events: [EventType.OBJECT_CREATED],
+            filters: [{ prefix: this.getS3Prefix(props, MAP_ID, 666) }]
           })
         )
         for (var i = start; i < end; i++) {

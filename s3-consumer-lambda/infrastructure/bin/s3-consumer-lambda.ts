@@ -20,7 +20,7 @@ const stackProps: S3ConsumerLambdaStackProps = {
   reportBatchItemFailures: false,
   debug: false,
   functionTimeoutSeconds: 300,
-  numberOfConsumers: 20,
+  numberOfConsumers: 50,
   alertingEnabled: true,
   bucketName: 'benchmarking-events3',
   isTpcH: true,
