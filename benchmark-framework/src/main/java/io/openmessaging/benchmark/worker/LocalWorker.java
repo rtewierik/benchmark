@@ -410,10 +410,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
 
     @NotNull
     private static Integer getGlobalBatchIndex(TpcHProducerAssignment assignment, Integer chunkIndex) {
-        if (EnvironmentConfiguration.getNumberOfConsumers() > 0 && assignment.commandsPerBatch == 3) {
-            float exactBatchSize = (float) assignment.numberOfChunks / assignment.arguments.numberOfWorkers;
-            return Math.round((chunkIndex - 1) / exactBatchSize);
-        }
         return (chunkIndex - 1) / assignment.commandsPerBatch;
     }
 

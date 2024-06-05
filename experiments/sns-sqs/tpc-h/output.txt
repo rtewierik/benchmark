@@ -402,3 +402,123 @@ sudo bin/benchmark \
 23:20:33.306 [main] INFO LocalWorker - Created 0 consumers in 2.404525 ms
 23:20:33.326 [main] INFO WorkloadGenerator - Created 44 producers in 19.457036 ms
 23:20:33.326 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q6-100-40-2024-06-04-23-20-33 at 1717543233326
+
+
+
+sudo bin/benchmark \
+>   --drivers driver-sns-sqs/sns-sqs-default.yaml \
+>   --tpc-h-files workloads/tpc-h-q6-100-50.yaml \
+>   workloads/tpc-h-base.yaml
+01:12:10.691 [main] INFO Benchmark - Using default worker file workers.yaml!
+01:12:10.704 [main] INFO Benchmark - Reading workers list from workers.yaml
+01:12:10.784 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-sns-sqs/sns-sqs-default.yaml" ],
+  "workers" : [ "http://10.0.0.113:8080", "http://10.0.0.30:8080", "http://10.0.0.200:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q6-100-50.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base.yaml" ],
+  "output" : null
+}
+01:12:10.808 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 3,
+    "warmupDurationMinutes" : 1
+  }
+}
+01:12:10.824 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q6-100-50",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 50
+} ]
+01:12:10.844 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+01:12:11.480 [main] INFO CentralWorkerStats - Central worker stats initialized
+01:12:12.301 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.113:8080,http://10.0.0.30:8080,http://10.0.0.200:8080]
+01:12:12.301 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.113:8080,http://10.0.0.30:8080,http://10.0.0.200:8080
+01:12:12.304 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : SNS-SQS---------------
+01:12:12.716 [main] INFO LocalWorker - Driver: {
+  "name" : "SNS-SQS",
+  "driverClass" : "io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkDriver"
+}
+01:12:12.755 [main] INFO WorkloadGenerator - Created 54 topics in 30.94225 ms
+01:12:12.789 [main] INFO WorkloadGenerator - Created 54 external consumers in 21.031955 ms
+01:12:12.798 [main] INFO LocalWorker - Created 0 consumers in 8.689122 ms
+01:12:12.814 [main] INFO WorkloadGenerator - Created 54 producers in 14.727177 ms
+01:12:12.814 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q6-100-50-2024-06-05-01-12-12 at 1717549932814
+01:13:02.311 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717549982311
+sudo bin/benchmark \
+>   --drivers driver-sns-sqs/sns-sqs-default.yaml \
+>   --tpc-h-files workloads/tpc-h-q1-100-50.yaml \
+>   workloads/tpc-h-base.yaml
+01:13:58.649 [main] INFO Benchmark - Using default worker file workers.yaml!
+01:13:58.676 [main] INFO Benchmark - Reading workers list from workers.yaml
+01:13:58.743 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-sns-sqs/sns-sqs-default.yaml" ],
+  "workers" : [ "http://10.0.0.113:8080", "http://10.0.0.30:8080", "http://10.0.0.200:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-100-50.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base.yaml" ],
+  "output" : null
+}
+01:13:58.766 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 3,
+    "warmupDurationMinutes" : 1
+  }
+}
+01:13:58.780 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-100-50",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 50
+} ]
+01:13:58.799 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+01:13:59.398 [main] INFO CentralWorkerStats - Central worker stats initialized
+01:14:00.220 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.113:8080,http://10.0.0.30:8080,http://10.0.0.200:8080]
+01:14:00.220 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.113:8080,http://10.0.0.30:8080,http://10.0.0.200:8080
+01:14:00.223 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : SNS-SQS---------------
+01:14:00.635 [main] INFO LocalWorker - Driver: {
+  "name" : "SNS-SQS",
+  "driverClass" : "io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkDriver"
+}
+01:14:00.681 [main] INFO WorkloadGenerator - Created 54 topics in 35.625232 ms
+01:14:00.726 [main] INFO WorkloadGenerator - Created 54 external consumers in 28.263077 ms
+01:14:00.728 [main] INFO LocalWorker - Created 0 consumers in 2.343907 ms
+01:14:00.739 [main] INFO WorkloadGenerator - Created 54 producers in 10.419123 ms
+01:14:00.740 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q1-100-50-2024-06-05-01-14-00 at 1717550040740
+01:14:54.812 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717550094812
+
+
+

@@ -20,10 +20,10 @@ const stackProps: SnsSqsConsumerLambdaStackProps = {
   reportBatchItemFailures: false,
   debug: false,
   functionTimeoutSeconds: 60,
-  numberOfConsumers: 40,
+  numberOfConsumers: 200,
   alertingEnabled: true,
   isTpcH: true,
-  isCloudMonitoringEnabled: false,
+  isCloudMonitoringEnabled: true,
   monitoringSqsUri: 'https://sqs.eu-west-1.amazonaws.com/138945776678/benchmark-monitoring',
   monitoringSqsArn: 'arn:aws:sqs:eu-west-1:138945776678:benchmark-monitoring'
 }
