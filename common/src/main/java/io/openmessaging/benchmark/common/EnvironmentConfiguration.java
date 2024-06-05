@@ -24,6 +24,7 @@ public class EnvironmentConfiguration {
     @Getter private static final boolean isCloudMonitoringEnabled;
     @Getter private static final String region;
     @Getter private static final boolean isDebug;
+    @Getter private static final Integer numberOfConsumers;
 
     static {
         produceWithAllWorkers = Boolean.parseBoolean(System.getenv("PRODUCE_WITH_ALL_WORKERS"));
@@ -32,5 +33,12 @@ public class EnvironmentConfiguration {
         isCloudMonitoringEnabled = Boolean.parseBoolean(System.getenv("IS_CLOUD_MONITORING_ENABLED"));
         region = System.getenv("REGION");
         isDebug = Boolean.parseBoolean(System.getenv("DEBUG"));
+        Integer numberOfConsumersFromEnv;
+        try {
+            numberOfConsumersFromEnv = Integer.parseInt(System.getenv("NUMBER_OF_CONSUMERS"));
+        } catch (Throwable ignored) {
+            numberOfConsumersFromEnv = -1;
+        }
+        numberOfConsumers = numberOfConsumersFromEnv;
     }
 }

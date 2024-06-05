@@ -75,6 +75,7 @@ import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import io.openmessaging.tpch.processing.TpcHStateProvider;
 import org.apache.bookkeeper.stats.NullStatsLogger;
 import org.apache.bookkeeper.stats.StatsLogger;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -357,7 +358,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                                 if (chunkIndex > max) {
                                     continue;
                                 }
-                                Integer globalBatchIdx = (chunkIndex - 1) / assignment.commandsPerBatch;
+                                Integer globalBatchIdx = getGlobalBatchIndex(assignment, chunkIndex);
                                 Integer numberOfMapResults = assignment.getBatchSize(globalBatchIdx);
                                 String batchId = String.format(
                                         "%s-batch-%d-%s", assignment.queryId, globalBatchIdx, numberOfMapResults);
@@ -405,6 +406,15 @@ public class LocalWorker implements Worker, ConsumerCallback {
                             processorProducerIndex,
                             messagesSent);
                 });
+    }
+
+    @NotNull
+    private static Integer getGlobalBatchIndex(TpcHProducerAssignment assignment, Integer chunkIndex) {
+        if (EnvironmentConfiguration.getNumberOfConsumers() > 0 && assignment.commandsPerBatch == 3) {
+            float exactBatchSize = (float) assignment.numberOfChunks / assignment.arguments.numberOfWorkers;
+            return Math.round((chunkIndex - 1) / exactBatchSize);
+        }
+        return (chunkIndex - 1) / assignment.commandsPerBatch;
     }
 
     private void startLoadForThroughputProducers(ProducerWorkAssignment producerWorkAssignment) {

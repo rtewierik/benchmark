@@ -229,6 +229,176 @@ sudo bin/benchmark \
 22:18:43.841 [main] INFO WorkloadGenerator - Created 24 producers in 9.91541 ms
 22:18:43.842 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q1-100-20-2024-06-04-22-18-43 at 1717539523842
 22:20:15.616 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717539615616
+sudo bin/benchmark \
+>   --drivers driver-sns-sqs/sns-sqs-default.yaml \
+>   --tpc-h-files workloads/tpc-h-q6-100-20.yaml \
+>   workloads/tpc-h-base.yaml
+23:05:59.250 [main] INFO Benchmark - Using default worker file workers.yaml!
+23:05:59.277 [main] INFO Benchmark - Reading workers list from workers.yaml
+23:05:59.352 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-sns-sqs/sns-sqs-default.yaml" ],
+  "workers" : [ "http://10.0.0.126:8080", "http://10.0.0.136:8080", "http://10.0.0.100:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q6-100-20.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base.yaml" ],
+  "output" : null
+}
+23:05:59.377 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 3,
+    "warmupDurationMinutes" : 1
+  }
+}
+23:05:59.393 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q6-100-20",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 20
+} ]
+23:05:59.414 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+23:06:00.106 [main] INFO CentralWorkerStats - Central worker stats initialized
+23:06:01.035 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.126:8080,http://10.0.0.136:8080,http://10.0.0.100:8080]
+23:06:01.036 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.126:8080,http://10.0.0.136:8080,http://10.0.0.100:8080
+23:06:01.038 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : SNS-SQS---------------
+23:06:01.443 [main] INFO LocalWorker - Driver: {
+  "name" : "SNS-SQS",
+  "driverClass" : "io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkDriver"
+}
+23:06:01.469 [main] INFO WorkloadGenerator - Created 24 topics in 19.648845 ms
+23:06:01.495 [main] INFO WorkloadGenerator - Created 24 external consumers in 18.143426 ms
+23:06:01.498 [main] INFO LocalWorker - Created 0 consumers in 2.894303 ms
+23:06:01.513 [main] INFO WorkloadGenerator - Created 24 producers in 13.610562 ms
+23:06:01.513 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q6-100-20-2024-06-04-23-06-01 at 1717542361513
+23:06:57.351 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717542417351
+sudo bin/benchmark \
+>   --drivers driver-sns-sqs/sns-sqs-default.yaml \
+>   --tpc-h-files workloads/tpc-h-q1-100-20.yaml \
+>   workloads/tpc-h-base.yaml
+23:07:19.777 [main] INFO Benchmark - Using default worker file workers.yaml!
+23:07:19.789 [main] INFO Benchmark - Reading workers list from workers.yaml
+23:07:19.863 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-sns-sqs/sns-sqs-default.yaml" ],
+  "workers" : [ "http://10.0.0.126:8080", "http://10.0.0.136:8080", "http://10.0.0.100:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-100-20.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base.yaml" ],
+  "output" : null
+}
+23:07:19.889 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 3,
+    "warmupDurationMinutes" : 1
+  }
+}
+23:07:19.904 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-100-20",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 20
+} ]
+23:07:19.927 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+23:07:20.641 [main] INFO CentralWorkerStats - Central worker stats initialized
+23:07:21.508 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.126:8080,http://10.0.0.136:8080,http://10.0.0.100:8080]
+23:07:21.509 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.126:8080,http://10.0.0.136:8080,http://10.0.0.100:8080
+23:07:21.516 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : SNS-SQS---------------
+23:07:21.960 [main] INFO LocalWorker - Driver: {
+  "name" : "SNS-SQS",
+  "driverClass" : "io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkDriver"
+}
+23:07:21.991 [main] INFO WorkloadGenerator - Created 24 topics in 23.841457 ms
+23:07:22.025 [main] INFO WorkloadGenerator - Created 24 external consumers in 19.532353 ms
+23:07:22.029 [main] INFO LocalWorker - Created 0 consumers in 3.86536 ms
+23:07:22.049 [main] INFO WorkloadGenerator - Created 24 producers in 18.255677 ms
+23:07:22.050 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q1-100-20-2024-06-04-23-07-21 at 1717542442050
+23:09:05.448 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717542545448
 
 
 
+sudo bin/benchmark \
+>   --drivers driver-sns-sqs/sns-sqs-default.yaml \
+>   --tpc-h-files workloads/tpc-h-q6-100-40.yaml \
+>   workloads/tpc-h-base.yaml
+23:20:31.324 [main] INFO Benchmark - Using default worker file workers.yaml!
+23:20:31.334 [main] INFO Benchmark - Reading workers list from workers.yaml
+23:20:31.412 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-sns-sqs/sns-sqs-default.yaml" ],
+  "workers" : [ "http://10.0.0.116:8080", "http://10.0.0.214:8080", "http://10.0.0.160:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q6-100-40.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base.yaml" ],
+  "output" : null
+}
+23:20:31.434 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 3,
+    "warmupDurationMinutes" : 1
+  }
+}
+23:20:31.452 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q6-100-40",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 40
+} ]
+23:20:31.475 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+23:20:32.077 [main] INFO CentralWorkerStats - Central worker stats initialized
+23:20:32.853 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.116:8080,http://10.0.0.214:8080,http://10.0.0.160:8080]
+23:20:32.854 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.116:8080,http://10.0.0.214:8080,http://10.0.0.160:8080
+23:20:32.857 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : SNS-SQS---------------
+23:20:33.247 [main] INFO LocalWorker - Driver: {
+  "name" : "SNS-SQS",
+  "driverClass" : "io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkDriver"
+}
+23:20:33.268 [main] INFO WorkloadGenerator - Created 44 topics in 16.521713 ms
+23:20:33.303 [main] INFO WorkloadGenerator - Created 44 external consumers in 24.903232 ms
+23:20:33.306 [main] INFO LocalWorker - Created 0 consumers in 2.404525 ms
+23:20:33.326 [main] INFO WorkloadGenerator - Created 44 producers in 19.457036 ms
+23:20:33.326 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q6-100-40-2024-06-04-23-20-33 at 1717543233326

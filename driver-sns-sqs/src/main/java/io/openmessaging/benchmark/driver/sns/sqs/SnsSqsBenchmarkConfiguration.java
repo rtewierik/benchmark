@@ -14,6 +14,8 @@
 package io.openmessaging.benchmark.driver.sns.sqs;
 
 
+import io.openmessaging.benchmark.common.EnvironmentConfiguration;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +24,6 @@ public class SnsSqsBenchmarkConfiguration {
     public static final String sqsUri;
     public static final String region;
     public static final String accountId;
-    public static final Integer numberOfConsumers;
     public static final boolean isTpcH;
     public static final List<String> snsUris;
 
@@ -30,13 +31,6 @@ public class SnsSqsBenchmarkConfiguration {
         sqsUri = System.getenv("SQS_URI");
         region = System.getenv("REGION");
         accountId = System.getenv("ACCOUNT_ID");
-        Integer numberOfConsumersFromEnv;
-        try {
-            numberOfConsumersFromEnv = Integer.parseInt(System.getenv("NUMBER_OF_CONSUMERS"));
-        } catch (Throwable ignored) {
-            numberOfConsumersFromEnv = 1;
-        }
-        numberOfConsumers = numberOfConsumersFromEnv;
         Boolean isTpcHFromEnv;
         try {
             isTpcHFromEnv = Boolean.parseBoolean(System.getenv("IS_TPC_H"));
@@ -52,12 +46,12 @@ public class SnsSqsBenchmarkConfiguration {
         if (isTpcH) {
             snsUris.add(getSnsUri("result"));
             snsUris.add(getSnsUri("map"));
-            for (int i = 0; i < numberOfConsumers; i++) {
+            for (int i = 0; i < EnvironmentConfiguration.getNumberOfConsumers(); i++) {
                 String id = String.format("reduce%s", i);
                 snsUris.add(getSnsUri(id));
             }
         } else {
-            for (int i = 0; i < numberOfConsumers; i++) {
+            for (int i = 0; i < EnvironmentConfiguration.getNumberOfConsumers(); i++) {
                 String id = String.format("default%s", i);
                 snsUris.add(getSnsUri(id));
             }
