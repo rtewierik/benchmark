@@ -20,8 +20,6 @@ import {
 } from 'aws-cdk-lib/aws-iam'
 import { S3ConsumerLambdaStackProps } from './stack-configuration'
 
-import { addMonitoring } from '../modules/monitoring'
-import { addAlerting } from '../modules/alerting'
 import path = require('path')
 import { Bucket, EventType, IBucket } from 'aws-cdk-lib/aws-s3'
 
@@ -79,9 +77,9 @@ export class ServiceStack extends Stack {
 
   private createDataIngestionLayer(props: S3ConsumerLambdaStackProps, id: string, bucket: IBucket, chunksBucket: IBucket, monitoringSqsQueue: IQueue, lambdaConfiguration: LambdaConfiguration, s3Prefix: string) {
     const lambdaDeadLetterQueue = this.createS3ConsumerLambdaDeadLetterQueue(props, id)
-    const lambda = this.createS3ConsumerLambda(bucket, chunksBucket, monitoringSqsQueue, lambdaDeadLetterQueue, props, id, lambdaConfiguration, s3Prefix)
-    addMonitoring(this, lambda, lambdaDeadLetterQueue, props, id)
-    addAlerting(this, lambda, lambdaDeadLetterQueue, props, id)
+    this.createS3ConsumerLambda(bucket, chunksBucket, monitoringSqsQueue, lambdaDeadLetterQueue, props, id, lambdaConfiguration, s3Prefix)
+    // addMonitoring(this, lambda, lambdaDeadLetterQueue, props, id)
+    // addAlerting(this, lambda, lambdaDeadLetterQueue, props, id)
   }
 
   private createS3ConsumerLambdaDeadLetterQueue(props: S3ConsumerLambdaStackProps, id: string): IQueue {

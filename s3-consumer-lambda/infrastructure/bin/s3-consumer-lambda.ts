@@ -24,7 +24,7 @@ const stackProps: S3ConsumerLambdaStackProps = {
   alertingEnabled: true,
   bucketName: 'benchmarking-events',
   isTpcH: true,
-  isCloudMonitoringEnabled: false,
+  isCloudMonitoringEnabled: true,
   monitoringSqsUri: 'https://sqs.eu-west-1.amazonaws.com/138945776678/benchmark-monitoring',
   monitoringSqsArn: 'arn:aws:sqs:eu-west-1:138945776678:benchmark-monitoring'
 }
