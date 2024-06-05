@@ -22,7 +22,7 @@ sudo bin/benchmark \
 ```
 sudo bin/benchmark \
   --drivers driver-sns-sqs/sns-sqs-default.yaml \
-  --tpc-h-files workloads/tpc-h-q1-100-10.yaml \
+  --tpc-h-files workloads/tpc-h-q6-10000-200.yaml \
   workloads/tpc-h-base.yaml
 ```
 

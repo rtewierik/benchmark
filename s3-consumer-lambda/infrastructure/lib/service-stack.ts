@@ -50,7 +50,7 @@ export class ServiceStack extends Stack {
     if (props.isTpcH) {
       const mapPrefix = this.getS3Prefix(props, MAP_ID)
       const resultPrefix = this.getS3Prefix(props, RESULT_ID)
-      const s3Prefixes = [mapPrefix, resultPrefix]
+      const s3Prefixes = [resultPrefix, mapPrefix]
       for (var i = 0; i < props.numberOfConsumers; i++) {
         const reducePrefixId = `${REDUCE_ID}${i}`
         s3Prefixes.push(this.getS3Prefix(props, reducePrefixId))

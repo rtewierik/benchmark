@@ -18,5 +18,5 @@ monitoring_sqs_uri      = "https://sqs.eu-west-1.amazonaws.com/138945776678/benc
 
 is_debug = false
 
-number_of_consumers = 300
+number_of_consumers = 200
 account_id = "138945776678"

@@ -18,7 +18,7 @@ list_lambda_functions() {
 
     # List Lambda functions and filter based on the provided substring
     aws lambda list-functions --output json | \
-    jq -r --arg substring "$substring" '.Functions[] | select(.FunctionName | contains($substring)) | .FunctionName'
+    jq -r --arg substring "$substring" '.Functions[] | select(.FunctionName | contains($substring) and (contains("reduce") | not)) | .FunctionName'
 }
 
 lambda_metrics=()

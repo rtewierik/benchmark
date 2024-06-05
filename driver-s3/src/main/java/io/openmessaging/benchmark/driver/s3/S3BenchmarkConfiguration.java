@@ -14,6 +14,8 @@
 package io.openmessaging.benchmark.driver.s3;
 
 
+import io.openmessaging.benchmark.common.EnvironmentConfiguration;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,14 +23,12 @@ public class S3BenchmarkConfiguration {
 
     public static final String region;
     public static final String accountId;
-    public static final Integer numberOfConsumers;
     public static final boolean isTpcH;
     public static final List<String> s3Uris;
 
     static {
         region = System.getenv("REGION");
         accountId = System.getenv("ACCOUNT_ID");
-        numberOfConsumers = Integer.parseInt(System.getenv("NUMBER_OF_CONSUMERS"));
         isTpcH = Boolean.parseBoolean(System.getenv("IS_TPC_H"));
         s3Uris = S3BenchmarkConfiguration.getS3UrisFromEnvironment();
     }
@@ -36,14 +36,14 @@ public class S3BenchmarkConfiguration {
     private static List<String> getS3UrisFromEnvironment() {
         ArrayList<String> s3Uris = new ArrayList<>();
         if (isTpcH) {
-            s3Uris.add(getS3Uri("map"));
             s3Uris.add(getS3Uri("result"));
-            for (int i = 0; i < numberOfConsumers; i++) {
+            s3Uris.add(getS3Uri("map"));
+            for (int i = 0; i < EnvironmentConfiguration.getNumberOfConsumers(); i++) {
                 String id = String.format("reduce%s", i);
                 s3Uris.add(getS3Uri(id));
             }
         } else {
-            for (int i = 0; i < numberOfConsumers; i++) {
+            for (int i = 0; i < EnvironmentConfiguration.getNumberOfConsumers(); i++) {
                 String id = String.format("default%s", i);
                 s3Uris.add(getS3Uri(id));
             }
