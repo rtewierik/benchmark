@@ -20,7 +20,7 @@ const stackProps: S3ConsumerLambdaStackProps = {
   reportBatchItemFailures: false,
   debug: false,
   functionTimeoutSeconds: 300,
-  numberOfConsumers: 10,
+  numberOfConsumers: 40,
   alertingEnabled: true,
   bucketName: 'benchmarking-events',
   isTpcH: true,
@@ -29,4 +29,12 @@ const stackProps: S3ConsumerLambdaStackProps = {
   monitoringSqsArn: 'arn:aws:sqs:eu-west-1:138945776678:benchmark-monitoring'
 }
 
-new ServiceStack(app, 's3-consumer-lambda', stackProps)
+const batchSize = 20
+const numStacks = stackProps.numberOfConsumers / batchSize
+
+new ServiceStack(app, `s3-consumer-lambda`, stackProps, true, 0, 0)
+for (let i = 0; i < numStacks; i++) {
+  const start = i * batchSize
+  const end = i * batchSize + batchSize
+  new ServiceStack(app, `s3-consumer-lambda-${i}`, stackProps, false, start, end)
+}

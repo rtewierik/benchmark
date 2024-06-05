@@ -40,7 +40,7 @@ const AGGREGATE_CONFIG = {
 }
 
 export class ServiceStack extends Stack {
-  constructor(scope: App, id: string, props: S3ConsumerLambdaStackProps) {
+  constructor(scope: App, id: string, props: S3ConsumerLambdaStackProps, createMapAndResult: boolean, start: number, end: number) {
     super(scope, id, props)
     const bucket = Bucket.fromBucketName(this, 'S3ConsumerLambdaSourceBucket', props.bucketName)
     const chunksBucket = Bucket.fromBucketName(this, 'S3ConsumerChunksBucket', 'tpc-h-chunks')
@@ -54,16 +54,20 @@ export class ServiceStack extends Stack {
         s3Prefixes.push(this.getS3Prefix(props, reducePrefixId))
       }
       const aggregateConfig = { ...AGGREGATE_CONFIG, s3Prefixes }
-      const mapConfiguration = { s3Prefixes, ...props }
-      this.createDataIngestionLayer(props, MAP_ID, bucket, chunksBucket, monitoringSqsQueue, mapConfiguration, mapPrefix)
-      for (var i = 0; i < props.numberOfConsumers; i++) {
+      if (createMapAndResult) {
+        const mapConfiguration = { s3Prefixes, ...props }
+        this.createDataIngestionLayer(props, MAP_ID, bucket, chunksBucket, monitoringSqsQueue, mapConfiguration, mapPrefix)
+      }
+      for (var i = start; i < end; i++) {
         const reducePrefixId = `${REDUCE_ID}${i}`
         const prefix = s3Prefixes[2 + i]
         this.createDataIngestionLayer(props, reducePrefixId, bucket, chunksBucket, monitoringSqsQueue, aggregateConfig, prefix)
       }
-      this.createDataIngestionLayer(props, RESULT_ID, bucket, chunksBucket, monitoringSqsQueue, aggregateConfig, resultPrefix)
+      if (createMapAndResult) {
+        this.createDataIngestionLayer(props, RESULT_ID, bucket, chunksBucket, monitoringSqsQueue, aggregateConfig, resultPrefix)
+      }
     } else {
-      for (var i = 0; i < props.numberOfConsumers; i++) {
+      for (var i = start; i < end; i++) {
         const consumerPrefixId = `${DEFAULT_ID}${i}`
         const prefix = this.getS3Prefix(props, consumerPrefixId)
         this.createDataIngestionLayer(props, consumerPrefixId, bucket, chunksBucket, monitoringSqsQueue, AGGREGATE_CONFIG, prefix)
