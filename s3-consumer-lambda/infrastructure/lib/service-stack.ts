@@ -39,32 +39,63 @@ const AGGREGATE_CONFIG = {
   functionTimeoutSeconds: 15
 }
 
+const getFunctionName = (props: S3ConsumerLambdaStackProps, id: string) =>
+  `${props.appName}-${id.toLowerCase()}`
+
+
 export class ServiceStack extends Stack {
-  constructor(scope: App, id: string, props: S3ConsumerLambdaStackProps, createMapAndResult: boolean, start: number, end: number) {
+  constructor(scope: App, id: string, props: S3ConsumerLambdaStackProps, createMapAndResult: boolean, start: number, end: number, createEventSources = false) {
     super(scope, id, props)
     const bucket = Bucket.fromBucketName(this, 'S3ConsumerLambdaSourceBucket', props.bucketName)
     const chunksBucket = Bucket.fromBucketName(this, 'S3ConsumerChunksBucket', 'tpc-h-chunks')
     const monitoringSqsQueue = Queue.fromQueueArn(this, 'S3ConsumerMonitoringSqsQueue', props.monitoringSqsArn)
     if (props.isTpcH) {
-      const mapPrefix = this.getS3Prefix(props, MAP_ID)
-      const resultPrefix = this.getS3Prefix(props, RESULT_ID)
-      const s3Prefixes = [resultPrefix, mapPrefix]
-      for (var i = 0; i < props.numberOfConsumers; i++) {
-        const reducePrefixId = `${REDUCE_ID}${i}`
-        s3Prefixes.push(this.getS3Prefix(props, reducePrefixId))
-      }
-      const aggregateConfig = { ...AGGREGATE_CONFIG, s3Prefixes }
-      if (createMapAndResult) {
-        const mapConfiguration = { s3Prefixes, ...props }
-        this.createDataIngestionLayer(props, MAP_ID, bucket, chunksBucket, monitoringSqsQueue, mapConfiguration, mapPrefix)
-      }
-      for (var i = start; i < end; i++) {
-        const reducePrefixId = `${REDUCE_ID}${i}`
-        const prefix = s3Prefixes[2 + i]
-        this.createDataIngestionLayer(props, reducePrefixId, bucket, chunksBucket, monitoringSqsQueue, aggregateConfig, prefix)
-      }
-      if (createMapAndResult) {
-        this.createDataIngestionLayer(props, RESULT_ID, bucket, chunksBucket, monitoringSqsQueue, aggregateConfig, resultPrefix)
+      if (createEventSources) {
+        const mapLambda = LambdaFunction.fromFunctionName(this, `MapLambda`, getFunctionName(props, MAP_ID));
+        mapLambda.addEventSource(
+          new S3EventSourceV2(bucket, {
+            events: [EventType.OBJECT_CREATED],
+            filters: [{ prefix: this.getS3Prefix(props, MAP_ID) }]
+          })
+        )
+        const resultLambda = LambdaFunction.fromFunctionName(this, `ResultLambda`, getFunctionName(props, RESULT_ID));
+        resultLambda.addEventSource(
+          new S3EventSourceV2(bucket, {
+            events: [EventType.OBJECT_CREATED],
+            filters: [{ prefix: this.getS3Prefix(props, RESULT_ID) }]
+          })
+        )
+        for (var i = start; i < end; i++) {
+          const reduceId =`${REDUCE_ID}${i}`;
+          const reduceLambda = LambdaFunction.fromFunctionName(this, `ReduceLambda${i}`, getFunctionName(props, reduceId));
+          reduceLambda.addEventSource(
+            new S3EventSourceV2(bucket, {
+              events: [EventType.OBJECT_CREATED],
+              filters: [{ prefix: this.getS3Prefix(props, reduceId) }]
+            })
+          )
+        }
+      } else {
+        const mapPrefix = this.getS3Prefix(props, MAP_ID)
+        const resultPrefix = this.getS3Prefix(props, RESULT_ID)
+        const s3Prefixes = [resultPrefix, mapPrefix]
+        for (var i = 0; i < props.numberOfConsumers; i++) {
+          const reducePrefixId = `${REDUCE_ID}${i}`
+          s3Prefixes.push(this.getS3Prefix(props, reducePrefixId))
+        }
+        const aggregateConfig = { ...AGGREGATE_CONFIG, s3Prefixes }
+        if (createMapAndResult) {
+          const mapConfiguration = { s3Prefixes, ...props }
+          this.createDataIngestionLayer(props, MAP_ID, bucket, chunksBucket, monitoringSqsQueue, mapConfiguration, mapPrefix)
+        }
+        for (var i = start; i < end; i++) {
+          const reducePrefixId = `${REDUCE_ID}${i}`
+          const prefix = s3Prefixes[2 + i]
+          this.createDataIngestionLayer(props, reducePrefixId, bucket, chunksBucket, monitoringSqsQueue, aggregateConfig, prefix)
+        }
+        if (createMapAndResult) {
+          this.createDataIngestionLayer(props, RESULT_ID, bucket, chunksBucket, monitoringSqsQueue, aggregateConfig, resultPrefix)
+        }
       }
     } else {
       for (var i = start; i < end; i++) {
@@ -157,13 +188,6 @@ export class ServiceStack extends Stack {
     const layer = LayerVersion.fromLayerVersionArn(this, `S3ConsumerLambdaFunctionLambdaInsightsLayerFromArn${id}`, layerArn);
 
     lambda.addLayers(layer);
-
-    lambda.addEventSource(
-      new S3EventSourceV2(bucket, {
-        events: [EventType.OBJECT_CREATED],
-        filters: [{ prefix: s3Prefix }]
-      })
-    )
 
     return lambda
   }
