@@ -55,14 +55,14 @@ export class ServiceStack extends Stack {
         mapLambda.addEventSource(
           new S3EventSourceV2(bucket, {
             events: [EventType.OBJECT_CREATED],
-            filters: [{ prefix: this.getS3Prefix(props, MAP_ID) }]
+            filters: [{ prefix: this.getS3Prefix(props, MAP_ID, 333) }]
           })
         )
         const resultLambda = LambdaFunction.fromFunctionName(this, `ResultLambda`, getFunctionName(props, RESULT_ID));
         resultLambda.addEventSource(
           new S3EventSourceV2(bucket, {
             events: [EventType.OBJECT_CREATED],
-            filters: [{ prefix: this.getS3Prefix(props, RESULT_ID) }]
+            filters: [{ prefix: this.getS3Prefix(props, RESULT_ID, 666) }]
           })
         )
         for (var i = start; i < end; i++) {
@@ -71,17 +71,17 @@ export class ServiceStack extends Stack {
           reduceLambda.addEventSource(
             new S3EventSourceV2(bucket, {
               events: [EventType.OBJECT_CREATED],
-              filters: [{ prefix: this.getS3Prefix(props, reduceId) }]
+              filters: [{ prefix: this.getS3Prefix(props, reduceId, i) }]
             })
           )
         }
       } else {
-        const mapPrefix = this.getS3Prefix(props, MAP_ID)
-        const resultPrefix = this.getS3Prefix(props, RESULT_ID)
+        const resultPrefix = this.getS3Prefix(props, RESULT_ID, 333)
+        const mapPrefix = this.getS3Prefix(props, MAP_ID, 666)
         const s3Prefixes = [resultPrefix, mapPrefix]
         for (var i = 0; i < props.numberOfConsumers; i++) {
           const reducePrefixId = `${REDUCE_ID}${i}`
-          s3Prefixes.push(this.getS3Prefix(props, reducePrefixId))
+          s3Prefixes.push(this.getS3Prefix(props, reducePrefixId, i))
         }
         const aggregateConfig = { ...AGGREGATE_CONFIG, s3Prefixes }
         if (createMapAndResult) {
@@ -100,14 +100,14 @@ export class ServiceStack extends Stack {
     } else {
       for (var i = start; i < end; i++) {
         const consumerPrefixId = `${DEFAULT_ID}${i}`
-        const prefix = this.getS3Prefix(props, consumerPrefixId)
+        const prefix = this.getS3Prefix(props, consumerPrefixId, i)
         this.createDataIngestionLayer(props, consumerPrefixId, bucket, chunksBucket, monitoringSqsQueue, AGGREGATE_CONFIG, prefix)
       }
     }
   }
 
-  private getS3Prefix(props: S3ConsumerLambdaStackProps, id: string) {
-    return `${props.appName}-${id.toLowerCase()}`
+  private getS3Prefix(props: S3ConsumerLambdaStackProps, id: string, index: number) {
+    return `${index}-${props.appName}-${id.toLowerCase()}`
   }
 
   private createDataIngestionLayer(props: S3ConsumerLambdaStackProps, id: string, bucket: IBucket, chunksBucket: IBucket, monitoringSqsQueue: IQueue, lambdaConfiguration: LambdaConfiguration, s3Prefix: string) {

@@ -36,22 +36,22 @@ public class S3BenchmarkConfiguration {
     private static List<String> getS3UrisFromEnvironment() {
         ArrayList<String> s3Uris = new ArrayList<>();
         if (isTpcH) {
-            s3Uris.add(getS3Uri("result"));
-            s3Uris.add(getS3Uri("map"));
+            s3Uris.add(getS3Uri("result", 333));
+            s3Uris.add(getS3Uri("map", 666));
             for (int i = 0; i < EnvironmentConfiguration.getNumberOfConsumers(); i++) {
                 String id = String.format("reduce%s", i);
-                s3Uris.add(getS3Uri(id));
+                s3Uris.add(getS3Uri(id, i));
             }
         } else {
             for (int i = 0; i < EnvironmentConfiguration.getNumberOfConsumers(); i++) {
                 String id = String.format("default%s", i);
-                s3Uris.add(getS3Uri(id));
+                s3Uris.add(getS3Uri(id, i));
             }
         }
         return s3Uris;
     }
 
-    private static String getS3Uri(String id) {
-        return String.format("s3://benchmarking-events/s3-consumer-lambda-%s", id);
+    private static String getS3Uri(String id, Integer index) {
+        return String.format("s3://benchmarking-events3/%d-s3-consumer-lambda-%s", index, id);
     }
 }

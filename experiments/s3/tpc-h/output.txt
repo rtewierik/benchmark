@@ -1,0 +1,124 @@
+sudo bin/benchmark \
+>   --drivers driver-s3/s3-default.yaml \
+>   --tpc-h-files workloads/tpc-h-q6-100-10.yaml \
+>   workloads/tpc-h-base.yaml
+16:01:38.195 [main] INFO Benchmark - Using default worker file workers.yaml!
+16:01:38.207 [main] INFO Benchmark - Reading workers list from workers.yaml
+16:01:38.282 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-s3/s3-default.yaml" ],
+  "workers" : [ "http://10.0.0.39:8080", "http://10.0.0.98:8080", "http://10.0.0.139:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q6-100-10.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base.yaml" ],
+  "output" : null
+}
+16:01:38.307 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 3,
+    "warmupDurationMinutes" : 1
+  }
+}
+16:01:38.327 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q6-100-10",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 10
+} ]
+16:01:38.351 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+16:01:39.032 [main] INFO CentralWorkerStats - Central worker stats initialized
+16:01:39.887 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.39:8080,http://10.0.0.98:8080,http://10.0.0.139:8080]
+16:01:39.888 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.39:8080,http://10.0.0.98:8080,http://10.0.0.139:8080
+16:01:39.890 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : S3---------------
+16:01:40.359 [main] INFO LocalWorker - Driver: {
+  "name" : "S3",
+  "driverClass" : "io.openmessaging.benchmark.driver.s3.S3BenchmarkDriver"
+}
+16:01:40.383 [main] INFO WorkloadGenerator - Created 14 topics in 15.761879 ms
+16:01:40.414 [main] INFO WorkloadGenerator - Created 14 external consumers in 22.925413 ms
+16:01:40.417 [main] INFO LocalWorker - Created 0 consumers in 2.888362 ms
+16:01:40.440 [main] INFO WorkloadGenerator - Created 14 producers in 22.776605 ms
+16:01:40.441 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark S3-tpc-h-tpc-h-q6-100-10-2024-06-05-16-01-40 at 1717603300441
+16:04:40.045 [main] INFO S3BenchmarkConsumer - [RESULT] TPC-H query result: 
+{
+    "rows": [
+        {
+            "columns": {
+                "revenue": 1106886908.0572
+            }
+        }
+    ]
+}
+16:04:40.045 [main] INFO S3BenchmarkConsumer - [RESULT] Observed at 1717603480045
+sudo bin/benchmark \
+>   --drivers driver-s3/s3-default.yaml \
+>   --tpc-h-files workloads/tpc-h-q1-100-10.yaml \
+>   workloads/tpc-h-base.yaml
+16:04:54.065 [main] INFO Benchmark - Using default worker file workers.yaml!
+16:04:54.077 [main] INFO Benchmark - Reading workers list from workers.yaml
+16:04:54.149 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-s3/s3-default.yaml" ],
+  "workers" : [ "http://10.0.0.39:8080", "http://10.0.0.98:8080", "http://10.0.0.139:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q1-100-10.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base.yaml" ],
+  "output" : null
+}
+16:04:54.175 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 3,
+    "warmupDurationMinutes" : 1
+  }
+}
+16:04:54.192 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q1-100-10",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/70mb",
+  "numberOfChunks" : 100,
+  "numberOfWorkers" : 10
+} ]
+16:04:54.225 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+16:04:54.867 [main] INFO CentralWorkerStats - Central worker stats initialized
+16:04:55.660 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.39:8080,http://10.0.0.98:8080,http://10.0.0.139:8080]
+16:04:55.661 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.39:8080,http://10.0.0.98:8080,http://10.0.0.139:8080
+16:04:55.664 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : S3---------------
+16:04:56.084 [main] INFO LocalWorker - Driver: {
+  "name" : "S3",
+  "driverClass" : "io.openmessaging.benchmark.driver.s3.S3BenchmarkDriver"
+}
+16:04:56.123 [main] INFO WorkloadGenerator - Created 14 topics in 29.957862 ms
+16:04:56.163 [main] INFO WorkloadGenerator - Created 14 external consumers in 26.860129 ms
+16:04:56.168 [main] INFO LocalWorker - Created 0 consumers in 4.352034 ms
+16:04:56.187 [main] INFO WorkloadGenerator - Created 14 producers in 16.779883 ms
+16:04:56.187 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark S3-tpc-h-tpc-h-q1-100-10-2024-06-05-16-04-56 at 1717603496187
+16:10:23.115 [main] INFO S3BenchmarkConsumer - [RESULT] Observed at 1717603823115
