@@ -44,6 +44,7 @@ core/*.json
 **/sns_metrics.json
 **/sqs_metrics.json
 **/s3_metrics.json
+**/ec2_metrics.json
 **/lambda_metrics.json
 !experiments/**/*.json
 **/cdk.out*/*

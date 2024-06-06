@@ -1,0 +1,8 @@
+13:51:38.278 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : null,
+  "workers" : null,
+  "workersFile" : null,
+  "tpcHFiles" : null,
+  "workloads" : null,
+  "output" : null
+}

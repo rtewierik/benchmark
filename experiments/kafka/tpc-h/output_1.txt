@@ -1,0 +1,1811 @@
+sudo bin/benchmark \
+> --drivers driver-kafka/kafka-experiment.yaml \
+> --tpc-h-files workloads/tpc-h-q6-10000-300.yaml,workloads/tpc-h-q1-10000-300.yaml,workloads/tpc-h-q6-10000-500.yaml,workloads/tpc-h-q1-10000-500.yaml,workloads/tpc-h-q6-10000-800.yaml,workloads/tpc-h-q1-10000-800.yaml \
+> workloads/tpc-h-base-long.yaml
+10:27:21.873 [main] INFO Benchmark - Using default worker file workers.yaml!
+10:27:21.884 [main] INFO Benchmark - Reading workers list from workers.yaml
+10:27:21.935 [main] INFO Benchmark - Starting benchmark with config: {
+  "drivers" : [ "driver-kafka/kafka-experiment.yaml" ],
+  "workers" : [ "http://10.0.0.190:8080", "http://10.0.0.18:8080", "http://10.0.0.126:8080" ],
+  "workersFile" : "/opt/benchmark/workers.yaml",
+  "tpcHFiles" : [ "workloads/tpc-h-q6-10000-300.yaml", "workloads/tpc-h-q1-10000-300.yaml", "workloads/tpc-h-q6-10000-500.yaml", "workloads/tpc-h-q1-10000-500.yaml", "workloads/tpc-h-q6-10000-800.yaml", "workloads/tpc-h-q1-10000-800.yaml" ],
+  "workloads" : [ "workloads/tpc-h-base-long.yaml" ],
+  "output" : null
+}
+10:27:21.957 [main] INFO Benchmark - Workloads: {
+  "tpc-h-base-long" : {
+    "name" : "tpc-h",
+    "topics" : 0,
+    "partitionsPerTopic" : 1,
+    "keyDistributor" : "NO_KEY",
+    "messageSize" : 0,
+    "useRandomizedPayloads" : false,
+    "randomBytesRatio" : 0.0,
+    "randomizedPayloadPoolSize" : 0,
+    "payloadFile" : "",
+    "subscriptionsPerTopic" : 1,
+    "producersPerTopic" : 1,
+    "consumerPerSubscription" : 1,
+    "producerRate" : 10000000,
+    "consumerBacklogSizeGB" : 0,
+    "backlogDrainRatio" : 1.0,
+    "testDurationMinutes" : 10,
+    "warmupDurationMinutes" : 1
+  }
+}
+10:27:21.975 [main] INFO Benchmark - TPC-H arguments: [ {
+  "queryId" : "tpc-h-q6-10000-300",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 300
+}, {
+  "queryId" : "tpc-h-q1-10000-300",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 300
+}, {
+  "queryId" : "tpc-h-q6-10000-500",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 500
+}, {
+  "queryId" : "tpc-h-q1-10000-500",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 500
+}, {
+  "queryId" : "tpc-h-q6-10000-800",
+  "query" : "ForecastingRevenueChange",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 800
+}, {
+  "queryId" : "tpc-h-q1-10000-800",
+  "query" : "PricingSummaryReport",
+  "sourceDataS3FolderUri" : "s3://tpc-h-chunks/chunks-by-file-size/7kb",
+  "numberOfChunks" : 10000,
+  "numberOfWorkers" : 800
+} ]
+10:27:21.991 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+10:27:22.414 [main] INFO CentralWorkerStats - Central worker stats initialized
+10:27:22.948 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.190:8080,http://10.0.0.18:8080,http://10.0.0.126:8080]
+10:27:22.948 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.190:8080,http://10.0.0.18:8080,http://10.0.0.126:8080
+10:27:22.951 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Kafka---------------
+10:27:23.289 [main] INFO LocalWorker - Driver: {
+  "name" : "Kafka",
+  "driverClass" : "io.openmessaging.benchmark.driver.kafka.KafkaBenchmarkDriver"
+}
+10:27:23.327 [main] INFO AdminClientConfig - AdminClientConfig values:
+	auto.include.jmx.reporter = true
+	bootstrap.servers = [10.0.0.200:9092, 10.0.0.110:9092, 10.0.0.125:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id =
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 1200000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 1200000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+
+10:27:23.380 [main] INFO AppInfoParser - Kafka version: 3.6.1
+10:27:23.380 [main] INFO AppInfoParser - Kafka commitId: 5e3c2b738d253ff5
+10:27:23.380 [main] INFO AppInfoParser - Kafka startTimeMs: 1717410443379
+10:27:24.535 [main] INFO WorkloadGenerator - Created 304 topics in 1147.752055 ms
+10:27:25.710 [main] INFO WorkloadGenerator - Created 304 external consumers in 1160.607952 ms
+10:27:25.720 [main] INFO ConsumerConfig - ConsumerConfig values:
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [10.0.0.200:9092, 10.0.0.110:9092, 10.0.0.125:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-sub-000-qIWNV9s-1
+	client.rack =
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 1200000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = sub-000-qIWNV9s
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 10485760
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 1200000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+
+10:27:25.759 [main] INFO AppInfoParser - Kafka version: 3.6.1
+10:27:25.760 [main] INFO AppInfoParser - Kafka commitId: 5e3c2b738d253ff5
+10:27:25.760 [main] INFO AppInfoParser - Kafka startTimeMs: 1717410445759
+10:27:25.761 [main] INFO KafkaConsumer - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Subscribed to topic(s): test-topic-0000000-4XMdTYM
+10:27:25.765 [main] INFO LocalWorker - Created 1 consumers in 54.852845 ms
+10:27:25.777 [pool-7-thread-1] INFO Metadata - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Cluster ID: S3pQLgFbSLCsLvhwYduNSA
+10:27:25.778 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Discovered group coordinator 10.0.0.110:9092 (id: 2147483646 rack: null)
+10:27:25.780 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] (Re-)joining group
+10:27:25.797 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Request joining group due to: need to re-join with the given member-id: consumer-sub-000-qIWNV9s-1-2061b701-4dae-4269-a922-c2235b41ccbb
+10:27:25.798 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Request joining group due to: rebalance failed due to 'The group member needs to have a valid member id before actually entering a consumer group.' (MemberIdRequiredException)
+10:27:25.798 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] (Re-)joining group
+10:27:26.491 [main] INFO WorkloadGenerator - Created 304 producers in 724.961304 ms
+10:27:26.491 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+10:27:26.990 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 927, Received: 0, Expected: 0
+10:27:26.990 [main] INFO WorkloadGenerator - All consumers are ready!
+10:27:26.991 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Kafka-tpc-h-tpc-h-q6-10000-300-2024-06-03-10-27-23 at 1717410446991
+10:27:28.800 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Successfully joined group with generation Generation{generationId=1, memberId='consumer-sub-000-qIWNV9s-1-2061b701-4dae-4269-a922-c2235b41ccbb', protocol='range'}
+10:27:28.819 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Finished assignment for group at generation 1: {consumer-sub-000-qIWNV9s-1-2061b701-4dae-4269-a922-c2235b41ccbb=Assignment(partitions=[test-topic-0000000-4XMdTYM-0])}
+10:27:28.826 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Successfully synced group in generation Generation{generationId=1, memberId='consumer-sub-000-qIWNV9s-1-2061b701-4dae-4269-a922-c2235b41ccbb', protocol='range'}
+10:27:28.826 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Notifying assignor about the new Assignment(partitions=[test-topic-0000000-4XMdTYM-0])
+10:27:28.829 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Adding newly assigned partitions: test-topic-0000000-4XMdTYM-0
+10:27:28.837 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Found no committed offset for partition test-topic-0000000-4XMdTYM-0
+10:27:28.851 [pool-7-thread-1] INFO SubscriptionState - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Resetting offset for partition test-topic-0000000-4XMdTYM-0 to position FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[10.0.0.125:9092 (id: 2 rack: null)], epoch=0}}.
+10:27:35.041 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 10
+10:27:35.316 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 20
+10:27:35.953 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 30
+10:27:36.657 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 40
+10:27:37.602 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 50
+10:27:38.561 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 60
+10:27:39.522 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 70
+10:27:40.535 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 80
+10:27:41.498 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 90
+10:27:42.334 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 100
+10:27:43.466 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 110
+10:27:44.147 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 120
+10:27:44.990 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 130
+10:27:45.837 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 140
+10:27:46.745 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 150
+10:27:47.721 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 160
+10:27:48.732 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 170
+10:27:49.608 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 180
+10:27:50.356 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 190
+10:27:51.177 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 200
+10:27:52.051 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 210
+10:27:52.920 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 220
+10:27:53.474 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 230
+10:27:54.532 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 240
+10:27:55.353 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 250
+10:27:56.063 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 260
+10:27:56.770 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 270
+10:27:57.445 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 280
+10:27:58.610 [pool-7-thread-1] INFO LocalWorker - TPC-H progress: 290
+10:27:59.530 [pool-7-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+10:27:59.531 [pool-7-thread-1] INFO LocalWorker - [RESULT] Observed at 1717410479530
+10:28:07.016 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Kafka-tpc-h-tpc-h-q6-10000-300-2024-06-03-10-27-23 at 1717410487016
+10:28:40.345 [pool-7-thread-1] WARN AbstractFetch - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Received unknown topic or partition error in fetch for partition test-topic-0000000-4XMdTYM-0
+10:28:40.347 [pool-7-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Error while fetching metadata with correlation id 716 : {test-topic-0000000-4XMdTYM=LEADER_NOT_AVAILABLE}
+10:28:40.347 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Request joining group due to: cached metadata has changed from (version2: {test-topic-0000000-4XMdTYM=[NO_RACKS]}) at the beginning of the rebalance to (version3: {test-topic-0000000-4XMdTYM=[]})
+10:28:40.348 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Revoke previously assigned partitions test-topic-0000000-4XMdTYM-0
+10:28:40.348 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] (Re-)joining group
+10:28:40.350 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Successfully joined group with generation Generation{generationId=2, memberId='consumer-sub-000-qIWNV9s-1-2061b701-4dae-4269-a922-c2235b41ccbb', protocol='range'}
+10:28:40.449 [pool-7-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Error while fetching metadata with correlation id 718 : {test-topic-0000000-4XMdTYM=LEADER_NOT_AVAILABLE}
+10:28:40.450 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Finished assignment for group at generation 2: {consumer-sub-000-qIWNV9s-1-2061b701-4dae-4269-a922-c2235b41ccbb=Assignment(partitions=[])}
+10:28:40.451 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Successfully synced group in generation Generation{generationId=2, memberId='consumer-sub-000-qIWNV9s-1-2061b701-4dae-4269-a922-c2235b41ccbb', protocol='range'}
+10:28:40.452 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Notifying assignor about the new Assignment(partitions=[])
+10:28:40.452 [pool-7-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Adding newly assigned partitions:
+10:28:40.551 [pool-7-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Error while fetching metadata with correlation id 720 : {test-topic-0000000-4XMdTYM=LEADER_NOT_AVAILABLE}
+10:28:40.652 [pool-7-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Error while fetching metadata with correlation id 721 : {test-topic-0000000-4XMdTYM=LEADER_NOT_AVAILABLE}
+10:28:40.753 [pool-7-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Error while fetching metadata with correlation id 722 : {test-topic-0000000-4XMdTYM=LEADER_NOT_AVAILABLE}
+10:28:40.855 [pool-7-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Error while fetching metadata with correlation id 723 : {test-topic-0000000-4XMdTYM=LEADER_NOT_AVAILABLE}
+10:28:40.952 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Member consumer-sub-000-qIWNV9s-1-2061b701-4dae-4269-a922-c2235b41ccbb sending LeaveGroup request to coordinator 10.0.0.110:9092 (id: 2147483646 rack: null) due to the consumer is being closed
+10:28:40.953 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Resetting generation and member id due to: consumer pro-actively leaving the group
+10:28:40.953 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-qIWNV9s-1, groupId=sub-000-qIWNV9s] Request joining group due to: consumer pro-actively leaving the group
+10:28:40.956 [main] INFO Metrics - Metrics scheduler closed
+10:28:40.956 [main] INFO Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+10:28:40.962 [main] INFO Metrics - Metrics reporters closed
+10:28:40.967 [main] INFO AppInfoParser - App info kafka.consumer for consumer-sub-000-qIWNV9s-1 unregistered
+10:28:40.979 [main] INFO KafkaBenchmarkDriver - Preparing to delete topics...
+10:28:40.981 [main] INFO KafkaBenchmarkDriver - Topics left over: 0
+10:28:40.982 [kafka-admin-client-thread | adminclient-1] INFO AppInfoParser - App info kafka.admin.client for adminclient-1 unregistered
+10:28:40.984 [kafka-admin-client-thread | adminclient-1] INFO Metrics - Metrics scheduler closed
+10:28:40.984 [kafka-admin-client-thread | adminclient-1] INFO Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+10:28:40.984 [kafka-admin-client-thread | adminclient-1] INFO Metrics - Metrics reporters closed
+10:28:41.188 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+10:28:41.188 [main] INFO CentralWorkerStats - Central worker stats initialized
+10:28:41.204 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.190:8080,http://10.0.0.18:8080,http://10.0.0.126:8080]
+10:28:41.204 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.190:8080,http://10.0.0.18:8080,http://10.0.0.126:8080
+10:28:41.205 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Kafka---------------
+10:28:41.424 [main] INFO LocalWorker - Driver: {
+  "name" : "Kafka",
+  "driverClass" : "io.openmessaging.benchmark.driver.kafka.KafkaBenchmarkDriver"
+}
+10:28:41.425 [main] INFO AdminClientConfig - AdminClientConfig values:
+	auto.include.jmx.reporter = true
+	bootstrap.servers = [10.0.0.200:9092, 10.0.0.110:9092, 10.0.0.125:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id =
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 1200000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 1200000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+
+10:28:41.429 [main] INFO AppInfoParser - Kafka version: 3.6.1
+10:28:41.429 [main] INFO AppInfoParser - Kafka commitId: 5e3c2b738d253ff5
+10:28:41.429 [main] INFO AppInfoParser - Kafka startTimeMs: 1717410521429
+10:28:42.289 [main] INFO WorkloadGenerator - Created 304 topics in 859.548283 ms
+10:28:42.994 [main] INFO WorkloadGenerator - Created 304 external consumers in 700.827066 ms
+10:28:42.995 [main] INFO ConsumerConfig - ConsumerConfig values:
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [10.0.0.200:9092, 10.0.0.110:9092, 10.0.0.125:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-sub-000-XqJ3Ewg-2
+	client.rack =
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 1200000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = sub-000-XqJ3Ewg
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 10485760
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 1200000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+
+10:28:43.001 [main] INFO AppInfoParser - Kafka version: 3.6.1
+10:28:43.001 [main] INFO AppInfoParser - Kafka commitId: 5e3c2b738d253ff5
+10:28:43.001 [main] INFO AppInfoParser - Kafka startTimeMs: 1717410523001
+10:28:43.002 [main] INFO KafkaConsumer - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Subscribed to topic(s): test-topic-0000000-7d5gX_I
+10:28:43.002 [main] INFO LocalWorker - Created 1 consumers in 7.768723 ms
+10:28:43.007 [pool-9-thread-1] INFO Metadata - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Cluster ID: S3pQLgFbSLCsLvhwYduNSA
+10:28:43.007 [pool-9-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Discovered group coordinator 10.0.0.110:9092 (id: 2147483646 rack: null)
+10:28:43.008 [pool-9-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] (Re-)joining group
+10:28:43.010 [pool-9-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Request joining group due to: need to re-join with the given member-id: consumer-sub-000-XqJ3Ewg-2-01f40f53-0e01-4195-9c1e-69d162db80ef
+10:28:43.011 [pool-9-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Request joining group due to: rebalance failed due to 'The group member needs to have a valid member id before actually entering a consumer group.' (MemberIdRequiredException)
+10:28:43.011 [pool-9-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] (Re-)joining group
+10:28:43.499 [main] INFO WorkloadGenerator - Created 304 producers in 495.392411 ms
+10:28:43.499 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+10:28:43.956 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 926, Received: 0, Expected: 0
+10:28:43.956 [main] INFO WorkloadGenerator - All consumers are ready!
+10:28:43.956 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Kafka-tpc-h-tpc-h-q1-10000-300-2024-06-03-10-28-41 at 1717410523956
+10:28:46.013 [pool-9-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Successfully joined group with generation Generation{generationId=1, memberId='consumer-sub-000-XqJ3Ewg-2-01f40f53-0e01-4195-9c1e-69d162db80ef', protocol='range'}
+10:28:46.014 [pool-9-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Finished assignment for group at generation 1: {consumer-sub-000-XqJ3Ewg-2-01f40f53-0e01-4195-9c1e-69d162db80ef=Assignment(partitions=[test-topic-0000000-7d5gX_I-0])}
+10:28:46.016 [pool-9-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Successfully synced group in generation Generation{generationId=1, memberId='consumer-sub-000-XqJ3Ewg-2-01f40f53-0e01-4195-9c1e-69d162db80ef', protocol='range'}
+10:28:46.016 [pool-9-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Notifying assignor about the new Assignment(partitions=[test-topic-0000000-7d5gX_I-0])
+10:28:46.017 [pool-9-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Adding newly assigned partitions: test-topic-0000000-7d5gX_I-0
+10:28:46.018 [pool-9-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Found no committed offset for partition test-topic-0000000-7d5gX_I-0
+10:28:46.021 [pool-9-thread-1] INFO SubscriptionState - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Resetting offset for partition test-topic-0000000-7d5gX_I-0 to position FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[10.0.0.110:9092 (id: 1 rack: null)], epoch=0}}.
+10:28:52.003 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 10
+10:28:52.616 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 20
+10:28:53.469 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 30
+10:28:54.677 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 40
+10:28:55.887 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 50
+10:28:56.944 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 60
+10:28:58.021 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 70
+10:28:58.941 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 80
+10:28:59.882 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 90
+10:29:00.876 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 100
+10:29:01.958 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 110
+10:29:03.012 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 120
+10:29:03.848 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 130
+10:29:04.978 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 140
+10:29:06.154 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 150
+10:29:07.109 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 160
+10:29:08.240 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 170
+10:29:09.296 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 180
+10:29:10.249 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 190
+10:29:11.077 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 200
+10:29:12.195 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 210
+10:29:13.341 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 220
+10:29:14.280 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 230
+10:29:15.376 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 240
+10:29:16.291 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 250
+10:29:16.962 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 260
+10:29:17.952 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 270
+10:29:18.822 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 280
+10:29:19.676 [pool-9-thread-1] INFO LocalWorker - TPC-H progress: 290
+10:29:20.673 [pool-9-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+10:29:20.673 [pool-9-thread-1] INFO LocalWorker - [RESULT] Observed at 1717410560673
+10:29:23.965 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Kafka-tpc-h-tpc-h-q1-10000-300-2024-06-03-10-28-41 at 1717410563965
+10:29:57.387 [pool-9-thread-1] WARN AbstractFetch - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Received unknown topic or partition error in fetch for partition test-topic-0000000-7d5gX_I-0
+10:29:57.390 [pool-9-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Error while fetching metadata with correlation id 706 : {test-topic-0000000-7d5gX_I=LEADER_NOT_AVAILABLE}
+10:29:57.390 [pool-9-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Request joining group due to: cached metadata has changed from (version2: {test-topic-0000000-7d5gX_I=[NO_RACKS]}) at the beginning of the rebalance to (version3: {test-topic-0000000-7d5gX_I=[]})
+10:29:57.390 [pool-9-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Revoke previously assigned partitions test-topic-0000000-7d5gX_I-0
+10:29:57.390 [pool-9-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] (Re-)joining group
+10:29:57.391 [pool-9-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Successfully joined group with generation Generation{generationId=2, memberId='consumer-sub-000-XqJ3Ewg-2-01f40f53-0e01-4195-9c1e-69d162db80ef', protocol='range'}
+10:29:57.491 [pool-9-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Error while fetching metadata with correlation id 708 : {test-topic-0000000-7d5gX_I=LEADER_NOT_AVAILABLE}
+10:29:57.492 [pool-9-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Finished assignment for group at generation 2: {consumer-sub-000-XqJ3Ewg-2-01f40f53-0e01-4195-9c1e-69d162db80ef=Assignment(partitions=[])}
+10:29:57.492 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Member consumer-sub-000-XqJ3Ewg-2-01f40f53-0e01-4195-9c1e-69d162db80ef sending LeaveGroup request to coordinator 10.0.0.110:9092 (id: 2147483646 rack: null) due to the consumer is being closed
+10:29:57.492 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Resetting generation and member id due to: consumer pro-actively leaving the group
+10:29:57.493 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Request joining group due to: consumer pro-actively leaving the group
+10:29:57.493 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-XqJ3Ewg-2, groupId=sub-000-XqJ3Ewg] Generation data was cleared by heartbeat thread to Generation{generationId=-1, memberId='', protocol='null'} and state is now UNJOINED before receiving SyncGroup response, marking this rebalance as failed and retry
+10:29:57.495 [main] INFO Metrics - Metrics scheduler closed
+10:29:57.495 [main] INFO Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+10:29:57.495 [main] INFO Metrics - Metrics reporters closed
+10:29:57.496 [main] INFO AppInfoParser - App info kafka.consumer for consumer-sub-000-XqJ3Ewg-2 unregistered
+10:29:57.499 [main] INFO KafkaBenchmarkDriver - Preparing to delete topics...
+10:29:57.500 [main] INFO KafkaBenchmarkDriver - Topics left over: 0
+10:29:57.500 [kafka-admin-client-thread | adminclient-2] INFO AppInfoParser - App info kafka.admin.client for adminclient-2 unregistered
+10:29:57.501 [kafka-admin-client-thread | adminclient-2] INFO Metrics - Metrics scheduler closed
+10:29:57.501 [kafka-admin-client-thread | adminclient-2] INFO Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+10:29:57.501 [kafka-admin-client-thread | adminclient-2] INFO Metrics - Metrics reporters closed
+10:29:57.704 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+10:29:57.704 [main] INFO CentralWorkerStats - Central worker stats initialized
+10:29:57.709 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.190:8080,http://10.0.0.18:8080,http://10.0.0.126:8080]
+10:29:57.709 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.190:8080,http://10.0.0.18:8080,http://10.0.0.126:8080
+10:29:57.709 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Kafka---------------
+10:29:57.927 [main] INFO LocalWorker - Driver: {
+  "name" : "Kafka",
+  "driverClass" : "io.openmessaging.benchmark.driver.kafka.KafkaBenchmarkDriver"
+}
+10:29:57.927 [main] INFO AdminClientConfig - AdminClientConfig values:
+	auto.include.jmx.reporter = true
+	bootstrap.servers = [10.0.0.200:9092, 10.0.0.110:9092, 10.0.0.125:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id =
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 1200000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 1200000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+
+10:29:57.929 [main] INFO AppInfoParser - Kafka version: 3.6.1
+10:29:57.929 [main] INFO AppInfoParser - Kafka commitId: 5e3c2b738d253ff5
+10:29:57.929 [main] INFO AppInfoParser - Kafka startTimeMs: 1717410597929
+10:29:59.984 [main] INFO WorkloadGenerator - Created 504 topics in 2053.707388 ms
+10:30:00.893 [main] INFO WorkloadGenerator - Created 504 external consumers in 904.910177 ms
+10:30:00.894 [main] INFO ConsumerConfig - ConsumerConfig values:
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [10.0.0.200:9092, 10.0.0.110:9092, 10.0.0.125:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-sub-000-ENj1Vbk-3
+	client.rack =
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 1200000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = sub-000-ENj1Vbk
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 10485760
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 1200000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+
+10:30:00.898 [main] INFO AppInfoParser - Kafka version: 3.6.1
+10:30:00.898 [main] INFO AppInfoParser - Kafka commitId: 5e3c2b738d253ff5
+10:30:00.898 [main] INFO AppInfoParser - Kafka startTimeMs: 1717410600898
+10:30:00.898 [main] INFO KafkaConsumer - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Subscribed to topic(s): test-topic-0000000-nnbOWT8
+10:30:00.899 [main] INFO LocalWorker - Created 1 consumers in 5.281857 ms
+10:30:00.902 [pool-11-thread-1] INFO Metadata - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Cluster ID: S3pQLgFbSLCsLvhwYduNSA
+10:30:00.902 [pool-11-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Discovered group coordinator 10.0.0.125:9092 (id: 2147483645 rack: null)
+10:30:00.903 [pool-11-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] (Re-)joining group
+10:30:00.904 [pool-11-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Request joining group due to: need to re-join with the given member-id: consumer-sub-000-ENj1Vbk-3-8450dfc7-86ce-49ba-baa1-0243c346f1dc
+10:30:00.905 [pool-11-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Request joining group due to: rebalance failed due to 'The group member needs to have a valid member id before actually entering a consumer group.' (MemberIdRequiredException)
+10:30:00.905 [pool-11-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] (Re-)joining group
+10:30:01.706 [main] INFO WorkloadGenerator - Created 504 producers in 806.54387 ms
+10:30:01.706 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+10:30:02.424 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 1526, Received: 0, Expected: 0
+10:30:02.424 [main] INFO WorkloadGenerator - All consumers are ready!
+10:30:02.424 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Kafka-tpc-h-tpc-h-q6-10000-500-2024-06-03-10-29-57 at 1717410602424
+10:30:03.906 [pool-11-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Successfully joined group with generation Generation{generationId=1, memberId='consumer-sub-000-ENj1Vbk-3-8450dfc7-86ce-49ba-baa1-0243c346f1dc', protocol='range'}
+10:30:03.907 [pool-11-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Finished assignment for group at generation 1: {consumer-sub-000-ENj1Vbk-3-8450dfc7-86ce-49ba-baa1-0243c346f1dc=Assignment(partitions=[test-topic-0000000-nnbOWT8-0])}
+10:30:03.909 [pool-11-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Successfully synced group in generation Generation{generationId=1, memberId='consumer-sub-000-ENj1Vbk-3-8450dfc7-86ce-49ba-baa1-0243c346f1dc', protocol='range'}
+10:30:03.909 [pool-11-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Notifying assignor about the new Assignment(partitions=[test-topic-0000000-nnbOWT8-0])
+10:30:03.909 [pool-11-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Adding newly assigned partitions: test-topic-0000000-nnbOWT8-0
+10:30:03.910 [pool-11-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Found no committed offset for partition test-topic-0000000-nnbOWT8-0
+10:30:03.912 [pool-11-thread-1] INFO SubscriptionState - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Resetting offset for partition test-topic-0000000-nnbOWT8-0 to position FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[10.0.0.200:9092 (id: 0 rack: null)], epoch=0}}.
+10:30:08.314 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 10
+10:30:09.492 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 20
+10:30:09.988 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 30
+10:30:10.130 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 40
+10:30:10.257 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 50
+10:30:10.386 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 60
+10:30:10.563 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 70
+10:30:11.031 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 80
+10:30:11.657 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 90
+10:30:12.244 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 100
+10:30:12.860 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 110
+10:30:13.387 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 120
+10:30:13.795 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 130
+10:30:14.323 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 140
+10:30:14.862 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 150
+10:30:15.381 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 160
+10:30:16.004 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 170
+10:30:16.646 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 180
+10:30:17.048 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 190
+10:30:17.622 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 200
+10:30:18.105 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 210
+10:30:18.736 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 220
+10:30:19.245 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 230
+10:30:19.683 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 240
+10:30:20.241 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 250
+10:30:20.801 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 260
+10:30:21.400 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 270
+10:30:21.902 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 280
+10:30:22.253 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 290
+10:30:22.850 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 300
+10:30:23.341 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 310
+10:30:23.817 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 320
+10:30:24.437 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 330
+10:30:24.944 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 340
+10:30:25.480 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 350
+10:30:26.002 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 360
+10:30:26.614 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 370
+10:30:27.018 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 380
+10:30:27.549 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 390
+10:30:28.172 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 400
+10:30:28.608 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 410
+10:30:29.177 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 420
+10:30:29.480 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 430
+10:30:30.050 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 440
+10:30:30.537 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 450
+10:30:30.991 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 460
+10:30:31.447 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 470
+10:30:31.885 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 480
+10:30:32.529 [pool-11-thread-1] INFO LocalWorker - TPC-H progress: 490
+10:30:33.465 [pool-11-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+10:30:33.466 [pool-11-thread-1] INFO LocalWorker - [RESULT] Observed at 1717410633466
+10:30:42.436 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Kafka-tpc-h-tpc-h-q6-10000-500-2024-06-03-10-29-57 at 1717410642436
+10:31:43.675 [pool-11-thread-1] WARN AbstractFetch - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Received unknown topic or partition error in fetch for partition test-topic-0000000-nnbOWT8-0
+10:31:43.677 [pool-11-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Error while fetching metadata with correlation id 1174 : {test-topic-0000000-nnbOWT8=LEADER_NOT_AVAILABLE}
+10:31:43.677 [pool-11-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Request joining group due to: cached metadata has changed from (version2: {test-topic-0000000-nnbOWT8=[NO_RACKS]}) at the beginning of the rebalance to (version3: {test-topic-0000000-nnbOWT8=[]})
+10:31:43.677 [pool-11-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Revoke previously assigned partitions test-topic-0000000-nnbOWT8-0
+10:31:43.677 [pool-11-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] (Re-)joining group
+10:31:43.678 [pool-11-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Successfully joined group with generation Generation{generationId=2, memberId='consumer-sub-000-ENj1Vbk-3-8450dfc7-86ce-49ba-baa1-0243c346f1dc', protocol='range'}
+10:31:43.777 [pool-11-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Error while fetching metadata with correlation id 1176 : {test-topic-0000000-nnbOWT8=LEADER_NOT_AVAILABLE}
+10:31:43.778 [pool-11-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Finished assignment for group at generation 2: {consumer-sub-000-ENj1Vbk-3-8450dfc7-86ce-49ba-baa1-0243c346f1dc=Assignment(partitions=[])}
+10:31:43.778 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Member consumer-sub-000-ENj1Vbk-3-8450dfc7-86ce-49ba-baa1-0243c346f1dc sending LeaveGroup request to coordinator 10.0.0.125:9092 (id: 2147483645 rack: null) due to the consumer is being closed
+10:31:43.779 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Resetting generation and member id due to: consumer pro-actively leaving the group
+10:31:43.779 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Request joining group due to: consumer pro-actively leaving the group
+10:31:43.779 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ENj1Vbk-3, groupId=sub-000-ENj1Vbk] Generation data was cleared by heartbeat thread to Generation{generationId=-1, memberId='', protocol='null'} and state is now UNJOINED before receiving SyncGroup response, marking this rebalance as failed and retry
+10:31:43.780 [main] INFO Metrics - Metrics scheduler closed
+10:31:43.780 [main] INFO Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+10:31:43.780 [main] INFO Metrics - Metrics reporters closed
+10:31:43.781 [main] INFO AppInfoParser - App info kafka.consumer for consumer-sub-000-ENj1Vbk-3 unregistered
+10:31:43.784 [main] INFO KafkaBenchmarkDriver - Preparing to delete topics...
+10:31:44.482 [main] INFO KafkaBenchmarkDriver - Topics left over: 0
+10:31:44.483 [kafka-admin-client-thread | adminclient-3] INFO AppInfoParser - App info kafka.admin.client for adminclient-3 unregistered
+10:31:44.484 [kafka-admin-client-thread | adminclient-3] INFO Metrics - Metrics scheduler closed
+10:31:44.484 [kafka-admin-client-thread | adminclient-3] INFO Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+10:31:44.484 [kafka-admin-client-thread | adminclient-3] INFO Metrics - Metrics reporters closed
+10:31:44.687 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+10:31:44.687 [main] INFO CentralWorkerStats - Central worker stats initialized
+10:31:44.691 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.190:8080,http://10.0.0.18:8080,http://10.0.0.126:8080]
+10:31:44.692 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.190:8080,http://10.0.0.18:8080,http://10.0.0.126:8080
+10:31:44.692 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Kafka---------------
+10:31:44.904 [main] INFO LocalWorker - Driver: {
+  "name" : "Kafka",
+  "driverClass" : "io.openmessaging.benchmark.driver.kafka.KafkaBenchmarkDriver"
+}
+10:31:44.905 [main] INFO AdminClientConfig - AdminClientConfig values:
+	auto.include.jmx.reporter = true
+	bootstrap.servers = [10.0.0.200:9092, 10.0.0.110:9092, 10.0.0.125:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id =
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 1200000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 1200000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+
+10:31:44.906 [main] INFO AppInfoParser - Kafka version: 3.6.1
+10:31:44.906 [main] INFO AppInfoParser - Kafka commitId: 5e3c2b738d253ff5
+10:31:44.906 [main] INFO AppInfoParser - Kafka startTimeMs: 1717410704906
+10:31:46.243 [main] INFO WorkloadGenerator - Created 504 topics in 1336.44312 ms
+10:31:47.242 [main] INFO WorkloadGenerator - Created 504 external consumers in 997.34541 ms
+10:31:47.243 [main] INFO ConsumerConfig - ConsumerConfig values:
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [10.0.0.200:9092, 10.0.0.110:9092, 10.0.0.125:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-sub-000-Z_ybvSs-4
+	client.rack =
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 1200000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = sub-000-Z_ybvSs
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 10485760
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 1200000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+
+10:31:47.246 [main] INFO AppInfoParser - Kafka version: 3.6.1
+10:31:47.246 [main] INFO AppInfoParser - Kafka commitId: 5e3c2b738d253ff5
+10:31:47.246 [main] INFO AppInfoParser - Kafka startTimeMs: 1717410707246
+10:31:47.246 [main] INFO KafkaConsumer - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Subscribed to topic(s): test-topic-0000000-H_Q3jrg
+10:31:47.246 [main] INFO LocalWorker - Created 1 consumers in 3.847356 ms
+10:31:47.249 [pool-13-thread-1] INFO Metadata - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Cluster ID: S3pQLgFbSLCsLvhwYduNSA
+10:31:47.250 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Discovered group coordinator 10.0.0.110:9092 (id: 2147483646 rack: null)
+10:31:47.250 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] (Re-)joining group
+10:31:47.252 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Request joining group due to: need to re-join with the given member-id: consumer-sub-000-Z_ybvSs-4-2e1ed23d-bae1-417b-a784-78d6252b83f1
+10:31:47.253 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Request joining group due to: rebalance failed due to 'The group member needs to have a valid member id before actually entering a consumer group.' (MemberIdRequiredException)
+10:31:47.253 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] (Re-)joining group
+10:31:48.037 [main] INFO WorkloadGenerator - Created 504 producers in 790.378317 ms
+10:31:48.037 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+10:31:48.747 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 1526, Received: 0, Expected: 0
+10:31:48.747 [main] INFO WorkloadGenerator - All consumers are ready!
+10:31:48.747 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Kafka-tpc-h-tpc-h-q1-10000-500-2024-06-03-10-31-44 at 1717410708747
+10:31:50.255 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Successfully joined group with generation Generation{generationId=1, memberId='consumer-sub-000-Z_ybvSs-4-2e1ed23d-bae1-417b-a784-78d6252b83f1', protocol='range'}
+10:31:50.255 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Finished assignment for group at generation 1: {consumer-sub-000-Z_ybvSs-4-2e1ed23d-bae1-417b-a784-78d6252b83f1=Assignment(partitions=[test-topic-0000000-H_Q3jrg-0])}
+10:31:50.258 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Successfully synced group in generation Generation{generationId=1, memberId='consumer-sub-000-Z_ybvSs-4-2e1ed23d-bae1-417b-a784-78d6252b83f1', protocol='range'}
+10:31:50.258 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Notifying assignor about the new Assignment(partitions=[test-topic-0000000-H_Q3jrg-0])
+10:31:50.258 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Adding newly assigned partitions: test-topic-0000000-H_Q3jrg-0
+10:31:50.259 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Found no committed offset for partition test-topic-0000000-H_Q3jrg-0
+10:31:50.262 [pool-13-thread-1] INFO SubscriptionState - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Resetting offset for partition test-topic-0000000-H_Q3jrg-0 to position FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[10.0.0.110:9092 (id: 1 rack: null)], epoch=0}}.
+10:31:55.596 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 10
+10:31:56.008 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 20
+10:31:56.225 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 30
+10:31:56.474 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 40
+10:31:56.583 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 50
+10:31:56.721 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 60
+10:31:57.042 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 70
+10:31:57.692 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 80
+10:31:58.250 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 90
+10:31:59.030 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 100
+10:31:59.622 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 110
+10:32:00.253 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 120
+10:32:00.772 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 130
+10:32:01.392 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 140
+10:32:02.119 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 150
+10:32:02.773 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 160
+10:32:03.379 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 170
+10:32:04.006 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 180
+10:32:04.596 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 190
+10:32:05.249 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 200
+10:32:05.805 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 210
+10:32:06.412 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 220
+10:32:06.997 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 230
+10:32:07.649 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 240
+10:32:08.344 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 250
+10:32:08.929 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 260
+10:32:09.465 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 270
+10:32:10.036 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 280
+10:32:10.669 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 290
+10:32:11.401 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 300
+10:32:11.964 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 310
+10:32:12.640 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 320
+10:32:13.152 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 330
+10:32:13.788 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 340
+10:32:14.538 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 350
+10:32:15.071 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 360
+10:32:15.735 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 370
+10:32:16.247 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 380
+10:32:16.868 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 390
+10:32:17.575 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 400
+10:32:18.137 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 410
+10:32:18.684 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 420
+10:32:19.210 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 430
+10:32:19.819 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 440
+10:32:20.366 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 450
+10:32:20.875 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 460
+10:32:21.452 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 470
+10:32:22.105 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 480
+10:32:23.047 [pool-13-thread-1] INFO LocalWorker - TPC-H progress: 490
+10:32:24.113 [pool-13-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+10:32:24.113 [pool-13-thread-1] INFO LocalWorker - [RESULT] Observed at 1717410744113
+10:32:28.752 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Kafka-tpc-h-tpc-h-q1-10000-500-2024-06-03-10-31-44 at 1717410748752
+10:33:23.116 [pool-13-thread-1] WARN AbstractFetch - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Received unknown topic or partition error in fetch for partition test-topic-0000000-H_Q3jrg-0
+10:33:23.118 [pool-13-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Error while fetching metadata with correlation id 1157 : {test-topic-0000000-H_Q3jrg=LEADER_NOT_AVAILABLE}
+10:33:23.118 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Request joining group due to: cached metadata has changed from (version2: {test-topic-0000000-H_Q3jrg=[NO_RACKS]}) at the beginning of the rebalance to (version3: {test-topic-0000000-H_Q3jrg=[]})
+10:33:23.118 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Revoke previously assigned partitions test-topic-0000000-H_Q3jrg-0
+10:33:23.118 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] (Re-)joining group
+10:33:23.119 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Successfully joined group with generation Generation{generationId=2, memberId='consumer-sub-000-Z_ybvSs-4-2e1ed23d-bae1-417b-a784-78d6252b83f1', protocol='range'}
+10:33:23.219 [pool-13-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Error while fetching metadata with correlation id 1159 : {test-topic-0000000-H_Q3jrg=LEADER_NOT_AVAILABLE}
+10:33:23.219 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Finished assignment for group at generation 2: {consumer-sub-000-Z_ybvSs-4-2e1ed23d-bae1-417b-a784-78d6252b83f1=Assignment(partitions=[])}
+10:33:23.221 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Successfully synced group in generation Generation{generationId=2, memberId='consumer-sub-000-Z_ybvSs-4-2e1ed23d-bae1-417b-a784-78d6252b83f1', protocol='range'}
+10:33:23.221 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Notifying assignor about the new Assignment(partitions=[])
+10:33:23.221 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Adding newly assigned partitions:
+10:33:23.319 [pool-13-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Error while fetching metadata with correlation id 1161 : {test-topic-0000000-H_Q3jrg=LEADER_NOT_AVAILABLE}
+10:33:23.421 [pool-13-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Error while fetching metadata with correlation id 1162 : {test-topic-0000000-H_Q3jrg=LEADER_NOT_AVAILABLE}
+10:33:23.522 [pool-13-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Error while fetching metadata with correlation id 1163 : {test-topic-0000000-H_Q3jrg=LEADER_NOT_AVAILABLE}
+10:33:23.623 [pool-13-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Error while fetching metadata with correlation id 1164 : {test-topic-0000000-H_Q3jrg=LEADER_NOT_AVAILABLE}
+10:33:23.730 [pool-13-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Error while fetching metadata with correlation id 1165 : {test-topic-0000000-H_Q3jrg=LEADER_NOT_AVAILABLE}
+10:33:23.832 [pool-13-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Error while fetching metadata with correlation id 1166 : {test-topic-0000000-H_Q3jrg=LEADER_NOT_AVAILABLE}
+10:33:23.934 [pool-13-thread-1] INFO Metadata - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Resetting the last seen epoch of partition test-topic-0000000-H_Q3jrg-0 to 0 since the associated topicId changed from null to vhI4mR0xQmODGciTdAUekQ
+10:33:23.934 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Request joining group due to: cached metadata has changed from (version4: {test-topic-0000000-H_Q3jrg=[]}) at the beginning of the rebalance to (version11: {test-topic-0000000-H_Q3jrg=[NO_RACKS]})
+10:33:23.934 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Revoke previously assigned partitions
+10:33:23.934 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] (Re-)joining group
+10:33:23.935 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Successfully joined group with generation Generation{generationId=3, memberId='consumer-sub-000-Z_ybvSs-4-2e1ed23d-bae1-417b-a784-78d6252b83f1', protocol='range'}
+10:33:23.935 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Finished assignment for group at generation 3: {consumer-sub-000-Z_ybvSs-4-2e1ed23d-bae1-417b-a784-78d6252b83f1=Assignment(partitions=[test-topic-0000000-H_Q3jrg-0])}
+10:33:23.937 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Successfully synced group in generation Generation{generationId=3, memberId='consumer-sub-000-Z_ybvSs-4-2e1ed23d-bae1-417b-a784-78d6252b83f1', protocol='range'}
+10:33:23.937 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Notifying assignor about the new Assignment(partitions=[test-topic-0000000-H_Q3jrg-0])
+10:33:23.937 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Adding newly assigned partitions: test-topic-0000000-H_Q3jrg-0
+10:33:23.937 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Found no committed offset for partition test-topic-0000000-H_Q3jrg-0
+10:33:23.938 [pool-13-thread-1] INFO SubscriptionState - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Resetting offset for partition test-topic-0000000-H_Q3jrg-0 to position FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[10.0.0.110:9092 (id: 1 rack: null)], epoch=0}}.
+10:33:24.694 [pool-13-thread-1] WARN AbstractFetch - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Received unknown topic or partition error in fetch for partition test-topic-0000000-H_Q3jrg-0
+10:33:24.696 [pool-13-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Error while fetching metadata with correlation id 1175 : {test-topic-0000000-H_Q3jrg=LEADER_NOT_AVAILABLE}
+10:33:24.696 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Request joining group due to: cached metadata has changed from (version11: {test-topic-0000000-H_Q3jrg=[NO_RACKS]}) at the beginning of the rebalance to (version12: {test-topic-0000000-H_Q3jrg=[]})
+10:33:24.696 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Revoke previously assigned partitions test-topic-0000000-H_Q3jrg-0
+10:33:24.696 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] (Re-)joining group
+10:33:24.697 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Successfully joined group with generation Generation{generationId=4, memberId='consumer-sub-000-Z_ybvSs-4-2e1ed23d-bae1-417b-a784-78d6252b83f1', protocol='range'}
+10:33:24.798 [pool-13-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Error while fetching metadata with correlation id 1177 : {test-topic-0000000-H_Q3jrg=LEADER_NOT_AVAILABLE}
+10:33:24.798 [pool-13-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Finished assignment for group at generation 4: {consumer-sub-000-Z_ybvSs-4-2e1ed23d-bae1-417b-a784-78d6252b83f1=Assignment(partitions=[])}
+10:33:24.799 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Member consumer-sub-000-Z_ybvSs-4-2e1ed23d-bae1-417b-a784-78d6252b83f1 sending LeaveGroup request to coordinator 10.0.0.110:9092 (id: 2147483646 rack: null) due to the consumer is being closed
+10:33:24.799 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Resetting generation and member id due to: consumer pro-actively leaving the group
+10:33:24.799 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Request joining group due to: consumer pro-actively leaving the group
+10:33:24.799 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-Z_ybvSs-4, groupId=sub-000-Z_ybvSs] Generation data was cleared by heartbeat thread to Generation{generationId=-1, memberId='', protocol='null'} and state is now UNJOINED before receiving SyncGroup response, marking this rebalance as failed and retry
+10:33:24.800 [main] INFO Metrics - Metrics scheduler closed
+10:33:24.800 [main] INFO Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+10:33:24.800 [main] INFO Metrics - Metrics reporters closed
+10:33:24.801 [main] INFO AppInfoParser - App info kafka.consumer for consumer-sub-000-Z_ybvSs-4 unregistered
+10:33:24.803 [main] INFO KafkaBenchmarkDriver - Preparing to delete topics...
+10:33:24.804 [main] INFO KafkaBenchmarkDriver - Topics left over: 0
+10:33:24.804 [kafka-admin-client-thread | adminclient-4] INFO AppInfoParser - App info kafka.admin.client for adminclient-4 unregistered
+10:33:24.805 [kafka-admin-client-thread | adminclient-4] INFO Metrics - Metrics scheduler closed
+10:33:24.805 [kafka-admin-client-thread | adminclient-4] INFO Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+10:33:24.805 [kafka-admin-client-thread | adminclient-4] INFO Metrics - Metrics reporters closed
+10:33:25.008 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+10:33:25.008 [main] INFO CentralWorkerStats - Central worker stats initialized
+10:33:25.012 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.190:8080,http://10.0.0.18:8080,http://10.0.0.126:8080]
+10:33:25.012 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.190:8080,http://10.0.0.18:8080,http://10.0.0.126:8080
+10:33:25.013 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Kafka---------------
+10:33:25.223 [main] INFO LocalWorker - Driver: {
+  "name" : "Kafka",
+  "driverClass" : "io.openmessaging.benchmark.driver.kafka.KafkaBenchmarkDriver"
+}
+10:33:25.223 [main] INFO AdminClientConfig - AdminClientConfig values:
+	auto.include.jmx.reporter = true
+	bootstrap.servers = [10.0.0.200:9092, 10.0.0.110:9092, 10.0.0.125:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id =
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 1200000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 1200000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+
+10:33:25.225 [main] INFO AppInfoParser - Kafka version: 3.6.1
+10:33:25.225 [main] INFO AppInfoParser - Kafka commitId: 5e3c2b738d253ff5
+10:33:25.225 [main] INFO AppInfoParser - Kafka startTimeMs: 1717410805225
+10:33:27.356 [main] INFO WorkloadGenerator - Created 804 topics in 2130.215886 ms
+10:33:28.784 [main] INFO WorkloadGenerator - Created 804 external consumers in 1426.1037 ms
+10:33:28.785 [main] INFO ConsumerConfig - ConsumerConfig values:
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [10.0.0.200:9092, 10.0.0.110:9092, 10.0.0.125:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-sub-000-T3yXt8k-5
+	client.rack =
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 1200000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = sub-000-T3yXt8k
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 10485760
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 1200000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+
+10:33:28.787 [main] INFO AppInfoParser - Kafka version: 3.6.1
+10:33:28.787 [main] INFO AppInfoParser - Kafka commitId: 5e3c2b738d253ff5
+10:33:28.787 [main] INFO AppInfoParser - Kafka startTimeMs: 1717410808787
+10:33:28.787 [main] INFO KafkaConsumer - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Subscribed to topic(s): test-topic-0000000--RY6MxU
+10:33:28.788 [main] INFO LocalWorker - Created 1 consumers in 3.741268 ms
+10:33:28.790 [pool-15-thread-1] INFO Metadata - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Cluster ID: S3pQLgFbSLCsLvhwYduNSA
+10:33:28.791 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Discovered group coordinator 10.0.0.200:9092 (id: 2147483647 rack: null)
+10:33:28.791 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] (Re-)joining group
+10:33:28.793 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Request joining group due to: need to re-join with the given member-id: consumer-sub-000-T3yXt8k-5-8dc95ff9-b26c-4cfd-aa7e-8d1b8d0c8dcb
+10:33:28.793 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Request joining group due to: rebalance failed due to 'The group member needs to have a valid member id before actually entering a consumer group.' (MemberIdRequiredException)
+10:33:28.793 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] (Re-)joining group
+10:33:29.899 [main] INFO WorkloadGenerator - Created 804 producers in 1111.532885 ms
+10:33:29.900 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+10:33:31.177 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 2427, Received: 1380, Expected: 0
+10:33:31.177 [main] INFO WorkloadGenerator - All consumers are ready!
+10:33:31.177 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Kafka-tpc-h-tpc-h-q6-10000-800-2024-06-03-10-33-25 at 1717410811177
+10:33:31.794 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Successfully joined group with generation Generation{generationId=1, memberId='consumer-sub-000-T3yXt8k-5-8dc95ff9-b26c-4cfd-aa7e-8d1b8d0c8dcb', protocol='range'}
+10:33:31.794 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Finished assignment for group at generation 1: {consumer-sub-000-T3yXt8k-5-8dc95ff9-b26c-4cfd-aa7e-8d1b8d0c8dcb=Assignment(partitions=[test-topic-0000000--RY6MxU-0])}
+10:33:31.797 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Successfully synced group in generation Generation{generationId=1, memberId='consumer-sub-000-T3yXt8k-5-8dc95ff9-b26c-4cfd-aa7e-8d1b8d0c8dcb', protocol='range'}
+10:33:31.797 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Notifying assignor about the new Assignment(partitions=[test-topic-0000000--RY6MxU-0])
+10:33:31.797 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Adding newly assigned partitions: test-topic-0000000--RY6MxU-0
+10:33:31.797 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Found no committed offset for partition test-topic-0000000--RY6MxU-0
+10:33:31.800 [pool-15-thread-1] INFO SubscriptionState - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Resetting offset for partition test-topic-0000000--RY6MxU-0 to position FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[10.0.0.125:9092 (id: 2 rack: null)], epoch=0}}.
+10:33:34.806 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 10
+10:33:35.697 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 20
+10:33:36.395 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 30
+10:33:36.746 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 40
+10:33:36.951 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 50
+10:33:37.092 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 60
+10:33:37.208 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 70
+10:33:37.360 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 80
+10:33:37.446 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 90
+10:33:37.758 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 100
+10:33:38.103 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 110
+10:33:38.205 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 120
+10:33:38.278 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 130
+10:33:38.581 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 140
+10:33:39.008 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 150
+10:33:39.414 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 160
+10:33:39.808 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 170
+10:33:40.216 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 180
+10:33:40.555 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 190
+10:33:41.055 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 200
+10:33:41.387 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 210
+10:33:41.785 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 220
+10:33:42.174 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 230
+10:33:42.537 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 240
+10:33:42.926 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 250
+10:33:43.292 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 260
+10:33:43.634 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 270
+10:33:43.977 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 280
+10:33:44.282 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 290
+10:33:44.656 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 300
+10:33:44.998 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 310
+10:33:45.436 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 320
+10:33:45.786 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 330
+10:33:46.127 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 340
+10:33:46.502 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 350
+10:33:46.871 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 360
+10:33:47.217 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 370
+10:33:47.581 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 380
+10:33:47.901 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 390
+10:33:48.290 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 400
+10:33:48.652 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 410
+10:33:49.038 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 420
+10:33:49.346 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 430
+10:33:49.703 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 440
+10:33:50.009 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 450
+10:33:50.377 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 460
+10:33:50.766 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 470
+10:33:51.144 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 480
+10:33:51.553 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 490
+10:33:51.842 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 500
+10:33:52.216 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 510
+10:33:52.550 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 520
+10:33:52.861 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 530
+10:33:53.142 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 540
+10:33:53.507 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 550
+10:33:53.891 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 560
+10:33:54.314 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 570
+10:33:54.674 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 580
+10:33:54.981 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 590
+10:33:55.347 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 600
+10:33:55.691 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 610
+10:33:56.005 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 620
+10:33:56.308 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 630
+10:33:56.650 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 640
+10:33:57.022 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 650
+10:33:57.390 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 660
+10:33:57.699 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 670
+10:33:58.042 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 680
+10:33:58.341 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 690
+10:33:58.578 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 700
+10:33:58.894 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 710
+10:33:59.158 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 720
+10:33:59.432 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 730
+10:33:59.882 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 740
+10:34:00.254 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 750
+10:34:01.084 [pool-15-thread-1] INFO LocalWorker - TPC-H progress: 760
+10:34:02.035 [pool-15-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"revenue":1106886908.0572}}]}
+10:34:02.035 [pool-15-thread-1] INFO LocalWorker - [RESULT] Observed at 1717410842035
+10:34:11.293 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Kafka-tpc-h-tpc-h-q6-10000-800-2024-06-03-10-33-25 at 1717410851293
+10:35:34.269 [pool-15-thread-1] WARN AbstractFetch - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Received unknown topic or partition error in fetch for partition test-topic-0000000--RY6MxU-0
+10:35:34.271 [pool-15-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Error while fetching metadata with correlation id 1750 : {test-topic-0000000--RY6MxU=LEADER_NOT_AVAILABLE}
+10:35:34.271 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Request joining group due to: cached metadata has changed from (version2: {test-topic-0000000--RY6MxU=[NO_RACKS]}) at the beginning of the rebalance to (version3: {test-topic-0000000--RY6MxU=[]})
+10:35:34.271 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Revoke previously assigned partitions test-topic-0000000--RY6MxU-0
+10:35:34.271 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] (Re-)joining group
+10:35:34.272 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Successfully joined group with generation Generation{generationId=2, memberId='consumer-sub-000-T3yXt8k-5-8dc95ff9-b26c-4cfd-aa7e-8d1b8d0c8dcb', protocol='range'}
+10:35:34.373 [pool-15-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Error while fetching metadata with correlation id 1752 : {test-topic-0000000--RY6MxU=LEADER_NOT_AVAILABLE}
+10:35:34.373 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Finished assignment for group at generation 2: {consumer-sub-000-T3yXt8k-5-8dc95ff9-b26c-4cfd-aa7e-8d1b8d0c8dcb=Assignment(partitions=[])}
+10:35:34.374 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Successfully synced group in generation Generation{generationId=2, memberId='consumer-sub-000-T3yXt8k-5-8dc95ff9-b26c-4cfd-aa7e-8d1b8d0c8dcb', protocol='range'}
+10:35:34.374 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Notifying assignor about the new Assignment(partitions=[])
+10:35:34.374 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Adding newly assigned partitions:
+10:35:34.473 [pool-15-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Error while fetching metadata with correlation id 1754 : {test-topic-0000000--RY6MxU=LEADER_NOT_AVAILABLE}
+10:35:34.575 [pool-15-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Error while fetching metadata with correlation id 1755 : {test-topic-0000000--RY6MxU=LEADER_NOT_AVAILABLE}
+10:35:34.675 [pool-15-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Error while fetching metadata with correlation id 1756 : {test-topic-0000000--RY6MxU=LEADER_NOT_AVAILABLE}
+10:35:34.778 [pool-15-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Error while fetching metadata with correlation id 1757 : {test-topic-0000000--RY6MxU=LEADER_NOT_AVAILABLE}
+10:35:34.879 [pool-15-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Error while fetching metadata with correlation id 1758 : {test-topic-0000000--RY6MxU=LEADER_NOT_AVAILABLE}
+10:35:34.980 [pool-15-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Error while fetching metadata with correlation id 1759 : {test-topic-0000000--RY6MxU=LEADER_NOT_AVAILABLE}
+10:35:35.081 [pool-15-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Error while fetching metadata with correlation id 1760 : {test-topic-0000000--RY6MxU=LEADER_NOT_AVAILABLE}
+10:35:35.182 [pool-15-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Error while fetching metadata with correlation id 1761 : {test-topic-0000000--RY6MxU=LEADER_NOT_AVAILABLE}
+10:35:35.284 [pool-15-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Error while fetching metadata with correlation id 1762 : {test-topic-0000000--RY6MxU=LEADER_NOT_AVAILABLE}
+10:35:35.385 [pool-15-thread-1] INFO Metadata - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Resetting the last seen epoch of partition test-topic-0000000--RY6MxU-0 to 0 since the associated topicId changed from null to tT0bmzLMSU6K5gK3AkaMUw
+10:35:35.385 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Request joining group due to: cached metadata has changed from (version4: {test-topic-0000000--RY6MxU=[]}) at the beginning of the rebalance to (version14: {test-topic-0000000--RY6MxU=[NO_RACKS]})
+10:35:35.385 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Revoke previously assigned partitions
+10:35:35.385 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] (Re-)joining group
+10:35:35.386 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Successfully joined group with generation Generation{generationId=3, memberId='consumer-sub-000-T3yXt8k-5-8dc95ff9-b26c-4cfd-aa7e-8d1b8d0c8dcb', protocol='range'}
+10:35:35.386 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Finished assignment for group at generation 3: {consumer-sub-000-T3yXt8k-5-8dc95ff9-b26c-4cfd-aa7e-8d1b8d0c8dcb=Assignment(partitions=[test-topic-0000000--RY6MxU-0])}
+10:35:35.387 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Successfully synced group in generation Generation{generationId=3, memberId='consumer-sub-000-T3yXt8k-5-8dc95ff9-b26c-4cfd-aa7e-8d1b8d0c8dcb', protocol='range'}
+10:35:35.387 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Notifying assignor about the new Assignment(partitions=[test-topic-0000000--RY6MxU-0])
+10:35:35.387 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Adding newly assigned partitions: test-topic-0000000--RY6MxU-0
+10:35:35.388 [pool-15-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Found no committed offset for partition test-topic-0000000--RY6MxU-0
+10:35:35.390 [pool-15-thread-1] INFO SubscriptionState - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Resetting offset for partition test-topic-0000000--RY6MxU-0 to position FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[10.0.0.200:9092 (id: 0 rack: null)], epoch=0}}.
+10:35:35.477 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Revoke previously assigned partitions test-topic-0000000--RY6MxU-0
+10:35:35.477 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Member consumer-sub-000-T3yXt8k-5-8dc95ff9-b26c-4cfd-aa7e-8d1b8d0c8dcb sending LeaveGroup request to coordinator 10.0.0.200:9092 (id: 2147483647 rack: null) due to the consumer is being closed
+10:35:35.477 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Resetting generation and member id due to: consumer pro-actively leaving the group
+10:35:35.477 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Request joining group due to: consumer pro-actively leaving the group
+10:35:35.892 [main] INFO FetchSessionHandler - [Consumer clientId=consumer-sub-000-T3yXt8k-5, groupId=sub-000-T3yXt8k] Node 0 sent an invalid full fetch response with extraIds=(tT0bmzLMSU6K5gK3AkaMUw), response=()
+10:35:35.892 [main] INFO Metrics - Metrics scheduler closed
+10:35:35.892 [main] INFO Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+10:35:35.892 [main] INFO Metrics - Metrics reporters closed
+10:35:35.893 [main] INFO AppInfoParser - App info kafka.consumer for consumer-sub-000-T3yXt8k-5 unregistered
+10:35:35.896 [main] INFO KafkaBenchmarkDriver - Preparing to delete topics...
+10:35:36.705 [main] INFO KafkaBenchmarkDriver - Topics left over: 0
+10:35:36.705 [kafka-admin-client-thread | adminclient-5] INFO AppInfoParser - App info kafka.admin.client for adminclient-5 unregistered
+10:35:36.706 [kafka-admin-client-thread | adminclient-5] INFO Metrics - Metrics scheduler closed
+10:35:36.706 [kafka-admin-client-thread | adminclient-5] INFO Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+10:35:36.706 [kafka-admin-client-thread | adminclient-5] INFO Metrics - Metrics reporters closed
+10:35:36.908 [main] INFO AdaptiveRateLimitedTaskProcessor - Initialising with 1 max concurrent tasks
+10:35:36.909 [main] INFO CentralWorkerStats - Central worker stats initialized
+10:35:36.921 [main] INFO DistributedWorkersEnsemble - Workers list - producers: [http://10.0.0.190:8080,http://10.0.0.18:8080,http://10.0.0.126:8080]
+10:35:36.921 [main] INFO DistributedWorkersEnsemble - Workers list - consumers: http://10.0.0.190:8080,http://10.0.0.18:8080,http://10.0.0.126:8080
+10:35:36.921 [main] INFO Benchmark - --------------- WORKLOAD : tpc-h --- DRIVER : Kafka---------------
+10:35:37.131 [main] INFO LocalWorker - Driver: {
+  "name" : "Kafka",
+  "driverClass" : "io.openmessaging.benchmark.driver.kafka.KafkaBenchmarkDriver"
+}
+10:35:37.132 [main] INFO AdminClientConfig - AdminClientConfig values:
+	auto.include.jmx.reporter = true
+	bootstrap.servers = [10.0.0.200:9092, 10.0.0.110:9092, 10.0.0.125:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id =
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 1200000
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 1200000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+
+10:35:37.134 [main] INFO AppInfoParser - Kafka version: 3.6.1
+10:35:37.134 [main] INFO AppInfoParser - Kafka commitId: 5e3c2b738d253ff5
+10:35:37.134 [main] INFO AppInfoParser - Kafka startTimeMs: 1717410937134
+10:35:39.306 [main] INFO WorkloadGenerator - Created 804 topics in 2171.717297 ms
+10:35:40.645 [main] INFO WorkloadGenerator - Created 804 external consumers in 1337.290428 ms
+10:35:40.646 [main] INFO ConsumerConfig - ConsumerConfig values:
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [10.0.0.200:9092, 10.0.0.110:9092, 10.0.0.125:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-sub-000-ybsI8no-6
+	client.rack =
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 1200000
+	enable.auto.commit = false
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = sub-000-ybsI8no
+	group.instance.id = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 10485760
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 1200000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+
+10:35:40.648 [main] INFO AppInfoParser - Kafka version: 3.6.1
+10:35:40.648 [main] INFO AppInfoParser - Kafka commitId: 5e3c2b738d253ff5
+10:35:40.648 [main] INFO AppInfoParser - Kafka startTimeMs: 1717410940648
+10:35:40.648 [main] INFO KafkaConsumer - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Subscribed to topic(s): test-topic-0000000-kRwmakw
+10:35:40.649 [main] INFO LocalWorker - Created 1 consumers in 3.264188 ms
+10:35:40.651 [pool-17-thread-1] INFO Metadata - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Cluster ID: S3pQLgFbSLCsLvhwYduNSA
+10:35:40.652 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Discovered group coordinator 10.0.0.200:9092 (id: 2147483647 rack: null)
+10:35:40.652 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] (Re-)joining group
+10:35:40.654 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Request joining group due to: need to re-join with the given member-id: consumer-sub-000-ybsI8no-6-c8eaf0fe-4c70-495b-af1b-c5b6c57739c2
+10:35:40.654 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Request joining group due to: rebalance failed due to 'The group member needs to have a valid member id before actually entering a consumer group.' (MemberIdRequiredException)
+10:35:40.654 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] (Re-)joining group
+10:35:41.718 [main] INFO WorkloadGenerator - Created 804 producers in 1069.257683 ms
+10:35:41.718 [main] INFO WorkloadGenerator - Waiting for consumers to be ready...
+10:35:43.046 [main] INFO WorkloadGenerator - Waiting for topics to be ready -- Sent: 2426, Received: 1323, Expected: 0
+10:35:43.046 [main] INFO WorkloadGenerator - All consumers are ready!
+10:35:43.046 [main] INFO WorkloadGenerator - [BenchmarkStart] Starting benchmark Kafka-tpc-h-tpc-h-q1-10000-800-2024-06-03-10-35-37 at 1717410943046
+10:35:43.654 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Successfully joined group with generation Generation{generationId=1, memberId='consumer-sub-000-ybsI8no-6-c8eaf0fe-4c70-495b-af1b-c5b6c57739c2', protocol='range'}
+10:35:43.655 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Finished assignment for group at generation 1: {consumer-sub-000-ybsI8no-6-c8eaf0fe-4c70-495b-af1b-c5b6c57739c2=Assignment(partitions=[test-topic-0000000-kRwmakw-0])}
+10:35:43.656 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Successfully synced group in generation Generation{generationId=1, memberId='consumer-sub-000-ybsI8no-6-c8eaf0fe-4c70-495b-af1b-c5b6c57739c2', protocol='range'}
+10:35:43.656 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Notifying assignor about the new Assignment(partitions=[test-topic-0000000-kRwmakw-0])
+10:35:43.656 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Adding newly assigned partitions: test-topic-0000000-kRwmakw-0
+10:35:43.657 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Found no committed offset for partition test-topic-0000000-kRwmakw-0
+10:35:43.659 [pool-17-thread-1] INFO SubscriptionState - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Resetting offset for partition test-topic-0000000-kRwmakw-0 to position FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[10.0.0.200:9092 (id: 0 rack: null)], epoch=0}}.
+10:35:47.120 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 10
+10:35:48.842 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 20
+10:35:49.210 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 30
+10:35:49.346 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 40
+10:35:49.568 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 50
+10:35:49.662 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 60
+10:35:49.803 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 70
+10:35:49.904 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 80
+10:35:49.985 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 90
+10:35:50.063 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 100
+10:35:50.215 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 110
+10:35:50.492 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 120
+10:35:51.020 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 130
+10:35:51.512 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 140
+10:35:51.942 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 150
+10:35:52.400 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 160
+10:35:52.847 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 170
+10:35:53.261 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 180
+10:35:53.631 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 190
+10:35:54.113 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 200
+10:35:54.570 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 210
+10:35:54.971 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 220
+10:35:55.400 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 230
+10:35:55.795 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 240
+10:35:56.207 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 250
+10:35:56.630 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 260
+10:35:57.055 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 270
+10:35:57.581 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 280
+10:35:57.985 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 290
+10:35:58.356 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 300
+10:35:58.785 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 310
+10:35:59.156 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 320
+10:35:59.634 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 330
+10:36:00.011 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 340
+10:36:00.452 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 350
+10:36:01.019 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 360
+10:36:01.378 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 370
+10:36:01.779 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 380
+10:36:02.166 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 390
+10:36:02.589 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 400
+10:36:03.042 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 410
+10:36:03.418 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 420
+10:36:03.936 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 430
+10:36:04.300 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 440
+10:36:04.718 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 450
+10:36:05.143 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 460
+10:36:05.535 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 470
+10:36:05.988 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 480
+10:36:06.361 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 490
+10:36:06.858 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 500
+10:36:07.290 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 510
+10:36:07.737 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 520
+10:36:08.077 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 530
+10:36:08.442 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 540
+10:36:08.899 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 550
+10:36:09.290 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 560
+10:36:09.798 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 570
+10:36:10.251 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 580
+10:36:10.626 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 590
+10:36:11.025 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 600
+10:36:11.422 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 610
+10:36:11.818 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 620
+10:36:12.281 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 630
+10:36:12.736 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 640
+10:36:13.091 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 650
+10:36:13.513 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 660
+10:36:13.944 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 670
+10:36:14.287 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 680
+10:36:14.587 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 690
+10:36:14.926 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 700
+10:36:15.303 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 710
+10:36:15.627 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 720
+10:36:16.094 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 730
+10:36:16.463 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 740
+10:36:16.892 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 750
+10:36:17.606 [pool-17-thread-1] INFO LocalWorker - TPC-H progress: 760
+10:36:18.405 [pool-17-thread-1] INFO LocalWorker - [RESULT] TPC-H query result: {"rows":[{"columns":{"lineStatus":"O","returnFlag":"N","discountedPriceSum":692969433134.2497,"chargeSum":720694299770.132732,"orderCount":19077602,"basePriceSum":729448143820.78,"averageQuantity":25.5,"averagePrice":38235.84,"averageDiscount":0.05,"quantitySum":486415690.0}},{"columns":{"lineStatus":"F","returnFlag":"R","discountedPriceSum":484203993195.0628,"chargeSum":503570450844.880070,"orderCount":13324947,"basePriceSum":509684306612.03,"averageQuantity":25.5,"averagePrice":38250.38,"averageDiscount":0.05,"quantitySum":339894957.0}},{"columns":{"lineStatus":"F","returnFlag":"A","discountedPriceSum":483946017285.3019,"chargeSum":503310457149.612943,"orderCount":13322390,"basePriceSum":509419078748.72,"averageQuantity":25.5,"averagePrice":38237.81,"averageDiscount":0.05,"quantitySum":339737725.0}},{"columns":{"lineStatus":"F","returnFlag":"N","discountedPriceSum":12628053899.1349,"chargeSum":13133599534.652978,"orderCount":347260,"basePriceSum":13292554922.64,"averageQuantity":25.5,"averagePrice":38278.39,"averageDiscount":0.05,"quantitySum":8863383.0}}]}
+10:36:18.405 [pool-17-thread-1] INFO LocalWorker - [RESULT] Observed at 1717410978405
+10:36:23.058 [main] INFO WorkloadGenerator - [BenchmarkEnd] Ending benchmark Kafka-tpc-h-tpc-h-q1-10000-800-2024-06-03-10-35-37 at 1717410983058
+10:37:53.737 [pool-17-thread-1] WARN AbstractFetch - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Received unknown topic or partition error in fetch for partition test-topic-0000000-kRwmakw-0
+10:37:53.738 [pool-17-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Error while fetching metadata with correlation id 1754 : {test-topic-0000000-kRwmakw=LEADER_NOT_AVAILABLE}
+10:37:53.738 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Request joining group due to: cached metadata has changed from (version2: {test-topic-0000000-kRwmakw=[NO_RACKS]}) at the beginning of the rebalance to (version3: {test-topic-0000000-kRwmakw=[]})
+10:37:53.738 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Revoke previously assigned partitions test-topic-0000000-kRwmakw-0
+10:37:53.738 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] (Re-)joining group
+10:37:53.739 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Successfully joined group with generation Generation{generationId=2, memberId='consumer-sub-000-ybsI8no-6-c8eaf0fe-4c70-495b-af1b-c5b6c57739c2', protocol='range'}
+10:37:53.839 [pool-17-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Error while fetching metadata with correlation id 1756 : {test-topic-0000000-kRwmakw=LEADER_NOT_AVAILABLE}
+10:37:53.840 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Finished assignment for group at generation 2: {consumer-sub-000-ybsI8no-6-c8eaf0fe-4c70-495b-af1b-c5b6c57739c2=Assignment(partitions=[])}
+10:37:53.841 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Successfully synced group in generation Generation{generationId=2, memberId='consumer-sub-000-ybsI8no-6-c8eaf0fe-4c70-495b-af1b-c5b6c57739c2', protocol='range'}
+10:37:53.841 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Notifying assignor about the new Assignment(partitions=[])
+10:37:53.841 [pool-17-thread-1] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Adding newly assigned partitions:
+10:37:53.940 [pool-17-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Error while fetching metadata with correlation id 1758 : {test-topic-0000000-kRwmakw=LEADER_NOT_AVAILABLE}
+10:37:54.041 [pool-17-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Error while fetching metadata with correlation id 1759 : {test-topic-0000000-kRwmakw=LEADER_NOT_AVAILABLE}
+10:37:54.142 [pool-17-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Error while fetching metadata with correlation id 1760 : {test-topic-0000000-kRwmakw=LEADER_NOT_AVAILABLE}
+10:37:54.243 [pool-17-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Error while fetching metadata with correlation id 1761 : {test-topic-0000000-kRwmakw=LEADER_NOT_AVAILABLE}
+10:37:54.345 [pool-17-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Error while fetching metadata with correlation id 1762 : {test-topic-0000000-kRwmakw=LEADER_NOT_AVAILABLE}
+10:37:54.446 [pool-17-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Error while fetching metadata with correlation id 1763 : {test-topic-0000000-kRwmakw=LEADER_NOT_AVAILABLE}
+10:37:54.547 [pool-17-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Error while fetching metadata with correlation id 1764 : {test-topic-0000000-kRwmakw=LEADER_NOT_AVAILABLE}
+10:37:54.649 [pool-17-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Error while fetching metadata with correlation id 1765 : {test-topic-0000000-kRwmakw=LEADER_NOT_AVAILABLE}
+10:37:54.751 [pool-17-thread-1] WARN NetworkClient - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Error while fetching metadata with correlation id 1766 : {test-topic-0000000-kRwmakw=LEADER_NOT_AVAILABLE}
+10:37:54.841 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Member consumer-sub-000-ybsI8no-6-c8eaf0fe-4c70-495b-af1b-c5b6c57739c2 sending LeaveGroup request to coordinator 10.0.0.200:9092 (id: 2147483647 rack: null) due to the consumer is being closed
+10:37:54.841 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Resetting generation and member id due to: consumer pro-actively leaving the group
+10:37:54.841 [main] INFO ConsumerCoordinator - [Consumer clientId=consumer-sub-000-ybsI8no-6, groupId=sub-000-ybsI8no] Request joining group due to: consumer pro-actively leaving the group
+10:37:54.842 [main] INFO Metrics - Metrics scheduler closed
+10:37:54.842 [main] INFO Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+10:37:54.843 [main] INFO Metrics - Metrics reporters closed
+10:37:54.843 [main] INFO AppInfoParser - App info kafka.consumer for consumer-sub-000-ybsI8no-6 unregistered
+10:37:54.845 [main] INFO KafkaBenchmarkDriver - Preparing to delete topics...
+10:37:54.846 [main] INFO KafkaBenchmarkDriver - Topics left over: 0
+10:37:54.846 [kafka-admin-client-thread | adminclient-6] INFO AppInfoParser - App info kafka.admin.client for adminclient-6 unregistered
+10:37:54.846 [kafka-admin-client-thread | adminclient-6] INFO Metrics - Metrics scheduler closed
+10:37:54.846 [kafka-admin-client-thread | adminclient-6] INFO Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+10:37:54.847 [kafka-admin-client-thread | adminclient-6] INFO Metrics - Metrics reporters closed

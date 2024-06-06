@@ -12,6 +12,11 @@ sudo bin/benchmark \
   workloads/simple-workload.yaml
 ```
 
+sudo bin/benchmark \
+  --drivers driver-s3/s3-default.yaml \
+  --tpc-h-files workloads/tpc-h-q6-100-10.yaml \
+  workloads/tpc-h-base.yaml
+  
 ```
 sudo bin/benchmark \
   --drivers driver-s3/s3-default.yaml \

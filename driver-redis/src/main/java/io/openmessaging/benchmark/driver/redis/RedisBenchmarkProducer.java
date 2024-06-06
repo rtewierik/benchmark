@@ -15,51 +15,63 @@ package io.openmessaging.benchmark.driver.redis;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.params.XAddParams;
 
 public class RedisBenchmarkProducer implements BenchmarkProducer {
     private final JedisPool pool;
-    private final JedisCluster cluster;
+    private final GenericObjectPool<StatefulRedisClusterConnection<String, String>> lettucePool;
     private final String rmqTopic;
     private final XAddParams xaddParams;
 
     public RedisBenchmarkProducer(
-            final JedisPool pool, final JedisCluster cluster, final String rmqTopic) {
+            final JedisPool pool,
+            final GenericObjectPool<StatefulRedisClusterConnection<String, String>> lettucePool,
+            final String rmqTopic) {
         this.pool = pool;
-        this.cluster = cluster;
+        this.lettucePool = lettucePool;
         this.rmqTopic = rmqTopic;
         this.xaddParams = redis.clients.jedis.params.XAddParams.xAddParams();
     }
 
     @Override
-    public CompletableFuture<Void> sendAsync(final Optional<String> key, final byte[] payload) {
-        Map<byte[], byte[]> map1 = new HashMap<>();
-        map1.put("payload".getBytes(UTF_8), payload);
+    public CompletableFuture<Void> sendAsync(final Optional<String> key, final byte[] payload)
+            throws Exception {
+        Map<String, String> data = new HashMap<>();
+        data.put("payload", new String(payload, UTF_8));
 
         if (key.isPresent()) {
-            map1.put("key".getBytes(UTF_8), key.toString().getBytes(UTF_8));
+            data.put("key", key.toString());
         }
 
         CompletableFuture<Void> future = new CompletableFuture<>();
-        if (cluster != null) {
-            try {
-                cluster.xadd(this.rmqTopic.getBytes(UTF_8), map1, this.xaddParams);
-                future.complete(null);
-            } catch (Exception e) {
-                future.completeExceptionally(e);
+        if (lettucePool != null) {
+            try (StatefulRedisClusterConnection<String, String> connection = lettucePool.borrowObject()) {
+                connection
+                        .async()
+                        .xadd(this.rmqTopic, data)
+                        .thenRun(() -> future.complete(null))
+                        .exceptionally(
+                                ex -> {
+                                    log.error("Exception occurred while sending xadd command", ex);
+                                    future.completeExceptionally(ex);
+                                    return null;
+                                });
+                return future;
             }
-            return future;
         }
         try (Jedis jedis = this.pool.getResource()) {
-            jedis.xadd(this.rmqTopic.getBytes(UTF_8), map1, this.xaddParams);
+            jedis.xadd(this.rmqTopic, data, this.xaddParams);
             future.complete(null);
         } catch (Exception e) {
             future.completeExceptionally(e);
@@ -71,4 +83,6 @@ public class RedisBenchmarkProducer implements BenchmarkProducer {
     public void close() throws Exception {
         // Close in Driver
     }
+
+    private static final Logger log = LoggerFactory.getLogger(RedisBenchmarkProducer.class);
 }

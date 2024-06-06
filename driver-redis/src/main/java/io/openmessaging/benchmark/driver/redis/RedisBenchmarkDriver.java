@@ -19,32 +19,48 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.io.BaseEncoding;
+import io.lettuce.core.KeyScanCursor;
+import io.lettuce.core.RedisURI;
+import io.lettuce.core.ScanArgs;
+import io.lettuce.core.ScanCursor;
+import io.lettuce.core.XGroupCreateArgs;
+import io.lettuce.core.XReadArgs;
+import io.lettuce.core.cluster.RedisClusterClient;
+import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
+import io.lettuce.core.cluster.api.async.RedisAdvancedClusterAsyncCommands;
+import io.lettuce.core.resource.ClientResources;
+import io.lettuce.core.resource.DefaultClientResources;
+import io.lettuce.core.support.ConnectionPoolSupport;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient;
 import io.openmessaging.benchmark.driver.redis.client.RedisClientConfig;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import org.apache.bookkeeper.stats.StatsLogger;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.params.ScanParams;
 import redis.clients.jedis.resps.ScanResult;
 
 public class RedisBenchmarkDriver implements BenchmarkDriver {
     JedisPool jedisPool;
-    JedisCluster jedisCluster;
+    private static final ClientResources resources = DefaultClientResources.create();
+
+    private RedisClusterClient clusterClient;
+    private AsyncRedisClient asyncRedisClient;
     private RedisClientConfig clientConfig;
+    private GenericObjectPool<StatefulRedisClusterConnection<String, String>> lettucePool;
+    private StatefulRedisClusterConnection<String, String> connection;
+    private RedisAdvancedClusterAsyncCommands<String, String> asyncCommands;
 
     @Override
     public void initialize(final File configurationFile, final StatsLogger statsLogger)
@@ -64,29 +80,46 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public CompletableFuture<BenchmarkProducer> createProducer(final String topic) {
-        if (jedisPool == null && jedisCluster == null) {
-            setupJedisConn();
+        synchronized (this) {
+            if (jedisPool == null && asyncRedisClient == null) {
+                setupJedisConn();
+            }
         }
+        log.info(
+                "Creating producer with Jedis pool {} and cluster client {}", jedisPool, asyncRedisClient);
         return CompletableFuture.completedFuture(
-                new RedisBenchmarkProducer(jedisPool, jedisCluster, topic));
+                new RedisBenchmarkProducer(jedisPool, lettucePool, topic));
     }
 
     @Override
     public CompletableFuture<BenchmarkConsumer> createConsumer(
             final String topic, final String subscriptionName, final ConsumerCallback consumerCallback) {
         String consumerId = "consumer-" + getRandomString();
-        if (jedisCluster != null) {
+        if (jedisPool == null && asyncRedisClient == null) {
+            setupJedisConn();
+        }
+        if (asyncRedisClient != null) {
             try {
-                jedisCluster.xgroupCreate(topic, subscriptionName, null, true);
+                XReadArgs.StreamOffset<String> offset = XReadArgs.StreamOffset.from(topic, "0");
+                return asyncRedisClient
+                        .asyncCommands
+                        .xgroupCreate(offset, subscriptionName, XGroupCreateArgs.Builder.mkstream(true))
+                        .toCompletableFuture()
+                        .thenApply(
+                                (ignored) ->
+                                        new RedisBenchmarkConsumer(
+                                                consumerId,
+                                                topic,
+                                                subscriptionName,
+                                                jedisPool,
+                                                lettucePool,
+                                                consumerCallback));
             } catch (Exception e) {
                 log.info("Failed to create consumer instance.", e);
+                CompletableFuture<BenchmarkConsumer> future = new CompletableFuture<>();
+                future.completeExceptionally(e);
+                return future;
             }
-            return CompletableFuture.completedFuture(
-                    new RedisBenchmarkConsumer(
-                            consumerId, topic, subscriptionName, jedisPool, jedisCluster, consumerCallback));
-        }
-        if (jedisPool == null) {
-            setupJedisConn();
         }
         try (Jedis jedis = this.jedisPool.getResource()) {
             jedis.xgroupCreate(topic, subscriptionName, null, true);
@@ -99,25 +132,31 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
     }
 
     private void setupJedisConn() {
-        GenericObjectPoolConfig<Jedis> poolConfig = new GenericObjectPoolConfig<>();
-        poolConfig.setMaxTotal(this.clientConfig.jedisPoolMaxTotal);
-        poolConfig.setMaxIdle(this.clientConfig.jedisPoolMaxIdle);
         log.info(
                 "Attempting to connect to {}:{} with user {}",
                 this.clientConfig.redisHost,
                 this.clientConfig.redisPort,
                 this.clientConfig.redisUser);
+        GenericObjectPoolConfig<StatefulRedisClusterConnection<String, String>> lettucePoolConfig =
+                new GenericObjectPoolConfig<>();
+        lettucePoolConfig.setMaxTotal(this.clientConfig.poolMaxTotal);
+        lettucePoolConfig.setMaxIdle(this.clientConfig.poolMaxIdle);
         if (this.clientConfig.redisNodes != null && !this.clientConfig.redisNodes.isEmpty()) {
-            Set<HostAndPort> jedisClusterNodes = new HashSet<>();
-            for (String address : this.clientConfig.redisNodes) {
-                String[] parts = address.split(":");
-                String host = parts[0];
-                int port = Integer.parseInt(parts[1]);
-                HostAndPort hostAndPort = new HostAndPort(host, port);
-                jedisClusterNodes.add(hostAndPort);
-            }
-            jedisCluster = new JedisCluster(jedisClusterNodes);
+            RedisURI redisUri =
+                    RedisURI.Builder.redis(this.clientConfig.redisHost).withPort(6379).build();
+            clusterClient = RedisClusterClient.create(resources, redisUri);
+            this.lettucePool =
+                    ConnectionPoolSupport.createGenericObjectPool(
+                            () -> clusterClient.connect(), lettucePoolConfig);
+            this.connection = clusterClient.connect();
+            this.asyncCommands = connection.async();
+            this.asyncRedisClient = new AsyncRedisClient(asyncCommands);
+            log.info("Created cluster client: {}", this.asyncRedisClient);
+            return;
         }
+        GenericObjectPoolConfig<Jedis> poolConfig = new GenericObjectPoolConfig<>();
+        poolConfig.setMaxTotal(this.clientConfig.poolMaxTotal);
+        poolConfig.setMaxIdle(this.clientConfig.poolMaxIdle);
         if (this.clientConfig.redisPass != null) {
             if (this.clientConfig.redisUser != null) {
                 jedisPool =
@@ -145,34 +184,39 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
 
     @Override
     public void close() throws Exception {
-        if (this.jedisCluster != null) {
+        if (this.asyncRedisClient != null) {
             try {
                 String pattern = "stream:*";
-                String cursor = "0";
+                ScanCursor cursor = ScanCursor.INITIAL;
                 do {
-                    ScanResult<String> scanResult =
-                            jedisCluster.scan(cursor, new ScanParams().match(pattern));
-                    List<String> streamKeys = scanResult.getResult();
-                    cursor = scanResult.getCursor();
+                    KeyScanCursor<String> scanResult =
+                            asyncRedisClient.asyncCommands.scan(cursor, new ScanArgs().match(pattern)).get();
+                    List<String> streamKeys = scanResult.getKeys();
+                    cursor = ScanCursor.of(scanResult.getCursor());
 
                     for (String streamKey : streamKeys) {
                         try {
-                            jedisCluster.del(streamKey);
+                            asyncRedisClient.asyncCommands.del(streamKey).get();
                         } catch (Exception e) {
                             log.error("Error deleting stream " + streamKey + ": " + e.getMessage());
                         }
                     }
-                } while (!"0".equals(cursor));
+                } while (!cursor.isFinished());
             } catch (Throwable ignored) {
             }
             try {
                 String pattern = "stream:*";
-                String cursor = "0";
-                ScanResult<String> scanResult = jedisCluster.scan(cursor, new ScanParams().match(pattern));
-                log.info("Streams left over: {}", scanResult.getResult().size());
+                ScanCursor cursor = ScanCursor.INITIAL;
+                KeyScanCursor<String> scanResult =
+                        asyncRedisClient.asyncCommands.scan(cursor, new ScanArgs().match(pattern)).get();
+                log.info("Streams left over: {}", scanResult.getKeys().size());
             } catch (Throwable ignored) {
             }
-            this.jedisCluster.close();
+            this.asyncCommands.shutdown(false);
+            if (this.connection.isOpen()) {
+                this.connection.close();
+            }
+            clusterClient.shutdown();
         }
         if (this.jedisPool != null) {
             try {

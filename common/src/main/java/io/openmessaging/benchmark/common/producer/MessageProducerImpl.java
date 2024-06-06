@@ -49,7 +49,7 @@ public class MessageProducerImpl implements MessageProducer {
             byte[] payload,
             String experimentId,
             String messageId,
-            boolean isTpcH) {
+            boolean isTpcH) throws Exception {
         final long intendedSendTime = rateLimiter.acquire();
         uninterruptibleSleepNs(intendedSendTime);
         final long sendTime = nanoClock.get();

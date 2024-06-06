@@ -24,5 +24,6 @@ public interface MessageProducer {
             byte[] payload,
             String experimentId,
             String messageId,
-            boolean isTpcH);
+            boolean isTpcH)
+            throws Exception;
 }

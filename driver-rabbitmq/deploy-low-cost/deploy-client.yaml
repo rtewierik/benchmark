@@ -1,0 +1,73 @@
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+- name: RabbitMQ benchmarking client setup
+  hosts: client
+  connection: ssh
+  become: true
+  tasks:
+    - name: Benchmark - Clean folder
+      file: path=/opt/benchmark state=absent
+      tags: [client-code]
+    - name: Benchmark - Copy and unpack
+      unarchive:
+        src: ../../package/target/openmessaging-benchmark-0.0.1-SNAPSHOT-bin.tar.gz
+        dest: /opt
+      tags: [client-code]
+    - name: Benchmark - Install binary
+      shell: mv /opt/openmessaging-benchmark-0.0.1-SNAPSHOT /opt/benchmark
+      tags: [client-code]
+    - name: Benchmark - Configure worker
+      template:
+        src: "templates/workers.yaml"
+        dest: "/opt/benchmark/workers.yaml"
+      tags: [client-code]
+    - name: Benchmark - Configure classic driver
+      template:
+        src: "templates/rabbitmq-classic.yaml"
+        dest: "/opt/benchmark/driver-rabbitmq/rabbitmq-classic.yaml"
+      tags: [client-code]
+    - name: Benchmark - Configure quorum driver
+      template:
+        src: "templates/rabbitmq-quorum.yaml"
+        dest: "/opt/benchmark/driver-rabbitmq/rabbitmq-quorum.yaml"
+      tags: [client-code]
+    - name: Benchmark - Configure experiment driver
+      template:
+        src: "templates/rabbitmq-experiment.yaml"
+        dest: "/opt/benchmark/driver-rabbitmq/rabbitmq-experiment.yaml"
+      tags: [client-code]
+    - name: Benchmark - Configure worker JVM memory
+      lineinfile:
+        dest: /opt/benchmark/bin/benchmark-worker
+        regexp: '^JVM_MEM='
+        line: 'JVM_MEM="-Xms15G -Xmx15G -XX:MaxDirectMemorySize=10g -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -XX:+ParallelRefProcEnabled -XX:+AggressiveOpts -XX:+DoEscapeAnalysis -XX:ParallelGCThreads=32 -XX:ConcGCThreads=32 -XX:+DisableExplicitGC -XX:-ResizePLAB"'
+      tags: [client-code]
+    - name: Benchmark - Configure client JVM memory
+      lineinfile:
+        dest: /opt/benchmark/bin/benchmark
+        regexp: '^JVM_MEM='
+        line: 'JVM_MEM="-Xmx4G"'
+      tags: [client-code]
+    - name: Benchmark - Install systemd service
+      template:
+        src: "templates/benchmark-worker.service"
+        dest: "/etc/systemd/system/benchmark-worker.service"
+      tags: [client-code]
+    - name: Benchmark - Start worker
+      systemd:
+        state: restarted
+        daemon_reload: yes
+        name: "benchmark-worker"
+      tags: [client-code]

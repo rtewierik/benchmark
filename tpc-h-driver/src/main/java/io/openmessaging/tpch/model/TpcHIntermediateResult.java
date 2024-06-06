@@ -120,7 +120,7 @@ public class TpcHIntermediateResult {
         this.numberOfAggregatedResults += result.numberOfAggregatedResults;
     }
 
-    public TpcHIntermediateResultGroup findGroupByIdentifiers(Map<String, Object> identifiers) {
+    private TpcHIntermediateResultGroup findGroupByIdentifiers(Map<String, Object> identifiers) {
         int numIdentifiers = identifiers.size();
         List<Map.Entry<String, Object>> identifiersCollection = new ArrayList<>(identifiers.entrySet());
         for (TpcHIntermediateResultGroup group : this.groups) {
