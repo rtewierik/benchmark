@@ -457,12 +457,12 @@ resource "aws_iam_role" "s3_iam_role" {
             "s3:PutObject"
           ]
           Effect   = "Allow"
-          Resource = "${var.s3_benchmarking_bucket_arn}/*"
+          Resource = "${var.s3_benchmarking_bucket_arn}*/*"
         },
         {
           Action   = "s3:ListBucket"
           Effect   = "Allow"
-          Resource = var.s3_benchmarking_bucket_arn
+          Resource = "${var.s3_benchmarking_bucket_arn}*"
         },
         {
           Action   = "s3:GetObject",
