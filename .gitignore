@@ -50,3 +50,5 @@ core/*.json
 **/cdk.out*/*
 
 **/*dmp*
+
+venv
