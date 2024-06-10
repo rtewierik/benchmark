@@ -1,0 +1,538 @@
+[BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q6-100-10-2024-06-05-01-39-27 at 1717551567725
+01:41:23.701 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] TPC-H query result: 
+{
+    "rows": [
+        {
+            "columns": {
+                "revenue": 1106886908.0572
+            }
+        }
+    ]
+}
+01:41:23.702 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717551683702
+
+[BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q1-100-10-2024-06-05-01-41-56 at 1717551716352
+01:49:23.103 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] TPC-H query result: 
+{
+    "rows": [
+        {
+            "columns": {
+                "lineStatus": "O",
+                "returnFlag": "N",
+                "discountedPriceSum": 692969433134.2497,
+                "chargeSum": 720694299770.13274,
+                "orderCount": 19077602,
+                "basePriceSum": 729448143820.78,
+                "averageQuantity": 25,
+                "averagePrice": 38235.84,
+                "averageDiscount": 0.05,
+                "quantitySum": 486415690
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "R",
+                "discountedPriceSum": 484203993195.0628,
+                "chargeSum": 503570450844.880073,
+                "orderCount": 13324947,
+                "basePriceSum": 509684306612.03,
+                "averageQuantity": 26,
+                "averagePrice": 38250.38,
+                "averageDiscount": 0.05,
+                "quantitySum": 339894957
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "A",
+                "discountedPriceSum": 483946017285.3019,
+                "chargeSum": 503310457149.612946,
+                "orderCount": 13322390,
+                "basePriceSum": 509419078748.72,
+                "averageQuantity": 26,
+                "averagePrice": 38237.81,
+                "averageDiscount": 0.05,
+                "quantitySum": 339737725
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "N",
+                "discountedPriceSum": 12628053899.1349,
+                "chargeSum": 13133599534.652978,
+                "orderCount": 347260,
+                "basePriceSum": 13292554922.64,
+                "averageQuantity": 25.5,
+                "averagePrice": 38278.39,
+                "averageDiscount": 0.05,
+                "quantitySum": 8863383
+            }
+        }
+    ]
+}
+01:49:23.104 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717552163104
+
+[BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q6-100-20-2024-06-05-02-00-21 at 1717552821270
+02:01:34.695 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] TPC-H query result: 
+{
+    "rows": [
+        {
+            "columns": {
+                "revenue": 1106886908.0572
+            }
+        }
+    ]
+}
+02:01:34.695 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717552894695
+
+[BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q1-100-20-2024-06-05-02-02-16 at 1717552936915
+02:03:47.195 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] TPC-H query result: 
+{
+    "rows": [
+        {
+            "columns": {
+                "lineStatus": "O",
+                "returnFlag": "N",
+                "discountedPriceSum": 692969433134.2497,
+                "chargeSum": 720694299770.132725,
+                "orderCount": 19077602,
+                "basePriceSum": 729448143820.78,
+                "averageQuantity": 25,
+                "averagePrice": 38235.84,
+                "averageDiscount": 0.05,
+                "quantitySum": 486415690
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "R",
+                "discountedPriceSum": 484203993195.0628,
+                "chargeSum": 503570450844.880066,
+                "orderCount": 13324947,
+                "basePriceSum": 509684306612.03,
+                "averageQuantity": 26,
+                "averagePrice": 38250.38,
+                "averageDiscount": 0.05,
+                "quantitySum": 339894957
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "A",
+                "discountedPriceSum": 483946017285.3019,
+                "chargeSum": 503310457149.612931,
+                "orderCount": 13322390,
+                "basePriceSum": 509419078748.72,
+                "averageQuantity": 26,
+                "averagePrice": 38237.81,
+                "averageDiscount": 0.05,
+                "quantitySum": 339737725
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "N",
+                "discountedPriceSum": 12628053899.1349,
+                "chargeSum": 13133599534.652978,
+                "orderCount": 347260,
+                "basePriceSum": 13292554922.64,
+                "averageQuantity": 25.5,
+                "averagePrice": 38278.39,
+                "averageDiscount": 0.05,
+                "quantitySum": 8863383
+            }
+        }
+    ]
+}
+02:03:47.195 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717553027195
+
+[BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q6-100-50-2024-06-05-02-13-08 at 1717553588385
+02:13:58.832 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] TPC-H query result: 
+{
+    "rows": [
+        {
+            "columns": {
+                "revenue": 1106886908.0572
+            }
+        }
+    ]
+}
+02:13:58.832 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717553638832
+
+[BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q1-100-50-2024-06-05-02-14-31 at 1717553671909
+02:15:34.951 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] TPC-H query result: 
+{
+    "rows": [
+        {
+            "columns": {
+                "lineStatus": "O",
+                "returnFlag": "N",
+                "discountedPriceSum": 692969433134.2497,
+                "chargeSum": 720694299770.132737,
+                "orderCount": 19077602,
+                "basePriceSum": 729448143820.78,
+                "averageQuantity": 25.5,
+                "averagePrice": 38235.84,
+                "averageDiscount": 0.05,
+                "quantitySum": 486415690
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "R",
+                "discountedPriceSum": 484203993195.0628,
+                "chargeSum": 503570450844.880071,
+                "orderCount": 13324947,
+                "basePriceSum": 509684306612.03,
+                "averageQuantity": 25.5,
+                "averagePrice": 38250.38,
+                "averageDiscount": 0.05,
+                "quantitySum": 339894957
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "A",
+                "discountedPriceSum": 483946017285.3019,
+                "chargeSum": 503310457149.612946,
+                "orderCount": 13322390,
+                "basePriceSum": 509419078748.72,
+                "averageQuantity": 25.5,
+                "averagePrice": 38237.81,
+                "averageDiscount": 0.05,
+                "quantitySum": 339737725
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "N",
+                "discountedPriceSum": 12628053899.1349,
+                "chargeSum": 13133599534.652978,
+                "orderCount": 347260,
+                "basePriceSum": 13292554922.64,
+                "averageQuantity": 25.5,
+                "averagePrice": 38278.39,
+                "averageDiscount": 0.05,
+                "quantitySum": 8863383
+            }
+        }
+    ]
+}
+02:15:34.951 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717553734951
+
+[BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q6-1000-100-2024-06-05-02-23-34 at 1717554214115
+02:24:18.478 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] TPC-H query result: 
+{
+    "rows": [
+        {
+            "columns": {
+                "revenue": 1106886908.0572
+            }
+        }
+    ]
+}
+02:24:18.478 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717554258478
+
+[BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q1-1000-100-2024-06-05-02-24-43 at 1717554283941
+02:25:45.346 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] TPC-H query result: 
+{
+    "rows": [
+        {
+            "columns": {
+                "lineStatus": "O",
+                "returnFlag": "N",
+                "discountedPriceSum": 692969433134.2497,
+                "chargeSum": 720694299770.132732,
+                "orderCount": 19077602,
+                "basePriceSum": 729448143820.78,
+                "averageQuantity": 25.5,
+                "averagePrice": 38235.84,
+                "averageDiscount": 0.05,
+                "quantitySum": 486415690
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "R",
+                "discountedPriceSum": 484203993195.0628,
+                "chargeSum": 503570450844.88007,
+                "orderCount": 13324947,
+                "basePriceSum": 509684306612.03,
+                "averageQuantity": 25.5,
+                "averagePrice": 38250.38,
+                "averageDiscount": 0.05,
+                "quantitySum": 339894957
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "A",
+                "discountedPriceSum": 483946017285.3019,
+                "chargeSum": 503310457149.612943,
+                "orderCount": 13322390,
+                "basePriceSum": 509419078748.72,
+                "averageQuantity": 25.5,
+                "averagePrice": 38237.81,
+                "averageDiscount": 0.05,
+                "quantitySum": 339737725
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "N",
+                "discountedPriceSum": 12628053899.1349,
+                "chargeSum": 13133599534.652978,
+                "orderCount": 347260,
+                "basePriceSum": 13292554922.64,
+                "averageQuantity": 25.5,
+                "averagePrice": 38278.39,
+                "averageDiscount": 0.05,
+                "quantitySum": 8863383
+            }
+        }
+    ]
+}
+02:25:45.347 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717554345347
+
+[BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q6-1000-200-2024-06-05-02-52-38 at 1717555958217
+02:53:30.736 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] TPC-H query result: 
+{
+    "rows": [
+        {
+            "columns": {
+                "revenue": 1106886908.0572
+            }
+        }
+    ]
+}
+02:53:30.737 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717556010737
+
+[BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q1-1000-200-2024-06-05-02-53-51 at 1717556031861
+02:55:03.920 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] TPC-H query result: 
+{
+    "rows": [
+        {
+            "columns": {
+                "lineStatus": "O",
+                "returnFlag": "N",
+                "discountedPriceSum": 692969433134.2497,
+                "chargeSum": 720694299770.132732,
+                "orderCount": 19077602,
+                "basePriceSum": 729448143820.78,
+                "averageQuantity": 25.5,
+                "averagePrice": 38235.84,
+                "averageDiscount": 0.05,
+                "quantitySum": 486415690
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "R",
+                "discountedPriceSum": 484203993195.0628,
+                "chargeSum": 503570450844.88007,
+                "orderCount": 13324947,
+                "basePriceSum": 509684306612.03,
+                "averageQuantity": 25.5,
+                "averagePrice": 38250.38,
+                "averageDiscount": 0.05,
+                "quantitySum": 339894957
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "A",
+                "discountedPriceSum": 483946017285.3019,
+                "chargeSum": 503310457149.612943,
+                "orderCount": 13322390,
+                "basePriceSum": 509419078748.72,
+                "averageQuantity": 25.5,
+                "averagePrice": 38237.81,
+                "averageDiscount": 0.05,
+                "quantitySum": 339737725
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "N",
+                "discountedPriceSum": 12628053899.1349,
+                "chargeSum": 13133599534.652978,
+                "orderCount": 347260,
+                "basePriceSum": 13292554922.64,
+                "averageQuantity": 25.5,
+                "averagePrice": 38278.39,
+                "averageDiscount": 0.05,
+                "quantitySum": 8863383
+            }
+        }
+    ]
+}
+02:55:03.920 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717556103920
+
+[BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q6-10000-400-2024-06-05-03-10-01 at 1717557001636
+03:11:34.705 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] TPC-H query result: 
+{
+    "rows": [
+        {
+            "columns": {
+                "revenue": 1106886908.0572
+            }
+        }
+    ]
+}
+03:11:34.705 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717557094705
+
+[BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q1-10000-400-2024-06-05-03-11-56 at 1717557116752
+03:13:29.690 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] TPC-H query result: 
+{
+    "rows": [
+        {
+            "columns": {
+                "lineStatus": "O",
+                "returnFlag": "N",
+                "discountedPriceSum": 692969433134.2497,
+                "chargeSum": 720694299770.132732,
+                "orderCount": 19077602,
+                "basePriceSum": 729448143820.78,
+                "averageQuantity": 25.5,
+                "averagePrice": 38235.84,
+                "averageDiscount": 0.05,
+                "quantitySum": 486415690
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "R",
+                "discountedPriceSum": 484203993195.0628,
+                "chargeSum": 503570450844.88007,
+                "orderCount": 13324947,
+                "basePriceSum": 509684306612.03,
+                "averageQuantity": 25.5,
+                "averagePrice": 38250.38,
+                "averageDiscount": 0.05,
+                "quantitySum": 339894957
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "A",
+                "discountedPriceSum": 483946017285.3019,
+                "chargeSum": 503310457149.612943,
+                "orderCount": 13322390,
+                "basePriceSum": 509419078748.72,
+                "averageQuantity": 25.5,
+                "averagePrice": 38237.81,
+                "averageDiscount": 0.05,
+                "quantitySum": 339737725
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "N",
+                "discountedPriceSum": 12628053899.1349,
+                "chargeSum": 13133599534.652978,
+                "orderCount": 347260,
+                "basePriceSum": 13292554922.64,
+                "averageQuantity": 25.5,
+                "averagePrice": 38278.39,
+                "averageDiscount": 0.05,
+                "quantitySum": 8863383
+            }
+        }
+    ]
+}
+03:13:29.690 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717557209690
+
+[BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q6-10000-200-2024-06-05-03-45-26 at 1717559126775
+03:46:42.425 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] TPC-H query result: 
+{
+    "rows": [
+        {
+            "columns": {
+                "revenue": 1106886908.0572
+            }
+        }
+    ]
+}
+03:46:42.425 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717559202425
+
+[BenchmarkStart] Starting benchmark SNS-SQS-tpc-h-tpc-h-q1-10000-200-2024-06-05-03-47-21 at 1717559241475
+03:48:41.394 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] TPC-H query result: 
+{
+    "rows": [
+        {
+            "columns": {
+                "lineStatus": "O",
+                "returnFlag": "N",
+                "discountedPriceSum": 692969433134.2497,
+                "chargeSum": 720694299770.132732,
+                "orderCount": 19077602,
+                "basePriceSum": 729448143820.78,
+                "averageQuantity": 25.5,
+                "averagePrice": 38235.84,
+                "averageDiscount": 0.05,
+                "quantitySum": 486415690
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "R",
+                "discountedPriceSum": 484203993195.0628,
+                "chargeSum": 503570450844.88007,
+                "orderCount": 13324947,
+                "basePriceSum": 509684306612.03,
+                "averageQuantity": 25.5,
+                "averagePrice": 38250.38,
+                "averageDiscount": 0.05,
+                "quantitySum": 339894957
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "A",
+                "discountedPriceSum": 483946017285.3019,
+                "chargeSum": 503310457149.612943,
+                "orderCount": 13322390,
+                "basePriceSum": 509419078748.72,
+                "averageQuantity": 25.5,
+                "averagePrice": 38237.81,
+                "averageDiscount": 0.05,
+                "quantitySum": 339737725
+            }
+        },
+        {
+            "columns": {
+                "lineStatus": "F",
+                "returnFlag": "N",
+                "discountedPriceSum": 12628053899.1349,
+                "chargeSum": 13133599534.652978,
+                "orderCount": 347260,
+                "basePriceSum": 13292554922.64,
+                "averageQuantity": 25.5,
+                "averagePrice": 38278.39,
+                "averageDiscount": 0.05,
+                "quantitySum": 8863383
+            }
+        }
+    ]
+}
+03:48:41.394 [main] INFO SnsSqsBenchmarkConsumer - [RESULT] Observed at 1717559321394
