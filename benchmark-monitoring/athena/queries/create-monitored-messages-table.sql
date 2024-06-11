@@ -1,13 +1,18 @@
 CREATE EXTERNAL TABLE IF NOT EXISTS {{ table_name }} (
   Item STRUCT<
+    transactionId: STRUCT<S: STRING>,
     messageId: STRUCT<S: STRING>,
-    isTpcH: STRUCT<BOOL: BOOLEAN>,
-    isError: STRUCT<BOOL: BOOLEAN>,
+    experimentId: STRUCT<S: STRING>,
     payloadLength: STRUCT<N: BIGINT>,
     intendedSendTimeNs: STRUCT<N: BIGINT>,
-    experimentId: STRUCT<S: STRING>,
+    sendTimeNs: STRUCT<N: BIGINT>,
     nowNs: STRUCT<N: BIGINT>,
-    sendTimeNs: STRUCT<N: BIGINT>
+    endToEndLatencyMicros: STRUCT<N: BIGINT>,
+    timestamp: STRUCT<N: BIGINT>,
+    publishTimestamp: STRUCT<N: BIGINT>,
+    processTimestamp: STRUCT<N: BIGINT>,
+    isTpcH: STRUCT<BOOL: BOOLEAN>,
+    isError: STRUCT<BOOL: BOOLEAN>
   >
 )
 ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'

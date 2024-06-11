@@ -1,0 +1,2 @@
+SELECT Item.experimentId.S FROM {{ table }} WHERE Item.timestamp.N >= {{ start }} AND Item.timestamp.N <= {{ end }} GROUP BY Item.experimentId.S;
+SELECT Item.experimentId.S FROM {{ table }} WHERE LOWER(Item.experimentId.S) LIKE '%{{ lower_experiment_id }}%';
