@@ -32,7 +32,6 @@ import software.amazon.awssdk.core.retry.backoff.FixedDelayBackoffStrategy;
 import software.amazon.awssdk.http.nio.netty.NettyNioAsyncHttpClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
-import software.amazon.awssdk.services.s3.crt.S3CrtRetryConfiguration;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
 @Slf4j
@@ -68,7 +67,10 @@ public class S3Client {
     S3AsyncClient s3AsyncClient =
             S3AsyncClient.crtBuilder()
                     .region(Region.EU_WEST_1)
-                    .retryConfiguration(S3CrtRetryConfiguration.builder().numRetries(5).build())
+                    .maxConcurrency(2048)
+                    .targetThroughputInGbps(25.0)
+                    .maxNativeMemoryLimitInBytes(3L * 1024 * 1024 * 1024) // 3 GB
+                    .initialReadBufferSizeInBytes(64L * 1024 * 1024) // 64 MB
                     .build();
     private final ExecutorService executor;
     private final Throttler throttler;

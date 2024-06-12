@@ -77,6 +77,18 @@ resource "aws_subnet" "benchmark_subnet" {
   availability_zone       = var.az
 }
 
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id       = aws_vpc.benchmark_vpc.id
+  service_name = "com.amazonaws.eu-west-1.s3"
+  vpc_endpoint_type = "Gateway"
+
+  route_table_ids = [aws_vpc.benchmark_vpc.main_route_table_id]
+
+  tags = {
+    Name = "s3-vpc-endpoint"
+  }
+}
+
 resource "aws_security_group" "benchmark_security_group" {
   name   = "terraform-kafka-${random_id.hash.hex}"
   vpc_id = aws_vpc.benchmark_vpc.id
