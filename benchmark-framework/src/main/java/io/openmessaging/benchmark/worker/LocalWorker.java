@@ -265,13 +265,13 @@ public class LocalWorker implements Worker, ConsumerCallback {
             int maxConcurrentTasks = 1;
             switch (producerWorkAssignment.tpcHArguments.numberOfChunks) {
                 case 100:
-                    maxConcurrentTasks = 125;
+                    maxConcurrentTasks = 1024;
                     break;
                 case 1000:
-                    maxConcurrentTasks = 250;
+                    maxConcurrentTasks = 1024;
                     break;
                 case 10000:
-                    maxConcurrentTasks = 500;
+                    maxConcurrentTasks = 1024;
                     break;
                 default:
                     break;
@@ -596,7 +596,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
             log.info("Started new task!");
         }
         TpcHStateProvider stateProvider = stateProviders.get(consumer);
-        tpcHMessageProcessor.processTpcHMessage(message, stateProvider).thenApply((queryId) -> {
+        tpcHMessageProcessor.processTpcHMessage(message, stateProvider).thenApplyAsync((queryId) -> {
             try {
                 internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
             } catch (IOException e) {

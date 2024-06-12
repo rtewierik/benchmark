@@ -46,6 +46,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -55,13 +57,14 @@ import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
 public class TpcHMessageProcessor {
+    private static final ExecutorService executor = Executors.newFixedThreadPool(64);
     private final AtomicInteger numResultsProcessed = new AtomicInteger();
     private final Supplier<String> getExperimentId;
     private final List<BenchmarkProducer> producers;
     private volatile MessageProducer messageProducer;
     private final Runnable onTestCompleted;
     private final Logger log;
-    private static final S3Client s3AsyncClient = new S3Client();
+    private static final S3Client s3AsyncClient = new S3Client(executor);
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
     private static final ObjectWriter writer = new ObjectMapper().writer();
     private static final ObjectMapper mapper =
@@ -162,7 +165,7 @@ public class TpcHMessageProcessor {
         }
         GetObjectRequest getObjectRequest = parseS3Uri(s3Uri);
         return getStreamFromS3(getObjectRequest)
-                .thenApply(
+                .thenApplyAsync(
                         stream -> {
                             try {
                                 List<TpcHRow> chunkData = TpcHDataParser.readTpcHRowsFromStream(stream);
@@ -197,7 +200,7 @@ public class TpcHMessageProcessor {
                                 log.error("Error occurred while transforming retrieved file.", e);
                                 throw new RuntimeException(e);
                             }
-                        })
+                        }, executor)
                 .exceptionally(
                         throwable -> {
                             log.error("Error occurred while retrieving file from S3.", throwable);
@@ -265,11 +268,11 @@ public class TpcHMessageProcessor {
                             experimentId == null ? queryId : experimentId.replace("QUERY_ID", queryId),
                             message.messageId,
                             true)
-                    .thenApply(
+                    .thenApplyAsync(
                             (f) -> {
                                 collectedIntermediateResults.remove(batchId);
                                 return queryId;
-                            });
+                            }, executor);
         }
         return CompletableFuture.completedFuture(queryId);
     }

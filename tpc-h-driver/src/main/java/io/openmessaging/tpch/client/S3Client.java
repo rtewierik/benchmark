@@ -17,27 +17,33 @@ package io.openmessaging.tpch.client;
 import java.io.InputStream;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+
+import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.core.BytesWrapper;
 import software.amazon.awssdk.core.async.AsyncResponseTransformer;
 import software.amazon.awssdk.http.nio.netty.NettyNioAsyncHttpClient;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
+@Slf4j
 public class S3Client {
     private static final S3AsyncClient s3AsyncClient =
             S3AsyncClient.builder()
                     .httpClientBuilder(
                             NettyNioAsyncHttpClient.builder()
-                                    .maxConcurrency(1024)
-                                    .maxPendingConnectionAcquires(1024)
+                                    .maxConcurrency(2048)
+                                    .maxPendingConnectionAcquires(2048)
                                     .connectionAcquisitionTimeout(Duration.ofSeconds(30)))
                     .build();
+    private final ExecutorService executor;
     private final Throttler throttler;
 
-    public S3Client() {
-        this.throttler = new Throttler(2500, 1, TimeUnit.SECONDS);
+    public S3Client(ExecutorService executor) {
+        this.throttler = new Throttler(500, 1, TimeUnit.SECONDS);
+        this.executor = executor;
     }
 
     public CompletableFuture<InputStream> getObject(GetObjectRequest request) {
@@ -45,7 +51,7 @@ public class S3Client {
                 () ->
                         s3AsyncClient
                                 .getObject(request, AsyncResponseTransformer.toBytes())
-                                .thenApply(BytesWrapper::asInputStream));
+                                .thenApplyAsync(BytesWrapper::asInputStream, executor));
     }
 
     private <T> CompletableFuture<T> executeThrottled(Supplier<CompletableFuture<T>> supplier) {
@@ -56,6 +62,7 @@ public class S3Client {
                     .get()
                     .whenComplete(
                             (result, error) -> {
+                                log.info("Finished downloading file.");
                                 if (error != null) {
                                     future.completeExceptionally(error);
                                 } else {
