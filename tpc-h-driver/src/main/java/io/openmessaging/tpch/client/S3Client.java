@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -175,25 +176,32 @@ public class S3Client {
 
     public CompletableFuture<Void> readCsvInChunks(
             Buffer buffer, String bucketName, String key, long objectSize, int chunkSize) {
-        List<CompletableFuture<Void>> futures = new ArrayList<>();
+        List<CompletableFuture<String>> futures = new ArrayList<>();
 
         for (long start = 0; start < objectSize; start += chunkSize) {
             long end = Math.min(start + chunkSize - 1, objectSize - 1);
-            futures.add(readChunk(bucketName, key, start, end, buffer.data));
+            futures.add(readChunk(bucketName, key, start, end));
         }
 
         return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).thenRun(() -> {
+            for (CompletableFuture<String> f : futures) {
+                try {
+                    buffer.data.append(f.get());
+                } catch (InterruptedException | ExecutionException e) {
+                    log.error("Error occurred while appending data to buffer.", e);
+                    throw new RuntimeException(e);
+                }
+            }
             log.info("Finished reading chunks, launching chunk processor... {}", System.currentTimeMillis());
             buffer.isDone.set(true);
         });
     }
 
-    public CompletableFuture<Void> readChunk(
+    public CompletableFuture<String> readChunk(
             String bucketName,
             String key,
             long start,
-            long end,
-            StringBuilder buffer) {
+            long end) {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
@@ -202,11 +210,9 @@ public class S3Client {
 
         return s3AsyncClient
                 .getObject(getObjectRequest, AsyncResponseTransformer.toBytes())
-                .thenAccept(responseBytes -> {
+                .thenApply(responseBytes -> {
                     ByteBuffer byteBuffer = responseBytes.asByteBuffer();
-                    String chunkData = StandardCharsets.UTF_8.decode(byteBuffer).toString();
-
-                    buffer.append(chunkData);
+                    return StandardCharsets.UTF_8.decode(byteBuffer).toString();
                 });
     }
 
