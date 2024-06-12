@@ -15,7 +15,6 @@ package io.openmessaging.benchmark.driver.s3;
 
 
 import io.openmessaging.benchmark.common.EnvironmentConfiguration;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +52,7 @@ public class S3BenchmarkConfiguration {
 
     private static String getS3Uri(String id, Integer index, boolean iterative) {
         int bucketIndex = iterative ? 1 + (index / 50) : 0;
-        return String.format("s3://benchmarking-events%d/%d-s3-consumer-lambda-%s", bucketIndex, index, id);
+        return String.format(
+                "s3://benchmarking-events%d/%d-s3-consumer-lambda-%s", bucketIndex, index, id);
     }
 }

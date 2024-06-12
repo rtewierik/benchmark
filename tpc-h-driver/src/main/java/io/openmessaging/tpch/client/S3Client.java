@@ -16,6 +16,7 @@ package io.openmessaging.tpch.client;
 
 import java.io.InputStream;
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -24,25 +25,56 @@ import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.core.BytesWrapper;
 import software.amazon.awssdk.core.async.AsyncResponseTransformer;
+import software.amazon.awssdk.core.client.config.ClientOverrideConfiguration;
+import software.amazon.awssdk.core.retry.RetryPolicy;
+import software.amazon.awssdk.core.retry.backoff.BackoffStrategy;
+import software.amazon.awssdk.core.retry.backoff.FixedDelayBackoffStrategy;
 import software.amazon.awssdk.http.nio.netty.NettyNioAsyncHttpClient;
+import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
+import software.amazon.awssdk.services.s3.crt.S3CrtRetryConfiguration;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
 @Slf4j
 public class S3Client {
-    private static final S3AsyncClient s3AsyncClient =
-            S3AsyncClient.builder()
-                    .httpClientBuilder(
-                            NettyNioAsyncHttpClient.builder()
-                                    .maxConcurrency(2048)
-                                    .maxPendingConnectionAcquires(2048)
-                                    .connectionAcquisitionTimeout(Duration.ofSeconds(30)))
+    private static final NettyNioAsyncHttpClient.Builder asyncHttpClientBuilder =
+            NettyNioAsyncHttpClient.builder()
+                    .maxConcurrency(500)
+                    .maxPendingConnectionAcquires(10000)
+                    .connectionMaxIdleTime(Duration.ofSeconds(600))
+                    .connectionTimeout(Duration.ofSeconds(20))
+                    .connectionAcquisitionTimeout(Duration.ofSeconds(60))
+                    .readTimeout(Duration.ofSeconds(120));
+
+    private static final long CLIENT_TIMEOUT_MILLIS = 600000;
+    private static final int NUMBER_RETRIES = 60;
+    private static final long RETRY_BACKOFF_MILLIS = 30000;
+    private static final ClientOverrideConfiguration overrideConfiguration =
+            ClientOverrideConfiguration.builder()
+                    .apiCallTimeout(Duration.ofMillis(CLIENT_TIMEOUT_MILLIS))
+                    .apiCallAttemptTimeout(Duration.ofMillis(CLIENT_TIMEOUT_MILLIS))
+                    .retryPolicy(
+                            RetryPolicy.builder()
+                                    .numRetries(NUMBER_RETRIES)
+                                    .backoffStrategy(
+                                            FixedDelayBackoffStrategy.create(
+                                                    Duration.of(RETRY_BACKOFF_MILLIS, ChronoUnit.MILLIS)))
+                                    .throttlingBackoffStrategy(BackoffStrategy.none())
+                                    .retryCondition(new AlwaysRetryCondition())
+                                    .retryCapacityCondition(null)
+                                    .build())
+                    .build();
+
+    S3AsyncClient s3AsyncClient =
+            S3AsyncClient.crtBuilder()
+                    .region(Region.EU_WEST_1)
+                    .retryConfiguration(S3CrtRetryConfiguration.builder().numRetries(5).build())
                     .build();
     private final ExecutorService executor;
     private final Throttler throttler;
 
     public S3Client(ExecutorService executor) {
-        this.throttler = new Throttler(500, 1, TimeUnit.SECONDS);
+        this.throttler = new Throttler(2500, 1, TimeUnit.SECONDS);
         this.executor = executor;
     }
 

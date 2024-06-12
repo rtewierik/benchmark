@@ -15,7 +15,6 @@ package io.openmessaging.benchmark.driver.sns.sqs;
 
 
 import io.openmessaging.benchmark.common.EnvironmentConfiguration;
-
 import java.util.ArrayList;
 import java.util.List;
 

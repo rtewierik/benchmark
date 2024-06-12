@@ -261,17 +261,17 @@ public class LocalWorker implements Worker, ConsumerCallback {
             commandHandler = new CommandHandler("throughput-worker");
             startLoadForThroughputProducers(producerWorkAssignment);
         } else {
-            commandHandler = new CommandHandler(8, "tpc-h-worker");
+            commandHandler = new CommandHandler(64, "tpc-h-worker");
             int maxConcurrentTasks = 1;
             switch (producerWorkAssignment.tpcHArguments.numberOfChunks) {
                 case 100:
-                    maxConcurrentTasks = 1024;
+                    maxConcurrentTasks = 2048;
                     break;
                 case 1000:
-                    maxConcurrentTasks = 1024;
+                    maxConcurrentTasks = 2048;
                     break;
                 case 10000:
-                    maxConcurrentTasks = 1024;
+                    maxConcurrentTasks = 2048;
                     break;
                 default:
                     break;

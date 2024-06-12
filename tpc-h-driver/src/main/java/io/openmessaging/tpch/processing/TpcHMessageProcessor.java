@@ -200,7 +200,8 @@ public class TpcHMessageProcessor {
                                 log.error("Error occurred while transforming retrieved file.", e);
                                 throw new RuntimeException(e);
                             }
-                        }, executor)
+                        },
+                        executor)
                 .exceptionally(
                         throwable -> {
                             log.error("Error occurred while retrieving file from S3.", throwable);
@@ -209,8 +210,7 @@ public class TpcHMessageProcessor {
     }
 
     private CompletableFuture<String> processIntermediateResult(
-            TpcHIntermediateResult intermediateResult, TpcHStateProvider stateProvider)
-            throws Exception {
+            TpcHIntermediateResult intermediateResult, TpcHStateProvider stateProvider) throws Exception {
         String queryId = intermediateResult.queryId;
         String chunkId = this.getChunkId(intermediateResult);
         String batchId = intermediateResult.batchId;
@@ -272,7 +272,8 @@ public class TpcHMessageProcessor {
                             (f) -> {
                                 collectedIntermediateResults.remove(batchId);
                                 return queryId;
-                            }, executor);
+                            },
+                            executor);
         }
         return CompletableFuture.completedFuture(queryId);
     }
