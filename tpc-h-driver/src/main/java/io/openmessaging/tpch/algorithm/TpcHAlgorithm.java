@@ -22,8 +22,8 @@ import io.openmessaging.tpch.model.TpcHRow;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class TpcHAlgorithm {
@@ -41,7 +41,7 @@ public class TpcHAlgorithm {
     private static final BigDecimal quantityLowerBound = new BigDecimal("24.00");
 
     public static TpcHIntermediateResult applyQueryToChunk(
-            List<TpcHRow> chunk, TpcHQuery query, TpcHConsumerAssignment assignment) {
+            Collection<TpcHRow> chunk, TpcHQuery query, TpcHConsumerAssignment assignment) {
         switch (query) {
             case PricingSummaryReport:
                 return applyPricingSummaryReportQueryToChunk(chunk, assignment);
@@ -53,7 +53,7 @@ public class TpcHAlgorithm {
     }
 
     private static TpcHIntermediateResult applyPricingSummaryReportQueryToChunk(
-            List<TpcHRow> chunk, TpcHConsumerAssignment assignment) {
+            Collection<TpcHRow> chunk, TpcHConsumerAssignment assignment) {
         HashMap<String, TpcHIntermediateResultGroup> groups = new HashMap<>();
         for (TpcHRow row : chunk) {
             LocalDate shipDate = row.shipDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -88,7 +88,7 @@ public class TpcHAlgorithm {
     }
 
     private static TpcHIntermediateResult applyForecastingRevenueChangeReportQueryToChunk(
-            List<TpcHRow> chunk, TpcHConsumerAssignment assignment) {
+            Collection<TpcHRow> chunk, TpcHConsumerAssignment assignment) {
         HashMap<String, TpcHIntermediateResultGroup> groups = new HashMap<>();
         for (TpcHRow row : chunk) {
             LocalDate shipDate = row.shipDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();

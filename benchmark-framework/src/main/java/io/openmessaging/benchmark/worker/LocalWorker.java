@@ -156,6 +156,9 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 | InterruptedException e) {
             throw new RuntimeException(e);
         }
+        if (this.tpcHMessageProcessor != null) {
+            this.tpcHMessageProcessor.shutdown();
+        }
         this.tpcHMessageProcessor = new TpcHMessageProcessor(
                 () -> this.experimentId,
                 this.producers,
@@ -163,6 +166,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 () -> testCompleted = true,
                 log
         );
+        this.tpcHMessageProcessor.startRowProcessor();
     }
 
     @Override

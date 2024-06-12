@@ -84,6 +84,7 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
     private static final TpcHStateProvider stateProvider = new SingleThreadTpcHStateProvider();
 
     static {
+        messageProcessor.startRowProcessor();
         if (!SnsSqsBenchmarkConfiguration.isTpcH) {
             executor.submit(
                     () -> {

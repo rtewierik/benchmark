@@ -77,6 +77,7 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
     private static final TpcHStateProvider stateProvider = new SingleThreadTpcHStateProvider();
 
     static {
+        messageProcessor.startRowProcessor();
         if (!S3BenchmarkConfiguration.isTpcH) {
             executor.submit(
                     () -> {

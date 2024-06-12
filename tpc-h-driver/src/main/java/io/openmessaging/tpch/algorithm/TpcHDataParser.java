@@ -47,6 +47,11 @@ public class TpcHDataParser {
         }
     }
 
+    public static TpcHRow readTpcHRowFromLine(String line) throws IOException {
+        String[] values = line.split("\\|");
+        return parseCsvRow(values);
+    }
+
     private static TpcHRow parseCsvRow(String[] values) throws RuntimeException {
         try {
             TpcHRow row = new TpcHRow();
