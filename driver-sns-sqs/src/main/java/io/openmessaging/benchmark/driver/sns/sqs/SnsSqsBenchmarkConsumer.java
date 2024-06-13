@@ -85,7 +85,7 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
 
     static {
         if (SnsSqsBenchmarkConfiguration.accountId != null && !SnsSqsBenchmarkConfiguration.accountId.isEmpty()) {
-            messageProcessor.startRowProcessor();
+            messageProcessor.startRowProcessor(null);
         }
         if (!SnsSqsBenchmarkConfiguration.isTpcH) {
             executor.submit(

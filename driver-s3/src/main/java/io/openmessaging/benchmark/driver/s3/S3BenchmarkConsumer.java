@@ -78,7 +78,7 @@ public class S3BenchmarkConsumer implements RequestHandler<S3Event, Void>, Bench
 
     static {
         if (S3BenchmarkConfiguration.accountId != null && !S3BenchmarkConfiguration.accountId.isEmpty()) {
-            messageProcessor.startRowProcessor();
+            messageProcessor.startRowProcessor(null);
         }
         if (!S3BenchmarkConfiguration.isTpcH) {
             executor.submit(

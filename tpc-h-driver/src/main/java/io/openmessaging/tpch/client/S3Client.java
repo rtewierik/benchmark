@@ -81,6 +81,7 @@ public class S3Client {
     private final ExecutorService executor;
     private final Throttler throttler;
     private final TpcHMessageProcessor processor;
+    private ExecutorService executorOverride;
 
     public S3Client(ExecutorService executor, TpcHMessageProcessor processor) {
         this.executor = executor;
@@ -88,20 +89,28 @@ public class S3Client {
         this.processor = processor;
     }
 
-    public void startRowProcessor() {
+    public void startRowProcessor(ExecutorService executor) {
+        log.info("Starting row processor from S3 client.");
+        if (executor != null) {
+            executorOverride = executor;
+        }
         this.rowProcessor.scheduleAtFixedRate(() -> {
+            log.info("Buffer size: {}", buffers.size());
             for (Buffer buffer : buffers) {
                 Future<?> bufferProcessorTask = rowProcessorTasks.get(buffer.name);
                 boolean isRunningTaskAbsent = bufferProcessorTask == null || bufferProcessorTask.isDone();
                 if (isRunningTaskAbsent && !buffer.isDone.get()) {
+                    log.info("Scheduling new task!");
                     rowProcessorTasks.put(buffer.name, submitRowProcessorTask(buffer));
+                    log.info("Scheduled new task.");
                 }
             }
-        }, 0, 100, TimeUnit.MILLISECONDS);
+        }, 0, 1000, TimeUnit.MILLISECONDS);
     }
 
     public Future<?> submitRowProcessorTask(Buffer buffer) {
-        return this.executor.submit(() -> {
+        ExecutorService executor = executorOverride != null ? executorOverride : this.executor;
+        return executor.submit(() -> {
             try {
                 while (true) {
                     StringBuilder data = buffer.data;
@@ -167,6 +176,7 @@ public class S3Client {
         Buffer buffer = new Buffer(s3Uri, assignment, data);
         rowsMap.put(s3Uri, new ArrayList<>());
         buffers.add(buffer);
+        log.info("Added {} to buffer. New size: {}", s3Uri, buffers.size());
         HeadObjectRequest headObjectRequest = HeadObjectRequest
                 .builder()
                 .bucket(bucketName)

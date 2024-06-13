@@ -90,8 +90,10 @@ public class TpcHMessageProcessor {
         this.messageProducer = messageProducer;
     }
 
-    public void startRowProcessor() {
-        s3AsyncClient.startRowProcessor();
+    public void startRowProcessor(ExecutorService executorOverride) {
+        ExecutorService executor = executorOverride != null ? executorOverride : TpcHMessageProcessor.executor;
+        log.info("Starting row processor from TPC-H processor.");
+        s3AsyncClient.startRowProcessor(executor);
     }
 
     public void shutdown() {

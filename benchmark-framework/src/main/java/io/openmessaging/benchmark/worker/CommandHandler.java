@@ -33,8 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CommandHandler {
 
-    private final ExecutorService executorService;
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    public final ExecutorService executorService;
     private final AtomicInteger numCommandsSubmitted = new AtomicInteger();
 
     public CommandHandler(String poolName) {

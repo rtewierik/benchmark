@@ -166,7 +166,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 () -> testCompleted = true,
                 log
         );
-        this.tpcHMessageProcessor.startRowProcessor();
     }
 
     @Override
@@ -265,7 +264,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
             commandHandler = new CommandHandler("throughput-worker");
             startLoadForThroughputProducers(producerWorkAssignment);
         } else {
-            commandHandler = new CommandHandler(64, "tpc-h-worker");
+            commandHandler = new CommandHandler(8, "tpc-h-worker");
             int maxConcurrentTasks = 1;
             switch (producerWorkAssignment.tpcHArguments.numberOfChunks) {
                 case 100:
@@ -281,6 +280,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     break;
             }
             taskProcessor = new AdaptiveRateLimitedTaskProcessor(maxConcurrentTasks);
+            tpcHMessageProcessor.startRowProcessor(commandHandler.executorService);
             startLoadForTpcHProducers(producerWorkAssignment);
         }
     }
