@@ -57,7 +57,7 @@ import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
 public class TpcHMessageProcessor {
-    private static final int numProcessors = Runtime.getRuntime().availableProcessors();
+    public static final int numProcessors = Runtime.getRuntime().availableProcessors();
     private static final ExecutorService executor = Executors.newFixedThreadPool(numProcessors);
     private static final Map<String, Semaphore> semaphores = new ConcurrentHashMap<>();
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
@@ -174,7 +174,7 @@ public class TpcHMessageProcessor {
         } else {
             processedMapMessageIds.add(mapMessageId);
         }
-        s3AsyncClient.fetchAndProcessCsvInChunks(assignment, 8 * 1024 * 1024); // 8 MB
+        s3AsyncClient.fetchAndProcessCsvInChunks(assignment, 5242848); // 33,608 lines of 156 bytes
         return CompletableFuture.completedFuture(queryId);
     }
 

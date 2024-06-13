@@ -25,10 +25,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -50,7 +52,7 @@ import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
 @Slf4j
 public class S3Client {
 
-    private class Buffer {
+    public class Buffer {
         public final String name;
         public final TpcHConsumerAssignment assignment;
         public final StringBuilder data;
@@ -70,11 +72,12 @@ public class S3Client {
                     .targetThroughputInGbps(25.0)
                     .maxNativeMemoryLimitInBytes(4L * 1024 * 1024 * 1024) // 3 GB
                     .initialReadBufferSizeInBytes(64L * 1024 * 1024) // 64 MB
-                    .minimumPartSizeInBytes(8L * 1024 * 1024) // 8 MB
+                    .minimumPartSizeInBytes(4L * 1024 * 1024) // 5 MB
                     .build();
-    private static final Map<String, ConcurrentLinkedQueue<TpcHRow>> rowsMap = new HashMap<>();
+    private static final Map<String, List<TpcHRow>> rowsMap = new HashMap<>();
     private static final ConcurrentLinkedQueue<Buffer> buffers = new ConcurrentLinkedQueue<>();
     private final ScheduledExecutorService rowProcessor = Executors.newSingleThreadScheduledExecutor();
+    private final ConcurrentMap<String, Future<?>> rowProcessorTasks = new ConcurrentHashMap<>();
     private final ExecutorService executor;
     private final Throttler throttler;
     private final TpcHMessageProcessor processor;
@@ -86,56 +89,60 @@ public class S3Client {
     }
 
     public void startRowProcessor() {
-        this.rowProcessor.scheduleWithFixedDelay(() -> {
+        this.rowProcessor.scheduleAtFixedRate(() -> {
+            for (Buffer buffer : buffers) {
+                Future<?> bufferProcessorTask = rowProcessorTasks.get(buffer.name);
+                boolean isRunningTaskAbsent = bufferProcessorTask == null || bufferProcessorTask.isDone();
+                if (isRunningTaskAbsent && !buffer.isDone.get()) {
+                    rowProcessorTasks.put(buffer.name, submitRowProcessorTask(buffer));
+                }
+            }
+        }, 0, 100, TimeUnit.MILLISECONDS);
+    }
+
+    public Future<?> submitRowProcessorTask(Buffer buffer) {
+        return this.executor.submit(() -> {
             try {
                 while (true) {
-                    boolean allNotReady = true;
-                    for (Buffer buffer : buffers) {
-                        StringBuilder data = buffer.data;
-                        ConcurrentLinkedQueue<TpcHRow> rows = rowsMap.get(buffer.name);
-                        int lastNewlineIndex = data.indexOf("\n");
-                        if (lastNewlineIndex > 0) {
+                    StringBuilder data = buffer.data;
+                    List<TpcHRow> rows = rowsMap.get(buffer.name);
+                    int firstNewLineIndex = data.indexOf("\n");
+                    if (firstNewLineIndex > 0) {
+                        try {
+                            String line = data.substring(0, firstNewLineIndex + 1);
+                            data.delete(0, firstNewLineIndex + 1);
+                            log.info("Length after delete: {}", data.length());
+                            if (line.isEmpty()) {
+                                continue;
+                            }
+                            TpcHRow row = TpcHDataParser.readTpcHRowFromLine(line);
+                            rows.add(row);
+                        } catch (IOException exception) {
+                            log.error("Error occurred while trying to parse TPC-H row.", exception);
+                            throw new RuntimeException(exception);
+                        }
+                    } else {
+                        log.info("Buffer {} is {}. {}", buffer.name, buffer.isDone, firstNewLineIndex);
+                        if (buffer.isDone.get()) {
                             try {
-                                allNotReady = false;
-                                String line = data.substring(0, lastNewlineIndex + 1);
-                                data.delete(0, lastNewlineIndex + 1);
-                                if (line.isEmpty()) {
-                                    continue;
-                                }
-                                TpcHRow row = TpcHDataParser.readTpcHRowFromLine(line);
-                                rows.add(row);
-                            } catch (IOException exception) {
-                                log.error("Error occurred while trying to parse TPC-H row.", exception);
+                                log.info("Processing consumer assignment chunk {}...", buffer.name);
+                                processor.processConsumerAssignmentChunk(rows, buffer.assignment);
+                                rowsMap.remove(buffer.name);
+                                buffers.remove(buffer);
+                            } catch (Exception exception) {
+                                log.error("Exception occurred while processing consumer assignment chunk.",
+                                        exception);
                                 throw new RuntimeException(exception);
                             }
                         } else {
-                            log.info("Buffer {} is {}. {}", buffer.name, buffer.isDone, lastNewlineIndex);
-                            if (buffer.isDone.get()) {
-                                try {
-                                    log.info("Processing consumer assignment chunk {}...", buffer.name);
-                                    processor.processConsumerAssignmentChunk(rows, buffer.assignment);
-                                    rowsMap.remove(buffer.name);
-                                    buffers.remove(buffer);
-                                } catch (Exception exception) {
-                                    log.error("Exception occurred while processing consumer assignment chunk.",
-                                            exception);
-                                    throw new RuntimeException(exception);
-                                }
-                            }
+                            break;
                         }
-                    }
-                    if (allNotReady) {
-                        int size = buffers.size();
-                        if (size != 0) {
-                            log.info("Interrupting processor iteration. {}", size);
-                        }
-                        break;
                     }
                 }
             } catch (Throwable t) {
                 log.error("Exception occurred!", t);
             }
-        }, 0, 10, TimeUnit.MILLISECONDS);
+        });
     }
 
     public void shutdown() {
@@ -158,7 +165,7 @@ public class S3Client {
         String key = uri.getPath().substring(1);
         StringBuilder data = new StringBuilder();
         Buffer buffer = new Buffer(s3Uri, assignment, data);
-        rowsMap.put(s3Uri, new ConcurrentLinkedQueue<>());
+        rowsMap.put(s3Uri, new ArrayList<>());
         buffers.add(buffer);
         HeadObjectRequest headObjectRequest = HeadObjectRequest
                 .builder()
@@ -176,32 +183,25 @@ public class S3Client {
 
     public CompletableFuture<Void> readCsvInChunks(
             Buffer buffer, String bucketName, String key, long objectSize, int chunkSize) {
-        List<CompletableFuture<String>> futures = new ArrayList<>();
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
 
         for (long start = 0; start < objectSize; start += chunkSize) {
             long end = Math.min(start + chunkSize - 1, objectSize - 1);
-            futures.add(readChunk(bucketName, key, start, end));
+            futures.add(readChunk(bucketName, key, start, end, buffer.data));
         }
 
         return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).thenRun(() -> {
-            for (CompletableFuture<String> f : futures) {
-                try {
-                    buffer.data.append(f.get());
-                } catch (InterruptedException | ExecutionException e) {
-                    log.error("Error occurred while appending data to buffer.", e);
-                    throw new RuntimeException(e);
-                }
-            }
             log.info("Finished reading chunks, launching chunk processor... {}", System.currentTimeMillis());
             buffer.isDone.set(true);
         });
     }
 
-    public CompletableFuture<String> readChunk(
+    public CompletableFuture<Void> readChunk(
             String bucketName,
             String key,
             long start,
-            long end) {
+            long end,
+            StringBuilder buffer) {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
@@ -212,7 +212,10 @@ public class S3Client {
                 .getObject(getObjectRequest, AsyncResponseTransformer.toBytes())
                 .thenApply(responseBytes -> {
                     ByteBuffer byteBuffer = responseBytes.asByteBuffer();
-                    return StandardCharsets.UTF_8.decode(byteBuffer).toString();
+                    String data = StandardCharsets.UTF_8.decode(byteBuffer).toString();
+                    // Should modify a buffer one at a time since this is run by consumer threads in blocking fashion.
+                    buffer.append(data);
+                    return null;
                 });
     }
 
