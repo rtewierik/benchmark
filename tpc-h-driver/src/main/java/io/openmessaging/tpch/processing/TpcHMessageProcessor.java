@@ -178,8 +178,23 @@ public class TpcHMessageProcessor {
             processedMapMessageIds.add(mapMessageId);
         }
         ExecutorService executor = executorOverride != null ? executorOverride : TpcHMessageProcessor.executor;
-        // 33,608 lines of 156 bytes
-        executor.submit(() -> s3AsyncClient.fetchAndProcessCsvInChunks(assignment, 5242848));
+        executor.submit(() -> {
+            try {
+                // 33,608 lines of 156 bytes
+                s3AsyncClient.fetchAndProcessCsvInChunks(assignment, 5242848).thenApply((result) -> {
+                    try {
+                        processConsumerAssignmentChunk(result, assignment);
+                    } catch (Throwable t) {
+                        log.error("Error occurred while processing consumer assignment chunk.", t);
+                        throw new RuntimeException(t);
+                    }
+                    return null;
+                });
+            } catch (Throwable t) {
+                log.error("Error occurred while fetching and processing CSV in chunks.", t);
+                throw new RuntimeException(t);
+            }
+        });
         return CompletableFuture.completedFuture(queryId);
     }
 

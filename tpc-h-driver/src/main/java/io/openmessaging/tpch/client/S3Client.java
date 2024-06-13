@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -81,8 +80,9 @@ public class S3Client {
                                 .thenApplyAsync(BytesWrapper::asInputStream, executor));
     }
 
-    public CompletableFuture<Void> fetchAndProcessCsvInChunks(TpcHConsumerAssignment assignment, int chunkSize)
-            throws URISyntaxException {
+    public CompletableFuture<TpcHIntermediateResult> fetchAndProcessCsvInChunks(
+            TpcHConsumerAssignment assignment, int chunkSize) throws URISyntaxException {
+        log.info("Starting to process CSV in chunks ({}).", assignment.sourceDataS3Uri);
         String s3Uri = assignment.sourceDataS3Uri;
         URI uri = new URI(s3Uri);
         String bucketName = uri.getHost();
@@ -101,7 +101,7 @@ public class S3Client {
         });
     }
 
-    public CompletableFuture<Void> readCsvInChunks(
+    public CompletableFuture<TpcHIntermediateResult> readCsvInChunks(
             String bucketName, String key, long objectSize, int chunkSize, TpcHConsumerAssignment assignment) {
         List<CompletableFuture<TpcHIntermediateResult>> futures = new ArrayList<>();
 
@@ -110,14 +110,15 @@ public class S3Client {
             futures.add(readChunk(bucketName, key, start, end, assignment));
         }
 
-        return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).thenRun(() -> {
+        return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).thenApply((ignored) -> {
             log.info("Finished reading chunks, aggregating chunks... {}", System.currentTimeMillis());
             try {
                 TpcHIntermediateResult result = futures.get(0).get();
                 for (int i = 1; i < futures.size(); i++) {
                     result.aggregateChunkResult(futures.get(i).get());
                 }
-                processor.processConsumerAssignmentChunk(result, assignment);
+                // processor.processConsumerAssignmentChunk(result, assignment);
+                return result;
             } catch (Throwable t) {
                 log.error("Exception occurred while aggregating chunks.", t);
                 throw new RuntimeException(t);
