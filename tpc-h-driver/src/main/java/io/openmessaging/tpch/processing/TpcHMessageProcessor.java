@@ -72,6 +72,7 @@ public class TpcHMessageProcessor {
     private final Runnable onTestCompleted;
     private final Logger log;
     private final S3Client s3AsyncClient = new S3Client(executor, this);
+    private ExecutorService executorOverride = null;
 
     public TpcHMessageProcessor(
             Supplier<String> getExperimentId,
@@ -91,9 +92,10 @@ public class TpcHMessageProcessor {
     }
 
     public void startRowProcessor(ExecutorService executorOverride) {
-        ExecutorService executor = executorOverride != null ? executorOverride : TpcHMessageProcessor.executor;
-        log.info("Starting row processor from TPC-H processor.");
-        s3AsyncClient.startRowProcessor(executor);
+        if (executorOverride != null) {
+            this.executorOverride = executorOverride;
+        }
+        log.info("Started row processor from TPC-H processor.");
     }
 
     public void shutdown() {
@@ -160,8 +162,7 @@ public class TpcHMessageProcessor {
     }
 
     private CompletableFuture<String> processConsumerAssignment(
-            TpcHConsumerAssignment assignment, TpcHStateProvider stateProvider)
-            throws URISyntaxException {
+            TpcHConsumerAssignment assignment, TpcHStateProvider stateProvider) {
         String s3Uri = assignment.sourceDataS3Uri;
         String queryId = assignment.queryId;
         if (EnvironmentConfiguration.isDebug()) {
@@ -176,46 +177,46 @@ public class TpcHMessageProcessor {
         } else {
             processedMapMessageIds.add(mapMessageId);
         }
-        s3AsyncClient.fetchAndProcessCsvInChunks(assignment, 5242848); // 33,608 lines of 156 bytes
+        ExecutorService executor = executorOverride != null ? executorOverride : TpcHMessageProcessor.executor;
+        // 33,608 lines of 156 bytes
+        executor.submit(() -> s3AsyncClient.fetchAndProcessCsvInChunks(assignment, 5242848));
         return CompletableFuture.completedFuture(queryId);
     }
 
-    // This might run on the mapper executor.
     public String processConsumerAssignmentChunk(
-            Collection<TpcHRow> chunkData, TpcHConsumerAssignment assignment) throws Exception {
+            TpcHIntermediateResult result, TpcHConsumerAssignment assignment) throws Exception {
         String queryId = assignment.queryId;
         log.info("Submitting task to process consumer assignment chunk...");
-        executor.submit(() -> {
-            try {
-                log.info("[STARTED] Task to process consumer assignment chunk");
-            TpcHIntermediateResult result =
-                    TpcHAlgorithm.applyQueryToChunk(chunkData, assignment.query, assignment);
-            int producerIndex =
-                    TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.producerIndex;
-            BenchmarkProducer producer = this.producers.get(producerIndex);
-            KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
-            TpcHMessage message = new TpcHMessage(
-                        TpcHMessageType.IntermediateResult,
-                        messageWriter.writeValueAsString(result));
-            String key = keyDistributor.next();
-            Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
-            String serializedMessage = messageWriter.writeValueAsString(message);
-            if (EnvironmentConfiguration.isDebug()) {
-                log.info("Sending consumer assignment: {}", serializedMessage);
-            }
-            String experimentId = getExperimentId.get();
-            this.messageProducer.sendMessage(
-                    producer,
-                    optionalKey,
-                    messageWriter.writeValueAsBytes(message),
-                    experimentId == null ? queryId : experimentId.replace("QUERY_ID", queryId),
-                    message.messageId,
-                    true);
-            } catch (Exception exception) {
-                log.error("Exception occurred while processing consumer assignment chunk", exception);
-                throw new RuntimeException(exception);
-            }
-        });
+        executor.submit(
+                () -> {
+                    try {
+                        log.info("[STARTED] Task to process consumer assignment chunk");
+                        int producerIndex =
+                                TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.producerIndex;
+                        BenchmarkProducer producer = this.producers.get(producerIndex);
+                        KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
+                        TpcHMessage message =
+                                new TpcHMessage(
+                                        TpcHMessageType.IntermediateResult, messageWriter.writeValueAsString(result));
+                        String key = keyDistributor.next();
+                        Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
+                        String serializedMessage = messageWriter.writeValueAsString(message);
+                        if (EnvironmentConfiguration.isDebug()) {
+                            log.info("Sending consumer assignment: {}", serializedMessage);
+                        }
+                        String experimentId = getExperimentId.get();
+                        this.messageProducer.sendMessage(
+                                producer,
+                                optionalKey,
+                                messageWriter.writeValueAsBytes(message),
+                                experimentId == null ? queryId : experimentId.replace("QUERY_ID", queryId),
+                                message.messageId,
+                                true);
+                    } catch (Exception exception) {
+                        log.error("Exception occurred while processing consumer assignment chunk", exception);
+                        throw new RuntimeException(exception);
+                    }
+                });
         return queryId;
     }
 

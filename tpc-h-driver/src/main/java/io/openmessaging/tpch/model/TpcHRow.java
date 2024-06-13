@@ -14,65 +14,60 @@
 package io.openmessaging.tpch.model;
 
 
+import com.opencsv.bean.CsvBindByPosition;
+import com.opencsv.bean.CsvDate;
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class TpcHRow {
+    @CsvBindByPosition(position = 0)
     public Integer orderKey;
-    public Integer partKey;
-    public Integer suppKey;
-    public Integer lineNumber;
-    public BigDecimal quantity;
-    public BigDecimal extendedPrice;
-    public BigDecimal discount;
-    public BigDecimal tax;
-    public Character returnFlag;
-    public Character lineStatus;
-    public Date shipDate;
-    public Date commitDate;
-    public Date receiptDate;
-    public String shipInstruct;
-    public String shipMode;
-    public String comment;
 
-    @Override
-    public String toString() {
-        return "TpcHRow{"
-                + "orderKey="
-                + orderKey
-                + ", partKey="
-                + partKey
-                + ", suppKey="
-                + suppKey
-                + ", lineNumber="
-                + lineNumber
-                + ", quantity="
-                + quantity
-                + ", extendedPrice="
-                + extendedPrice
-                + ", discount="
-                + discount
-                + ", tax="
-                + tax
-                + ", returnFlag="
-                + returnFlag
-                + ", lineStatus="
-                + lineStatus
-                + ", shipDate="
-                + shipDate
-                + ", commitDate="
-                + commitDate
-                + ", receiptDate="
-                + receiptDate
-                + ", shipInstruct='"
-                + shipInstruct
-                + '\''
-                + ", shipMode='"
-                + shipMode
-                + '\''
-                + ", comment='"
-                + comment
-                + '\''
-                + '}';
-    }
+    @CsvBindByPosition(position = 1)
+    public Integer partKey;
+
+    @CsvBindByPosition(position = 2)
+    public Integer suppKey;
+
+    @CsvBindByPosition(position = 3)
+    public Integer lineNumber;
+
+    @CsvBindByPosition(position = 4)
+    public BigDecimal quantity;
+
+    @CsvBindByPosition(position = 5)
+    public BigDecimal extendedPrice;
+
+    @CsvBindByPosition(position = 6)
+    public BigDecimal discount;
+
+    @CsvBindByPosition(position = 7)
+    public BigDecimal tax;
+
+    @CsvBindByPosition(position = 8)
+    public Character returnFlag;
+
+    @CsvBindByPosition(position = 9)
+    public Character lineStatus;
+
+    @CsvDate("yyyy-MM-dd")
+    @CsvBindByPosition(position = 10)
+    public Date shipDate;
+
+    @CsvDate("yyyy-MM-dd")
+    @CsvBindByPosition(position = 11)
+    public Date commitDate;
+
+    @CsvDate("yyyy-MM-dd")
+    @CsvBindByPosition(position = 12)
+    public Date receiptDate;
+
+    @CsvBindByPosition(position = 13)
+    public String shipInstruct;
+
+    @CsvBindByPosition(position = 14)
+    public String shipMode;
+
+    @CsvBindByPosition(position = 15)
+    public String comment;
 }

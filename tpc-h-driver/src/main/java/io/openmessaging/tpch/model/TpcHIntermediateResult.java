@@ -76,6 +76,11 @@ public class TpcHIntermediateResult {
         this.aggregateResult(reducedResult);
     }
 
+    public void aggregateChunkResult(TpcHIntermediateResult chunkResult) {
+        this.aggregateResult(chunkResult);
+        this.numberOfAggregatedResults = 1;
+    }
+
     private void aggregateResult(TpcHIntermediateResult result) {
         String queryId = result.queryId;
         if (!this.queryId.equals(queryId)) {
