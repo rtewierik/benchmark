@@ -18,61 +18,17 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class TpcHRow {
-    public Integer orderKey;
-    public Integer partKey;
-    public Integer suppKey;
-    public Integer lineNumber;
     public BigDecimal quantity;
-    public BigDecimal extendedPrice;
-    public BigDecimal discount;
-    public BigDecimal tax;
-    public Character returnFlag;
-    public Character lineStatus;
-    public Date shipDate;
-    public Date commitDate;
-    public Date receiptDate;
-    public String shipInstruct;
-    public String shipMode;
-    public String comment;
 
-    @Override
-    public String toString() {
-        return "TpcHRow{"
-                + "orderKey="
-                + orderKey
-                + ", partKey="
-                + partKey
-                + ", suppKey="
-                + suppKey
-                + ", lineNumber="
-                + lineNumber
-                + ", quantity="
-                + quantity
-                + ", extendedPrice="
-                + extendedPrice
-                + ", discount="
-                + discount
-                + ", tax="
-                + tax
-                + ", returnFlag="
-                + returnFlag
-                + ", lineStatus="
-                + lineStatus
-                + ", shipDate="
-                + shipDate
-                + ", commitDate="
-                + commitDate
-                + ", receiptDate="
-                + receiptDate
-                + ", shipInstruct='"
-                + shipInstruct
-                + '\''
-                + ", shipMode='"
-                + shipMode
-                + '\''
-                + ", comment='"
-                + comment
-                + '\''
-                + '}';
-    }
+    public BigDecimal extendedPrice;
+
+    public BigDecimal discount;
+
+    public BigDecimal tax;
+
+    public Character returnFlag;
+
+    public Character lineStatus;
+
+    public Date shipDate;
 }
