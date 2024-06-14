@@ -31,21 +31,19 @@ import io.openmessaging.benchmark.worker.LocalWorker;
 import io.openmessaging.benchmark.worker.Worker;
 import io.openmessaging.tpch.algorithm.TpcHAlgorithm;
 import io.openmessaging.tpch.algorithm.TpcHDataParser;
-import io.openmessaging.tpch.algorithm.TpcHQueryResultGenerator;
 import io.openmessaging.tpch.client.S3Client;
 import io.openmessaging.tpch.model.TpcHArguments;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CompletableFuture;
@@ -57,7 +55,6 @@ import java.util.concurrent.TimeUnit;
 import io.openmessaging.tpch.model.TpcHConsumerAssignment;
 import io.openmessaging.tpch.model.TpcHIntermediateResult;
 import io.openmessaging.tpch.model.TpcHQuery;
-import io.openmessaging.tpch.model.TpcHQueryResult;
 import io.openmessaging.tpch.model.TpcHRow;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import org.slf4j.Logger;
@@ -137,26 +134,33 @@ public class Benchmark {
             );
             S3Client client = new S3Client();
             ObjectWriter writer = new ObjectMapper().writer();
-            Future<TpcHIntermediateResult>[] f = new Future[100];
-            CompletableFuture<TpcHIntermediateResult>[] futures = new CompletableFuture[f.length];
-            for (int i = 0; i < futures.length; i++) {
+            CompletableFuture<TpcHIntermediateResult>[] f = new CompletableFuture[100];
+            for (int i = 0; i < f.length; i++) {
                 int i2 = i + 1;
                 TpcHConsumerAssignment assignment = createTpcHConsumerAssignment(i2);
                 URI uri = new URI(assignment.sourceDataS3Uri);
                 String bucketName = uri.getHost();
                 String key = uri.getPath().substring(1);
                 GetObjectRequest request = GetObjectRequest.builder().bucket(bucketName).key(key).build();
-                futures[i] = executorService.submit(() -> client.getObject(request).thenApply(() -> {
-                    List<TpcHRow> chunk = TpcHDataParser.readTpcHRowsFromStream(futures[i].get());
-                    return TpcHAlgorithm.applyQueryToChunk(chunk, assignment.query, assignment);
+                int finalI = i;
+                executorService.submit(() -> f[finalI] = client.getObject(request).thenApply((res) -> {
+                    try {
+                        List<TpcHRow> chunk = TpcHDataParser.readTpcHRowsFromStream(res);
+                        return TpcHAlgorithm.applyQueryToChunk(chunk, assignment.query, assignment);
+                    } catch (Throwable t) {
+                        throw new RuntimeException(t);
+                    }
                 }));
             }
+            while (Arrays.stream(f).anyMatch(Objects::isNull)) {
+                Thread.sleep(1000);
+            }
             log.info("Awaiting all futures...");
-            CompletableFuture.allOf(futures).join();
+            CompletableFuture.allOf(f).join();
             log.info("All futures completed.");
-            TpcHIntermediateResult result = futures[0].get();
+            TpcHIntermediateResult result = f[0].get();
             for (int i = 1; i < 100; i++) {
-                result.aggregateReducedResult(futures[i].get());
+                result.aggregateReducedResult(f[i].get());
             }
             log.info("TPC-H query result: {}", writer.writeValueAsString(result));
         }
