@@ -21,7 +21,6 @@ import io.openmessaging.tpch.model.TpcHConsumerAssignment;
 import io.openmessaging.tpch.model.TpcHIntermediateResult;
 import io.openmessaging.tpch.model.TpcHRow;
 import io.openmessaging.tpch.processing.TpcHMessageProcessor;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
@@ -36,7 +35,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
-import software.amazon.awssdk.core.BytesWrapper;
 import software.amazon.awssdk.core.async.AsyncResponseTransformer;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
@@ -58,26 +56,61 @@ public class S3Client {
                     .build();
     private final ScheduledExecutorService rowProcessor =
             Executors.newSingleThreadScheduledExecutor();
-    private final ExecutorService executor;
     private final Throttler throttler;
     private final TpcHMessageProcessor processor;
+    private ExecutorService executor;
 
-    public S3Client(ExecutorService executor, TpcHMessageProcessor processor) {
-        this.executor = executor;
+    public S3Client(TpcHMessageProcessor processor, ExecutorService executor) {
         this.throttler = new Throttler(2500, 1, TimeUnit.SECONDS);
         this.processor = processor;
+        this.executor = executor;
     }
 
     public void shutdown() {
         rowProcessor.shutdown();
     }
 
-    public CompletableFuture<InputStream> getObject(GetObjectRequest request) {
+    public void startRowProcessor(ExecutorService executor) {
+        this.executor = executor;
+    }
+
+    public CompletableFuture<TpcHIntermediateResult> getIntermediateResultFromS3(
+            TpcHConsumerAssignment assignment) {
         return executeThrottled(
-                () ->
-                        s3AsyncClient
+                () -> {
+                    try {
+                        String s3Uri = assignment.sourceDataS3Uri;
+                        URI uri = new URI(s3Uri);
+                        String bucketName = uri.getHost();
+                        String key = uri.getPath().substring(1);
+                        GetObjectRequest request =
+                                GetObjectRequest.builder().bucket(bucketName).key(key).build();
+                        return s3AsyncClient
                                 .getObject(request, AsyncResponseTransformer.toBytes())
-                                .thenApplyAsync(BytesWrapper::asInputStream, executor));
+                                .thenApplyAsync(
+                                        (response) -> {
+                                            try (Reader reader = new InputStreamReader(response.asInputStream())) {
+                                                CsvToBean<TpcHRow> csvToBean =
+                                                        new CsvToBeanBuilder<TpcHRow>(reader)
+                                                                .withType(TpcHRow.class)
+                                                                .withSeparator('|')
+                                                                .withIgnoreLeadingWhiteSpace(true)
+                                                                .withSkipLines(0)
+                                                                .build();
+                                                Iterator<TpcHRow> iterator = csvToBean.iterator();
+                                                return TpcHAlgorithm.applyQueryToChunk(
+                                                        iterator, assignment.query, assignment);
+                                            } catch (Throwable t) {
+                                                log.error("Error occurred while attempting to parse chunk.", t);
+                                                throw new RuntimeException(t);
+                                            }
+                                        },
+                                        executor);
+                    } catch (Throwable t) {
+                        log.error("Error occurred while getting intermediate result from S3.", t);
+                        throw new RuntimeException(t);
+                    }
+                });
     }
 
     public CompletableFuture<Void> fetchAndProcessCsvInChunks(

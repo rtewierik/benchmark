@@ -33,9 +33,6 @@ import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.model.TpcHMessageType;
 import io.openmessaging.tpch.model.TpcHQueryResult;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -44,18 +41,14 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
 public class TpcHMessageProcessor {
-    public static final int numProcessors = Runtime.getRuntime().availableProcessors();
-    private static final ExecutorService executor = Executors.newFixedThreadPool(numProcessors);
     private static final Map<String, Semaphore> semaphores = new ConcurrentHashMap<>();
     private static final ObjectWriter messageWriter = ObjectMappers.writer;
     private static final ObjectWriter writer = new ObjectMapper().writer();
@@ -68,7 +61,7 @@ public class TpcHMessageProcessor {
     private volatile MessageProducer messageProducer;
     private final Runnable onTestCompleted;
     private final Logger log;
-    private final S3Client s3AsyncClient = new S3Client(executor, this);
+    private final S3Client s3AsyncClient = new S3Client(this, null);
     private ExecutorService executorOverride = null;
 
     public TpcHMessageProcessor(
@@ -91,12 +84,12 @@ public class TpcHMessageProcessor {
     public void startRowProcessor(ExecutorService executorOverride) {
         if (executorOverride != null) {
             this.executorOverride = executorOverride;
+            s3AsyncClient.startRowProcessor(executorOverride);
         }
         log.info("Started row processor from TPC-H processor.");
     }
 
     public void shutdown() {
-        executor.shutdown();
         s3AsyncClient.shutdown();
     }
 
@@ -131,32 +124,34 @@ public class TpcHMessageProcessor {
         }
     }
 
-    public static GetObjectRequest parseS3Uri(String s3Uri) throws URISyntaxException {
-        URI uri = new URI(s3Uri);
-        String bucketName = uri.getHost();
-        String key = uri.getPath().substring(1);
-        return GetObjectRequest.builder().bucket(bucketName).key(key).build();
-    }
-
-    private CompletableFuture<InputStream> getStreamFromS3(GetObjectRequest getObjectRequest) {
-        try {
-            int numRetries = 0;
-            while (numRetries < 5) {
-                try {
-                    return s3AsyncClient.getObject(getObjectRequest);
-                } catch (Throwable t) {
-                    log.error("[Try {}] Error occurred while retrieving object from S3.", numRetries);
-                    numRetries++;
-                }
-            }
-        } catch (Exception exception) {
-            log.error(
-                    String.format(
-                            "Could not retrieve object %s from bucket %s!",
-                            getObjectRequest.key(), getObjectRequest.bucket()));
-        }
-        throw new RuntimeException("Allowed number of retries for retrieving a file from S3 exceeded!");
-    }
+    //    public static GetObjectRequest parseS3Uri(String s3Uri) throws URISyntaxException {
+    //        URI uri = new URI(s3Uri);
+    //        String bucketName = uri.getHost();
+    //        String key = uri.getPath().substring(1);
+    //        return GetObjectRequest.builder().bucket(bucketName).key(key).build();
+    //    }
+    //
+    //    private CompletableFuture<InputStream> getStreamFromS3(GetObjectRequest getObjectRequest) {
+    //        try {
+    //            int numRetries = 0;
+    //            while (numRetries < 5) {
+    //                try {
+    //                    return s3AsyncClient.getObject(getObjectRequest);
+    //                } catch (Throwable t) {
+    //                    log.error("[Try {}] Error occurred while retrieving object from S3.",
+    // numRetries);
+    //                    numRetries++;
+    //                }
+    //            }
+    //        } catch (Exception exception) {
+    //            log.error(
+    //                    String.format(
+    //                            "Could not retrieve object %s from bucket %s!",
+    //                            getObjectRequest.key(), getObjectRequest.bucket()));
+    //        }
+    //        throw new RuntimeException("Allowed number of retries for retrieving a file from S3
+    // exceeded!");
+    //    }
 
     private CompletableFuture<String> processConsumerAssignment(
             TpcHConsumerAssignment assignment, TpcHStateProvider stateProvider) {
@@ -174,10 +169,23 @@ public class TpcHMessageProcessor {
         } else {
             processedMapMessageIds.add(mapMessageId);
         }
-        ExecutorService executor =
-                executorOverride != null ? executorOverride : TpcHMessageProcessor.executor;
+        executorOverride.submit(
+                () -> {
+                    s3AsyncClient
+                            .getIntermediateResultFromS3(assignment)
+                            .thenApplyAsync(
+                                    (result -> {
+                                        try {
+                                            return processConsumerAssignmentChunk(result, assignment);
+                                        } catch (Throwable t) {
+                                            log.error("Error occurred while processing consumer assignment chunk,", t);
+                                            throw new RuntimeException(t);
+                                        }
+                                    }),
+                                    executorOverride);
+                });
         // 33,608 lines of 156 bytes
-        executor.submit(() -> s3AsyncClient.fetchAndProcessCsvInChunks(assignment, 5242848));
+        //        executor.submit(() -> s3AsyncClient.fetchAndProcessCsvInChunks(assignment, 5242848));
         return CompletableFuture.completedFuture(queryId);
     }
 
@@ -185,9 +193,7 @@ public class TpcHMessageProcessor {
             TpcHIntermediateResult result, TpcHConsumerAssignment assignment) throws Exception {
         String queryId = assignment.queryId;
         log.info("Submitting task to process consumer assignment chunk...");
-        ExecutorService executor =
-                executorOverride != null ? executorOverride : TpcHMessageProcessor.executor;
-        executor.submit(
+        executorOverride.submit(
                 () -> {
                     try {
                         log.info("[STARTED] Task to process consumer assignment chunk");
@@ -284,7 +290,7 @@ public class TpcHMessageProcessor {
                                 collectedIntermediateResults.remove(batchId);
                                 return queryId;
                             },
-                            executor);
+                            executorOverride);
         }
         return CompletableFuture.completedFuture(queryId);
     }
