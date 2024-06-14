@@ -137,8 +137,8 @@ public class Benchmark {
             );
             S3Client client = new S3Client();
             ObjectWriter writer = new ObjectMapper().writer();
-            Future<InputStream>[] f = new Future[100];
-            CompletableFuture<InputStream>[] futures = new CompletableFuture[f.length];
+            Future<TpcHIntermediateResult>[] f = new Future[100];
+            CompletableFuture<TpcHIntermediateResult>[] futures = new CompletableFuture[f.length];
             for (int i = 0; i < futures.length; i++) {
                 int i2 = i + 1;
                 TpcHConsumerAssignment assignment = createTpcHConsumerAssignment(i2);
@@ -146,22 +146,18 @@ public class Benchmark {
                 String bucketName = uri.getHost();
                 String key = uri.getPath().substring(1);
                 GetObjectRequest request = GetObjectRequest.builder().bucket(bucketName).key(key).build();
-                futures[i] = client.getObject(request);
+                futures[i] = executorService.submit(() -> client.getObject(request).thenApply(() -> {
+                    List<TpcHRow> chunk = TpcHDataParser.readTpcHRowsFromStream(futures[i].get());
+                    return TpcHAlgorithm.applyQueryToChunk(chunk, assignment.query, assignment);
+                }));
             }
             log.info("Awaiting all futures...");
             CompletableFuture.allOf(futures).join();
             log.info("All futures completed.");
-            TpcHConsumerAssignment assignment = createTpcHConsumerAssignment(1);
-            List<TpcHRow> resultChunk = TpcHDataParser.readTpcHRowsFromStream(futures[0].get());
-            TpcHIntermediateResult reduced = TpcHAlgorithm.applyQueryToChunk(resultChunk, assignment.query, assignment);
+            TpcHIntermediateResult result = futures[0].get();
             for (int i = 1; i < 100; i++) {
-                List<TpcHRow> chunk = TpcHDataParser.readTpcHRowsFromStream(futures[i].get());
-                TpcHIntermediateResult intermediate = TpcHAlgorithm.applyQueryToChunk(chunk, assignment.query, assignment);
-                reduced.aggregateReducedResult(intermediate);
+                result.aggregateReducedResult(futures[i].get());
             }
-            System.out.println("[INFO] Generating result from reduced intermediate result...");
-            TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(reduced, assignment.query);
-            System.out.println(result);
             log.info("TPC-H query result: {}", writer.writeValueAsString(result));
         }
     }

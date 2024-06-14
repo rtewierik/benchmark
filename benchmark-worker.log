@@ -6,3 +6,6 @@
   "workloads" : null,
   "output" : null
 }
+16:20:43.725 [main] INFO Benchmark - 10
+16:20:43.728 [main] INFO Benchmark - Starting at 1718374843728
+16:20:44.423 [main] INFO Benchmark - Awaiting all futures...

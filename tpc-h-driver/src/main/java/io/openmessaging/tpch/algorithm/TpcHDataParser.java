@@ -50,22 +50,13 @@ public class TpcHDataParser {
     private static TpcHRow parseCsvRow(String[] values) throws RuntimeException {
         try {
             TpcHRow row = new TpcHRow();
-            row.orderKey = Integer.parseInt(values[0]);
-            row.partKey = Integer.parseInt(values[1]);
-            row.suppKey = Integer.parseInt(values[2]);
-            row.lineNumber = Integer.parseInt(values[3]);
-            row.quantity = new BigDecimal(values[4]);
-            row.extendedPrice = new BigDecimal(values[5]);
-            row.discount = new BigDecimal(values[6]);
-            row.tax = new BigDecimal(values[7]);
-            row.returnFlag = values[8].charAt(0);
-            row.lineStatus = values[9].charAt(0);
-            row.shipDate = SIMPLE_DATE_FORMAT.get().parse(values[10]);
-            row.commitDate = SIMPLE_DATE_FORMAT.get().parse(values[11]);
-            row.receiptDate = SIMPLE_DATE_FORMAT.get().parse(values[12]);
-            row.shipInstruct = values[13];
-            row.shipMode = values[14];
-            row.comment = values[15];
+            row.quantity = new BigDecimal(values[0]);
+            row.extendedPrice = new BigDecimal(values[1]);
+            row.discount = new BigDecimal(values[2]);
+            row.tax = new BigDecimal(values[3]);
+            row.returnFlag = values[4].charAt(0);
+            row.lineStatus = values[5].charAt(0);
+            row.shipDate = SIMPLE_DATE_FORMAT.get().parse(values[6]);
             return row;
         } catch (Exception exception) {
             throw new RuntimeException("Failed to parse row: " + exception.getMessage(), exception);
