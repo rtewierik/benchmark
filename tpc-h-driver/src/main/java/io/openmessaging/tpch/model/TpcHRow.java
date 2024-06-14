@@ -16,23 +16,28 @@ package io.openmessaging.tpch.model;
 
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvDate;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class TpcHRow {
     @CsvBindByPosition(position = 0)
     public BigDecimal quantity;
+
     @CsvBindByPosition(position = 1)
     public BigDecimal extendedPrice;
+
     @CsvBindByPosition(position = 2)
     public BigDecimal discount;
+
     @CsvBindByPosition(position = 3)
     public BigDecimal tax;
+
     @CsvBindByPosition(position = 4)
     public Character returnFlag;
+
     @CsvBindByPosition(position = 5)
     public Character lineStatus;
+
     @CsvDate("yyyy-MM-dd")
     @CsvBindByPosition(position = 6)
     public Date shipDate;

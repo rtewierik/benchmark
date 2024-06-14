@@ -190,8 +190,7 @@ public class TpcHMessageProcessor {
         String queryId = assignment.queryId;
         try {
             log.info("[STARTED] Task to process consumer assignment chunk");
-            int producerIndex =
-                    TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.producerIndex;
+            int producerIndex = TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.producerIndex;
             BenchmarkProducer producer = this.producers.get(producerIndex);
             KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
             TpcHMessage message =
