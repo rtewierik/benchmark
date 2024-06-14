@@ -107,44 +107,41 @@ public class Benchmark {
 
     public static void main(String[] args) throws Exception {
 //        benchmark(args);
-        log.info("Starting at {}", System.currentTimeMillis());
-        ExecutorService executorService = new ThreadPoolExecutor(
-                8,
-                8,
-                50L,
-                TimeUnit.MILLISECONDS,
-                new ArrayBlockingQueue<>(5000),
-                new DefaultThreadFactory("tpc-h-test"),
-                new ThreadPoolExecutor.AbortPolicy());
-        TpcHMessageProcessor processor = new TpcHMessageProcessor(
-                () -> "tpc-h-test-id",
-                new ArrayList<>(),
-                null,
-                () -> {},
-                LoggerFactory.getLogger(Benchmark.class)
-        );
-        S3Client client = new S3Client(executorService, processor);
-        ObjectWriter writer = new ObjectMapper().writer();
-        Future<TpcHIntermediateResult>[] f = new Future[100];
-        CompletableFuture<TpcHIntermediateResult>[] futures = new CompletableFuture[f.length];
-        for (int i = 0; i < futures.length; i++) {
-            int i2 = i + 1;
-            futures[i] = CompletableFuture.supplyAsync(() -> {
-                try {
-                    return client.fetchAndProcessCsvInChunks(createTpcHConsumerAssignment(i2), 5242848).get();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }, executorService);
+        log.info("{}", Runtime.getRuntime().availableProcessors());
+        if (true) {
+            log.info("Starting at {}", System.currentTimeMillis());
+            ExecutorService executorService = new ThreadPoolExecutor(
+                    10,
+                    10,
+                    50L,
+                    TimeUnit.MILLISECONDS,
+                    new ArrayBlockingQueue<>(5000),
+                    new DefaultThreadFactory("tpc-h-test"),
+                    new ThreadPoolExecutor.AbortPolicy());
+            TpcHMessageProcessor processor = new TpcHMessageProcessor(
+                    () -> "tpc-h-test-id",
+                    new ArrayList<>(),
+                    null,
+                    () -> {},
+                    LoggerFactory.getLogger(Benchmark.class)
+            );
+            S3Client client = new S3Client(executorService, processor);
+            ObjectWriter writer = new ObjectMapper().writer();
+            Future<TpcHIntermediateResult>[] f = new Future[100];
+            CompletableFuture<TpcHIntermediateResult>[] futures = new CompletableFuture[f.length];
+            for (int i = 0; i < futures.length; i++) {
+                int i2 = i + 1;
+                futures[i] = client.getIntermediateResultFromS3(createTpcHConsumerAssignment(i2));
+            }
+            log.info("Awaiting all futures...");
+            CompletableFuture.allOf(futures).join();
+            log.info("All futures completed.");
+            TpcHIntermediateResult result = futures[0].get();
+            for (int i = 1; i < 100; i++) {
+                result.aggregateReducedResult(futures[i].get());
+            }
+            log.info("TPC-H query result: {}", writer.writeValueAsString(result));
         }
-        log.info("Awaiting all futures...");
-        CompletableFuture.allOf(futures).join();
-        log.info("All futures completed.");
-        TpcHIntermediateResult result = futures[0].get();
-        for (int i = 1; i < 100; i++) {
-            result.aggregateReducedResult(futures[i].get());
-        }
-        log.info("TPC-H query result: {}", writer.writeValueAsString(result));
     }
 
     private static TpcHConsumerAssignment createTpcHConsumerAssignment(int index) {

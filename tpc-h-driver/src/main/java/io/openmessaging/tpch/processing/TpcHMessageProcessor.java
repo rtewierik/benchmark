@@ -134,32 +134,32 @@ public class TpcHMessageProcessor {
         }
     }
 
-    public static GetObjectRequest parseS3Uri(String s3Uri) throws URISyntaxException {
-        URI uri = new URI(s3Uri);
-        String bucketName = uri.getHost();
-        String key = uri.getPath().substring(1);
-        return GetObjectRequest.builder().bucket(bucketName).key(key).build();
-    }
-
-    private CompletableFuture<InputStream> getStreamFromS3(GetObjectRequest getObjectRequest) {
-        try {
-            int numRetries = 0;
-            while (numRetries < 5) {
-                try {
-                    return s3AsyncClient.getObject(getObjectRequest);
-                } catch (Throwable t) {
-                    log.error("[Try {}] Error occurred while retrieving object from S3.", numRetries);
-                    numRetries++;
-                }
-            }
-        } catch (Exception exception) {
-            log.error(
-                    String.format(
-                            "Could not retrieve object %s from bucket %s!",
-                            getObjectRequest.key(), getObjectRequest.bucket()));
-        }
-        throw new RuntimeException("Allowed number of retries for retrieving a file from S3 exceeded!");
-    }
+//    public static GetObjectRequest parseS3Uri(String s3Uri) throws URISyntaxException {
+//        URI uri = new URI(s3Uri);
+//        String bucketName = uri.getHost();
+//        String key = uri.getPath().substring(1);
+//        return GetObjectRequest.builder().bucket(bucketName).key(key).build();
+//    }
+//
+//    private CompletableFuture<InputStream> getStreamFromS3(GetObjectRequest getObjectRequest) {
+//        try {
+//            int numRetries = 0;
+//            while (numRetries < 5) {
+//                try {
+//                    return s3AsyncClient.getObject(getObjectRequest);
+//                } catch (Throwable t) {
+//                    log.error("[Try {}] Error occurred while retrieving object from S3.", numRetries);
+//                    numRetries++;
+//                }
+//            }
+//        } catch (Exception exception) {
+//            log.error(
+//                    String.format(
+//                            "Could not retrieve object %s from bucket %s!",
+//                            getObjectRequest.key(), getObjectRequest.bucket()));
+//        }
+//        throw new RuntimeException("Allowed number of retries for retrieving a file from S3 exceeded!");
+//    }
 
     private CompletableFuture<String> processConsumerAssignment(
             TpcHConsumerAssignment assignment, TpcHStateProvider stateProvider) {

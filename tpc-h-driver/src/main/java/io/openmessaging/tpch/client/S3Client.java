@@ -52,10 +52,10 @@ public class S3Client {
             S3AsyncClient.crtBuilder()
                     .region(Region.EU_WEST_1)
                     .maxConcurrency(2048)
-                    .targetThroughputInGbps(25.0)
-                    .maxNativeMemoryLimitInBytes(4L * 1024 * 1024 * 1024) // 3 GB
-                    .initialReadBufferSizeInBytes(64L * 1024 * 1024) // 64 MB
-                    .minimumPartSizeInBytes(4L * 1024 * 1024) // 5 MB
+                    .targetThroughputInGbps(8.125)
+                    .maxNativeMemoryLimitInBytes(5L * 1024 * 1024 * 1024) // 3 GB
+                    .initialReadBufferSizeInBytes(32L * 1024 * 1024) // 64 MB
+                    .minimumPartSizeInBytes(5L * 1024 * 1024) // 5 MB
                     .build();
     private final ScheduledExecutorService rowProcessor = Executors.newSingleThreadScheduledExecutor();
     private final ExecutorService executor;
@@ -72,12 +72,37 @@ public class S3Client {
         rowProcessor.shutdown();
     }
 
-    public CompletableFuture<InputStream> getObject(GetObjectRequest request) {
+    public CompletableFuture<TpcHIntermediateResult> getIntermediateResultFromS3(TpcHConsumerAssignment assignment) {
         return executeThrottled(
-                () ->
-                        s3AsyncClient
+                () -> {
+                    try {
+                        String s3Uri = assignment.sourceDataS3Uri;
+                        URI uri = new URI(s3Uri);
+                        String bucketName = uri.getHost();
+                        String key = uri.getPath().substring(1);
+                        GetObjectRequest request = GetObjectRequest.builder().bucket(bucketName).key(key).build();
+                        return s3AsyncClient
                                 .getObject(request, AsyncResponseTransformer.toBytes())
-                                .thenApplyAsync(BytesWrapper::asInputStream, executor));
+                                .thenApplyAsync((response) -> {
+                                    try (Reader reader = new InputStreamReader(response.asInputStream())) {
+                                        CsvToBean<TpcHRow> csvToBean = new CsvToBeanBuilder<TpcHRow>(reader)
+                                                .withType(TpcHRow.class)
+                                                .withSeparator('|')
+                                                .withIgnoreLeadingWhiteSpace(true)
+                                                .withSkipLines(0)
+                                                .build();
+                                        Iterator<TpcHRow> iterator = csvToBean.iterator();
+                                        return TpcHAlgorithm.applyQueryToChunk(iterator, assignment.query, assignment);
+                                    } catch (Throwable t) {
+                                        log.error("Error occurred while attempting to parse chunk.", t);
+                                        throw new RuntimeException(t);
+                                    }
+                                }, executor);
+                    } catch (Throwable t) {
+                        log.error("Error occurred while getting intermediate result from S3.", t);
+                        throw new RuntimeException(t);
+                    }
+                });
     }
 
     public CompletableFuture<TpcHIntermediateResult> fetchAndProcessCsvInChunks(
