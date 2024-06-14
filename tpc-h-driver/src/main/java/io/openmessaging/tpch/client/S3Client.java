@@ -50,7 +50,7 @@ public class S3Client {
                     .region(Region.EU_WEST_1)
                     .maxConcurrency(2048)
                     .targetThroughputInGbps(25.0)
-                    .maxNativeMemoryLimitInBytes(4L * 1024 * 1024 * 1024) // 3 GB
+                    .maxNativeMemoryLimitInBytes(4L * 1024 * 1024 * 1024) // 4 GB
                     .initialReadBufferSizeInBytes(64L * 1024 * 1024) // 64 MB
                     .minimumPartSizeInBytes(4L * 1024 * 1024) // 5 MB
                     .build();

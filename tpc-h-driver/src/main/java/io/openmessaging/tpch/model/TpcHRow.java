@@ -14,60 +14,15 @@
 package io.openmessaging.tpch.model;
 
 
-import com.opencsv.bean.CsvBindByPosition;
-import com.opencsv.bean.CsvDate;
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class TpcHRow {
-    @CsvBindByPosition(position = 0)
-    public Integer orderKey;
-
-    @CsvBindByPosition(position = 1)
-    public Integer partKey;
-
-    @CsvBindByPosition(position = 2)
-    public Integer suppKey;
-
-    @CsvBindByPosition(position = 3)
-    public Integer lineNumber;
-
-    @CsvBindByPosition(position = 4)
     public BigDecimal quantity;
-
-    @CsvBindByPosition(position = 5)
     public BigDecimal extendedPrice;
-
-    @CsvBindByPosition(position = 6)
     public BigDecimal discount;
-
-    @CsvBindByPosition(position = 7)
     public BigDecimal tax;
-
-    @CsvBindByPosition(position = 8)
     public Character returnFlag;
-
-    @CsvBindByPosition(position = 9)
     public Character lineStatus;
-
-    @CsvDate("yyyy-MM-dd")
-    @CsvBindByPosition(position = 10)
     public Date shipDate;
-
-    @CsvDate("yyyy-MM-dd")
-    @CsvBindByPosition(position = 11)
-    public Date commitDate;
-
-    @CsvDate("yyyy-MM-dd")
-    @CsvBindByPosition(position = 12)
-    public Date receiptDate;
-
-    @CsvBindByPosition(position = 13)
-    public String shipInstruct;
-
-    @CsvBindByPosition(position = 14)
-    public String shipMode;
-
-    @CsvBindByPosition(position = 15)
-    public String comment;
 }
