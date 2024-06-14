@@ -22,15 +22,24 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.worker.BenchmarkWorkers;
 import io.openmessaging.benchmark.worker.DistributedWorkersEnsemble;
 import io.openmessaging.benchmark.worker.HttpWorkerClient;
 import io.openmessaging.benchmark.worker.LocalWorker;
 import io.openmessaging.benchmark.worker.Worker;
+import io.openmessaging.tpch.algorithm.TpcHAlgorithm;
+import io.openmessaging.tpch.algorithm.TpcHDataParser;
+import io.openmessaging.tpch.algorithm.TpcHQueryResultGenerator;
+import io.openmessaging.tpch.client.S3Client;
 import io.openmessaging.tpch.model.TpcHArguments;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,8 +47,22 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import io.openmessaging.tpch.model.TpcHConsumerAssignment;
+import io.openmessaging.tpch.model.TpcHIntermediateResult;
+import io.openmessaging.tpch.model.TpcHQuery;
+import io.openmessaging.tpch.model.TpcHQueryResult;
+import io.openmessaging.tpch.model.TpcHRow;
+import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
 public class Benchmark {
 
@@ -93,8 +116,69 @@ public class Benchmark {
     }
 
     public static void main(String[] args) throws Exception {
-        benchmark(args);
+//        benchmark(args);
+        log.info("{}", Runtime.getRuntime().availableProcessors());
+        if (true) {
+            log.info("Starting at {}", System.currentTimeMillis());
+            ExecutorService executorService = new ThreadPoolExecutor(
+                    10,
+                    10,
+                    50L,
+                    TimeUnit.MILLISECONDS,
+                    new ArrayBlockingQueue<>(5000),
+                    new DefaultThreadFactory("tpc-h-test"),
+                    new ThreadPoolExecutor.AbortPolicy());
+            TpcHMessageProcessor processor = new TpcHMessageProcessor(
+                    () -> "tpc-h-test-id",
+                    new ArrayList<>(),
+                    null,
+                    () -> {},
+                    LoggerFactory.getLogger(Benchmark.class)
+            );
+            S3Client client = new S3Client();
+            ObjectWriter writer = new ObjectMapper().writer();
+            Future<InputStream>[] f = new Future[100];
+            CompletableFuture<InputStream>[] futures = new CompletableFuture[f.length];
+            for (int i = 0; i < futures.length; i++) {
+                int i2 = i + 1;
+                TpcHConsumerAssignment assignment = createTpcHConsumerAssignment(i2);
+                URI uri = new URI(assignment.sourceDataS3Uri);
+                String bucketName = uri.getHost();
+                String key = uri.getPath().substring(1);
+                GetObjectRequest request = GetObjectRequest.builder().bucket(bucketName).key(key).build();
+                futures[i] = client.getObject(request);
+            }
+            log.info("Awaiting all futures...");
+            CompletableFuture.allOf(futures).join();
+            log.info("All futures completed.");
+            TpcHConsumerAssignment assignment = createTpcHConsumerAssignment(1);
+            List<TpcHRow> resultChunk = TpcHDataParser.readTpcHRowsFromStream(futures[0].get());
+            TpcHIntermediateResult reduced = TpcHAlgorithm.applyQueryToChunk(resultChunk, assignment.query, assignment);
+            for (int i = 1; i < 100; i++) {
+                List<TpcHRow> chunk = TpcHDataParser.readTpcHRowsFromStream(futures[i].get());
+                TpcHIntermediateResult intermediate = TpcHAlgorithm.applyQueryToChunk(chunk, assignment.query, assignment);
+                reduced.aggregateReducedResult(intermediate);
+            }
+            System.out.println("[INFO] Generating result from reduced intermediate result...");
+            TpcHQueryResult result = TpcHQueryResultGenerator.generateResult(reduced, assignment.query);
+            System.out.println(result);
+            log.info("TPC-H query result: {}", writer.writeValueAsString(result));
+        }
     }
+
+    private static TpcHConsumerAssignment createTpcHConsumerAssignment(int index) {
+        return new TpcHConsumerAssignment(
+                TpcHQuery.ForecastingRevenueChange,
+                "test-query-id",
+                "test-query-batch-id",
+                0,
+                0,
+                10,
+                100,
+                "s3://tpc-h-chunks/chunks-by-file-size/70mb/chunk_" + index + ".csv"
+        );
+    }
+
 
     private static void benchmark(String[] args) throws Exception {
         final Arguments arguments = new Arguments();
