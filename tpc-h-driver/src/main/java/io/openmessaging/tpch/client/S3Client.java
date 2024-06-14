@@ -14,6 +14,13 @@
 package io.openmessaging.tpch.client;
 
 
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+import io.openmessaging.tpch.algorithm.TpcHAlgorithm;
+import io.openmessaging.tpch.model.TpcHConsumerAssignment;
+import io.openmessaging.tpch.model.TpcHIntermediateResult;
+import io.openmessaging.tpch.model.TpcHRow;
+import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -23,20 +30,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
-
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import io.openmessaging.tpch.algorithm.TpcHAlgorithm;
-import io.openmessaging.tpch.model.TpcHConsumerAssignment;
-import io.openmessaging.tpch.model.TpcHIntermediateResult;
-import io.openmessaging.tpch.model.TpcHRow;
-import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.core.BytesWrapper;
 import software.amazon.awssdk.core.async.AsyncResponseTransformer;
@@ -58,7 +56,8 @@ public class S3Client {
                     .initialReadBufferSizeInBytes(64L * 1024 * 1024) // 64 MB
                     .minimumPartSizeInBytes(4L * 1024 * 1024) // 5 MB
                     .build();
-    private final ScheduledExecutorService rowProcessor = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService rowProcessor =
+            Executors.newSingleThreadScheduledExecutor();
     private final ExecutorService executor;
     private final Throttler throttler;
     private final TpcHMessageProcessor processor;
@@ -81,28 +80,31 @@ public class S3Client {
                                 .thenApplyAsync(BytesWrapper::asInputStream, executor));
     }
 
-    public CompletableFuture<Void> fetchAndProcessCsvInChunks(TpcHConsumerAssignment assignment, int chunkSize)
-            throws URISyntaxException {
+    public CompletableFuture<Void> fetchAndProcessCsvInChunks(
+            TpcHConsumerAssignment assignment, int chunkSize) throws URISyntaxException {
         String s3Uri = assignment.sourceDataS3Uri;
         URI uri = new URI(s3Uri);
         String bucketName = uri.getHost();
         String key = uri.getPath().substring(1);
-        HeadObjectRequest headObjectRequest = HeadObjectRequest
-                .builder()
-                .bucket(bucketName)
-                .key(key)
-                .build();
+        HeadObjectRequest headObjectRequest =
+                HeadObjectRequest.builder().bucket(bucketName).key(key).build();
 
-        CompletableFuture<HeadObjectResponse> headObjectResponseFuture = s3AsyncClient.headObject(headObjectRequest);
+        CompletableFuture<HeadObjectResponse> headObjectResponseFuture =
+                s3AsyncClient.headObject(headObjectRequest);
 
-        return headObjectResponseFuture.thenCompose(headObjectResponse -> {
-            long objectSize = headObjectResponse.contentLength();
-            return readCsvInChunks(bucketName, key, objectSize, chunkSize, assignment);
-        });
+        return headObjectResponseFuture.thenCompose(
+                headObjectResponse -> {
+                    long objectSize = headObjectResponse.contentLength();
+                    return readCsvInChunks(bucketName, key, objectSize, chunkSize, assignment);
+                });
     }
 
     public CompletableFuture<Void> readCsvInChunks(
-            String bucketName, String key, long objectSize, int chunkSize, TpcHConsumerAssignment assignment) {
+            String bucketName,
+            String key,
+            long objectSize,
+            int chunkSize,
+            TpcHConsumerAssignment assignment) {
         List<CompletableFuture<TpcHIntermediateResult>> futures = new ArrayList<>();
 
         for (long start = 0; start < objectSize; start += chunkSize) {
@@ -110,46 +112,52 @@ public class S3Client {
             futures.add(readChunk(bucketName, key, start, end, assignment));
         }
 
-        return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).thenRun(() -> {
-            log.info("Finished reading chunks, aggregating chunks... {}", System.currentTimeMillis());
-            try {
-                TpcHIntermediateResult result = futures.get(0).get();
-                for (int i = 1; i < futures.size(); i++) {
-                    result.aggregateChunkResult(futures.get(i).get());
-                }
-                processor.processConsumerAssignmentChunk(result, assignment);
-            } catch (Throwable t) {
-                log.error("Exception occurred while aggregating chunks.", t);
-                throw new RuntimeException(t);
-            }
-        });
+        return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+                .thenRun(
+                        () -> {
+                            log.info(
+                                    "Finished reading chunks, aggregating chunks... {}", System.currentTimeMillis());
+                            try {
+                                TpcHIntermediateResult result = futures.get(0).get();
+                                for (int i = 1; i < futures.size(); i++) {
+                                    result.aggregateChunkResult(futures.get(i).get());
+                                }
+                                processor.processConsumerAssignmentChunk(result, assignment);
+                            } catch (Throwable t) {
+                                log.error("Exception occurred while aggregating chunks.", t);
+                                throw new RuntimeException(t);
+                            }
+                        });
     }
 
     public CompletableFuture<TpcHIntermediateResult> readChunk(
             String bucketName, String key, long start, long end, TpcHConsumerAssignment assignment) {
-        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(bucketName)
-                .key(key)
-                .range("bytes=" + start + "-" + end)
-                .build();
+        GetObjectRequest getObjectRequest =
+                GetObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key)
+                        .range("bytes=" + start + "-" + end)
+                        .build();
 
         return s3AsyncClient
                 .getObject(getObjectRequest, AsyncResponseTransformer.toBytes())
-                .thenApply(responseBytes -> {
-                    try (Reader reader = new InputStreamReader(responseBytes.asInputStream())) {
-                        CsvToBean<TpcHRow> csvToBean = new CsvToBeanBuilder<TpcHRow>(reader)
-                                .withType(TpcHRow.class)
-                                .withSeparator('|')
-                                .withIgnoreLeadingWhiteSpace(true)
-                                .withSkipLines(0)
-                                .build();
-                        Iterator<TpcHRow> iterator = csvToBean.iterator();
-                        return TpcHAlgorithm.applyQueryToChunk(iterator, assignment.query, assignment);
-                    } catch (Throwable t) {
-                        log.error("Error occurred while attempting to parse chunk.", t);
-                        throw new RuntimeException(t);
-                    }
-                });
+                .thenApply(
+                        responseBytes -> {
+                            try (Reader reader = new InputStreamReader(responseBytes.asInputStream())) {
+                                CsvToBean<TpcHRow> csvToBean =
+                                        new CsvToBeanBuilder<TpcHRow>(reader)
+                                                .withType(TpcHRow.class)
+                                                .withSeparator('|')
+                                                .withIgnoreLeadingWhiteSpace(true)
+                                                .withSkipLines(0)
+                                                .build();
+                                Iterator<TpcHRow> iterator = csvToBean.iterator();
+                                return TpcHAlgorithm.applyQueryToChunk(iterator, assignment.query, assignment);
+                            } catch (Throwable t) {
+                                log.error("Error occurred while attempting to parse chunk.", t);
+                                throw new RuntimeException(t);
+                            }
+                        });
     }
 
     private <T> CompletableFuture<T> executeThrottled(Supplier<CompletableFuture<T>> supplier) {

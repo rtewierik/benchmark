@@ -84,7 +84,8 @@ public class SnsSqsBenchmarkConsumer implements RequestHandler<SQSEvent, Void>, 
     private static final TpcHStateProvider stateProvider = new SingleThreadTpcHStateProvider();
 
     static {
-        if (SnsSqsBenchmarkConfiguration.accountId != null && !SnsSqsBenchmarkConfiguration.accountId.isEmpty()) {
+        if (SnsSqsBenchmarkConfiguration.accountId != null
+                && !SnsSqsBenchmarkConfiguration.accountId.isEmpty()) {
             messageProcessor.startRowProcessor(null);
         }
         if (!SnsSqsBenchmarkConfiguration.isTpcH) {

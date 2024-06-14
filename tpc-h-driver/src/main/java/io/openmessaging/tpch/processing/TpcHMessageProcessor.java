@@ -25,7 +25,6 @@ import io.openmessaging.benchmark.common.key.distribution.KeyDistributorType;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.MessageProducer;
 import io.openmessaging.tpch.TpcHConstants;
-import io.openmessaging.tpch.algorithm.TpcHAlgorithm;
 import io.openmessaging.tpch.algorithm.TpcHQueryResultGenerator;
 import io.openmessaging.tpch.client.S3Client;
 import io.openmessaging.tpch.model.TpcHConsumerAssignment;
@@ -33,12 +32,10 @@ import io.openmessaging.tpch.model.TpcHIntermediateResult;
 import io.openmessaging.tpch.model.TpcHMessage;
 import io.openmessaging.tpch.model.TpcHMessageType;
 import io.openmessaging.tpch.model.TpcHQueryResult;
-import io.openmessaging.tpch.model.TpcHRow;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -177,7 +174,8 @@ public class TpcHMessageProcessor {
         } else {
             processedMapMessageIds.add(mapMessageId);
         }
-        ExecutorService executor = executorOverride != null ? executorOverride : TpcHMessageProcessor.executor;
+        ExecutorService executor =
+                executorOverride != null ? executorOverride : TpcHMessageProcessor.executor;
         // 33,608 lines of 156 bytes
         executor.submit(() -> s3AsyncClient.fetchAndProcessCsvInChunks(assignment, 5242848));
         return CompletableFuture.completedFuture(queryId);
@@ -187,6 +185,8 @@ public class TpcHMessageProcessor {
             TpcHIntermediateResult result, TpcHConsumerAssignment assignment) throws Exception {
         String queryId = assignment.queryId;
         log.info("Submitting task to process consumer assignment chunk...");
+        ExecutorService executor =
+                executorOverride != null ? executorOverride : TpcHMessageProcessor.executor;
         executor.submit(
                 () -> {
                     try {
