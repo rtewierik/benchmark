@@ -87,7 +87,7 @@ public class S3Client {
                                 GetObjectRequest.builder().bucket(bucketName).key(key).build();
                         return s3AsyncClient
                                 .getObject(request, AsyncResponseTransformer.toBytes())
-                                .thenApplyAsync(
+                                .thenApply(
                                         (response) -> {
                                             try (Reader reader = new InputStreamReader(response.asInputStream())) {
                                                 CsvToBean<TpcHRow> csvToBean =
@@ -104,8 +104,7 @@ public class S3Client {
                                                 log.error("Error occurred while attempting to parse chunk.", t);
                                                 throw new RuntimeException(t);
                                             }
-                                        },
-                                        executor);
+                                        });
                     } catch (Throwable t) {
                         log.error("Error occurred while getting intermediate result from S3.", t);
                         throw new RuntimeException(t);

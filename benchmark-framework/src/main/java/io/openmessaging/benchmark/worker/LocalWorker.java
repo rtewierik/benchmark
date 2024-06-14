@@ -600,7 +600,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
             log.info("Started new task!");
         }
         TpcHStateProvider stateProvider = stateProviders.get(consumer);
-        tpcHMessageProcessor.processTpcHMessage(message, stateProvider).thenApplyAsync((queryId) -> {
+        tpcHMessageProcessor.processTpcHMessage(message, stateProvider).thenApply((queryId) -> {
             try {
                 internalMessageReceived(length, publishTimestamp, queryId, message.messageId);
             } catch (IOException e) {
@@ -613,7 +613,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
                 }
             }
             return null;
-        }, commandHandler.executorService);
+        });
     }
 
     public boolean getTestCompleted() {

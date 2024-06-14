@@ -169,60 +169,52 @@ public class TpcHMessageProcessor {
         } else {
             processedMapMessageIds.add(mapMessageId);
         }
-        executorOverride.submit(
-                () -> {
-                    s3AsyncClient
-                            .getIntermediateResultFromS3(assignment)
-                            .thenApplyAsync(
-                                    (result -> {
-                                        try {
-                                            return processConsumerAssignmentChunk(result, assignment);
-                                        } catch (Throwable t) {
-                                            log.error("Error occurred while processing consumer assignment chunk,", t);
-                                            throw new RuntimeException(t);
-                                        }
-                                    }),
-                                    executorOverride);
-                });
+        s3AsyncClient
+                .getIntermediateResultFromS3(assignment)
+                .thenApply(
+                        (result -> {
+                            try {
+                                return processConsumerAssignmentChunk(result, assignment);
+                            } catch (Throwable t) {
+                                log.error("Error occurred while processing consumer assignment chunk,", t);
+                                throw new RuntimeException(t);
+                            }
+                        }));
         // 33,608 lines of 156 bytes
         //        executor.submit(() -> s3AsyncClient.fetchAndProcessCsvInChunks(assignment, 5242848));
         return CompletableFuture.completedFuture(queryId);
     }
 
     public String processConsumerAssignmentChunk(
-            TpcHIntermediateResult result, TpcHConsumerAssignment assignment) throws Exception {
+            TpcHIntermediateResult result, TpcHConsumerAssignment assignment) {
         String queryId = assignment.queryId;
-        log.info("Submitting task to process consumer assignment chunk...");
-        executorOverride.submit(
-                () -> {
-                    try {
-                        log.info("[STARTED] Task to process consumer assignment chunk");
-                        int producerIndex =
-                                TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.producerIndex;
-                        BenchmarkProducer producer = this.producers.get(producerIndex);
-                        KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
-                        TpcHMessage message =
-                                new TpcHMessage(
-                                        TpcHMessageType.IntermediateResult, messageWriter.writeValueAsString(result));
-                        String key = keyDistributor.next();
-                        Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
-                        String serializedMessage = messageWriter.writeValueAsString(message);
-                        if (EnvironmentConfiguration.isDebug()) {
-                            log.info("Sending consumer assignment: {}", serializedMessage);
-                        }
-                        String experimentId = getExperimentId.get();
-                        this.messageProducer.sendMessage(
-                                producer,
-                                optionalKey,
-                                messageWriter.writeValueAsBytes(message),
-                                experimentId == null ? queryId : experimentId.replace("QUERY_ID", queryId),
-                                message.messageId,
-                                true);
-                    } catch (Exception exception) {
-                        log.error("Exception occurred while processing consumer assignment chunk", exception);
-                        throw new RuntimeException(exception);
-                    }
-                });
+        try {
+            log.info("[STARTED] Task to process consumer assignment chunk");
+            int producerIndex =
+                    TpcHConstants.REDUCE_PRODUCER_START_INDEX + assignment.producerIndex;
+            BenchmarkProducer producer = this.producers.get(producerIndex);
+            KeyDistributor keyDistributor = KeyDistributor.build(KeyDistributorType.NO_KEY);
+            TpcHMessage message =
+                    new TpcHMessage(
+                            TpcHMessageType.IntermediateResult, messageWriter.writeValueAsString(result));
+            String key = keyDistributor.next();
+            Optional<String> optionalKey = key == null ? Optional.empty() : Optional.of(key);
+            String serializedMessage = messageWriter.writeValueAsString(message);
+            if (EnvironmentConfiguration.isDebug()) {
+                log.info("Sending consumer assignment: {}", serializedMessage);
+            }
+            String experimentId = getExperimentId.get();
+            this.messageProducer.sendMessage(
+                    producer,
+                    optionalKey,
+                    messageWriter.writeValueAsBytes(message),
+                    experimentId == null ? queryId : experimentId.replace("QUERY_ID", queryId),
+                    message.messageId,
+                    true);
+        } catch (Exception exception) {
+            log.error("Exception occurred while processing consumer assignment chunk", exception);
+            throw new RuntimeException(exception);
+        }
         return queryId;
     }
 
@@ -285,12 +277,11 @@ public class TpcHMessageProcessor {
                             experimentId == null ? queryId : experimentId.replace("QUERY_ID", queryId),
                             message.messageId,
                             true)
-                    .thenApplyAsync(
+                    .thenApply(
                             (f) -> {
                                 collectedIntermediateResults.remove(batchId);
                                 return queryId;
-                            },
-                            executorOverride);
+                            });
         }
         return CompletableFuture.completedFuture(queryId);
     }
