@@ -50,30 +50,46 @@ def plot_data(json_file_path, label, technology, size, plot, f):
     f(data, label, technology, size, plot)
 
 
-def main(files, label, technology, size, f):
+def main(files, prefix, labels, technology, size, f):
+    file_paths = [get_filepath(prefix, f) for f in files]
+
     fig = plt.figure(figsize=(10, 5))
-
-    for file in files[:-1]:
-        plot_data(file, label, technology, size, False, f)
-    plot_data(files[-1], label, technology, size, True, f)
-
+    for i, file_path in enumerate(file_paths[:-1]):
+        plot_data(file_path, labels[i], technology, size, False, f)
+    plot_data(file_paths[-1], labels[-1], technology, size, True, f)
     plt.close(fig)
 
 
 def get_filepath(prefix, filename):
-    return f"{prefix}{filename}"
+    return f"{prefix}{filename}.json"
 
 
 if __name__ == "__main__":
+    sizes = ["10", "100", "500"]
     kafka_p = '../experiments/kafka/throughput/'
-    kafka_1kb_f = [
-        'throughput-1kb-10-max-Kafka-2024-05-28-22-30-20.json',
-        'throughput-1kb-100-max-Kafka-2024-05-28-22-33-53.json',
-        'throughput-1kb-500-max-Kafka-2024-05-28-22-38-32.json'
+    kafka_100b_f = [
+        'throughput-100b-10-max-Kafka-2024-05-28-22-07-10',
+        'throughput-100b-100-max-Kafka-2024-05-28-22-10-51',
+        'throughput-100b-500-max-Kafka-2024-05-28-22-15-43'
     ]
-    kafka_f = [get_filepath(kafka_p, f) for f in kafka_1kb_f]
+    kafka_1kb_f = [
+        'throughput-1kb-10-max-Kafka-2024-05-28-22-30-20',
+        'throughput-1kb-100-max-Kafka-2024-05-28-22-33-53',
+        'throughput-1kb-500-max-Kafka-2024-05-28-22-38-32'
+    ]
+    kafka_10kb_f = [
+        'throughput-10kb-10-max-Kafka-2024-05-28-22-18-56',
+        'throughput-10kb-100-max-Kafka-2024-05-28-22-22-25',
+        'throughput-10kb-500-max-Kafka-2024-05-28-22-27-07'
+    ]
 
     f1, f2 = plot_latency_quantiles, plot_publish_consume_rates
 
-    main(kafka_f, "10", "kafka", "1kb", f1)
-    main(kafka_f, "10", "kafka", "1kb", f2)
+    main(kafka_100b_f, kafka_p, sizes, "kafka", "100b", f1)
+    main(kafka_100b_f, kafka_p, sizes, "kafka", "100b", f2)
+
+    main(kafka_100b_f, kafka_p, sizes, "kafka", "1kb", f1)
+    main(kafka_100b_f, kafka_p, sizes, "kafka", "1kb", f2)
+
+    main(kafka_100b_f, kafka_p, sizes, "kafka", "10kb", f1)
+    main(kafka_100b_f, kafka_p, sizes, "kafka", "10kb", f2)
