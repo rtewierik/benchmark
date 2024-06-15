@@ -91,7 +91,7 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
                         } catch (Exception e) {
                             log.error("Failed to read from consumer instance.", e);
                         }
-                        if (!EnvironmentConfiguration.isCloudMonitoringEnabled()) {
+                        if (EnvironmentConfiguration.isCloudMonitoringEnabled()) {
                             break;
                         }
                     }

@@ -61,42 +61,36 @@ public class S3Client {
 
     public CompletableFuture<TpcHIntermediateResult> getIntermediateResultFromS3(
             TpcHConsumerAssignment assignment) {
-        return executeThrottled(
-                () -> {
-                    try {
-                        String s3Uri = assignment.sourceDataS3Uri;
-                        URI uri = new URI(s3Uri);
-                        String bucketName = uri.getHost();
-                        String key = uri.getPath().substring(1);
-                        GetObjectRequest request =
-                                GetObjectRequest.builder().bucket(bucketName).key(key).build();
-                        return s3AsyncClient
-                                .getObject(request, AsyncResponseTransformer.toBytes())
-                                // Hand over requested file and responsibility of parsing to common fork-pool.
-                                .thenApplyAsync(
-                                        (response) -> {
-                                            log.info("This should be happening from fork-pool!");
-                                            try (Reader reader = new InputStreamReader(response.asInputStream())) {
-                                                CsvToBean<TpcHRow> csvToBean =
-                                                        new CsvToBeanBuilder<TpcHRow>(reader)
-                                                                .withType(TpcHRow.class)
-                                                                .withSeparator('|')
-                                                                .withIgnoreLeadingWhiteSpace(true)
-                                                                .withSkipLines(0)
-                                                                .build();
-                                                Iterator<TpcHRow> iterator = csvToBean.iterator();
-                                                return TpcHAlgorithm.applyQueryToChunk(
-                                                        iterator, assignment.query, assignment);
-                                            } catch (Throwable t) {
-                                                log.error("Error occurred while attempting to parse chunk.", t);
-                                                throw new RuntimeException(t);
-                                            }
-                                        });
-                    } catch (Throwable t) {
-                        log.error("Error occurred while getting intermediate result from S3.", t);
-                        throw new RuntimeException(t);
-                    }
-                });
+        try {
+            String s3Uri = assignment.sourceDataS3Uri;
+            URI uri = new URI(s3Uri);
+            String bucketName = uri.getHost();
+            String key = uri.getPath().substring(1);
+            GetObjectRequest request = GetObjectRequest.builder().bucket(bucketName).key(key).build();
+            return s3AsyncClient
+                    .getObject(request, AsyncResponseTransformer.toBytes())
+                    // Hand over requested file and responsibility of parsing to common fork-pool.
+                    .thenApplyAsync(
+                            (response) -> {
+                                try (Reader reader = new InputStreamReader(response.asInputStream())) {
+                                    CsvToBean<TpcHRow> csvToBean =
+                                            new CsvToBeanBuilder<TpcHRow>(reader)
+                                                    .withType(TpcHRow.class)
+                                                    .withSeparator('|')
+                                                    .withIgnoreLeadingWhiteSpace(true)
+                                                    .withSkipLines(0)
+                                                    .build();
+                                    Iterator<TpcHRow> iterator = csvToBean.iterator();
+                                    return TpcHAlgorithm.applyQueryToChunk(iterator, assignment.query, assignment);
+                                } catch (Throwable t) {
+                                    log.error("Error occurred while attempting to parse chunk.", t);
+                                    throw new RuntimeException(t);
+                                }
+                            });
+        } catch (Throwable t) {
+            log.error("Error occurred while getting intermediate result from S3.", t);
+            throw new RuntimeException(t);
+        }
     }
 
     public CompletableFuture<Void> fetchAndProcessCsvInChunks(

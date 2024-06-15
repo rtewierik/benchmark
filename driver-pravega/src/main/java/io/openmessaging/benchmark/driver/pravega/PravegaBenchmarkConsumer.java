@@ -88,7 +88,7 @@ public class PravegaBenchmarkConsumer implements BenchmarkConsumer {
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-                        if (!EnvironmentConfiguration.isCloudMonitoringEnabled()) {
+                        if (EnvironmentConfiguration.isCloudMonitoringEnabled()) {
                             break;
                         }
                     }

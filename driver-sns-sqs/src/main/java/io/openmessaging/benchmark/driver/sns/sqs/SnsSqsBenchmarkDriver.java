@@ -19,6 +19,7 @@ import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.Executor;
 import io.openmessaging.tpch.TpcHConstants;
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
 public class SnsSqsBenchmarkDriver implements BenchmarkDriver {
 
     @Override
-    public void initialize(File configurationFile, StatsLogger statsLogger)
+    public void initialize(File configurationFile, StatsLogger statsLogger, Executor executor)
             throws IOException, InterruptedException {}
 
     @Override

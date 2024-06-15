@@ -87,7 +87,7 @@ public class KafkaBenchmarkConsumer implements BenchmarkConsumer {
                         } catch (Exception e) {
                             log.error("exception occur while consuming message", e);
                         }
-                        if (!EnvironmentConfiguration.isCloudMonitoringEnabled()) {
+                        if (EnvironmentConfiguration.isCloudMonitoringEnabled()) {
                             break;
                         }
                     }

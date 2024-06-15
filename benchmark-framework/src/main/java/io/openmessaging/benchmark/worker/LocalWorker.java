@@ -598,7 +598,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
             throws IOException {
         boolean isConsumerAssignment = message.type == TpcHMessageType.ConsumerAssignment;
         if (isConsumerAssignment) {
-            log.info("Starting new task.");
             taskProcessor.startNewTask();
             log.info("Started new task!");
         }

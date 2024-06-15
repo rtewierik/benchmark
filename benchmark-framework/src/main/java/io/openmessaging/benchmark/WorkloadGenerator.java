@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 import org.apache.commons.lang.ArrayUtils;
@@ -545,7 +546,11 @@ public class WorkloadGenerator implements AutoCloseable {
                                             - stats.totalMessagesReceived);
 
                     log.info(
-                            "Pub rate {} msg/s / {} MB/s | Pub err {} err/s | Cons rate {} msg/s / {} MB/s | Backlog: {} K | Pub Latency (ms) avg: {} - 50%: {} - 99%: {} - 99.9%: {} - Max: {} | Pub Delay Latency (us) avg: {} - 50%: {} - 99%: {} - 99.9%: {} - Max: {}",
+                            "{} {} {} {} Pub rate {} msg/s / {} MB/s | Pub err {} err/s | Cons rate {} msg/s / {} MB/s | Backlog: {} K | Pub Latency (ms) avg: {} - 50%: {} - 99%: {} - 99.9%: {} - Max: {} | Pub Delay Latency (us) avg: {} - 50%: {} - 99%: {} - 99.9%: {} - Max: {}",
+                            ForkJoinPool.commonPool().getPoolSize(),
+                            ForkJoinPool.commonPool().getRunningThreadCount(),
+                            ForkJoinPool.commonPool().getActiveThreadCount(),
+                            ForkJoinPool.commonPool().getQueuedTaskCount(),
                             rateFormat.format(publishRate),
                             throughputFormat.format(publishThroughput),
                             rateFormat.format(errorRate),

@@ -22,19 +22,15 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import io.grpc.netty.shaded.io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.worker.BenchmarkWorkers;
 import io.openmessaging.benchmark.worker.DistributedWorkersEnsemble;
 import io.openmessaging.benchmark.worker.HttpWorkerClient;
 import io.openmessaging.benchmark.worker.LocalWorker;
 import io.openmessaging.benchmark.worker.Worker;
-import io.openmessaging.tpch.client.S3Client;
 import io.openmessaging.tpch.model.TpcHArguments;
 import io.openmessaging.tpch.model.TpcHConsumerAssignment;
-import io.openmessaging.tpch.model.TpcHIntermediateResult;
 import io.openmessaging.tpch.model.TpcHQuery;
-import io.openmessaging.tpch.processing.TpcHMessageProcessor;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -44,12 +40,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,44 +95,51 @@ public class Benchmark {
     }
 
     public static void main(String[] args) throws Exception {
-        //        benchmark(args);
-        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "32");
         log.info("{}", Runtime.getRuntime().availableProcessors());
-        if (true) {
-            log.info("Starting at {}", System.currentTimeMillis());
-            ExecutorService executorService =
-                    new ThreadPoolExecutor(
-                            32,
-                            32,
-                            50L,
-                            TimeUnit.MILLISECONDS,
-                            new ArrayBlockingQueue<>(5000),
-                            new DefaultThreadFactory("tpc-h-test"),
-                            new ThreadPoolExecutor.AbortPolicy());
-            TpcHMessageProcessor processor =
-                    new TpcHMessageProcessor(
-                            () -> "tpc-h-test-id",
-                            new ArrayList<>(),
-                            null,
-                            () -> {},
-                            LoggerFactory.getLogger(Benchmark.class));
-            S3Client client = new S3Client(processor);
-            ObjectWriter writer = new ObjectMapper().writer();
-            Future<TpcHIntermediateResult>[] f = new Future[100];
-            CompletableFuture<TpcHIntermediateResult>[] futures = new CompletableFuture[f.length];
-            for (int i = 0; i < futures.length; i++) {
-                int i2 = i + 1;
-                futures[i] = client.getIntermediateResultFromS3(createTpcHConsumerAssignment(i2));
-            }
-            log.info("Awaiting all futures...");
-            CompletableFuture.allOf(futures).join();
-            log.info("All futures completed.");
-            TpcHIntermediateResult result = futures[0].get();
-            for (int i = 1; i < 100; i++) {
-                result.aggregateReducedResult(futures[i].get());
-            }
-            log.info("TPC-H query result: {}", writer.writeValueAsString(result));
-        }
+        benchmark(args);
+        //        if (true) {
+        //            log.info("Starting at {}", System.currentTimeMillis());
+        //            ExecutorService executorService =
+        //                    new ThreadPoolExecutor(
+        //                            16,
+        //                            16,
+        //                            50L,
+        //                            TimeUnit.MILLISECONDS,
+        //                            new ArrayBlockingQueue<>(5000),
+        //                            new DefaultThreadFactory("tpc-h-test"),
+        //                            new ThreadPoolExecutor.AbortPolicy());
+        //            TpcHMessageProcessor processor =
+        //                    new TpcHMessageProcessor(
+        //                            () -> "tpc-h-test-id",
+        //                            new ArrayList<>(),
+        //                            null,
+        //                            () -> {},
+        //                            LoggerFactory.getLogger(Benchmark.class));
+        //            S3Client client = new S3Client(processor);
+        //            ObjectWriter writer = new ObjectMapper().writer();
+        //            Future<TpcHIntermediateResult>[] f = new Future[100];
+        //            CompletableFuture<TpcHIntermediateResult>[] futures = new
+        // CompletableFuture[f.length];
+        //            for (int i = 0; i < futures.length; i++) {
+        //                int finalI = i;
+        //                executorService.submit(() -> {
+        //                    futures[finalI] =
+        // client.getIntermediateResultFromS3(createTpcHConsumerAssignment(finalI + 1));
+        //                });
+        //            }
+        //            while (!Arrays.stream(futures).allMatch(Objects::nonNull)) {
+        //                Thread.sleep(100);
+        //            }
+        //            log.info("Awaiting all futures...");
+        //            CompletableFuture.allOf(futures).join();
+        //            log.info("All futures completed.");
+        //            TpcHIntermediateResult result = futures[0].get();
+        //            for (int i = 1; i < 100; i++) {
+        //                result.aggregateReducedResult(futures[i].get());
+        //            }
+        //            log.info("Done at {}", System.currentTimeMillis());
+        //            log.info("TPC-H query result: {}", writer.writeValueAsString(result));
+        //        }
     }
 
     private static TpcHConsumerAssignment createTpcHConsumerAssignment(int index) {
