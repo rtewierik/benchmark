@@ -83,13 +83,39 @@ if __name__ == "__main__":
         'throughput-10kb-500-max-Kafka-2024-05-28-22-27-07'
     ]
 
+    pravega_p = '../experiments/pravega/throughput/'
+    pravega_100b_f = [
+        'throughput-100b-10-max-Pravega-2024-05-29-21-39-45',
+        'throughput-100b-100-max-Pravega-2024-05-29-21-16-21',
+        'throughput-100b-500-max-Pravega-2024-05-29-22-03-47'
+    ]
+    pravega_1kb_f = [
+        'throughput-1kb-10-max-Pravega-2024-05-29-20-32-33',
+        'throughput-1kb-100-max-Pravega-2024-05-29-20-56-12',
+        'throughput-1kb-500-max-Pravega-2024-05-29-19-34-07'
+    ]
+    pravega_10kb_f = [
+        'throughput-10kb-10-max-Pravega-2024-05-29-20-14-37',
+        'throughput-10kb-100-max-Pravega-2024-05-29-14-38-27',
+        'throughput-10kb-500-max-Pravega-2024-05-29-19-01-26'
+    ]
+
     f1, f2 = plot_latency_quantiles, plot_publish_consume_rates
 
     main(kafka_100b_f, kafka_p, sizes, "kafka", "100b", f1)
     main(kafka_100b_f, kafka_p, sizes, "kafka", "100b", f2)
 
-    main(kafka_100b_f, kafka_p, sizes, "kafka", "1kb", f1)
-    main(kafka_100b_f, kafka_p, sizes, "kafka", "1kb", f2)
+    main(kafka_1kb_f, kafka_p, sizes, "kafka", "1kb", f1)
+    main(kafka_1kb_f, kafka_p, sizes, "kafka", "1kb", f2)
 
-    main(kafka_100b_f, kafka_p, sizes, "kafka", "10kb", f1)
-    main(kafka_100b_f, kafka_p, sizes, "kafka", "10kb", f2)
+    main(kafka_10kb_f, kafka_p, sizes, "kafka", "10kb", f1)
+    main(kafka_10kb_f, kafka_p, sizes, "kafka", "10kb", f2)
+
+    main(pravega_100b_f, pravega_p, sizes, "pravega", "100b", f1)
+    main(pravega_100b_f, pravega_p, sizes, "pravega", "100b", f2)
+
+    main(pravega_1kb_f, pravega_p, sizes, "pravega", "1kb", f1)
+    main(pravega_1kb_f, pravega_p, sizes, "pravega", "1kb", f2)
+
+    main(pravega_10kb_f, pravega_p, sizes, "pravega", "10kb", f1)
+    main(pravega_10kb_f, pravega_p, sizes, "pravega", "10kb", f2)
