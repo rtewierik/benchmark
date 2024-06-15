@@ -100,8 +100,26 @@ if __name__ == "__main__":
         'throughput-10kb-500-max-Pravega-2024-05-29-19-01-26'
     ]
 
+    pulsar_p = '../experiments/pulsar/throughput/'
+    pulsar_100b_f = [
+        'throughput-100b-10-max-Pulsar-2024-05-28-18-52-28',
+        'throughput-100b-100-max-Pulsar-2024-05-28-18-55-48',
+        'throughput-100b-500-max-Pulsar-2024-05-28-18-59-14'
+    ]
+    pulsar_1kb_f = [
+        'throughput-1kb-10-max-Pulsar-2024-05-28-19-05-45',
+        'throughput-1kb-100-max-Pulsar-2024-05-28-19-09-01',
+        'throughput-1kb-500-max-Pulsar-2024-05-28-19-12-26'
+    ]
+    pulsar_10kb_f = [
+        'throughput-10kb-10-max-Pulsar-2024-05-28-19-02-29',
+        'throughput-10kb-100-max-Pulsar-2024-05-28-18-44-42',
+        'throughput-10kb-500-max-Pulsar-2024-05-28-18-48-04'
+    ]
+
     f1, f2 = plot_latency_quantiles, plot_publish_consume_rates
 
+    # Kafka
     main(kafka_100b_f, kafka_p, sizes, "kafka", "100b", f1)
     main(kafka_100b_f, kafka_p, sizes, "kafka", "100b", f2)
 
@@ -111,6 +129,7 @@ if __name__ == "__main__":
     main(kafka_10kb_f, kafka_p, sizes, "kafka", "10kb", f1)
     main(kafka_10kb_f, kafka_p, sizes, "kafka", "10kb", f2)
 
+    # Pravega
     main(pravega_100b_f, pravega_p, sizes, "pravega", "100b", f1)
     main(pravega_100b_f, pravega_p, sizes, "pravega", "100b", f2)
 
@@ -119,3 +138,13 @@ if __name__ == "__main__":
 
     main(pravega_10kb_f, pravega_p, sizes, "pravega", "10kb", f1)
     main(pravega_10kb_f, pravega_p, sizes, "pravega", "10kb", f2)
+
+    # Pulsar
+    main(pulsar_100b_f, pulsar_p, sizes, "pulsar", "100b", f1)
+    main(pulsar_100b_f, pulsar_p, sizes, "pulsar", "100b", f2)
+
+    main(pulsar_1kb_f, pulsar_p, sizes, "pulsar", "1kb", f1)
+    main(pulsar_1kb_f, pulsar_p, sizes, "pulsar", "1kb", f2)
+
+    main(pulsar_10kb_f, pulsar_p, sizes, "pulsar", "10kb", f1)
+    main(pulsar_10kb_f, pulsar_p, sizes, "pulsar", "10kb", f2)
