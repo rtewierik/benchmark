@@ -14,14 +14,14 @@
 package io.openmessaging.benchmark.driver.kafka;
 
 
+import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.Executor;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -38,7 +38,8 @@ public class KafkaBenchmarkConsumer implements BenchmarkConsumer {
 
     private final KafkaConsumer<String, byte[]> consumer;
 
-    private final ExecutorService executor;
+    private final Executor executor;
+    private final Runnable task;
     private final Future<?> consumerTask;
     private volatile boolean closing = false;
     private boolean autoCommit;
@@ -46,53 +47,57 @@ public class KafkaBenchmarkConsumer implements BenchmarkConsumer {
     public KafkaBenchmarkConsumer(
             KafkaConsumer<String, byte[]> consumer,
             Properties consumerConfig,
-            ConsumerCallback callback) {
-        this(consumer, consumerConfig, callback, 100L);
+            ConsumerCallback callback,
+            Executor executor) {
+        this(consumer, consumerConfig, callback, 100L, executor);
     }
 
     public KafkaBenchmarkConsumer(
             KafkaConsumer<String, byte[]> consumer,
             Properties consumerConfig,
             ConsumerCallback callback,
-            long pollTimeoutMs) {
+            long pollTimeoutMs,
+            Executor executor) {
         this.consumer = consumer;
-        this.executor = Executors.newSingleThreadExecutor();
+        this.executor = executor;
         this.autoCommit =
                 Boolean.valueOf(
                         (String)
                                 consumerConfig.getOrDefault(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false"));
-        this.consumerTask =
-                this.executor.submit(
-                        () -> {
-                            while (!closing) {
-                                try {
-                                    ConsumerRecords<String, byte[]> records =
-                                            consumer.poll(Duration.ofMillis(pollTimeoutMs));
+        this.task =
+                () -> {
+                    while (!closing) {
+                        try {
+                            ConsumerRecords<String, byte[]> records =
+                                    consumer.poll(Duration.ofMillis(pollTimeoutMs));
 
-                                    Map<TopicPartition, OffsetAndMetadata> offsetMap = new HashMap<>();
-                                    for (ConsumerRecord<String, byte[]> record : records) {
-                                        callback.messageReceived(record.value(), record.timestamp(), this);
+                            Map<TopicPartition, OffsetAndMetadata> offsetMap = new HashMap<>();
+                            for (ConsumerRecord<String, byte[]> record : records) {
+                                callback.messageReceived(record.value(), record.timestamp(), this);
 
-                                        offsetMap.put(
-                                                new TopicPartition(record.topic(), record.partition()),
-                                                new OffsetAndMetadata(record.offset() + 1));
-                                    }
-
-                                    if (!autoCommit && !offsetMap.isEmpty()) {
-                                        // Async commit all messages polled so far
-                                        consumer.commitAsync(offsetMap, null);
-                                    }
-                                } catch (Exception e) {
-                                    log.error("exception occur while consuming message", e);
-                                }
+                                offsetMap.put(
+                                        new TopicPartition(record.topic(), record.partition()),
+                                        new OffsetAndMetadata(record.offset() + 1));
                             }
-                        });
+
+                            if (!autoCommit && !offsetMap.isEmpty()) {
+                                // Async commit all messages polled so far
+                                consumer.commitAsync(offsetMap, null);
+                            }
+                        } catch (Exception e) {
+                            log.error("exception occur while consuming message", e);
+                        }
+                        if (!EnvironmentConfiguration.isCloudMonitoringEnabled()) {
+                            break;
+                        }
+                    }
+                };
+        this.consumerTask = this.executor.submit(task);
     }
 
     @Override
     public void close() throws Exception {
         closing = true;
-        executor.shutdown();
         consumerTask.get();
         consumer.close();
     }

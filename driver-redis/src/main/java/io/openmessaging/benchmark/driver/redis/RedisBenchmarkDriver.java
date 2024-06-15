@@ -35,6 +35,7 @@ import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.Executor;
 import io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient;
 import io.openmessaging.benchmark.driver.redis.client.RedisClientConfig;
 import java.io.File;
@@ -61,10 +62,13 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
     private GenericObjectPool<StatefulRedisClusterConnection<String, String>> lettucePool;
     private StatefulRedisClusterConnection<String, String> connection;
     private RedisAdvancedClusterAsyncCommands<String, String> asyncCommands;
+    private Executor executor;
 
     @Override
-    public void initialize(final File configurationFile, final StatsLogger statsLogger)
+    public void initialize(
+            final File configurationFile, final StatsLogger statsLogger, Executor executor)
             throws IOException {
+        this.executor = executor;
         this.clientConfig = readConfig(configurationFile);
     }
 
@@ -113,7 +117,8 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
                                                 subscriptionName,
                                                 jedisPool,
                                                 lettucePool,
-                                                consumerCallback));
+                                                consumerCallback,
+                                                executor));
             } catch (Exception e) {
                 log.info("Failed to create consumer instance.", e);
                 CompletableFuture<BenchmarkConsumer> future = new CompletableFuture<>();
@@ -128,7 +133,7 @@ public class RedisBenchmarkDriver implements BenchmarkDriver {
         }
         return CompletableFuture.completedFuture(
                 new RedisBenchmarkConsumer(
-                        consumerId, topic, subscriptionName, jedisPool, null, consumerCallback));
+                        consumerId, topic, subscriptionName, jedisPool, null, consumerCallback, this.executor));
     }
 
     private void setupJedisConn() {

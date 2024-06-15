@@ -32,6 +32,7 @@ import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.Executor;
 import io.openmessaging.benchmark.driver.Pair;
 import io.openmessaging.benchmark.driver.ResourceCreator;
 import io.openmessaging.benchmark.driver.ResourceCreator.CreationResult;
@@ -63,7 +64,8 @@ public class RabbitMqBenchmarkDriver implements BenchmarkDriver {
     private final Map<String, Connection> connections = new ConcurrentHashMap<>();
 
     @Override
-    public void initialize(File configurationFile, StatsLogger statsLogger) throws IOException {
+    public void initialize(File configurationFile, StatsLogger statsLogger, Executor executor)
+            throws IOException {
         config = mapper.readValue(configurationFile, RabbitMqConfig.class);
     }
 

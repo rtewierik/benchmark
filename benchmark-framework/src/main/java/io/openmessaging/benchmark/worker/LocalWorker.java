@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Preconditions;
+import io.netty.util.concurrent.DefaultThreadFactory;
 import io.openmessaging.benchmark.DriverConfiguration;
 import io.openmessaging.benchmark.common.ObjectMappers;
 import io.openmessaging.benchmark.common.key.distribution.KeyDistributor;
@@ -36,6 +37,7 @@ import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.common.monitoring.CentralWorkerStats;
 import io.openmessaging.benchmark.common.monitoring.InstanceWorkerStats;
 import io.openmessaging.benchmark.common.monitoring.WorkerStats;
+import io.openmessaging.benchmark.driver.Executor;
 import io.openmessaging.benchmark.driver.sns.sqs.SnsSqsBenchmarkConfiguration;
 import io.openmessaging.benchmark.utils.Timer;
 import io.openmessaging.benchmark.worker.commands.ConsumerAssignment;
@@ -59,6 +61,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -96,6 +99,7 @@ public class LocalWorker implements Worker, ConsumerCallback {
     private TpcHMessageProcessor tpcHMessageProcessor;
     private AdaptiveRateLimitedTaskProcessor taskProcessor;
     private CommandHandler commandHandler;
+    private Executor executor;
     private final StatsLogger statsLogger;
     private final WorkerStats stats;
     private boolean testCompleted = false;
@@ -147,17 +151,17 @@ public class LocalWorker implements Worker, ConsumerCallback {
         }
 
         try {
+            this.executor = EnvironmentConfiguration.isCloudMonitoringEnabled()
+                    ? new Executor(Executors.newScheduledThreadPool(10))
+                    : new Executor(Executors.newCachedThreadPool(new DefaultThreadFactory("benchmark-executor")));
             benchmarkDriver =
                     (BenchmarkDriver) Class.forName(driverConfiguration.driverClass).newInstance();
-            benchmarkDriver.initialize(driverConfigFile, this.statsLogger);
+            benchmarkDriver.initialize(driverConfigFile, this.statsLogger, this.executor);
         } catch (InstantiationException
                 | IllegalAccessException
                 | ClassNotFoundException
                 | InterruptedException e) {
             throw new RuntimeException(e);
-        }
-        if (this.tpcHMessageProcessor != null) {
-            this.tpcHMessageProcessor.shutdown();
         }
         this.tpcHMessageProcessor = new TpcHMessageProcessor(
                 () -> this.experimentId,
@@ -280,7 +284,6 @@ public class LocalWorker implements Worker, ConsumerCallback {
                     break;
             }
             taskProcessor = new AdaptiveRateLimitedTaskProcessor(maxConcurrentTasks);
-            tpcHMessageProcessor.startRowProcessor(commandHandler.executorService);
             startLoadForTpcHProducers(producerWorkAssignment);
         }
     }

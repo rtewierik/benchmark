@@ -36,7 +36,7 @@ public interface BenchmarkDriver extends AutoCloseable {
      * @param statsLogger stats logger to collect stats from benchmark driver
      * @throws IOException
      */
-    void initialize(File configurationFile, StatsLogger statsLogger)
+    void initialize(File configurationFile, StatsLogger statsLogger, Executor executor)
             throws IOException, InterruptedException;
 
     /**

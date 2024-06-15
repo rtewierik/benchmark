@@ -21,6 +21,7 @@ import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.Executor;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -50,6 +51,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 @Slf4j
 public class KafkaBenchmarkDriver implements BenchmarkDriver {
 
+    private Executor executor;
     private Config config;
 
     private List<BenchmarkProducer> producers = Collections.synchronizedList(new ArrayList<>());
@@ -62,7 +64,9 @@ public class KafkaBenchmarkDriver implements BenchmarkDriver {
     private AdminClient admin;
 
     @Override
-    public void initialize(File configurationFile, StatsLogger statsLogger) throws IOException {
+    public void initialize(File configurationFile, StatsLogger statsLogger, Executor executor)
+            throws IOException {
+        this.executor = executor;
         config = mapper.readValue(configurationFile, Config.class);
 
         Properties commonProperties = new Properties();
@@ -136,7 +140,8 @@ public class KafkaBenchmarkDriver implements BenchmarkDriver {
         try {
             consumer.subscribe(Arrays.asList(topic));
             return CompletableFuture.completedFuture(
-                    new KafkaBenchmarkConsumer(consumer, consumerProperties, consumerCallback));
+                    new KafkaBenchmarkConsumer(
+                            consumer, consumerProperties, consumerCallback, this.executor));
         } catch (Throwable t) {
             consumer.close();
             CompletableFuture<BenchmarkConsumer> future = new CompletableFuture<>();

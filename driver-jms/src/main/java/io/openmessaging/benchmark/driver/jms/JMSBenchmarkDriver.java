@@ -22,6 +22,7 @@ import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.Executor;
 import io.openmessaging.benchmark.driver.jms.config.JMSConfig;
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +49,8 @@ public class JMSBenchmarkDriver implements BenchmarkDriver {
     private BenchmarkDriver delegateForAdminOperations;
 
     @Override
-    public void initialize(File configurationFile, StatsLogger statsLogger) throws IOException {
+    public void initialize(File configurationFile, StatsLogger statsLogger, Executor executor)
+            throws IOException {
         this.config = readConfig(configurationFile);
         log.info("JMS driver configuration: {}", writer.writeValueAsString(config));
 
@@ -66,7 +68,7 @@ public class JMSBenchmarkDriver implements BenchmarkDriver {
                                                 JMSBenchmarkDriver.class.getClassLoader())
                                         .getConstructor()
                                         .newInstance();
-                delegateForAdminOperations.initialize(configurationFile, statsLogger);
+                delegateForAdminOperations.initialize(configurationFile, statsLogger, executor);
             } catch (Throwable e) {
                 log.error(
                         "Cannot created delegate driver " + config.delegateForAdminOperationsClassName, e);

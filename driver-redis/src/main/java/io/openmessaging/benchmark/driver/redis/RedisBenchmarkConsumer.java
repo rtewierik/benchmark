@@ -20,13 +20,12 @@ import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.Executor;
 import io.openmessaging.benchmark.driver.redis.client.AsyncRedisClient;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.slf4j.Logger;
@@ -43,7 +42,8 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
     private final String topic;
     private final String subscriptionName;
     private final String consumerId;
-    private final ExecutorService executor;
+    private final Runnable task;
+    private final Executor executor;
     private final Future<?> consumerTask;
     private final ConsumerCallback consumerCallback;
     private volatile boolean closing = false;
@@ -54,46 +54,49 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
             final String subscriptionName,
             final JedisPool pool,
             final GenericObjectPool<StatefulRedisClusterConnection<String, String>> lettucePool,
-            ConsumerCallback consumerCallback) {
+            ConsumerCallback consumerCallback,
+            Executor executor) {
         this.pool = pool;
         this.lettucePool = lettucePool;
         this.topic = topic;
         this.subscriptionName = subscriptionName;
         this.consumerId = consumerId;
-        this.executor = Executors.newSingleThreadExecutor();
+        this.executor = executor;
         this.consumerCallback = consumerCallback;
         Jedis jedis = lettucePool == null ? this.pool.getResource() : null;
-
-        this.consumerTask =
-                this.executor.submit(
-                        () -> {
-                            while (!closing) {
-                                try {
-                                    Map<String, StreamEntryID> streamQuery =
-                                            Collections.singletonMap(this.topic, StreamEntryID.UNRECEIVED_ENTRY);
-                                    if (lettucePool != null) {
-                                        try (StatefulRedisClusterConnection<String, String> connection =
-                                                lettucePool.borrowObject()) {
-                                            List<StreamMessage<String, String>> range =
-                                                    new AsyncRedisClient(connection.async())
-                                                            .xreadGroup(subscriptionName, consumerId, topic)
-                                                            .get();
-                                            handleClusterRange(range);
-                                        }
-                                    } else {
-                                        List<Map.Entry<String, List<StreamEntry>>> range =
-                                                jedis.xreadGroup(
-                                                        this.subscriptionName,
-                                                        this.consumerId,
-                                                        XReadGroupParams.xReadGroupParams().block(0),
-                                                        streamQuery);
-                                        handleRange(range);
-                                    }
-                                } catch (Exception e) {
-                                    log.error("Failed to read from consumer instance.", e);
+        this.task =
+                () -> {
+                    while (!closing) {
+                        try {
+                            Map<String, StreamEntryID> streamQuery =
+                                    Collections.singletonMap(this.topic, StreamEntryID.UNRECEIVED_ENTRY);
+                            if (lettucePool != null) {
+                                try (StatefulRedisClusterConnection<String, String> connection =
+                                        lettucePool.borrowObject()) {
+                                    List<StreamMessage<String, String>> range =
+                                            new AsyncRedisClient(connection.async())
+                                                    .xreadGroup(subscriptionName, consumerId, topic)
+                                                    .get();
+                                    handleClusterRange(range);
                                 }
+                            } else {
+                                List<Map.Entry<String, List<StreamEntry>>> range =
+                                        jedis.xreadGroup(
+                                                this.subscriptionName,
+                                                this.consumerId,
+                                                XReadGroupParams.xReadGroupParams().block(0),
+                                                streamQuery);
+                                handleRange(range);
                             }
-                        });
+                        } catch (Exception e) {
+                            log.error("Failed to read from consumer instance.", e);
+                        }
+                        if (!EnvironmentConfiguration.isCloudMonitoringEnabled()) {
+                            break;
+                        }
+                    }
+                };
+        this.consumerTask = this.executor.submit(task);
     }
 
     private void handleRange(List<Map.Entry<String, List<StreamEntry>>> range) throws IOException {
@@ -128,7 +131,6 @@ public class RedisBenchmarkConsumer implements BenchmarkConsumer {
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Attempting to shut down executor...");
         }
-        executor.shutdown();
         if (EnvironmentConfiguration.isDebug()) {
             log.info("Attempting to shut down pool...");
         }

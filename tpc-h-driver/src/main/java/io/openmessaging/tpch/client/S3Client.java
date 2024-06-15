@@ -29,9 +29,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
@@ -48,30 +45,18 @@ public class S3Client {
     private static final S3AsyncClient s3AsyncClient =
             S3AsyncClient.crtBuilder()
                     .region(Region.EU_WEST_1)
-                    .maxConcurrency(2048)
-                    .targetThroughputInGbps(25.0)
+                    .maxConcurrency(1024)
+                    .targetThroughputInGbps(10.0)
                     .maxNativeMemoryLimitInBytes(4L * 1024 * 1024 * 1024) // 4 GB
-                    .initialReadBufferSizeInBytes(64L * 1024 * 1024) // 64 MB
-                    .minimumPartSizeInBytes(4L * 1024 * 1024) // 5 MB
+                    .initialReadBufferSizeInBytes(8L * 1024 * 1024) // 8 MB
+                    .minimumPartSizeInBytes(1024L * 1024) // 1 MB
                     .build();
-    private final ScheduledExecutorService rowProcessor =
-            Executors.newSingleThreadScheduledExecutor();
     private final Throttler throttler;
     private final TpcHMessageProcessor processor;
-    private ExecutorService executor;
 
-    public S3Client(TpcHMessageProcessor processor, ExecutorService executor) {
+    public S3Client(TpcHMessageProcessor processor) {
         this.throttler = new Throttler(2500, 1, TimeUnit.SECONDS);
         this.processor = processor;
-        this.executor = executor;
-    }
-
-    public void shutdown() {
-        rowProcessor.shutdown();
-    }
-
-    public void startRowProcessor(ExecutorService executor) {
-        this.executor = executor;
     }
 
     public CompletableFuture<TpcHIntermediateResult> getIntermediateResultFromS3(
@@ -87,8 +72,10 @@ public class S3Client {
                                 GetObjectRequest.builder().bucket(bucketName).key(key).build();
                         return s3AsyncClient
                                 .getObject(request, AsyncResponseTransformer.toBytes())
-                                .thenApply(
+                                // Hand over requested file and responsibility of parsing to common fork-pool.
+                                .thenApplyAsync(
                                         (response) -> {
+                                            log.info("This should be happening from fork-pool!");
                                             try (Reader reader = new InputStreamReader(response.asInputStream())) {
                                                 CsvToBean<TpcHRow> csvToBean =
                                                         new CsvToBeanBuilder<TpcHRow>(reader)
@@ -173,7 +160,8 @@ public class S3Client {
 
         return s3AsyncClient
                 .getObject(getObjectRequest, AsyncResponseTransformer.toBytes())
-                .thenApply(
+                // Hand over requested file and responsibility of parsing to common fork-pool.
+                .thenApplyAsync(
                         responseBytes -> {
                             try (Reader reader = new InputStreamReader(responseBytes.asInputStream())) {
                                 CsvToBean<TpcHRow> csvToBean =

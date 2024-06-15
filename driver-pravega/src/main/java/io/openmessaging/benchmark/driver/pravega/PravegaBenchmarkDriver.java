@@ -22,6 +22,7 @@ import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.Executor;
 import io.openmessaging.benchmark.driver.pravega.config.PravegaConfig;
 import io.pravega.client.ClientConfig;
 import io.pravega.client.EventStreamClientFactory;
@@ -52,9 +53,12 @@ public class PravegaBenchmarkDriver implements BenchmarkDriver {
     private ReaderGroupManager readerGroupManager;
     private EventStreamClientFactory clientFactory;
     private final List<String> createdTopics = new ArrayList<>();
+    private Executor executor;
 
     @Override
-    public void initialize(File configurationFile, StatsLogger statsLogger) throws IOException {
+    public void initialize(File configurationFile, StatsLogger statsLogger, Executor executor)
+            throws IOException {
+        this.executor = executor;
         config = readConfig(configurationFile);
         log.info("Pravega driver configuration: {}", objectWriter.writeValueAsString(config));
 
@@ -159,7 +163,8 @@ public class PravegaBenchmarkDriver implements BenchmarkDriver {
                         consumerCallback,
                         clientFactory,
                         readerGroupManager,
-                        config.includeTimestampInEvent);
+                        config.includeTimestampInEvent,
+                        this.executor);
         return CompletableFuture.completedFuture(consumer);
     }
 

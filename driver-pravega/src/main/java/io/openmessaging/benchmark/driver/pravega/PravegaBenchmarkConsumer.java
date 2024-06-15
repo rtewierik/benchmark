@@ -14,8 +14,10 @@
 package io.openmessaging.benchmark.driver.pravega;
 
 
+import io.openmessaging.benchmark.common.EnvironmentConfiguration;
 import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.Executor;
 import io.pravega.client.EventStreamClientFactory;
 import io.pravega.client.admin.ReaderGroupManager;
 import io.pravega.client.stream.EventStreamReader;
@@ -27,8 +29,6 @@ import io.pravega.client.stream.impl.ByteBufferSerializer;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
@@ -37,9 +37,10 @@ import org.slf4j.LoggerFactory;
 public class PravegaBenchmarkConsumer implements BenchmarkConsumer {
     private static final Logger log = LoggerFactory.getLogger(PravegaBenchmarkConsumer.class);
 
-    private final ExecutorService executor;
     private final EventStreamReader<ByteBuffer> reader;
     private final AtomicBoolean closed = new AtomicBoolean(false);
+    private final Runnable task;
+    private final Executor executor;
 
     public PravegaBenchmarkConsumer(
             String streamName,
@@ -48,7 +49,8 @@ public class PravegaBenchmarkConsumer implements BenchmarkConsumer {
             ConsumerCallback consumerCallback,
             EventStreamClientFactory clientFactory,
             ReaderGroupManager readerGroupManager,
-            boolean includeTimestampInEvent) {
+            boolean includeTimestampInEvent,
+            Executor executor) {
         log.info(
                 "PravegaBenchmarkConsumer: BEGIN: subscriptionName={}, streamName={}",
                 subscriptionName,
@@ -64,9 +66,8 @@ public class PravegaBenchmarkConsumer implements BenchmarkConsumer {
                         subscriptionName,
                         new ByteBufferSerializer(),
                         ReaderConfig.builder().disableTimeWindows(true).build());
-        // Start a thread to read events.
-        this.executor = Executors.newSingleThreadExecutor();
-        this.executor.submit(
+        this.executor = executor;
+        this.task =
                 () -> {
                     while (!closed.get()) {
                         try {
@@ -87,15 +88,16 @@ public class PravegaBenchmarkConsumer implements BenchmarkConsumer {
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
+                        if (!EnvironmentConfiguration.isCloudMonitoringEnabled()) {
+                            break;
+                        }
                     }
-                });
+                };
     }
 
     @Override
     public void close() throws Exception {
         closed.set(true);
-        this.executor.shutdown();
-        this.executor.awaitTermination(1, TimeUnit.MINUTES);
         reader.close();
     }
 }

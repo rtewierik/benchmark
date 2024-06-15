@@ -26,6 +26,7 @@ import io.openmessaging.benchmark.driver.BenchmarkConsumer;
 import io.openmessaging.benchmark.driver.BenchmarkDriver;
 import io.openmessaging.benchmark.driver.BenchmarkProducer;
 import io.openmessaging.benchmark.driver.ConsumerCallback;
+import io.openmessaging.benchmark.driver.Executor;
 import io.openmessaging.benchmark.driver.pulsar.config.PulsarClientConfig.PersistenceConfiguration;
 import io.openmessaging.benchmark.driver.pulsar.config.PulsarConfig;
 import java.io.File;
@@ -72,7 +73,8 @@ public class PulsarBenchmarkDriver implements BenchmarkDriver {
     private final Map<String, String> compressionDisabledProperties = new HashMap<>();
 
     @Override
-    public void initialize(File configurationFile, StatsLogger statsLogger) throws IOException {
+    public void initialize(File configurationFile, StatsLogger statsLogger, Executor executor)
+            throws IOException {
         this.config = readConfig(configurationFile);
         compressionDisabledProperties.put("compressionType", CompressionType.NONE.toString());
         log.info("Pulsar driver configuration: {}", writer.writeValueAsString(config));

@@ -40,7 +40,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -61,8 +60,7 @@ public class TpcHMessageProcessor {
     private volatile MessageProducer messageProducer;
     private final Runnable onTestCompleted;
     private final Logger log;
-    private final S3Client s3AsyncClient = new S3Client(this, null);
-    private ExecutorService executorOverride = null;
+    private final S3Client s3AsyncClient = new S3Client(this);
 
     public TpcHMessageProcessor(
             Supplier<String> getExperimentId,
@@ -79,18 +77,6 @@ public class TpcHMessageProcessor {
 
     public void updateMessageProducer(MessageProducer messageProducer) {
         this.messageProducer = messageProducer;
-    }
-
-    public void startRowProcessor(ExecutorService executorOverride) {
-        if (executorOverride != null) {
-            this.executorOverride = executorOverride;
-            s3AsyncClient.startRowProcessor(executorOverride);
-        }
-        log.info("Started row processor from TPC-H processor.");
-    }
-
-    public void shutdown() {
-        s3AsyncClient.shutdown();
     }
 
     public CompletableFuture<String> processTpcHMessage(
