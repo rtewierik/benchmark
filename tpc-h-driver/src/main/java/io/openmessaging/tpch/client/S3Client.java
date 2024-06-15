@@ -19,19 +19,22 @@ import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+
+import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.core.BytesWrapper;
 import software.amazon.awssdk.core.async.AsyncResponseTransformer;
 import software.amazon.awssdk.http.nio.netty.NettyNioAsyncHttpClient;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
+@Slf4j
 public class S3Client {
     private static final S3AsyncClient s3AsyncClient =
             S3AsyncClient.builder()
                     .httpClientBuilder(
                             NettyNioAsyncHttpClient.builder()
-                                    .maxConcurrency(1024)
-                                    .maxPendingConnectionAcquires(1024)
+                                    .maxConcurrency(2048)
+                                    .maxPendingConnectionAcquires(2048)
                                     .connectionAcquisitionTimeout(Duration.ofSeconds(30)))
                     .build();
     private final Throttler throttler;
@@ -52,10 +55,12 @@ public class S3Client {
         CompletableFuture<T> future = new CompletableFuture<>();
         try {
             throttler.acquire();
+            long curr = System.currentTimeMillis();
             supplier
                     .get()
                     .whenComplete(
                             (result, error) -> {
+                                log.info("Completed download in {}", System.currentTimeMillis() - curr);
                                 if (error != null) {
                                     future.completeExceptionally(error);
                                 } else {
