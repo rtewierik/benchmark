@@ -31,8 +31,8 @@ def plot_publish_consume_rates(json_data, label, technology, size, plot):
 
     x = np.arange(len(publish_rates))
 
-    plt.plot(x, publish_rates, label=f'Publish rate ({label})', marker='o', markersize=5)
-    plt.plot(x, consume_rates, label=f'Consume rate ({label})', marker='o', markersize=5)
+    plt.plot(x, publish_rates, label=f'Publish rate ({label})', marker='D', markersize=6)
+    plt.plot(x, consume_rates, label=f'Consume rate ({label})', marker='d', markersize=6)
     plt.xlabel('Time interval')
     plt.ylabel('Rate (messages/second)')
     plt.title('Publish and consume rates')
