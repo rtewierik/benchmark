@@ -13,8 +13,8 @@ def plot_latency_quantiles(json_data, label, technology, size, plot):
     end_to_end_x = list(map(float, end_to_end_latency_quantiles.keys()))
     end_to_end_y = list(end_to_end_latency_quantiles.values())
 
-    plt.plot(publish_x, publish_y, label=f'Publish latency quantiles ({label})')
-    plt.plot(end_to_end_x, end_to_end_y, label=f'E2E latency quantiles ({label})')
+    plt.plot(publish_x, publish_y, label=f'Publish latency quantiles ({label})', markersize=5)
+    plt.plot(end_to_end_x, end_to_end_y, label=f'E2E latency quantiles ({label})', markersize=5)
     plt.xlabel('Quantiles')
     plt.ylabel('Latency (ms)')
     plt.title('Latency quantiles')
@@ -31,8 +31,8 @@ def plot_publish_consume_rates(json_data, label, technology, size, plot):
 
     x = np.arange(len(publish_rates))
 
-    plt.plot(x, publish_rates, label=f'Publish rate ({label})', marker='o')
-    plt.plot(x, consume_rates, label=f'Consume rate ({label})', marker='o')
+    plt.plot(x, publish_rates, label=f'Publish rate ({label})', marker='o', markersize=5)
+    plt.plot(x, consume_rates, label=f'Consume rate ({label})', marker='o', markersize=5)
     plt.xlabel('Time interval')
     plt.ylabel('Rate (messages/second)')
     plt.title('Publish and consume rates')
