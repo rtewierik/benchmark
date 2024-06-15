@@ -134,6 +134,23 @@ if __name__ == "__main__":
         'throughput-10kb-500-max-RabbitMQ-2024-05-28-23-24-29'
     ]
 
+    redis_p = '../experiments/redis/throughput/'
+    redis_100b_f = [
+        'throughput-100b-10-max-Redis-2024-05-28-19-46-24',
+        'throughput-100b-100-max-Redis-2024-05-28-19-49-33',
+        'throughput-100b-500-max-Redis-2024-05-28-20-21-34'
+    ]
+    redis_1kb_f = [
+        'throughput-1kb-10-max-Redis-2024-05-28-20-08-23',
+        'throughput-1kb-100-max-Redis-2024-05-28-20-15-06',
+        'throughput-1kb-500-max-Redis-2024-05-28-20-26-32'
+    ]
+    redis_10kb_f = [
+        'throughput-10kb-10-max-Redis-2024-05-28-20-01-56',
+        'throughput-10kb-100-max-Redis-2024-05-28-20-05-12',
+        'throughput-10kb-500-max-Redis-2024-05-28-20-30-44'
+    ]
+
     f1, f2 = plot_latency_quantiles, plot_publish_consume_rates
 
     # Kafka
@@ -175,3 +192,13 @@ if __name__ == "__main__":
 
     main(rabbitmq_10kb_f, rabbitmq_p, sizes, "rabbitmq", "10kb", f1)
     main(rabbitmq_10kb_f, rabbitmq_p, sizes, "rabbitmq", "10kb", f2)
+
+    # Redis
+    main(redis_100b_f, redis_p, sizes, "redis", "100b", f1)
+    main(redis_100b_f, redis_p, sizes, "redis", "100b", f2)
+
+    main(redis_1kb_f, redis_p, sizes, "redis", "1kb", f1)
+    main(redis_1kb_f, redis_p, sizes, "redis", "1kb", f2)
+
+    main(redis_10kb_f, redis_p, sizes, "redis", "10kb", f1)
+    main(redis_10kb_f, redis_p, sizes, "redis", "10kb", f2)
