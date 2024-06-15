@@ -117,6 +117,23 @@ if __name__ == "__main__":
         'throughput-10kb-500-max-Pulsar-2024-05-28-18-48-04'
     ]
 
+    rabbitmq_p = '../experiments/rabbitmq/throughput/'
+    rabbitmq_100b_f = [
+        'throughput-1kb-10-max-RabbitMQ-2024-05-28-23-27-37',
+        'throughput-1kb-100-max-RabbitMQ-2024-05-28-23-30-51',
+        'throughput-1kb-500-max-RabbitMQ-2024-05-28-23-34-20'
+    ]
+    rabbitmq_1kb_f = [
+        'throughput-1kb-10-max-RabbitMQ-2024-05-28-23-27-37',
+        'throughput-1kb-100-max-RabbitMQ-2024-05-28-23-30-51',
+        'throughput-1kb-500-max-RabbitMQ-2024-05-28-23-34-20'
+    ]
+    rabbitmq_10kb_f = [
+        'throughput-10kb-10-max-RabbitMQ-2024-05-28-23-17-49',
+        'throughput-10kb-100-max-RabbitMQ-2024-05-28-23-21-01',
+        'throughput-10kb-500-max-RabbitMQ-2024-05-28-23-24-29'
+    ]
+
     f1, f2 = plot_latency_quantiles, plot_publish_consume_rates
 
     # Kafka
@@ -148,3 +165,13 @@ if __name__ == "__main__":
 
     main(pulsar_10kb_f, pulsar_p, sizes, "pulsar", "10kb", f1)
     main(pulsar_10kb_f, pulsar_p, sizes, "pulsar", "10kb", f2)
+
+    # RabbitMQ
+    main(rabbitmq_100b_f, rabbitmq_p, sizes, "rabbitmq", "100b", f1)
+    main(rabbitmq_100b_f, rabbitmq_p, sizes, "rabbitmq", "100b", f2)
+
+    main(rabbitmq_1kb_f, rabbitmq_p, sizes, "rabbitmq", "1kb", f1)
+    main(rabbitmq_1kb_f, rabbitmq_p, sizes, "rabbitmq", "1kb", f2)
+
+    main(rabbitmq_10kb_f, rabbitmq_p, sizes, "rabbitmq", "10kb", f1)
+    main(rabbitmq_10kb_f, rabbitmq_p, sizes, "rabbitmq", "10kb", f2)
